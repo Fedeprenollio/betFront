@@ -3,14 +3,14 @@ import { useEffect, useState } from "react";
 import StatisticsTablecopy from "../componts/StatisticsTablecopy";
 import { RadioButtonStatsLessThan } from "../componts/RadioButtonStatsLessThan";
 import { RadioButtonHomeAway } from "../componts/RadioButtonHomeAway";
-import useTeamStatsStore from "../stores/statsStore";
+import createTeamStatsStore from "../stores/statsStore";
 import { useParams } from "react-router-dom";
-import useMatchesStore from "../stores/matchesStore";
+import createMatchesStore from "../stores/matchesStore";
 
 export const TeamStatistics = () => {
   const { idHomeTeam, idAwayTeam, idMatch } = useParams();
   const [statsLessThan, setStatsLessThan] = useState(false);
-  const { getMatchDetail, matchDetail } = useMatchesStore((state) => state);
+  const { getMatchDetail, matchDetail } = createMatchesStore((state) => state);
   const [match, setMatch] = useState({});
 
   useEffect(() => {
@@ -55,7 +55,7 @@ export const TeamStatistics = () => {
     setHomeStatCorners,
     setAwayStatCorners,
     setAwayStatGoals,
-  } = useTeamStatsStore((state) => state);
+  } = createTeamStatsStore((state) => state);
 
   useEffect(() => {
     setHomeStatYellowCard({

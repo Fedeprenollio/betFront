@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { AdminLeague } from "./AdminLeague";
-import useLeagueStore from "../../stores/leagueStore";
+import crateLeagueStore from "../../stores/leagueStore";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
@@ -16,6 +16,7 @@ import Button from "@mui/material/Button";
 import FormSeason from "../../componts/FormSeason";
 import FormAdminSeasonWithTeams from "../../componts/FormAdminSeasonWithTeams";
 import { Tabs, Tab } from '@mui/material';
+import { useBoundStore } from "../../stores";
 
 // const Item = styled(Paper)(({ theme }) => ({
 //   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -26,7 +27,9 @@ import { Tabs, Tab } from '@mui/material';
 // }));
 
 export const LeaguePage = () => {
-  const { leagues, fetchLeagues } = useLeagueStore((state) => state);
+  // const { leagues, fetchLeagues } = crateLeagueStore((state) => state);
+  const { leagues, fetchLeagues } = useBoundStore ( state=> state)
+
 
   useEffect(() => {
     fetchLeagues();
@@ -40,7 +43,7 @@ export const LeaguePage = () => {
     <>
       <div>LeaguePage</div>
 
-      {leagues.map((league) => {
+      {/* {leagues.map((league) => {
         return (
           <Accordion
             spacing={2}
@@ -59,7 +62,7 @@ export const LeaguePage = () => {
             })}
           </Accordion>
         );
-      })}
+      })} */}
 
       {/* <AdmintSeason /> */}
       <div>AdmintSeason - agregar una tempordada a una liga y sus equipos </div>

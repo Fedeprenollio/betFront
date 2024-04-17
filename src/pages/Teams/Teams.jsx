@@ -1,10 +1,12 @@
 import { useEffect } from "react";
-import useTeamStore from "../../stores/teamStore";
+import createTeamStore from "../../stores/teamStore";
 import CardTeam from "../../componts/CardTeam";
 import { Grid } from "@mui/material";
+import { useBoundStore  } from "../../stores";
 
 export const Teams = () => {
-  const { teams, setTeams } = useTeamStore((state) => state);
+  // const { teams, setTeams } = useTeamStore((state) => state);
+  const { teams, setTeams} = useBoundStore ( state=> state)
   console.log(teams);
   useEffect(() => {
     setTeams();

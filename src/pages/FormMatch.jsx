@@ -1,16 +1,13 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { TextField, Button, MenuItem } from "@mui/material";
 import * as Yup from "yup";
-import useMatchesStore from "../stores/matchesStore";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import useLeagueStore from "../stores/leagueStore";
-import dayjs from "dayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import useSeasonStore from "../stores/seasonStore";
-import { FormControl, InputLabel, Select, Typography } from "@mui/material";
+import { Select } from "@mui/material";
+import { useBoundStore } from "../stores";
 
 const validationSchema = Yup.object().shape({
   homeTeam: Yup.string().required("Required"),
@@ -50,9 +47,11 @@ const MyDateTimePicker = ({ field, form }) => {
 };
 
 const FormMatch = () => {
-  // const { teams, setTeams } = useTeamStore((state) => state);
-  const { fetchLeagues, leagues } = useLeagueStore((state) => state);
-  const { addMatchesToSeason } = useSeasonStore((state) => state);
+  // const { fetchLeagues, leagues } = crateLeagueStore((state) => state);
+  // const { addMatchesToSeason } = createSeasonStore((state) => state);
+  const { fetchLeagues, leagues} = useBoundStore(state=> state)
+  const {addMatchesToSeason} = useBoundStore(state=> state)
+
   const [countries, setCountries] = useState([]);
   const [leaguesByCountry, setLeaguesByCountry] = useState({});
   const [selectedCountry, setSelectedCountry] = useState("");

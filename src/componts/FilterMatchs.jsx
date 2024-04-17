@@ -1,6 +1,5 @@
-
 // export default FilterMatchs;
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   MenuItem,
   Checkbox,
@@ -12,15 +11,17 @@ import {
 } from "@mui/material";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import useLeagueStore from "../stores/leagueStore";
+import { useBoundStore } from "../stores";
 
 const FilterMatchs = () => {
-  const { fetchLeagues, leagues } = useLeagueStore((state) => state);
+  const { fetchLeagues, leagues} = useBoundStore(state=> state)
 
-  const [selectedLeagues, setSelectedLeagues] = useState([]);
-  const [selectedCountries, setSelectedCountries] = useState([]);
+
+  // const [selectedLeagues, setSelectedLeagues] = useState([]);
+  // const [selectedCountries, setSelectedCountries] = useState([]);
+  // const [selectedSeasons, setSelectedSeasons] = useState([]);
+
   const [selectedRounds, setSelectedRounds] = useState([]);
-  const [selectedSeasons, setSelectedSeasons] = useState([]);
   const [isFinished, setIsFinished] = useState(false);
   const [isNotFinished, setIsNotFinished] = useState(false);
   const [countries, setCountries] = useState([]);
@@ -88,7 +89,6 @@ const FilterMatchs = () => {
     });
     // Aquí puedes enviar los valores seleccionados para filtrar los partidos
   };
-  
 
   return (
     <Formik
@@ -109,11 +109,10 @@ const FilterMatchs = () => {
             <InputLabel>País</InputLabel>
             <Select
               value={selectedCountry}
-              onChange={ (e)=> {
-                handleCountryChange(e)
+              onChange={(e) => {
+                handleCountryChange(e);
                 handleChange(e);
-              }
-              }
+              }}
             >
               {countries.map((country) => (
                 <MenuItem key={country} value={country}>
@@ -126,10 +125,7 @@ const FilterMatchs = () => {
           {/* Ligas */}
           <FormControl sx={{ m: 1, minWidth: 120 }}>
             <InputLabel>Liga</InputLabel>
-            <Select
-              value={selectedLeague}
-              onChange={handleLeagueChange}
-            >
+            <Select value={selectedLeague} onChange={handleLeagueChange}>
               {leaguesByCountry[selectedCountry]?.map((league) => (
                 <MenuItem key={league._id} value={league._id}>
                   {league.label}
@@ -141,10 +137,7 @@ const FilterMatchs = () => {
           {/* Temporadas */}
           <FormControl sx={{ m: 1, minWidth: 120 }}>
             <InputLabel>Temporada</InputLabel>
-            <Select
-              value={selectedSeason}
-              onChange={handleSeasonChange}
-            >
+            <Select value={selectedSeason} onChange={handleSeasonChange}>
               {/* Mostrar las temporadas disponibles para la liga seleccionada */}
               {leagues
                 .find((league) => league._id === selectedLeague)
@@ -164,14 +157,13 @@ const FilterMatchs = () => {
               value={selectedRounds}
               onChange={(e) => setSelectedRounds(e.target.value)}
             >
-             {[1,2,3,4,5,6,7,8,9,10].map( round=> {
-              return(
-
-                <MenuItem key={round} value={round}>
-               {round}
-             </MenuItem>
-            )
-             })}
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((round) => {
+                return (
+                  <MenuItem key={round} value={round}>
+                    {round}
+                  </MenuItem>
+                );
+              })}
             </Select>
           </FormControl>
 

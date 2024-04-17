@@ -18,7 +18,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { TeamStatistics } from "../pages/TeamStatistics";
-import useMatchesStore from "../stores/matchesStore";
+import { useBoundStore } from "../stores";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -33,7 +33,9 @@ const ExpandMore = styled((props) => {
 
 const MatchCard = ({ homeTeam, awayTeam, round,idMatch }) => {
 
-  const { onDeleteMatch} = useMatchesStore(state=> state)
+  // const { onDeleteMatch} = useMatchesStore(state=> state)
+  const { onDeleteMatch} = useBoundStore(state=> state)
+
 
   const handleMenuOpen = (event) => {
     // Escribir la lógica para abrir el menú de opciones

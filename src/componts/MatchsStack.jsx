@@ -11,7 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
-import useMatchesStore from "../stores/matchesStore";
+import createMatchesStore from "../stores/matchesStore";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import dayjs from "dayjs";
@@ -19,6 +19,8 @@ import { Link } from "react-router-dom";
 import "../App.css";
 import DeleteIcon from "@mui/icons-material/Delete";
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
+import { useBoundStore } from "../stores";
+
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -129,13 +131,15 @@ const MatchList3 = ({ match }) => {
 };
 
 export const MatchsStack = () => {
-  const { matches } = useMatchesStore((state) => state);
+  // const { matches } = createMatchesStore((state) => state);
+  const { matches} = useBoundStore(state=> state)
+
   const [myMatches, setMyMatches] = useState([]);
 
   useEffect(() => {
     setMyMatches(matches);
   }, [matches]);
-  console.log("PROBANDO PARTIDOS", myMatches);
+  console.log("PROBANDO PARTIDOS", myMatches, matches);
 
   return (
     <Container sx={{ backgroundColor: "#84828244", height: "100vh" }}>

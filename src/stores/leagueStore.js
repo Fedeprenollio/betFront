@@ -1,8 +1,10 @@
-import create from 'zustand';
-const URL_API = "http://localhost:1234/league"
+import { BACKEND_URL_BASE } from "./url_base";
+
+// const URL_API = "http://localhost:1234/league"
+const URL_API = `${BACKEND_URL_BASE}/league`
 
 // Definimos el store de League
-const useLeagueStore = create((set, get) => ({
+const crateLeagueStore = ((set, get) => ({
   leagues: [],
 
   // Función para crear una nueva liga
@@ -18,20 +20,23 @@ const useLeagueStore = create((set, get) => ({
         },
         body: JSON.stringify(newLeague),
       });
-
-      // Verificar si la solicitud fue exitosa
-      if (response.ok) {
-        // Actualizar el estado local con la nueva liga
-        const data = await response.json();
+      const data = await response.json();
         set((state) => ({
           leagues: [...state.leagues, data],
         }));
-        return data;
-      } else {
-        // Manejar errores si la solicitud falla
-        console.error('Error creating league:', response.statusText);
-        return null;
-      }
+      // Verificar si la solicitud fue exitosa
+      // if (response.ok) {
+      //   // Actualizar el estado local con la nueva liga
+      //   const data = await response.json();
+      //   set((state) => ({
+      //     leagues: [...state.leagues, data],
+      //   }));
+      //   return data;
+      // } else {
+      //   // Manejar errores si la solicitud falla
+      //   console.error('Error creating league:', response.statusText);
+      //   return null;
+      // }
     } catch (error) {
       console.error('Error creating league:', error);
       return null;
@@ -45,14 +50,16 @@ const useLeagueStore = create((set, get) => ({
       // Hacer una solicitud GET a la API para obtener todas las ligas
       const response = await fetch(URL_API);
       console.log(response)
-      // Verificar si la solicitud fue exitosa
-      if (response.ok) {
-        const data = await response.json();
+      const data = await response.json();
         set({ leagues: data });
-      } else {
-        // Manejar errores si la solicitud falla
-        console.error('Error fetching leagues:', response.statusText);
-      }
+      // Verificar si la solicitud fue exitosa
+      // if (response.ok) {
+      //   const data = await response.json();
+      //   set({ leagues: data });
+      // } else {
+      //   // Manejar errores si la solicitud falla
+      //   console.error('Error fetching leagues:', response.statusText);
+      // }
     } catch (error) {
       console.error('Error fetching leagues:', error);
     }
@@ -70,21 +77,27 @@ const useLeagueStore = create((set, get) => ({
         },
         body: JSON.stringify(updatedLeague),
       });
+      const data = await response.json();
+      set((state) => ({
+        leagues: state.leagues.map((league) =>
+          league.id === updatedLeague.id ? data : league
+        ),
+      }));
       // Verificar si la solicitud fue exitosa
-      if (response.ok) {
-        // Actualizar el estado local con la liga actualizada
-        const data = await response.json();
-        set((state) => ({
-          leagues: state.leagues.map((league) =>
-            league.id === updatedLeague.id ? data : league
-          ),
-        }));
-        return data;
-      } else {
-        // Manejar errores si la solicitud falla
-        console.error('Error updating league:', response.statusText);
-        return null;
-      }
+      // if (response.ok) {
+      //   // Actualizar el estado local con la liga actualizada
+      //   const data = await response.json();
+      //   set((state) => ({
+      //     leagues: state.leagues.map((league) =>
+      //       league.id === updatedLeague.id ? data : league
+      //     ),
+      //   }));
+      //   return data;
+      // } else {
+      //   // Manejar errores si la solicitud falla
+      //   console.error('Error updating league:', response.statusText);
+      //   return null;
+      // }
     } catch (error) {
       console.error('Error updating league:', error);
       return null;
@@ -96,23 +109,24 @@ const useLeagueStore = create((set, get) => ({
     // Lógica para eliminar la liga utilizando la API
     try {
       // Hacer una solicitud DELETE a la API para eliminar la liga
-      const response = await fetch(`${URL_API}/${leagueId}`, {
+   await fetch(`${URL_API}/${leagueId}`, {
         method: 'DELETE',
       });
+     
       // Verificar si la solicitud fue exitosa
-      if (response.ok) {
-        // Actualizar el estado local eliminando la liga
-        set((state) => ({
-          leagues: state.leagues.filter((league) => league.id !== leagueId),
-        }));
-      } else {
-        // Manejar errores si la solicitud falla
-        console.error('Error deleting league:', response.statusText);
-      }
+      // if (response.ok) {
+      //   // Actualizar el estado local eliminando la liga
+      //   set((state) => ({
+      //     leagues: state.leagues.filter((league) => league.id !== leagueId),
+      //   }));
+      // } else {
+      //   // Manejar errores si la solicitud falla
+      //   console.error('Error deleting league:', response.statusText);
+      // }
     } catch (error) {
       console.error('Error deleting league:', error);
     }
   },
 }));
 
-export default useLeagueStore;
+export default crateLeagueStore;

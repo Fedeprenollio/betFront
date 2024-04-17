@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
 import { Button, MenuItem, TextField, Typography } from "@mui/material";
-import useLeagueStore from "../stores/leagueStore";
-import useTeamStore from "../stores/teamStore";
+import crateLeagueStore from "../stores/leagueStore";
+import createTeamStore from "../stores/teamStore";
+import { useBoundStore } from "../stores";
 
 const validationSchema = yup.object({
   name: yup.string().required("El nombre es obligatorio"),
@@ -11,8 +12,10 @@ const validationSchema = yup.object({
 });
 
 const FormLeague = () => {
-  const { createLeague } = useLeagueStore();
-  const { teams, setTeams } = useTeamStore();
+  // const { createLeague } = crateLeagueStore();
+  // const { teams, setTeams } = createTeamStore();
+  const { teams,setTeams,createLeague } = useBoundStore(state=> state)
+
   const [countries, setCountries] = useState([]);
 
   useEffect(() => {

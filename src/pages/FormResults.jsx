@@ -1,7 +1,7 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { TextField, Button, Grid } from "@mui/material";
 import * as Yup from "yup";
-import useMatchesStore from "../stores/matchesStore";
+import createMatchesStore from "../stores/matchesStore";
 import { useParams } from "react-router-dom";
 
 const FormResult = () => {
@@ -45,7 +45,7 @@ const FormResult = () => {
     passesAway: Yup.number().min(0),
   });
 
-  const { addMatchResult } = useMatchesStore((state) => state);
+  const { addMatchResult } = createMatchesStore((state) => state);
 
   const handleSubmit = async(values) => {
     console.log("VALUE", values);

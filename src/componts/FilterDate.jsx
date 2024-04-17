@@ -7,7 +7,7 @@ import { IconButton } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
-import useMatchesStore from "../stores/matchesStore";
+import { useBoundStore } from "../stores";
 
 export const FilterDate = () => {
 
@@ -17,7 +17,7 @@ export const FilterDate = () => {
     return storedDate ? dayjs(storedDate) : dayjs(); // Si no hay ninguna fecha almacenada, usar la fecha actual
   });
 
-  const { setMatches } = useMatchesStore((state) => state);
+  const { setMatches } = useBoundStore((state) => state);
 
   useEffect(() => {
     // Almacenar la fecha seleccionada en el almacenamiento local cada vez que cambie
@@ -27,16 +27,18 @@ export const FilterDate = () => {
   }, [selectedDate, setMatches]);
 
   const handleDateChange = (date) => {
-    setSelectedDateState(date);
+    // Establecer la hora en 00:00 antes de actualizar el estado
+  const startOfDay = dayjs(date).startOf("day");
+    setSelectedDateState(startOfDay);
     // setSelectedDate(dayjs(date).startOf("day")); // Establecer la hora en 00:00
   };
 
   const handlePreviousDay = () => {
-    setSelectedDateState((prevDate) => prevDate.subtract(1, "day"));
+    setSelectedDateState((prevDate) => prevDate.subtract(1, "day").startOf("day"));
   };
-
+  
   const handleNextDay = () => {
-    setSelectedDateState((prevDate) => prevDate.add(1, "day"));
+    setSelectedDateState((prevDate) => prevDate.add(1, "day").startOf("day"));
   };
 
   return (

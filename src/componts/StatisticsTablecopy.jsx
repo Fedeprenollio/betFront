@@ -16,8 +16,8 @@ import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import useTeamStatsStore from "../stores/statsStore";
-import useTeamStore from "../stores/teamStore";
+import createTeamStatsStore from "../stores/statsStore";
+import createTeamStore from "../stores/teamStore";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -206,7 +206,7 @@ export default function StatisticsTablecopy({
   idHomeTeam,
   idAwayTeam,
 }) {
-  const { getTeamDetails, teamDetails } = useTeamStore((state) => state);
+  const { getTeamDetails, teamDetails } = createTeamStore((state) => state);
 
   //Valor para definir si las estadisticas son "mas de" o "menos de", True es lessThan
   React.useEffect(() => {
@@ -227,7 +227,7 @@ export default function StatisticsTablecopy({
     homeStatCorners,
     awayStatCorners,
     awayStatGoals,
-  } = useTeamStatsStore((state) => state);
+  } = createTeamStatsStore((state) => state);
 
   const UnderlinedTypography = styled(Typography)({
     textDecoration: 'underline',

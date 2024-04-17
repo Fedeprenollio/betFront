@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Formik, Form, Field } from "formik";
+import  { useEffect, useState } from "react";
+import { Formik, Form } from "formik";
 import { TextField } from "@mui/material";
 
 import * as yup from "yup";
@@ -11,8 +11,7 @@ import {
   Select,
   Typography,
 } from "@mui/material";
-import useLeagueStore from "../stores/leagueStore";
-import useSeasonStore from "../stores/seasonStore";
+import { useBoundStore } from "../stores";
 
 const validationSchema = yup.object({
   country: yup.string().required("El país es obligatorio"),
@@ -21,12 +20,13 @@ const validationSchema = yup.object({
 });
 
 const FormSeason = () => {
-  const { leagues, fetchLeagues } = useLeagueStore();
+  // const { leagues, fetchLeagues } = crateLeagueStore();
+  const { leagues, fetchLeagues, createSeason } = useBoundStore ( state=> state)
+
   const [countries, setCountries] = useState([]);
   const [leaguesByCountry, setLeaguesByCountry] = useState({});
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedLeague, setSelectedLeague] = useState("");
-  const { createSeason } = useSeasonStore((state) => state);
   useEffect(() => {
     const uniqueCountries = Array.from(
       new Set(leagues.map((league) => league.country))

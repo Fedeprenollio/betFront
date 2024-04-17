@@ -1,47 +1,49 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { TextField, Button, MenuItem } from "@mui/material";
-import * as Yup from "yup"; 
-import useTeamStore from "../../stores/teamStore";
+import * as Yup from "yup";
+import createTeamStore from "../../stores/teamStore";
+import { useEffect, useState } from "react";
+import { useBoundStore } from "../../stores";
 
 // Definimos las opciones para países y ligas
 const countries = [
   {
-    value: 'Argentina',
-    label: 'Argentina',
+    value: "Argentina",
+    label: "Argentina",
   },
   {
-    value: 'España',
-    label: 'España',
+    value: "España",
+    label: "España",
   },
   {
-    value: 'Inglaterra',
-    label: 'Inglaterra',
+    value: "Inglaterra",
+    label: "Inglaterra",
   },
   {
-    value: 'Italia',
-    label: 'Italia',
+    value: "Italia",
+    label: "Italia",
   },
 ];
 
-const leagues = {
-  Argentina: [
-    { value: 'Superliga', label: 'Superliga' },
-    { value: 'Primera Nacional', label: 'Primera Nacional' },
-    // Agrega más ligas según sea necesario para Argentina
-  ],
-  España: [
-    { value: 'La Liga', label: 'La Liga' },
-    // Agrega más ligas según sea necesario para España
-  ],
-  Inglaterra: [
-    { value: 'Premier League', label: 'Premier League' },
-    // Agrega más ligas según sea necesario para Inglaterra
-  ],
-  Italia: [
-    { value: 'Serie A', label: 'Serie A' },
-    // Agrega más ligas según sea necesario para Italia
-  ],
-};
+// const leagues = {
+//   Argentina: [
+//     { value: 'Superliga', label: 'Superliga' },
+//     { value: 'Primera Nacional', label: 'Primera Nacional' },
+//     // Agrega más ligas según sea necesario para Argentina
+//   ],
+//   España: [
+//     { value: 'La Liga', label: 'La Liga' },
+//     // Agrega más ligas según sea necesario para España
+//   ],
+//   Inglaterra: [
+//     { value: 'Premier League', label: 'Premier League' },
+//     // Agrega más ligas según sea necesario para Inglaterra
+//   ],
+//   Italia: [
+//     { value: 'Serie A', label: 'Serie A' },
+//     // Agrega más ligas según sea necesario para Italia
+//   ],
+// };
 
 const FormTeam = () => {
   const validationSchema = Yup.object().shape({
@@ -50,12 +52,46 @@ const FormTeam = () => {
     country: Yup.string().required("Required"),
     league: Yup.string().required("Required"),
   });
+  const [selectedLeague, setSelectedLeague] = useState("");
+  const [leaguesByCountry, setLeaguesByCountry] = useState({});
 
-  const { newTeam } = useTeamStore((state) => state);
-  
+  const { newTeam, leagues, fetchLeagues } = useBoundStore((state) => state);
+
+  useEffect(() => {
+    fetchLeagues();
+  }, [fetchLeagues]);
+
+  // useEffect(() => {
+  //   const leaguesData = {};
+  //   countries.forEach((country) => {
+  //     leaguesData[country] = leagues
+  //       .filter((league) => league.country === country)
+  //       .map((league) => ({ id: league._id, name: league.name }));
+  //   });
+  //   console.log("SOY LEAGUEDATA", leaguesData)
+  //   setLeaguesByCountry(leaguesData);
+  // }, [leagues]);
+  console.log(countries);
+  console.log("ligas", leagues);
+
+  console.log(leaguesByCountry);
+
   const handleSubmit = async (values) => {
-   await newTeam({ values });
+    await newTeam({ values });
   };
+
+const handleCountryChange=(e)=>{
+ const countrySelect = e.target.value
+  console.log(e.target.value)
+  const leaguesData = {};
+
+    leaguesData[countrySelect] = leagues
+      .filter((league) => league.country === countrySelect)
+      .map((league) => ({ id: league._id, name: league.name }));
+ 
+  console.log("SOY LEAGUEDATA", leaguesData)
+  setLeaguesByCountry(leaguesData);
+}
 
   return (
     <Formik
@@ -93,7 +129,10 @@ const FormTeam = () => {
             variant="outlined"
             fullWidth
             margin="normal"
-            onChange={handleChange}
+            onChange={(event) => {
+              handleChange(event); // Maneja el cambio en el campo del formulario
+              handleCountryChange(event); // Llama a tu función personalizada de manejo de cambios para el país
+            }}
           >
             <MenuItem value="">Seleccione un país</MenuItem>
             {countries.map((option) => (
@@ -117,13 +156,14 @@ const FormTeam = () => {
             {values.country === "" ? (
               <MenuItem value="">Seleccione un país primero</MenuItem>
             ) : (
-              leagues[values.country].map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
+              leaguesByCountry[values.country]?.map((option) => (
+                <MenuItem key={option.id} value={option.id}>
+                  {option.name}
                 </MenuItem>
               ))
             )}
           </Field>
+
           <ErrorMessage name="league" component="div" />
 
           <Button type="submit" variant="contained" color="primary">

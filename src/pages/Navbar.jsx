@@ -105,13 +105,13 @@ const Navbar = () => {
               <MenuItem onClick={handleClose} component={Link} to="/match/new">
                 Administrar Partidos
               </MenuItem>
-              <MenuItem
+              {/* <MenuItem
                 onClick={handleClose}
                 component={Link}
                 to="/match/addResults"
               >
                 Agregar resultados
-              </MenuItem>
+              </MenuItem> */}
             </Menu>
           </Box>
 

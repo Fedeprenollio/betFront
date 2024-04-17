@@ -1,7 +1,10 @@
-import create from "zustand";
+import { BACKEND_URL_BASE } from "./url_base";
+
+const URL_API = `${BACKEND_URL_BASE}/match/statsAc`
+
 
 // Definir el store
-const useTeamStatsStore = create((set) => ({
+const createTeamStatsStore = ((set) => ({
   homeStatYellowCard: {},
   homeStatCorners: {},
   homeStatGoals: {},
@@ -20,7 +23,7 @@ const useTeamStatsStore = create((set) => ({
     statsLessThan,
   }) => {
     const data = await fetch(
-      `http://localhost:1234/match/statsAc/${idHomeTeam}?statistic=yellowCards&lowerLimit=0.5&upperLimit=12.5&matchesCount=10&homeOnly=${homeMatchesLocalTeam}&awayOnly=${visitingmathgesLocalTeam}&lessThan=${statsLessThan}`
+      `${URL_API}/${idHomeTeam}?statistic=yellowCards&lowerLimit=0.5&upperLimit=12.5&matchesCount=10&homeOnly=${homeMatchesLocalTeam}&awayOnly=${visitingmathgesLocalTeam}&lessThan=${statsLessThan}`
     );
 
     const homeYc = await data.json();
@@ -34,9 +37,8 @@ const useTeamStatsStore = create((set) => ({
     statsLessThan,
   }) => {
     const data = await fetch(
-      `http://localhost:1234/match/statsAc/${idAwayTeam}?statistic=yellowCards&lowerLimit=0.5&upperLimit=12.5&matchesCount=10&homeOnly=${homeMateshAwayTeam}&awayOnly=${visitingMatchesAwayTeam}&lessThan=${statsLessThan}`    );
+      `${URL_API}/${idAwayTeam}?statistic=yellowCards&lowerLimit=0.5&upperLimit=12.5&matchesCount=10&homeOnly=${homeMateshAwayTeam}&awayOnly=${visitingMatchesAwayTeam}&lessThan=${statsLessThan}`    );
     const awayYc = await data.json();
-    console.log("QUE HABRA", awayYc);
 
     set({ awayStatYellowCard: awayYc });
   },
@@ -47,10 +49,9 @@ const useTeamStatsStore = create((set) => ({
     statsLessThan,
   }) => {
     const data = await fetch(
-      `http://localhost:1234/match/statsAc/${idHomeTeam}?statistic=goals&lowerLimit=0.5&upperLimit=12.5&matchesCount=10&homeOnly=${homeMatchesLocalTeam}&awayOnly=${visitingmathgesLocalTeam}&lessThan=${statsLessThan}`
+      `${URL_API}/${idHomeTeam}?statistic=goals&lowerLimit=0.5&upperLimit=12.5&matchesCount=10&homeOnly=${homeMatchesLocalTeam}&awayOnly=${visitingmathgesLocalTeam}&lessThan=${statsLessThan}`
     );
     const info = await data.json();
-    console.log(info)
     set({ homeStatGoals: info.goals });
   },
 
@@ -61,7 +62,7 @@ const useTeamStatsStore = create((set) => ({
     statsLessThan,
   }) => {
     const data = await fetch(
-      `http://localhost:1234/match/statsAc/${idHomeTeam}?statistic=corners&lowerLimit=0.5&upperLimit=12.5&matchesCount=10&homeOnly=${homeMatchesLocalTeam}&awayOnly=${visitingmathgesLocalTeam}&lessThan=${statsLessThan}`
+      `${URL_API}/${idHomeTeam}?statistic=corners&lowerLimit=0.5&upperLimit=12.5&matchesCount=10&homeOnly=${homeMatchesLocalTeam}&awayOnly=${visitingmathgesLocalTeam}&lessThan=${statsLessThan}`
     );
     const homeCorners = await data.json();
     set({ homeStatCorners: homeCorners.corners });
@@ -73,10 +74,9 @@ const useTeamStatsStore = create((set) => ({
     statsLessThan,
   }) => {
     const data = await fetch(
-      `http://localhost:1234/match/statsAc/${idAwayTeam}?statistic=corners&lowerLimit=0.5&upperLimit=12.5&matchesCount=10&homeOnly=${homeMateshAwayTeam}&awayOnly=${visitingMatchesAwayTeam}&lessThan=${statsLessThan}`
+      `${URL_API}/${idAwayTeam}?statistic=corners&lowerLimit=0.5&upperLimit=12.5&matchesCount=10&homeOnly=${homeMateshAwayTeam}&awayOnly=${visitingMatchesAwayTeam}&lessThan=${statsLessThan}`
     );
     const awayCorners = await data.json();
-    console.log("QUE HABRA", awayCorners.corners);
 
     set({ awayStatCorners: awayCorners.corners });
   },
@@ -87,14 +87,13 @@ const useTeamStatsStore = create((set) => ({
     statsLessThan,
   }) => {
     const data = await fetch(
-      `http://localhost:1234/match/statsAc/${idAwayTeam}?statistic=goals&lowerLimit=0.5&upperLimit=5.5&matchesCount=10&homeOnly=${homeMateshAwayTeam}&awayOnly=${visitingMatchesAwayTeam}&lessThan=${statsLessThan}`
+      `${URL_API}/${idAwayTeam}?statistic=goals&lowerLimit=0.5&upperLimit=12.5&matchesCount=10&homeOnly=${homeMateshAwayTeam}&awayOnly=${visitingMatchesAwayTeam}&lessThan=${statsLessThan}`
     );
     const awayGoals = await data.json();
-    console.log("QUE HABRA", awayGoals);
 
     set({ awayStatGoals: awayGoals.goals });
   },
 }));
 
-export default useTeamStatsStore;
+export default createTeamStatsStore;
 // setHomeStatCorners

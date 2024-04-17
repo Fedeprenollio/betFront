@@ -1,15 +1,17 @@
-import { create } from 'zustand';
+import { BACKEND_URL_BASE } from "./url_base";
 
-const API_URL ="http://localhost:1234/match"
+// const API_URL ="http://localhost:1234/match"
+const URL_API = `${BACKEND_URL_BASE}/match`
 
-const useMatchesStore = create((set, get) => ({
+
+const createMatchesStore = ((set, get) => ({
   matches: [],
   matchDetail :{},
 
   setMatches: async ({ league, round, isFinished = "all", country, seasonId, date }) => {
     try {
       // Construir la URL base
-      let url = `http://localhost:1234/match?`;
+      let url = `${URL_API}?`;
   
       // Agregar los parámetros de consulta solo si están definidos
       if (isFinished !== undefined) {
@@ -45,7 +47,7 @@ const useMatchesStore = create((set, get) => ({
   
   getAllMatches: async () => {
     try {
-      const res = await fetch(`http://localhost:1234/match`);
+      const res = await fetch(URL_API);
       const matches = await res.json();
       console.log("Datos recibidos:", matches);
       set({ matches });
@@ -55,7 +57,7 @@ const useMatchesStore = create((set, get) => ({
   },
   getMatchDetail: async ({idMatch}) => {
     try {
-      const res = await fetch(`http://localhost:1234/match/`+ idMatch);
+      const res = await fetch(`${URL_API}/`+ idMatch);
       const matchDetail = await res.json();
       console.log("PARTIDO DETALLE:", matchDetail);
       set({ matchDetail });
@@ -66,20 +68,20 @@ const useMatchesStore = create((set, get) => ({
   newMatch: async ({ homeTeamName, awayTeamName, date, league, seasonYear, round }) => {
     console.log(homeTeamName, awayTeamName, date, league, seasonYear, round)
     try {
-      const response = await fetch("http://localhost:1234/match", {
+       await fetch(URL_API, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ homeTeamName, awayTeamName, date, league, seasonYear, round })
       });
-      if (response.ok) {
-        console.log("Partido creado exitosamente");
-        // Realizar alguna acción adicional aquí, si es necesario
-      } else {
-        console.error("Error al crear partido:", response.statusText);
-        // Manejar el error de alguna manera, como mostrando un mensaje al usuario
-      }
+      // if (response.ok) {
+      //   console.log("Partido creado exitosamente");
+      //   // Realizar alguna acción adicional aquí, si es necesario
+      // } else {
+      //   console.error("Error al crear partido:", response.statusText);
+      //   // Manejar el error de alguna manera, como mostrando un mensaje al usuario
+      // }
     } catch (error) {
       console.error("Error al realizar la solicitud:", error);
       // Manejar el error de alguna manera, como mostrando un mensaje al usuario
@@ -89,7 +91,7 @@ const useMatchesStore = create((set, get) => ({
     console.log("ID PARTIDO,", matchId)
     console.log("BODY,", resultData)
     try {
-      const response = await fetch(`${API_URL}/${matchId}/result`, {
+      const response = await fetch(`${URL_API}/${matchId}/result`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -109,21 +111,23 @@ const useMatchesStore = create((set, get) => ({
 
   onDeleteMatch: async (idMatch)=>{
     try {
-      const response = await fetch(`http://localhost:1234/match/${idMatch}`, {
+     await fetch(`${URL_API}/${idMatch}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },       
       });
-      if (response.ok) {
-        console.log("Partido eliminado exitosamente");
-        // Realizar alguna acción adicional aquí, si es necesario
-        get().setMatches()
+      get().setMatches()
+
+      // if (response.ok) {
+      //   console.log("Partido eliminado exitosamente");
+      //   // Realizar alguna acción adicional aquí, si es necesario
+      //   get().setMatches()
         
-      } else {
-        console.error("Error al eliminar partido:", response.statusText);
-        // Manejar el error de alguna manera, como mostrando un mensaje al usuario
-      }
+      // } else {
+      //   console.error("Error al eliminar partido:", response.statusText);
+      //   // Manejar el error de alguna manera, como mostrando un mensaje al usuario
+      // }
     } catch (error) {
       console.error("Error al realizar la solicitud:", error);
       // Manejar el error de alguna manera, como mostrando un mensaje al usuario
@@ -131,4 +135,4 @@ const useMatchesStore = create((set, get) => ({
   }
 }));
 
-export default useMatchesStore;
+export default createMatchesStore;

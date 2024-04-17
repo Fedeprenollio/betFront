@@ -1,10 +1,12 @@
-import { create } from "zustand";
-const API_URL = `http://localhost:1234/team`;
-const useTeamStore = create((set, get) => ({
+import { BACKEND_URL_BASE } from "./url_base";
+const URL_API = `${BACKEND_URL_BASE}/team`
+console.log(URL_API)
+// const API_URL = `http://localhost:1234/team`;
+const createTeamStore = ((set, get) => ({
   teams: [],
   teamDetails: {},
   setTeams: async () => {
-    const res = await fetch(API_URL);
+    const res = await fetch(URL_API);
     const teams = await res.json();
     console.log("Datos recibidos:", teams);
     set({ teams });
@@ -14,7 +16,7 @@ const useTeamStore = create((set, get) => ({
       set( {teamDetails: {}})
     }
     // Aquí realizarías la llamada a la API para obtener los detalles del equipo
-    const response = await fetch(`${API_URL}/${teamId}`);
+    const response = await fetch(`${URL_API}/${teamId}`);
     const teamDetails = await response.json();
 
     set((state) => ({
@@ -30,7 +32,7 @@ const useTeamStore = create((set, get) => ({
     const { name, city, league, country } = values;
     console.log(values);
     try {
-      const response = await fetch("http://localhost:1234/team", {
+      const response = await fetch(URL_API, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -52,7 +54,7 @@ const useTeamStore = create((set, get) => ({
   },
   deleteTeam: async (idTeam) => {
     try {
-      const response = await fetch(`http://localhost:1234/team/${idTeam}`, {
+      const response = await fetch(`${URL_API}/${idTeam}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -75,4 +77,4 @@ const useTeamStore = create((set, get) => ({
   },
 }));
 
-export default useTeamStore;
+export default createTeamStore;

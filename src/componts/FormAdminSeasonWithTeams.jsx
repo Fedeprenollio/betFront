@@ -9,11 +9,12 @@ import {
   Select,
   Typography,
 } from "@mui/material";
-import useLeagueStore from "../stores/leagueStore";
-import useTeamStore from "../stores/teamStore";
-import useSeasonStore from "../stores/seasonStore";
+import crateLeagueStore from "../stores/leagueStore";
+import createTeamStore from "../stores/teamStore";
+import createSeasonStore from "../stores/seasonStore";
 import Checkbox from "@mui/material/Checkbox";
 import ListItemText from "@mui/material/ListItemText";
+import { useBoundStore } from "../stores";
 
 const validationSchema = yup.object({
   country: yup.string().required("El país es obligatorio"),
@@ -23,11 +24,13 @@ const validationSchema = yup.object({
 });
 
 const FormAdminSeasonWithTeams = () => {
-  const { leagues, fetchLeagues } = useLeagueStore();
-  const { addTeamsToSeason } = useSeasonStore(
-    (state) => state
-  );
-  const { teams: teamsStore } = useTeamStore((state) => state);
+  // const { leagues, fetchLeagues } = crateLeagueStore();
+  // const { addTeamsToSeason } = createSeasonStore(
+  //   (state) => state
+  // );
+  // const { teams: teamsStore } = createTeamStore((state) => state);
+  const { leagues, fetchLeagues,addTeamsToSeason,teams: teamsStore } = useBoundStore ( state=> state)
+
   const [countries, setCountries] = useState([]);
   const [leaguesByCountry, setLeaguesByCountry] = useState({});
   const [selectedCountry, setSelectedCountry] = useState("");
