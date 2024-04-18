@@ -12,7 +12,7 @@ import { useBoundStore } from "../stores";
 const validationSchema = Yup.object().shape({
   homeTeam: Yup.string().required("Required"),
   awayTeam: Yup.string().required("Required"),
-  // date: Yup.date().required("Required"),
+  date: Yup.date().required("Required"),
   league: Yup.string().required("Required"),
   country: Yup.string().required("Required"),
   seasonYear: Yup.string().required("Required"),
