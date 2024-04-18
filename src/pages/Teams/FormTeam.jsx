@@ -76,8 +76,8 @@ const FormTeam = () => {
 
   console.log(leaguesByCountry);
 
-  const handleSubmit = async (values) => {
-    await newTeam({ values });
+  const handleSubmit =  (values) => {
+     newTeam({ values });
   };
 
 const handleCountryChange=(e)=>{
@@ -89,7 +89,6 @@ const handleCountryChange=(e)=>{
       .filter((league) => league.country === countrySelect)
       .map((league) => ({ id: league._id, name: league.name }));
  
-  console.log("SOY LEAGUEDATA", leaguesData)
   setLeaguesByCountry(leaguesData);
 }
 

@@ -4,10 +4,12 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
-import createTeamStore from '../stores/teamStore';
+import { useBoundStore } from '../stores';
 
 export default function CardTeam({ team, onStatisticsClick, onEditClick }) {
-const {deleteTeam} = createTeamStore(state=> state)
+// const {deleteTeam} = createTeamStore(state=> state)
+const { deleteTeam } = useBoundStore((state) => state);
+
 
   const handleStatisticsClick = () => {
     if (onStatisticsClick) {

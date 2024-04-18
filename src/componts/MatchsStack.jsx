@@ -42,7 +42,7 @@ const MatchList3 = ({ match }) => {
     <Grid  container spacing={2} alignItems="center">
       <Grid item  xs={10}>
         <Link
-          to={`/stats/${match.homeTeam._id}/${match.awayTeam._id}/${match._id}`}
+          to={`/stats/${match?.homeTeam?._id}/${match?.awayTeam?._id}/${match._id}`}
           className="link-no-underline"
         >
           <ListItemButton component="div">
@@ -58,7 +58,7 @@ const MatchList3 = ({ match }) => {
                         variant="h6"
                         color="grey"
                       >
-                        {match.homeTeam.name}
+                        {match?.homeTeam?.name}
                       </Typography>
                     </>
                   }
@@ -104,7 +104,7 @@ const MatchList3 = ({ match }) => {
                         variant="h6"
                         color="grey"
                       >
-                        {match.awayTeam.name}
+                        {match?.awayTeam?.name}
                       </Typography>
                     </>
                   }
