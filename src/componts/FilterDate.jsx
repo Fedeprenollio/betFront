@@ -14,7 +14,7 @@ export const FilterDate = () => {
   const [selectedDate, setSelectedDateState] = useState(() => {
     // Recuperar la fecha seleccionada del almacenamiento local al cargar la página
     const storedDate = localStorage.getItem("selectedDate");
-    return storedDate ? dayjs(storedDate) : dayjs(); // Si no hay ninguna fecha almacenada, usar la fecha actual
+    return storedDate ? dayjs(storedDate).startOf("day") : dayjs().startOf("day"); // Si no hay ninguna fecha almacenada, usar la fecha actual
   });
 
   const { setMatches } = useBoundStore((state) => state);
