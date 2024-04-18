@@ -132,7 +132,35 @@ const createMatchesStore = ((set, get) => ({
       console.error("Error al realizar la solicitud:", error);
       // Manejar el error de alguna manera, como mostrando un mensaje al usuario
     }
-  }
+  },
+  updateMatchById: async ({matchId, updateFields}) => {
+    try {
+      // Realiza una solicitud a tu API para actualizar el partido
+      const response = await fetch(`${URL_API}/${matchId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updateFields),
+      });
+
+      await  get().setMatches()
+
+      // if (!response.ok) {
+      //   throw new Error('Error al actualizar el partido');
+      // }
+
+      // // Actualiza el estado con el partido actualizado
+      // const updatedMatch = await response.json();
+      // set((state) => ({
+      //   matches: state.matches.map((match) =>
+      //     match._id === updatedMatch._id ? updatedMatch : match
+      //   ),
+      // }));
+    } catch (error) {
+      console.error('Error al actualizar el partido:', error.message);
+    }
+  },
 }));
 
 export default createMatchesStore;

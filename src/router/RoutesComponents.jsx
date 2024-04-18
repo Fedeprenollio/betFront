@@ -20,6 +20,7 @@ const RoutesComponent = () => {
       <Route path="/match">
         <Route index element={<MatchesPage />} />
         <Route path="new" element={<AdminMatch />} />
+        <Route path="edit/:matchId" element={<AdminMatch />} />
         <Route path="addResults" element={<FormResult />} />
       </Route>
       <Route path="/league">

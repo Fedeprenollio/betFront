@@ -25,9 +25,14 @@ import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import "dayjs/locale/es"; // Importar la localización en español
 import { styled } from '@mui/material/styles';
+import { useBoundStore } from "../stores";
 
 
 const StatsTable = ({ homeStats, awayStats, statsLessThan }) => {
+  // if (!homeStats || !awayStats) {
+  //   return 
+  // }
+  console.log(homeStats,"----", awayStats)
   const homeFilteredStats = Object.keys(homeStats).filter(
     (key) => key !== "total" && key !== "matchesTotalFinished"
   );
@@ -206,7 +211,8 @@ export default function StatisticsTablecopy({
   idHomeTeam,
   idAwayTeam,
 }) {
-  const { getTeamDetails, teamDetails } = createTeamStore((state) => state);
+  const {  getTeamDetails, teamDetails } = useBoundStore((state) => state);
+
 
   //Valor para definir si las estadisticas son "mas de" o "menos de", True es lessThan
   React.useEffect(() => {
@@ -220,15 +226,8 @@ export default function StatisticsTablecopy({
   // Utilizamos los selectores para obtener los detalles de cada equipo
   const teamDetails1 = teamDetails && teamDetails[idHomeTeam];
   const teamDetails2 = teamDetails && teamDetails[idAwayTeam];
-  const {
-    homeStatYellowCard,
-    awayStatYellowCard,
-    homeStatGoals,
-    homeStatCorners,
-    awayStatCorners,
-    awayStatGoals,
-  } = createTeamStatsStore((state) => state);
-
+  const {  homeStatYellowCard,  awayStatYellowCard,   homeStatGoals,  homeStatCorners,  awayStatCorners,  awayStatGoals  } = useBoundStore((state) => state);
+console.log("AMARILLAS", homeStatYellowCard)
   const UnderlinedTypography = styled(Typography)({
     textDecoration: 'underline',
   });

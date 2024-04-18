@@ -18,7 +18,7 @@ const createTeamStore = (set, get) => ({
     // Aquí realizarías la llamada a la API para obtener los detalles del equipo
     const response = await fetch(`${URL_API}/${teamId}`);
     const teamDetails = await response.json();
-
+console.log("response", response)
     set((state) => ({
       teamDetails: {
         ...state.teamDetails,

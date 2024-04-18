@@ -46,9 +46,7 @@ const MyDateTimePicker = ({ field, form }) => {
   );
 };
 
-const FormMatch = () => {
-  // const { fetchLeagues, leagues } = crateLeagueStore((state) => state);
-  // const { addMatchesToSeason } = createSeasonStore((state) => state);
+const FormMatch = ({matchId}) => {
   const { fetchLeagues, leagues} = useBoundStore(state=> state)
   const {addMatchesToSeason} = useBoundStore(state=> state)
 

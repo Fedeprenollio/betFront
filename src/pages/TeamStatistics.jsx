@@ -6,11 +6,13 @@ import { RadioButtonHomeAway } from "../componts/RadioButtonHomeAway";
 import createTeamStatsStore from "../stores/statsStore";
 import { useParams } from "react-router-dom";
 import createMatchesStore from "../stores/matchesStore";
+import { useBoundStore } from "../stores";
 
 export const TeamStatistics = () => {
   const { idHomeTeam, idAwayTeam, idMatch } = useParams();
   const [statsLessThan, setStatsLessThan] = useState(false);
-  const { getMatchDetail, matchDetail } = createMatchesStore((state) => state);
+  const {  getMatchDetail, matchDetail } = useBoundStore((state) => state);
+
   const [match, setMatch] = useState({});
 
   useEffect(() => {
@@ -55,7 +57,7 @@ export const TeamStatistics = () => {
     setHomeStatCorners,
     setAwayStatCorners,
     setAwayStatGoals,
-  } = createTeamStatsStore((state) => state);
+  } = useBoundStore((state) => state);
 
   useEffect(() => {
     setHomeStatYellowCard({
