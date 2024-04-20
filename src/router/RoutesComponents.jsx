@@ -7,6 +7,7 @@ import FormResult from "../pages/FormResults";
 import { AdminMatch } from "../pages/Match/AdminMatch";
 import { LeaguePage } from "../pages/League/LeaguePage";
 import { TeamStatistics } from "../pages/TeamStatistics";
+import { DetailLeague } from "../pages/League/DetailLeague";
 
 const RoutesComponent = () => {
   return (
@@ -27,6 +28,8 @@ const RoutesComponent = () => {
         <Route index element={<LeaguePage />} />
         <Route path="new" element={<AdminMatch />} />
         <Route path="addResults" element={<FormResult />} />
+        <Route path="detail/:idLeague" element={<DetailLeague />} />
+
       </Route>
       <Route path="/stats">
         <Route path=":idHomeTeam/:idAwayTeam/:idMatch" element={<TeamStatistics />} />

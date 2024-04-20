@@ -11,16 +11,14 @@ import IconButton from "@mui/material/IconButton";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
-import createMatchesStore from "../stores/matchesStore";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
 import "../App.css";
 import DeleteIcon from "@mui/icons-material/Delete";
-import QueryStatsIcon from '@mui/icons-material/QueryStats';
+import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import { useBoundStore } from "../stores";
-
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -30,17 +28,14 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-
-const MatchList3 = ({ match }) => {
+ export const MatchList3 = ({ match }) => {
   console.log(match);
   const fecha = new Date(match.date);
   const hora = dayjs(fecha).format("HH:mm");
 
-
-
   return (
-    <Grid  container spacing={2} alignItems="center">
-      <Grid item  xs={10}>
+    <Grid container spacing={2} alignItems="center">
+      <Grid item xs={10}>
         <Link
           to={`/stats/${match?.homeTeam?._id}/${match?.awayTeam?._id}/${match._id}`}
           className="link-no-underline"
@@ -87,11 +82,13 @@ const MatchList3 = ({ match }) => {
                         variant="h5"
                         color="green"
                       >
-                        { match.isFinished ? `${match.teamStatistics.local.goals} - ${match.teamStatistics.visitor.goals} `: hora}
+                        {match.isFinished
+                          ? `${match.teamStatistics.local.goals} - ${match.teamStatistics.visitor.goals} `
+                          : hora}
                       </Typography>
                     </>
                   }
-                /> 
+                />
               </Grid>
               <Grid item xs={4}>
                 <ListItemText
@@ -114,14 +111,14 @@ const MatchList3 = ({ match }) => {
           </ListItemButton>
         </Link>
       </Grid>
-      <Grid item  xs={2}>
+      <Grid item xs={2}>
         <Tooltip title="Delete">
           <IconButton>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
         <Tooltip title="+ Estadística">
-          <IconButton  component={Link} to={`/stats/form/${match._id}`}>
+          <IconButton component={Link} to={`/stats/form/${match._id}`}>
             <QueryStatsIcon />
           </IconButton>
         </Tooltip>
@@ -131,8 +128,7 @@ const MatchList3 = ({ match }) => {
 };
 
 export const MatchsStack = () => {
-  // const { matches } = createMatchesStore((state) => state);
-  const { matches} = useBoundStore(state=> state)
+  const { matches } = useBoundStore((state) => state);
 
   const [myMatches, setMyMatches] = useState([]);
 
@@ -146,14 +142,15 @@ export const MatchsStack = () => {
       {Object.entries(
         myMatches.reduce((acc, match) => {
           const leagueName = match?.league?.name;
+          const leagueId = match?.league?._id
           const leagueCountry = match?.league?.country;
           if (!acc[leagueName]) {
-            acc[leagueName] = { country: leagueCountry, matches: [] };
+            acc[leagueName] = { country: leagueCountry, matches: [], leagueId };
           }
           acc[leagueName].matches.push(match);
           return acc;
         }, {})
-      ).map(([leagueName, { country, matches }]) => (
+      ).map(([leagueName, { country, matches, leagueId }]) => (
         <Box key={leagueName} sx={{ width: "100%", backgroundColor: "white" }}>
           <Stack
             spacing={1}
@@ -168,19 +165,19 @@ export const MatchsStack = () => {
                 backgroundColor: "#94BE1F",
               }}
             >
-              <Typography variant="h5" color={"white"}>
-                {leagueName}- {country}
-              </Typography>
+              <Link
+                to={`/league/detail/${leagueId}`}
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <Typography variant="h5" color="white">
+                  {leagueName}- {country}
+                </Typography>
+              </Link>
             </Item>
           </Stack>
 
           {matches.map((match) => (
             <MatchList3 key={match._id} match={match} />
-            // <div key={match._id}>
-            //   <h3>
-            //     {match.homeTeam.name} - {match.awayTeam.name}
-            //   </h3>
-            // </div>
           ))}
         </Box>
       ))}

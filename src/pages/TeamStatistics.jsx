@@ -22,7 +22,7 @@ export const TeamStatistics = () => {
   useEffect(() => {
     setMatch(matchDetail);
   }, [matchDetail]);
-  console.warn("el partido", match);
+  console.log("el partido", match);
 
   const handleChangeRadioButton = () => {
     setStatsLessThan(!statsLessThan);

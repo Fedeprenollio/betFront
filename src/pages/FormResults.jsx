@@ -1,8 +1,10 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { TextField, Button, Grid } from "@mui/material";
+import { TextField, Button, Grid, Typography } from "@mui/material";
 import * as Yup from "yup";
 import createMatchesStore from "../stores/matchesStore";
 import { useParams } from "react-router-dom";
+import { useBoundStore } from "../stores";
+import { useEffect } from "react";
 
 const FormResult = () => {
   const { matchId } = useParams();
@@ -45,7 +47,12 @@ const FormResult = () => {
     passesAway: Yup.number().min(0),
   });
 
-  const { addMatchResult } = createMatchesStore((state) => state);
+  const { addMatchResult, getMatchDetail,matchDetail } = useBoundStore((state) => state);
+  useEffect(() => {
+    getMatchDetail({idMatch: matchId})     
+  }, [getMatchDetail, matchId])
+  console.log("DETALLE," , matchDetail)
+  
 
   const handleSubmit = async(values) => {
     console.log("VALUE", values);
@@ -85,8 +92,21 @@ const FormResult = () => {
       onSubmit={handleSubmit}
     >
       {({ values, handleChange }) => (
-        <Form>
-          <Grid container spacing={2} alignItems="center">
+        <Form  >
+          <Grid  container spacing={2} alignItems="center">
+
+          <Grid item xs={6}>
+              <Typography variant="h6" gutterBottom align="center">
+                {matchDetail.homeTeam.name}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant="h6" gutterBottom align="center">
+              {matchDetail.awayTeam.name}
+              </Typography>
+            </Grid>
+
+
             <Grid item xs={6}>
               <Field
                 as={TextField}

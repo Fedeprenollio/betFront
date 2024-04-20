@@ -47,8 +47,7 @@ const MyDateTimePicker = ({ field, form }) => {
 };
 
 const FormMatch = ({matchId}) => {
-  const { fetchLeagues, leagues} = useBoundStore(state=> state)
-  const {addMatchesToSeason} = useBoundStore(state=> state)
+  const { fetchLeagues, leagues, addMatchesToSeason} = useBoundStore(state=> state)
 
   const [countries, setCountries] = useState([]);
   const [leaguesByCountry, setLeaguesByCountry] = useState({});

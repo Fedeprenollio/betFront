@@ -43,27 +43,6 @@ export const LeaguePage = () => {
     <>
       <div>LeaguePage</div>
 
-      {/* {leagues.map((league) => {
-        return (
-          <Accordion
-            spacing={2}
-            divider={<Divider orientation="horizontal" flexItem />}
-            key={league._id}
-            sx={{ backgroundColor: "green", color: "white", margin: "8px 0 " }}
-          >
-            <AccordionSummary>
-              {league.country} - {league.name}
-            </AccordionSummary>
-
-            {league.season?.map((l) => {
-              return (
-                <AccordionSummary key={l._id}> {l.year} </AccordionSummary>
-              );
-            })}
-          </Accordion>
-        );
-      })} */}
-
       {/* <AdmintSeason /> */}
       <div>AdmintSeason - agregar una tempordada a una liga y sus equipos </div>
       <h3>ahora agregamos equipos a la temporada</h3>
@@ -84,19 +63,3 @@ export const LeaguePage = () => {
     </>
   );
 };
-
-{
-  /* <Accordion>
-  <AccordionSummary
-    expandIcon={<ExpandMoreIcon />}
-    aria-controls="panel1-content"
-    id="panel1-header"
-  >
-    Accordion 1
-  </AccordionSummary>
-  <AccordionDetails>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-    malesuada lacus ex, sit amet blandit leo lobortis eget.
-  </AccordionDetails>
-</Accordion>; */
-}

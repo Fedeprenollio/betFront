@@ -6,6 +6,7 @@ const URL_API = `${BACKEND_URL_BASE}/league`
 // Definimos el store de League
 const crateLeagueStore = ((set, get) => ({
   leagues: [],
+  leagueDetail:{},
 
   // Función para crear una nueva liga
   createLeague: async (newLeague) => {
@@ -127,6 +128,32 @@ const crateLeagueStore = ((set, get) => ({
       console.error('Error deleting league:', error);
     }
   },
+    // Función para leer todas las ligas
+    getLeagueDetail: async ({idLeague}) => {
+      if(idLeague === null){
+        console.log("VOY A LKIMPIAR EL ESTADO")
+        set({leagueDetail: {}})
+        return
+      }
+      // Lógica para obtener todas las ligas utilizando la API
+      try {
+        // Hacer una solicitud GET a la API para obtener todas las ligas
+        const response = await fetch(URL_API +"/" +idLeague);
+        console.log(response)
+        const league = await response.json();
+          set({ leagueDetail: league });
+        // Verificar si la solicitud fue exitosa
+        // if (response.ok) {
+        //   const data = await response.json();
+        //   set({ leagues: data });
+        // } else {
+        //   // Manejar errores si la solicitud falla
+        //   console.error('Error fetching leagues:', response.statusText);
+        // }
+      } catch (error) {
+        console.error('Error fetching leagues:', error);
+      }
+    },
 }));
 
 export default crateLeagueStore;

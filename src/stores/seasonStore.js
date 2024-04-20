@@ -9,6 +9,7 @@ const createSeasonStore = (set) => ({
   seasonById: {},
   loading: false,
   error: null,
+  matchesByRound:[],
   // Función para cargar las temporadas desde el servidor
   fetchSeasons: async () => {
     set({ loading: true, error: null });
@@ -35,6 +36,23 @@ const createSeasonStore = (set) => ({
       set({ seasonById, loading: false });
     } catch (error) {
       set({ error: error.message, loading: false });
+    }
+  },
+  setMatchesByRound: async ({seasonId, round}) => {
+    
+    if(seasonId=== null && round=== null){
+      return set({ matchesByRound: {} });
+    }
+
+    try {
+      // Obtener los partidos filtrados por ronda desde la API
+      const response = await fetch(`${URL_API}/${seasonId}/matches?round=${round}`);
+      const matches = await response.json();
+
+      // Actualizar el estado del store con los partidos filtrados por ronda
+      set({ matchesByRound: matches });
+    } catch (error) {
+      console.error('Error al obtener los partidos por ronda:', error);
     }
   },
   // Función para crear una nueva temporada
