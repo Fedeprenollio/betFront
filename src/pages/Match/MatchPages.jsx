@@ -5,7 +5,7 @@ import { Container } from '@mui/material';
 const MatchesPage = () => {
 
   return (
-    <Container>
+    <Container sx={{paddingX:"0"}}>
       <h1>Página de Partidos</h1>
       {/* <FilterMatchs/> */}
       <FilterDate />

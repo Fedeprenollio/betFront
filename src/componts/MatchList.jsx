@@ -1,15 +1,10 @@
 /* eslint-disable react/prop-types */
+import { Container } from "@mui/material";
 import { MatchsStack } from "./MatchsStack";
 
 const MatchList = () => {
   // const { matches } = useMatchesStore();
-  return (
-    <div>
-      <h2>Lista de Partidos</h2>
-
-      <MatchsStack />
-    </div>
-  );
+  return <MatchsStack />;
 };
 
 export default MatchList;

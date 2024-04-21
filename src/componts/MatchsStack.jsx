@@ -19,6 +19,7 @@ import "../App.css";
 import DeleteIcon from "@mui/icons-material/Delete";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import { useBoundStore } from "../stores";
+import { useMediaQuery } from "@mui/material";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -33,22 +34,26 @@ const Item = styled(Paper)(({ theme }) => ({
   const fecha = new Date(match.date);
   const hora = dayjs(fecha).format("HH:mm");
 
+ // Utilizamos useMediaQuery para detectar si estamos en un dispositivo móvil
+ const isMobile = useMediaQuery((theme) => theme?.breakpoints?.down('sm'));
+
   return (
     <Grid container spacing={2} alignItems="center">
-      <Grid item xs={10}>
+      <Grid item xs={10} sx={{paddingX:"0rem"}}>
         <Link
           to={`/stats/${match?.homeTeam?._id}/${match?.awayTeam?._id}/${match._id}`}
           className="link-no-underline"
         >
-          <ListItemButton component="div">
-            <Grid container spacing={2} alignItems="center">
-              <Grid item xs={4}>
+          <ListItemButton component="div" sx={{paddingX:"0.2rem"}}>
+            <Grid container spacing={2} alignItems="center" sx={{paddingX:"0.2rem"}}>
+              <Grid item xs={5} >
                 <ListItemText
+                  sx={{paddingX:"0.2rem"}}
                   align="end"
                   primary={
                     <>
                       <Typography
-                        sx={{ display: "inline" }}
+                       sx={{ display: "inline", fontSize: isMobile ? "0.8rem" : "inherit" }}
                         component="h6"
                         variant="h6"
                         color="grey"
@@ -71,32 +76,34 @@ const Item = styled(Paper)(({ theme }) => ({
                   // }
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={2} sx={{paddingX:"0.2rem"}}>
                 <ListItemText
+                sx={{paddingX:"0.3rem"}}
                   align="center"
                   primary={
                     <>
                       <Typography
-                        sx={{ display: "inline" }}
+                        sx={{ display: "inline", fontSize: isMobile ? "0.9rem" : "inherit" }}
                         component="h6"
                         variant="h5"
                         color="green"
                       >
                         {match.isFinished
-                          ? `${match.teamStatistics.local.goals} - ${match.teamStatistics.visitor.goals} `
+                          ? `${match.teamStatistics.local.goals}-${match.teamStatistics.visitor.goals} `
                           : hora}
                       </Typography>
                     </>
                   }
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={5} sx={{paddingX:"0.2rem"}}>
                 <ListItemText
+                  sx={{paddingX:"0.2rem"}}
                   align="start"
                   primary={
                     <>
                       <Typography
-                        sx={{ display: "inline" }}
+                        sx={{ display: "inline", fontSize: isMobile ? "0.8rem" : "inherit" }}
                         component="h6"
                         variant="h6"
                         color="grey"
@@ -138,7 +145,7 @@ export const MatchsStack = () => {
   console.log("PROBANDO PARTIDOS", myMatches, matches);
 
   return (
-    <Container sx={{ backgroundColor: "#84828244", height: "100vh" }}>
+    <Container sx={{ backgroundColor: "#84828244", height: "100vh", padding:"0.3rem" }}>
       {Object.entries(
         myMatches.reduce((acc, match) => {
           const leagueName = match?.league?.name;
