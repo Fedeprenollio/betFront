@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
 import { Button, MenuItem, TextField, Typography } from "@mui/material";
-import crateLeagueStore from "../stores/leagueStore";
-import createTeamStore from "../stores/teamStore";
+
 import { useBoundStore } from "../stores";
+import AlertDialog from "./feedback/AlertDialog";
 
 const validationSchema = yup.object({
   name: yup.string().required("El nombre es obligatorio"),
@@ -12,9 +12,7 @@ const validationSchema = yup.object({
 });
 
 const FormLeague = () => {
-  // const { createLeague } = crateLeagueStore();
-  // const { teams, setTeams } = createTeamStore();
-  const { teams,setTeams,createLeague } = useBoundStore(state=> state)
+  const { teams, setTeams, createLeague } = useBoundStore((state) => state);
 
   const [countries, setCountries] = useState([]);
 
@@ -24,13 +22,17 @@ const FormLeague = () => {
 
   useEffect(() => {
     // Obtener países únicos de los clubes
-    const uniqueCountries = Array.from(new Set(teams.map((team) => team.country)));
+    const uniqueCountries = Array.from(
+      new Set(teams.map((team) => team.country))
+    );
     setCountries(uniqueCountries);
   }, [teams]);
 
-  const handleSubmit = (values) => {
+  const handleSubmit = async (values) => {
     console.log(values);
-    createLeague(values);
+    const res = await createLeague(values);
+    console.log(res);
+    return res;
   };
 
   return (
@@ -80,9 +82,17 @@ const FormLeague = () => {
             ))}
           </Field>
 
-          <Button type="submit" variant="contained" color="primary">
+          {/* <Button type="submit" variant="contained" color="primary">
             Crear Liga
-          </Button>
+          </Button> */}
+          <AlertDialog
+            textDialog={"¿Estás seguro en crear la liga?"}
+            textButton={"Crear liga"}
+            handleSubmit={handleSubmit}
+            formValues={values}
+            textSuccess={`Liga ${values.name} creada exitosamente`}
+            textError={"Error al crear la liga"}
+          ></AlertDialog>
         </Form>
       )}
     </Formik>

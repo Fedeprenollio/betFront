@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import { TextField } from "@mui/material";
 
@@ -12,6 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useBoundStore } from "../stores";
+import AlertDialog from "./feedback/AlertDialog";
 
 const validationSchema = yup.object({
   country: yup.string().required("El país es obligatorio"),
@@ -21,7 +22,9 @@ const validationSchema = yup.object({
 
 const FormSeason = () => {
   // const { leagues, fetchLeagues } = crateLeagueStore();
-  const { leagues, fetchLeagues, createSeason } = useBoundStore ( state=> state)
+  const { leagues, fetchLeagues, createSeason } = useBoundStore(
+    (state) => state
+  );
 
   const [countries, setCountries] = useState([]);
   const [leaguesByCountry, setLeaguesByCountry] = useState({});
@@ -56,6 +59,13 @@ const FormSeason = () => {
     setFieldValue("league", selectedLeague);
   };
 
+
+  const handleSubmit =async(values)=>{
+    const res = await createSeason(values);
+    console.log("ONSUBMIT",res)
+     await fetchLeagues();
+     return res
+  }
   return (
     <Formik
       initialValues={{
@@ -64,12 +74,8 @@ const FormSeason = () => {
         year: "",
       }}
       validationSchema={validationSchema}
-      onSubmit={ async(values) => {
-        createSeason(values);
-      await  fetchLeagues()
-      }}
-    >
-      {({ values, errors, touched, setFieldValue }) => (
+      onSubmit={handleSubmit}    >
+      {({ values, errors, touched, setFieldValue}) => (
         <Form>
           <Typography variant="h6" gutterBottom>
             Crear Temporada
@@ -135,9 +141,16 @@ const FormSeason = () => {
             )}
           </FormControl>
 
-          <Button type="submit" variant="contained" color="primary">
+          {/* <Button type="submit" variant="contained" color="primary">
             Crear Temporada
-          </Button>
+          </Button> */}
+          <AlertDialog
+            textButton={"Crear la temporada"}
+            textDialog="¿Estás seguro en crear la temporada?"
+            handleSubmit={handleSubmit}
+            formValues={values}
+            textSuccess={`Temporada ${values.year} creada exitosamente`} textError={"Error al crear la temporada"}
+          ></AlertDialog>
         </Form>
       )}
     </Formik>

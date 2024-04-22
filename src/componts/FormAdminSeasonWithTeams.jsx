@@ -9,12 +9,10 @@ import {
   Select,
   Typography,
 } from "@mui/material";
-import crateLeagueStore from "../stores/leagueStore";
-import createTeamStore from "../stores/teamStore";
-import createSeasonStore from "../stores/seasonStore";
 import Checkbox from "@mui/material/Checkbox";
 import ListItemText from "@mui/material/ListItemText";
 import { useBoundStore } from "../stores";
+import AlertDialog from "./feedback/AlertDialog";
 
 const validationSchema = yup.object({
   country: yup.string().required("El país es obligatorio"),
@@ -24,13 +22,13 @@ const validationSchema = yup.object({
 });
 
 const FormAdminSeasonWithTeams = () => {
-  // const { leagues, fetchLeagues } = crateLeagueStore();
-  // const { addTeamsToSeason } = createSeasonStore(
-  //   (state) => state
-  // );
-  // const { teams: teamsStore } = createTeamStore((state) => state);
-  const { leagues, fetchLeagues,addTeamsToSeason,teams: teamsStore } = useBoundStore ( state=> state)
-
+  const {
+    leagues,
+    fetchLeagues,
+    addTeamsToSeason,
+    teams: teamsStore,
+  } = useBoundStore((state) => state);
+console.log("LOS EQUIPOS", teamsStore)
   const [countries, setCountries] = useState([]);
   const [leaguesByCountry, setLeaguesByCountry] = useState({});
   const [selectedCountry, setSelectedCountry] = useState("");
@@ -38,10 +36,9 @@ const FormAdminSeasonWithTeams = () => {
   const [selectedSeason, setSelectedSeason] = useState("");
   const [selectedTeams, setSelectedTeams] = useState([]); // Estado para equipos seleccionados
 
-useEffect(() => {
-  fetchLeagues()
-}, [fetchLeagues])
-
+  useEffect(() => {
+    fetchLeagues();
+  }, [fetchLeagues]);
 
   useEffect(() => {
     // Obtener países únicos de las ligas
@@ -58,7 +55,6 @@ useEffect(() => {
         .map((league) => ({ name: league.name, _id: league._id }));
     });
     setLeaguesByCountry(leaguesData);
-    
   }, [leagues]);
 
   const handleCountryChange = (event) => {
@@ -94,6 +90,16 @@ useEffect(() => {
 
     setSelectedTeams(selectedTeams); // Actualizar estado de equipos seleccionados
   };
+  const [showTeamsValue, setShowTeamsValue] = useState(true);
+
+  const handleSubmit = async (values) => {
+    const res = await addTeamsToSeason(values.season, values.teams);
+    await fetchLeagues(); //Vuelvo a refrescar las ligas
+    if(res?.status ==! 201 || res?.status === undefined){
+      setShowTeamsValue(false)
+    }
+    return res;
+  };
 
   return (
     <Formik
@@ -104,12 +110,9 @@ useEffect(() => {
         teams: [], //poner los equipos iniciales si ya los hubiera
       }}
       validationSchema={validationSchema}
-      onSubmit={async () => {
-        await addTeamsToSeason(selectedSeason, selectedTeams);
-        await fetchLeagues(); //Vuelvo a refrescar las ligas
-      }}
+      onSubmit={handleSubmit}
     >
-      {({  errors, touched, setFieldValue }) => (
+      {({ values, errors, touched, setFieldValue }) => (
         <Form>
           <Typography variant="h6" gutterBottom>
             Agregar equipos a la temporada
@@ -184,12 +187,14 @@ useEffect(() => {
               }}
               disabled={!selectedSeason}
               renderValue={(selected) =>
-                selected
-                  .map(
-                    (teamId) =>
-                      teamsStore.find((team) => team._id === teamId)?.name
-                  )
-                  .join(", ")
+                showTeamsValue
+                  ? selected
+                      .map(
+                        (teamId) =>
+                          teamsStore.find((team) => team._id === teamId)?.name
+                      )
+                      .join(", ")
+                  : ""
               }
             >
               {teamsStore
@@ -209,9 +214,17 @@ useEffect(() => {
             )}
           </FormControl>
 
-          <Button type="submit" variant="contained" color="primary">
+          {/* <Button type="submit" variant="contained" color="primary">
             Crear Temporada con Equipos
-          </Button>
+          </Button> */}
+          <AlertDialog
+            textDialog={"¿Estás seguro en agregar los equipos?"}
+            textButton={"Agregar equipos a temporada"}
+            handleSubmit={handleSubmit}
+            formValues={values}
+            textSuccess={`Equipos de la temporada actualizados exitosamente`}
+            textError={"Error al cargar los equipos"}
+          ></AlertDialog>
         </Form>
       )}
     </Formik>

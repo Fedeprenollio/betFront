@@ -25,26 +25,6 @@ const countries = [
   },
 ];
 
-// const leagues = {
-//   Argentina: [
-//     { value: 'Superliga', label: 'Superliga' },
-//     { value: 'Primera Nacional', label: 'Primera Nacional' },
-//     // Agrega más ligas según sea necesario para Argentina
-//   ],
-//   España: [
-//     { value: 'La Liga', label: 'La Liga' },
-//     // Agrega más ligas según sea necesario para España
-//   ],
-//   Inglaterra: [
-//     { value: 'Premier League', label: 'Premier League' },
-//     // Agrega más ligas según sea necesario para Inglaterra
-//   ],
-//   Italia: [
-//     { value: 'Serie A', label: 'Serie A' },
-//     // Agrega más ligas según sea necesario para Italia
-//   ],
-// };
-
 const FormTeam = () => {
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Required"),

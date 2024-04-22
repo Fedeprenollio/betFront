@@ -67,7 +67,9 @@ const createSeasonStore = (set) => ({
         },
         body: JSON.stringify({ leagueId, year }),
       });
-      console.log(response);
+     const data = await response.json()
+      console.log(data);
+      return data
       // if (!response.ok) {
       //   throw new Error('Failed to create season');
       // }
@@ -94,13 +96,16 @@ const createSeasonStore = (set) => ({
   // Función para agregar equipos a una temporada
   addTeamsToSeason: async (seasonId, teams) => {
     try {
-     await fetch(`${URL_API}/${seasonId}`, {
+   const response =  await fetch(`${URL_API}/${seasonId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ teams }),
       });
+      const data = await response.json()
+      console.log("STORE EQUIPOS AGREGADOS",data)
+      return data
       // if (!response.ok) {
       //   throw new Error("Failed to add teams to season");
       // }

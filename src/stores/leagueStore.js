@@ -25,6 +25,7 @@ const crateLeagueStore = ((set, get) => ({
         set((state) => ({
           leagues: [...state.leagues, data],
         }));
+        return data
       // Verificar si la solicitud fue exitosa
       // if (response.ok) {
       //   // Actualizar el estado local con la nueva liga
