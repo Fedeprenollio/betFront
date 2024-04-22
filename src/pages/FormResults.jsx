@@ -1,7 +1,6 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { TextField, Button, Grid, Typography } from "@mui/material";
 import * as Yup from "yup";
-import createMatchesStore from "../stores/matchesStore";
 import { useParams } from "react-router-dom";
 import { useBoundStore } from "../stores";
 import { useEffect } from "react";
@@ -97,12 +96,12 @@ const FormResult = () => {
 
           <Grid item xs={6}>
               <Typography variant="h6" gutterBottom align="center">
-                {matchDetail.homeTeam.name}
+                {matchDetail?.homeTeam?.name}
               </Typography>
             </Grid>
             <Grid item xs={6}>
               <Typography variant="h6" gutterBottom align="center">
-              {matchDetail.awayTeam.name}
+              {matchDetail?.awayTeam?.name}
               </Typography>
             </Grid>
 
