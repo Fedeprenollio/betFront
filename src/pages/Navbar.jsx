@@ -159,11 +159,11 @@ const Navbar = () => {
               open={Boolean(anchorLeagues)}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose} component={Link} to="/league">
-                Administrar ligas
+              <MenuItem onClick={handleClose} component={Link} to="/league/view">
+                Ver ligas
               </MenuItem>
               <MenuItem onClick={handleClose} component={Link} to="/league">
-                Ver ligas
+                Administrar ligas
               </MenuItem>
             </Menu>
           </Box>

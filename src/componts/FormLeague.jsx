@@ -12,7 +12,7 @@ const validationSchema = yup.object({
 });
 
 const FormLeague = () => {
-  const { teams, setTeams, createLeague } = useBoundStore((state) => state);
+  const { teams, setTeams, createLeague,fetchLeagues } = useBoundStore((state) => state);
 
   const [countries, setCountries] = useState([]);
 
@@ -29,9 +29,8 @@ const FormLeague = () => {
   }, [teams]);
 
   const handleSubmit = async (values) => {
-    console.log(values);
     const res = await createLeague(values);
-    console.log(res);
+    await fetchLeagues()
     return res;
   };
 
