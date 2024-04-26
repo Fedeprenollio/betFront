@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Formik, Form } from "formik";
+import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
 import {
   Button,
@@ -7,12 +7,14 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  TextField,
   Typography,
 } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 import ListItemText from "@mui/material/ListItemText";
 import { useBoundStore } from "../stores";
-import AlertDialog from "./feedback/AlertDialog";
+import AlertDialogCopy from "./feedback/AlertDialogCopy";
+import { AlertMessageCopy } from "./feedback/AlertMessageCopy";
 
 const validationSchema = yup.object({
   country: yup.string().required("El país es obligatorio"),
@@ -28,26 +30,29 @@ const FormAdminSeasonWithTeams = () => {
     addTeamsToSeason,
     teams: teamsStore,
   } = useBoundStore((state) => state);
-console.log("LOS EQUIPOS", teamsStore)
+
   const [countries, setCountries] = useState([]);
   const [leaguesByCountry, setLeaguesByCountry] = useState({});
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedLeague, setSelectedLeague] = useState("");
   const [selectedSeason, setSelectedSeason] = useState("");
-  const [selectedTeams, setSelectedTeams] = useState([]); // Estado para equipos seleccionados
+  const [selectedTeams, setSelectedTeams] = useState([]);
+  const [showTeamsValue, setShowTeamsValue] = useState(true);
+  const [openAddTeamsDialog, setOpenAddTeamsDialog] = useState(false);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [severity, setSeverity] = useState("");
+  const [msgAlert, setMsgAlert] = useState("");
 
   useEffect(() => {
     fetchLeagues();
   }, [fetchLeagues]);
 
   useEffect(() => {
-    // Obtener países únicos de las ligas
     const uniqueCountries = Array.from(
       new Set(leagues.map((league) => league.country))
     );
     setCountries(uniqueCountries);
 
-    // Obtener ligas por país
     const leaguesData = {};
     uniqueCountries.forEach((country) => {
       leaguesData[country] = leagues
@@ -62,21 +67,20 @@ console.log("LOS EQUIPOS", teamsStore)
     setSelectedCountry(selectedCountry);
     setSelectedLeague("");
     setSelectedSeason("");
-    setSelectedTeams([]); // Reiniciar equipos seleccionados
+    setSelectedTeams([]);
   };
 
   const handleLeagueChange = (event) => {
     const selectedLeague = event.target.value;
     setSelectedLeague(selectedLeague);
     setSelectedSeason("");
-    setSelectedTeams([]); // Reiniciar equipos seleccionados
+    setSelectedTeams([]);
   };
 
   const handleSeasonChange = async (event) => {
     const selectedSeason = event.target.value;
     setSelectedSeason(selectedSeason);
 
-    // await getSeasonById(selectedSeason);
     const selectLeague = leagues.find(
       (league) => league._id === selectedLeague
     );
@@ -85,20 +89,42 @@ console.log("LOS EQUIPOS", teamsStore)
     );
     setSelectedTeams(selectSeasonFull?.teams.map((t) => t._id));
   };
+
   const handleTeamsChange = (event) => {
     const selectedTeams = event.target.value;
-
-    setSelectedTeams(selectedTeams); // Actualizar estado de equipos seleccionados
+    setSelectedTeams(selectedTeams);
   };
-  const [showTeamsValue, setShowTeamsValue] = useState(true);
 
   const handleSubmit = async (values) => {
-    const res = await addTeamsToSeason(values.season, values.teams);
-    await fetchLeagues(); //Vuelvo a refrescar las ligas
-    if(res?.status ==! 201 || res?.status === undefined){
-      setShowTeamsValue(false)
+    console.log("VALUES", values)
+    try {
+      await validationSchema.validate(values, { abortEarly: false });
+
+      const response = await addTeamsToSeason(values.season, values.teams);
+      await fetchLeagues();
+
+      setOpenAddTeamsDialog(false);
+      setIsAlertOpen(true);
+
+      if (response?.state === "ok") {
+        setSeverity("success");
+        setMsgAlert("Equipos agregados exitosamente");
+        setIsAlertOpen(true);
+      } else {
+        setSeverity("error");
+        setMsgAlert("Error al cargar equipos");
+        setIsAlertOpen(true);
+      }
+    } catch (error) {
+      if (error.name === "ValidationError") {
+        const errorMessage = error.errors.join(", ");
+        setSeverity("error");
+        setMsgAlert(errorMessage);
+        setIsAlertOpen(true);
+      } else {
+        console.error("Error al validar el formulario:", error);
+      }
     }
-    return res;
   };
 
   return (
@@ -107,7 +133,7 @@ console.log("LOS EQUIPOS", teamsStore)
         country: "",
         league: "",
         season: "",
-        teams: [], //poner los equipos iniciales si ya los hubiera
+        teams: [],
       }}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
@@ -117,9 +143,12 @@ console.log("LOS EQUIPOS", teamsStore)
           <Typography variant="h6" gutterBottom>
             Agregar equipos a la temporada
           </Typography>
+
           <FormControl fullWidth sx={{ m: 1, minWidth: 120 }}>
-            <InputLabel>País</InputLabel>
-            <Select
+            <Field
+              label="País"
+              as={TextField}
+              select
               value={selectedCountry}
               onChange={(event) => {
                 handleCountryChange(event);
@@ -132,7 +161,7 @@ console.log("LOS EQUIPOS", teamsStore)
                   {country}
                 </MenuItem>
               ))}
-            </Select>
+            </Field>
           </FormControl>
 
           <FormControl fullWidth sx={{ m: 1, minWidth: 120 }}>
@@ -142,6 +171,10 @@ console.log("LOS EQUIPOS", teamsStore)
               onChange={(event) => {
                 handleLeagueChange(event);
                 setFieldValue("league", event.target.value);
+                // Restablecer valores de temporada y equipos al cambiar la liga
+                setFieldValue("season", "");
+                setSelectedSeason("");
+                setSelectedTeams([]);
               }}
               disabled={!selectedCountry}
             >
@@ -181,7 +214,6 @@ console.log("LOS EQUIPOS", teamsStore)
               multiple
               value={selectedTeams}
               onChange={(event) => {
-                console.log(event.target.value);
                 handleTeamsChange(event);
                 setFieldValue("teams", event.target.value);
               }}
@@ -213,18 +245,30 @@ console.log("LOS EQUIPOS", teamsStore)
               </Typography>
             )}
           </FormControl>
+          <Button type="button" onClick={()=>setOpenAddTeamsDialog(true)} variant="contained" color="primary">
+            Agregar equipos
+          </Button>
 
-          {/* <Button type="submit" variant="contained" color="primary">
-            Crear Temporada con Equipos
-          </Button> */}
-          <AlertDialog
+          <AlertDialogCopy
+            open={openAddTeamsDialog}
+            onClose={() => setOpenAddTeamsDialog(false)}
+            onConfirm={async () => await handleSubmit(values)}
+            handleSubmit
+            formValues
             textDialog={"¿Estás seguro en agregar los equipos?"}
-            textButton={"Agregar equipos a temporada"}
-            handleSubmit={handleSubmit}
-            formValues={values}
-            textSuccess={`Equipos de la temporada actualizados exitosamente`}
-            textError={"Error al cargar los equipos"}
-          ></AlertDialog>
+            title="Agregar Equipos"
+            message="Confirmar la acción"
+            confirmText="Agregar"
+            cancelText="Cancelar"
+          />
+
+          {isAlertOpen && (
+            <AlertMessageCopy
+              severity={severity}
+              textAlert={msgAlert}
+              setIsAlertOpen={setIsAlertOpen}
+            />
+          )}
         </Form>
       )}
     </Formik>

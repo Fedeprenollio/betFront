@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
 import { Button, MenuItem, TextField, Typography } from "@mui/material";
 
 import { useBoundStore } from "../stores";
 import AlertDialog from "./feedback/AlertDialog";
+import AlertDialogCopy from "./feedback/AlertDialogCopy";
+import { AlertMessageCopy } from "./feedback/AlertMessageCopy";
 
 const validationSchema = yup.object({
   name: yup.string().required("El nombre es obligatorio"),
@@ -12,7 +14,14 @@ const validationSchema = yup.object({
 });
 
 const FormLeague = () => {
-  const { teams, setTeams, createLeague,fetchLeagues } = useBoundStore((state) => state);
+  const { teams, setTeams, createLeague, fetchLeagues } = useBoundStore(
+    (state) => state
+  );
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [severity, setSeverity] = useState("");
+  const [msgAlert, setMsgAlert] = useState("");
+
 
   const [countries, setCountries] = useState([]);
 
@@ -29,10 +38,34 @@ const FormLeague = () => {
   }, [teams]);
 
   const handleSubmit = async (values) => {
-    const res = await createLeague(values);
-    await fetchLeagues()
-    return res;
+    try {
+      await validationSchema.validate(values, { abortEarly: false }); // Validar los valores con Yup
+  
+      const response = await createLeague(values);
+      await fetchLeagues();
+      setOpenCreateDialog(false);
+      if (response?.state === "ok") {
+        setSeverity("success");
+        setMsgAlert("Liga creada exitosamente");
+        setIsAlertOpen(true);
+      } else {
+        setSeverity("error");
+        setMsgAlert("Error al crear la liga");
+        setIsAlertOpen(true);
+      }
+    } catch (error) {
+      if (error.name === "ValidationError") {
+        // Capturar errores de validación de Yup
+        const errorMessage = error.errors.join(", ");
+        setSeverity("error");
+        setMsgAlert(errorMessage);
+        setIsAlertOpen(true);
+      } else {
+        console.error("Error al validar el formulario:", error);
+      }
+    }
   };
+  
 
   return (
     <Formik
@@ -81,17 +114,39 @@ const FormLeague = () => {
             ))}
           </Field>
 
-          {/* <Button type="submit" variant="contained" color="primary">
+          <Button type="button" onClick={()=>setOpenCreateDialog(true)} variant="contained" color="primary">
             Crear Liga
-          </Button> */}
-          <AlertDialog
+          </Button>
+          {/* <AlertDialog
             textDialog={"¿Estás seguro en crear la liga?"}
             textButton={"Crear liga"}
             handleSubmit={handleSubmit}
             formValues={values}
             textSuccess={`Liga ${values.name} creada exitosamente`}
             textError={"Error al crear la liga"}
-          ></AlertDialog>
+          ></AlertDialog> */}
+
+          <AlertDialogCopy
+            open={openCreateDialog}
+            onClose={() => setOpenCreateDialog(false)}
+            onConfirm= { async() => await handleSubmit(values)}
+            handleSubmit
+            formValues
+            textDialog
+            title="Confirmar creación"
+            message={`¿Estás seguro  que deseas crear la liga "${values.name}?"`}
+            // contentText="La eliminación es irreversible y borra toda información relacionada a la liga como temporadas, partidos, resultados..."
+            confirmText="Si, crear"
+            cancelText="Cancelar"
+          />
+
+          {isAlertOpen && (
+            <AlertMessageCopy
+              severity={severity}
+              textAlert={msgAlert}
+              setIsAlertOpen={setIsAlertOpen}
+            />
+          )}
         </Form>
       )}
     </Formik>

@@ -2,7 +2,7 @@
 import { Alert, Stack } from "@mui/material";
 
 export const AlertMessage = ({ severity, textAlert, setIsAlertOpen }) => {
-
+console.log("ABRE EL MENSAKE DE ALERTA?", severity, textAlert, setIsAlertOpen)
   const handleCloseAlert = () => {
     console.log("GOla");
     setIsAlertOpen(false);

@@ -19,13 +19,13 @@ const validationSchema = yup.object({
   season: yup.string().required("La temporada es obligatoria"),
 });
 
-export const FilterLeague = ({ setLeagueSelected, setFilteredLeagues }) => {
+export const FilterLeague = ({ setFilteredLeagues, getSortedLeagues }) => {
   const { fetchLeagues, leagues } = useBoundStore((state) => state);
   const [countries, setCountries] = useState([]);
   const [leaguesByCountry, setLeaguesByCountry] = useState({});
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedLeague, setSelectedLeague] = useState("");
-  const [selectedSeason, setSelectedSeason] = useState("");
+  // const [selectedSeason, setSelectedSeason] = useState("");
 
   useEffect(() => {
     fetchLeagues();
@@ -35,35 +35,75 @@ export const FilterLeague = ({ setLeagueSelected, setFilteredLeagues }) => {
     const uniqueCountries = Array.from(
       new Set(leagues.map((league) => league.country))
     );
-    setCountries(uniqueCountries);
 
+    // Agregar "Todos" al inicio del array de opciones para el select de países
+    setCountries(["Todos", ...uniqueCountries]);
+
+    // Construir un objeto de ligas por país
     const leaguesData = {};
     uniqueCountries.forEach((country) => {
       leaguesData[country] = leagues
         .filter((league) => league.country === country)
         .map((league) => ({ name: league.name, _id: league._id }));
     });
-    setLeaguesByCountry(leaguesData);
+
+    // Agregar "Todos" al inicio del array de opciones para el select de ligas
+    const leaguesByCountryWithTodos = Object.entries(leaguesData).reduce(
+      (acc, [country, leagues]) => {
+        acc[country] = [{ name: "Todos", _id: "Todos" }, ...leagues];
+        return acc;
+      },
+      {}
+    );
+
+    setLeaguesByCountry(leaguesByCountryWithTodos);
   }, [leagues]);
 
   const handleCountryChange = (event, setFieldValue) => {
+    console.log("HOLA");
     const selectedCountry = event.target.value;
     setSelectedCountry(selectedCountry);
-    setSelectedLeague("");
-    setSelectedSeason("");
-    setFilteredLeagues(
-      leagues.filter((league) => league.country === selectedCountry)
-    );
+    setSelectedLeague(""); // Reinicia la selección de la liga
+    // setSelectedSeason(""); // Reinicia la selección de la temporada
+    if (selectedCountry === "Todos") {
+      // Si se selecciona "Todos" en países, mostrar todas las ligas
+      const sortedLeagues = getSortedLeagues({ leagues });
+
+      setFilteredLeagues(sortedLeagues);
+    } else {
+      // Filtrar las ligas por el país seleccionado
+      setFilteredLeagues(
+        leagues.filter((league) => league.country === selectedCountry)
+      );
+    }
     setFieldValue("country", selectedCountry);
   };
 
   const handleLeagueChange = (event, setFieldValue) => {
     const selectedLeague = event.target.value;
+    console.log("CHAY", selectedLeague);
     setSelectedLeague(selectedLeague);
-    setSelectedSeason("");
-    setLeagueSelected(selectedLeague); // Filtrar las ligas por la liga seleccionada
+    // setSelectedSeason("");
+
+    if (selectedLeague === "Todos") {
+      // Si se selecciona "Todos", establecer las ligas filtradas como todas las ligas del país seleccionado previamente
+      setFilteredLeagues(
+        leagues.filter(
+          (league) =>
+            league.country === selectedCountry || selectedCountry === "Todos"
+        )
+      );
+    } else {
+      // Si se selecciona una liga específica, filtrar las ligas por la liga seleccionada
+      setFilteredLeagues(
+        leagues.filter((league) => league._id === selectedLeague)
+      );
+    }
+
     setFieldValue("league", selectedLeague);
   };
+
+  console.log("LAS LIGAS", leaguesByCountry);
 
   const handleSubmit = (values) => {
     console.log(values);
@@ -86,16 +126,14 @@ export const FilterLeague = ({ setLeagueSelected, setFilteredLeagues }) => {
             Filtrar Ligas
           </Typography>
           <FormControl fullWidth sx={{ m: 1, minWidth: 120 }}>
-            {/* <InputLabel>País</InputLabel> */}
             <Field
               as={TextField}
-              select
               label="País"
+              select
               name="country"
               value={selectedCountry}
               onChange={(event) => handleCountryChange(event, setFieldValue)}
             >
-              <MenuItem value="">Selecciona un país</MenuItem>
               {countries.map((country) => (
                 <MenuItem key={country} value={country}>
                   {country}
@@ -106,15 +144,14 @@ export const FilterLeague = ({ setLeagueSelected, setFilteredLeagues }) => {
 
           <FormControl fullWidth sx={{ m: 1, minWidth: 120 }}>
             <Field
-               as={TextField}
-               select
-               label="Liga"
+              as={TextField}
+              select
+              label="Liga"
               name="league"
               value={selectedLeague}
               onChange={(event) => handleLeagueChange(event, setFieldValue)}
               disabled={!selectedCountry}
             >
-              <MenuItem value="">Selecciona una liga</MenuItem>
               {leaguesByCountry[selectedCountry]?.map((league) => (
                 <MenuItem key={league._id} value={league._id}>
                   {league.name}
@@ -144,9 +181,9 @@ export const FilterLeague = ({ setLeagueSelected, setFilteredLeagues }) => {
             </Select>
           </FormControl> */}
 
-          {/* <Button type="submit" variant="contained" color="primary">
+          <Button type="submit" variant="contained" color="primary">
             Filtrar
-          </Button> */}
+          </Button>
         </Form>
       )}
     </Formik>

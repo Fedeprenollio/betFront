@@ -27,20 +27,23 @@ export default function AlertDialog({
     setOpen(false);
   };
   const handleAccept = async () => {
+    console.log("VALUE", formValues)
     const res = await handleSubmit(formValues);
     setOpen(false);
-
-    if (res?.status === 201) {
+    
+    if (res?.state === "ok") {
+      console.log("QUE HAY EN LA ACTION?", res?.state === "ok")
       setSeverity("success");
       setMsgAlert(textSuccess);
       setIsAlertOpen(true);
-    } else if(res?.status ==! 201 || res?.status === undefined) {
+    } else {
       setSeverity("error");
+      console.log("ACA TMB ENTRA?")
       setMsgAlert(textError);
       setIsAlertOpen(true);
     }
   };
-
+console.log("isAlertOpen ", isAlertOpen )
   return (
     <>
       {" "}

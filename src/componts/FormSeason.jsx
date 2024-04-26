@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Formik, Form } from "formik";
+import { Formik, Form, Field } from "formik";
 import { TextField } from "@mui/material";
 
 import * as yup from "yup";
@@ -13,6 +13,8 @@ import {
 } from "@mui/material";
 import { useBoundStore } from "../stores";
 import AlertDialog from "./feedback/AlertDialog";
+import AlertDialogCopy from "./feedback/AlertDialogCopy";
+import { AlertMessageCopy } from "./feedback/AlertMessageCopy";
 
 const validationSchema = yup.object({
   country: yup.string().required("El país es obligatorio"),
@@ -25,6 +27,14 @@ const FormSeason = () => {
   const { leagues, fetchLeagues, createSeason } = useBoundStore(
     (state) => state
   );
+
+  //CUADRO DE DIALOGO:
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [severity, setSeverity] = useState("");
+  const [msgAlert, setMsgAlert] = useState("");
+
+  //------
 
   const [countries, setCountries] = useState([]);
   const [leaguesByCountry, setLeaguesByCountry] = useState({});
@@ -59,13 +69,35 @@ const FormSeason = () => {
     setFieldValue("league", selectedLeague);
   };
 
-
-  const handleSubmit =async(values)=>{
-    const res = await createSeason(values);
-    console.log("ONSUBMIT",res)
-     await fetchLeagues();
-     return res
-  }
+  const handleSubmit = async (values) => {
+    try {
+      await validationSchema.validate(values, { abortEarly: false }); // Validar los valores con Yup
+  
+      const response = await createSeason(values);
+      await fetchLeagues();
+      setOpenCreateDialog(false);
+      if (response?.state === "ok") {
+        setSeverity("success");
+        setMsgAlert("Temporada creada exitosamente");
+        setIsAlertOpen(true);
+      } else {
+        setSeverity("error");
+        setMsgAlert("Error al crear la temporada");
+        setIsAlertOpen(true);
+      }
+    } catch (error) {
+      if (error.name === "ValidationError") {
+        // Capturar errores de validación de Yup
+        const errorMessage = error.errors.join(", ");
+        setSeverity("error");
+        setMsgAlert(errorMessage);
+        setIsAlertOpen(true);
+      } else {
+        console.error("Error al validar el formulario:", error);
+      }
+    }
+  };
+  
   return (
     <Formik
       initialValues={{
@@ -74,16 +106,19 @@ const FormSeason = () => {
         year: "",
       }}
       validationSchema={validationSchema}
-      onSubmit={handleSubmit}    >
-      {({ values, errors, touched, setFieldValue}) => (
+      onSubmit={handleSubmit}
+    >
+      {({ values, errors, touched, setFieldValue }) => (
         <Form>
           <Typography variant="h6" gutterBottom>
             Crear Temporada
           </Typography>
 
           <FormControl fullWidth margin="normal">
-            <InputLabel htmlFor="country">País</InputLabel>
-            <Select
+            <Field
+              label="País"
+              as={TextField}
+              select
               id="country"
               name="country"
               value={selectedCountry}
@@ -95,7 +130,7 @@ const FormSeason = () => {
                   {country}
                 </MenuItem>
               ))}
-            </Select>
+            </Field>
             {touched.country && errors.country && (
               <Typography variant="caption" color="error">
                 {errors.country}
@@ -104,8 +139,10 @@ const FormSeason = () => {
           </FormControl>
 
           <FormControl fullWidth margin="normal">
-            <InputLabel htmlFor="league">Liga</InputLabel>
-            <Select
+            <Field
+              label="Liga"
+              as={TextField}
+              select
               id="league"
               name="league"
               value={selectedLeague}
@@ -118,7 +155,7 @@ const FormSeason = () => {
                   {league.name}
                 </MenuItem>
               ))}
-            </Select>
+            </Field>
             {touched.league && errors.league && (
               <Typography variant="caption" color="error">
                 {errors.league}
@@ -127,8 +164,9 @@ const FormSeason = () => {
           </FormControl>
 
           <FormControl fullWidth margin="normal">
-            <InputLabel htmlFor="year">Año</InputLabel>
-            <TextField
+            <Field
+              as={TextField}
+              label="Año"
               id="year"
               name="year"
               value={values.year}
@@ -141,16 +179,39 @@ const FormSeason = () => {
             )}
           </FormControl>
 
-          {/* <Button type="submit" variant="contained" color="primary">
+          <Button type="button" onClick={()=>setOpenCreateDialog(true)} variant="contained" color="primary">
             Crear Temporada
-          </Button> */}
-          <AlertDialog
+          </Button>
+          {/* <AlertDialog
             textButton={"Crear la temporada"}
             textDialog="¿Estás seguro en crear la temporada?"
             handleSubmit={handleSubmit}
             formValues={values}
-            textSuccess={`Temporada ${values.year} creada exitosamente`} textError={"Error al crear la temporada"}
-          ></AlertDialog>
+            textSuccess={`Temporada ${values.year} creada exitosamente`}
+            textError={"Error al crear la temporada"}
+          ></AlertDialog> */}
+
+          <AlertDialogCopy
+            open={openCreateDialog}
+            onClose={() => setOpenCreateDialog(false)}
+            onConfirm={async () => await handleSubmit(values)}
+            handleSubmit
+            formValues
+            textDialog
+            title="Confirmar creación"
+            message={`¿Estás seguro  que deseas crear la temporada "${values.year}?"`}
+            // contentText="La eliminación es irreversible y borra toda información relacionada a la liga como temporadas, partidos, resultados..."
+            confirmText="Si, crear"
+            cancelText="Cancelar"
+          />
+
+          {isAlertOpen && (
+            <AlertMessageCopy
+              severity={severity}
+              textAlert={msgAlert}
+              setIsAlertOpen={setIsAlertOpen}
+            />
+          )}
         </Form>
       )}
     </Formik>
