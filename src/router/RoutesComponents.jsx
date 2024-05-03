@@ -6,9 +6,13 @@ import { Teams } from "../pages/Teams/Teams";
 import FormResult from "../pages/FormResults";
 import { AdminMatch } from "../pages/Match/AdminMatch";
 import { LeaguePage } from "../pages/League/LeaguePage";
-import { TeamStatistics } from "../pages/TeamStatistics";
 import { DetailLeague } from "../pages/League/DetailLeague";
 import { ListLeagues } from "../pages/League/ListLeagues";
+import { Login } from "../pages/user/Login";
+import { Register } from "../pages/user/Register";
+import PrivateRoute from "./PrivateRoute";
+import { TeamStatistics } from "../pages/Statistics/TeamStatistics";
+import { StatisticsPage } from "../pages/Statistics/StatisticsPage";
 
 const RoutesComponent = () => {
   return (
@@ -16,27 +20,49 @@ const RoutesComponent = () => {
       <Route path="/" element={<App />} />
       <Route path="/teams">
         <Route index element={<Teams />} />
-        <Route path="adm" element={<FormTeam />} />
-        <Route path=":idTeam" />
+
+        <Route element={<PrivateRoute />}>
+          <Route path="adm" element={<FormTeam />} />
+          <Route path=":idTeam" />
+        </Route>
       </Route>
       <Route path="/match">
         <Route index element={<MatchesPage />} />
-        <Route path="new" element={<AdminMatch />} />
-        <Route path="edit/:matchId" element={<AdminMatch />} />
-        <Route path="addResults" element={<FormResult />} />
+
+        <Route element={<PrivateRoute />}>
+          <Route path="new" element={<AdminMatch />} />
+          <Route path="edit/:matchId" element={<AdminMatch />} />
+          <Route path="addResults" element={<FormResult />} />
+        </Route>
       </Route>
       <Route path="/league">
-        <Route index element={<LeaguePage />} />
         <Route path="view" element={<ListLeagues />} />
-        <Route path="new" element={<AdminMatch />} />
-        <Route path="addResults" element={<FormResult />} />
-        <Route path="detail/:idLeague" element={<DetailLeague />} />
 
+        <Route element={<PrivateRoute />}>
+          {/* leaaguePage en espete momento es para administrar ligas */}
+          <Route index element={<LeaguePage />} />
+          <Route path="new" element={<AdminMatch />} />
+          <Route path="addResults" element={<FormResult />} />
+          <Route path="detail/:idLeague" element={<DetailLeague />} />
+        </Route>
       </Route>
       <Route path="/stats">
-        <Route path=":idHomeTeam/:idAwayTeam/:idMatch" element={<TeamStatistics />} />
-        <Route path="form/:matchId" element={<FormResult />} />
+        {/* <Route
+          path=":idHomeTeam/:idAwayTeam/:idMatch"
+          element={<TeamStatistics />}
+        /> */}
+        <Route
+          path=":idHomeTeam/:idAwayTeam/:idMatch"
+          element={<StatisticsPage />}
+        />
+        <Route element={<PrivateRoute />}>
+          <Route path="form/:matchId" element={<FormResult />} />
+        </Route>
+      </Route>
 
+      <Route path="/user">
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
       </Route>
     </Routes>
   );

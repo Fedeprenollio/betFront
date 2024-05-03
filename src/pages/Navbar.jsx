@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -12,17 +12,25 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import HomeIcon from "@mui/icons-material/Home";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AdbIcon from "@mui/icons-material/Adb";
+import { useBoundStore } from "../stores";
 
-
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-
+// const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const Navbar = () => {
+const  navigate = useNavigate()
   const [anchorElPartidos, setAnchorElPartidos] = useState(null);
   const [anchorElEquipos, setAnchorElEquipos] = useState(null);
   const [anchorLeagues, setAnchorLeagues] = useState(null);
+  const { decodeTokenFromCookie, user, isAuthenticated,logout } = useBoundStore(
+    (state) => state
+  );
+
+  useEffect(() => {
+    const cookie = document.cookie;
+    decodeTokenFromCookie(cookie);
+  }, [decodeTokenFromCookie]);
 
   const handleMenuPartidos = (event) => {
     setAnchorElPartidos(event.currentTarget);
@@ -44,19 +52,32 @@ const Navbar = () => {
 
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
 
- 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const handleLogout =async () => {
+    // deleteCookie("jwt")
+    await logout()
+    navigate("/user/login");
+  };
+
+  const deleteCookie = (name) => {
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    // Redirigir al usuario después de eliminar la cookie
+    navigate("/user/login");
+  };
+
+  
   return (
-    <AppBar  position="static">
+    <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
+          <h4>Hola {user?.user}</h4>
           <IconButton
             component={Link}
             to="/"
@@ -102,9 +123,16 @@ const Navbar = () => {
               <MenuItem onClick={handleClose} component={Link} to="/match">
                 Ver partidos
               </MenuItem>
-              <MenuItem onClick={handleClose} component={Link} to="/match/new">
-                Administrar Partidos
-              </MenuItem>
+
+              {isAuthenticated && (
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
+                  to="/match/new"
+                >
+                  Administrar Partidos
+                </MenuItem>
+              )}
               {/* <MenuItem
                 onClick={handleClose}
                 component={Link}
@@ -131,15 +159,19 @@ const Navbar = () => {
               open={Boolean(anchorElEquipos)}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose} component={Link} to="/teams/adm">
-                Administrar equipos
-              </MenuItem>
               <MenuItem onClick={handleClose} component={Link} to="/teams">
                 Ver equipos
               </MenuItem>
-              <MenuItem onClick={handleClose} component={Link} to="/logout">
-                Logout
-              </MenuItem>
+
+              {isAuthenticated && (
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
+                  to="/teams/adm"
+                >
+                  Administrar equipos
+                </MenuItem>
+              )}
             </Menu>
           </Box>
 
@@ -159,12 +191,18 @@ const Navbar = () => {
               open={Boolean(anchorLeagues)}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose} component={Link} to="/league/view">
+              <MenuItem
+                onClick={handleClose}
+                component={Link}
+                to="/league/view"
+              >
                 Ver ligas
               </MenuItem>
-              <MenuItem onClick={handleClose} component={Link} to="/league">
-                Administrar ligas
-              </MenuItem>
+              {isAuthenticated && (
+                <MenuItem onClick={handleClose} component={Link} to="/league">
+                  Administrar ligas
+                </MenuItem>
+              )}
             </Menu>
           </Box>
           <Box sx={{ flexGrow: 0 }}>
@@ -189,11 +227,33 @@ const Navbar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
+              {!isAuthenticated && (
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
+                  to="/user/login"
+                >
+                  Login
+                </MenuItem>
+              )}
+
+              {isAuthenticated && 
+               <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              
+              }
+
+              {/* <MenuItem
+                onClick={handleClose}
+                component={Link}
+                to="/user/register"
+              >
+                Registrate
+              </MenuItem> */}
+              {/* {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
-              ))}
+              ))} */}
             </Menu>
           </Box>
         </Toolbar>

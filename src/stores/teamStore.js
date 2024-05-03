@@ -1,6 +1,5 @@
 import { BACKEND_URL_BASE } from "./url_base";
 const URL_API = `${BACKEND_URL_BASE}/team`;
-console.log(URL_API);
 // const API_URL = `http://localhost:1234/team`;
 const createTeamStore = (set, get) => ({
   teams: [],
@@ -18,7 +17,6 @@ const createTeamStore = (set, get) => ({
     // Aquí realizarías la llamada a la API para obtener los detalles del equipo
     const response = await fetch(`${URL_API}/${teamId}`);
     const teamDetails = await response.json();
-console.log("response", response)
     set((state) => ({
       teamDetails: {
         ...state.teamDetails,
@@ -34,6 +32,7 @@ console.log("response", response)
     try {
       const response = await fetch(URL_API, {
         method: "POST",
+         credentials:"include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -77,7 +76,6 @@ console.log("response", response)
   //   }
   // },
   deleteTeam: async (teamId) => {
-    console.log("q pasa");
     try {
       const res = await fetch(`${URL_API}/${teamId}`, {
         method: "DELETE",

@@ -59,7 +59,8 @@ export const ListLeagues = () => {
 
   const handleDelete = async (leagueId) => {
     const response = await deleteLeague(leagueId);
-    if (response?.state === "ok") {
+    console.log(response)
+    if (response) {
       setSeverity("success");
       setMsgAlert("Liga eliminada exitosamente");
       setIsAlertOpen(true);
@@ -106,6 +107,7 @@ export const ListLeagues = () => {
 
       {isAlertOpen && (
         <AlertMessageCopy
+        isAlertOpen={isAlertOpen}
           severity={severity}
           textAlert={msgAlert}
           setIsAlertOpen={setIsAlertOpen}

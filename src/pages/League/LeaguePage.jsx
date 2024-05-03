@@ -15,7 +15,7 @@ import { useBoundStore } from "../../stores";
 
 export const LeaguePage = () => {
   // const { leagues, fetchLeagues } = crateLeagueStore((state) => state);
-  const { leagues, fetchLeagues } = useBoundStore((state) => state);
+  const { fetchLeagues } = useBoundStore((state) => state);
 
   useEffect(() => {
     fetchLeagues();

@@ -70,11 +70,3 @@ const MoreVertIconComponent = ({ idItem, onDelete, onUpdate }) => {
 };
 
 export default MoreVertIconComponent;
-//   <AlertDialog
-//   textDialog={"¿Estás seguro en crear la liga?"}
-//   textButton={"Crear liga"}
-//   handleSubmit={handleSubmit}
-//   formValues={values}
-//   textSuccess={`Liga ${values.name} creada exitosamente`}
-//   textError={"Error al crear la liga"}
-// ></AlertDialog>

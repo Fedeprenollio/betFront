@@ -207,6 +207,7 @@ const FormSeason = () => {
 
           {isAlertOpen && (
             <AlertMessageCopy
+            isAlertOpen={isAlertOpen}
               severity={severity}
               textAlert={msgAlert}
               setIsAlertOpen={setIsAlertOpen}

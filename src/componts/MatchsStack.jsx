@@ -41,6 +41,7 @@ const Item = styled(Paper)(({ theme }) => ({
     <Grid container spacing={2} alignItems="center">
       <Grid item xs={10} sx={{paddingX:"0rem"}}>
         <Link
+          // to={`/stats/${match?.homeTeam?._id}/${match?.awayTeam?._id}/${match._id}`}
           to={`/stats/${match?.homeTeam?._id}/${match?.awayTeam?._id}/${match._id}`}
           className="link-no-underline"
         >
@@ -142,8 +143,7 @@ export const MatchsStack = () => {
   useEffect(() => {
     setMyMatches(matches);
   }, [matches]);
-  console.log("PROBANDO PARTIDOS", myMatches, matches);
-
+  
   return (
     <Container sx={{ backgroundColor: "#84828244", height: "100vh", padding:"0.3rem" }}>
       {Object.entries(

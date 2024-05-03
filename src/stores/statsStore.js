@@ -13,6 +13,8 @@ const createTeamStatsStore = ((set) => ({
   awayStatGoals: {},
   homeTeam: "",
   awayTeam:"",
+  localMatches:[],
+  visitorMatches:[],
   statsLessThan: false, // Valor inicial para statsLessThan
   setStatsLessThan: (newValue) => set({ statsLessThan: newValue }), // Función para actualizar statsLessThan
 
@@ -27,8 +29,9 @@ const createTeamStatsStore = ((set) => ({
     );
 
     const homeYc = await data.json();
-
+console.log("QUE TRAE ESTI", homeYc)
     set({ homeStatYellowCard: homeYc  });
+    set({localMatches: homeYc?.matches})
   },
   setAwayStatYellowCard: async ({
     idAwayTeam,
@@ -79,6 +82,7 @@ const createTeamStatsStore = ((set) => ({
     const awayCorners = await data.json();
 
     set({ awayStatCorners: awayCorners.corners });
+    set({visitorMatches: awayCorners?.matches})
   },
   setAwayStatGoals: async ({
     idAwayTeam,

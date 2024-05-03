@@ -1,160 +1,82 @@
+import axios from "axios";
 import { BACKEND_URL_BASE } from "./url_base";
 
-// const URL_API = "http://localhost:1234/league"
 const URL_API = `${BACKEND_URL_BASE}/league`;
 
-// Definimos el store de League
 const crateLeagueStore = (set, get) => ({
   leagues: [],
   leagueDetail: {},
 
-  // Función para crear una nueva liga
   createLeague: async (newLeague) => {
-    console.log(newLeague, "En el store");
-    // Lógica para crear la liga utilizando la API
     try {
-      // Hacer una solicitud POST a la API con la nueva liga
-      const response = await fetch(URL_API, {
-        method: "POST",
+      const response = await axios.post(URL_API, newLeague, {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newLeague),
       });
-      const data = await response.json();
+      const data = response.data;
+  
+      // Actualizar el estado local con la nueva liga
       set((state) => ({
         leagues: [...state.leagues, data],
       }));
+  
       return data;
-      // Verificar si la solicitud fue exitosa
-      // if (response.ok) {
-      //   // Actualizar el estado local con la nueva liga
-      //   const data = await response.json();
-      //   set((state) => ({
-      //     leagues: [...state.leagues, data],
-      //   }));
-      //   return data;
-      // } else {
-      //   // Manejar errores si la solicitud falla
-      //   console.error('Error creating league:', response.statusText);
-      //   return null;
-      // }
     } catch (error) {
       console.error("Error creating league:", error);
-      return null;
+      throw error.response.data.error;
     }
   },
 
-  // Función para leer todas las ligas
   fetchLeagues: async () => {
-    // Lógica para obtener todas las ligas utilizando la API
     try {
-      // Hacer una solicitud GET a la API para obtener todas las ligas
-      const response = await fetch(URL_API);
-      console.log(response);
-      const data = await response.json();
+      const response = await axios.get(URL_API);
+      const data = response.data;
       set({ leagues: data });
-      // Verificar si la solicitud fue exitosa
-      // if (response.ok) {
-      //   const data = await response.json();
-      //   set({ leagues: data });
-      // } else {
-      //   // Manejar errores si la solicitud falla
-      //   console.error('Error fetching leagues:', response.statusText);
-      // }
     } catch (error) {
       console.error("Error fetching leagues:", error);
     }
   },
 
-  // Función para actualizar una liga existente
   updateLeague: async (updatedLeague) => {
-    // Lógica para actualizar la liga utilizando la API
     try {
-      // Hacer una solicitud PUT a la API con la liga actualizada
-      const response = await fetch(`URL_DE_LA_API/${updatedLeague.id}`, {
-        method: "PUT",
+      const response = await axios.put(`${URL_API}/${updatedLeague.id}`, updatedLeague, {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(updatedLeague),
       });
-      const data = await response.json();
+      const data = response.data;
       set((state) => ({
         leagues: state.leagues.map((league) =>
           league.id === updatedLeague.id ? data : league
         ),
       }));
-      // Verificar si la solicitud fue exitosa
-      // if (response.ok) {
-      //   // Actualizar el estado local con la liga actualizada
-      //   const data = await response.json();
-      //   set((state) => ({
-      //     leagues: state.leagues.map((league) =>
-      //       league.id === updatedLeague.id ? data : league
-      //     ),
-      //   }));
-      //   return data;
-      // } else {
-      //   // Manejar errores si la solicitud falla
-      //   console.error('Error updating league:', response.statusText);
-      //   return null;
-      // }
     } catch (error) {
       console.error("Error updating league:", error);
-      return null;
     }
   },
 
-  // Función para eliminar una liga existente
   deleteLeague: async (leagueId) => {
-    // Lógica para eliminar la liga utilizando la API
     try {
-      // Hacer una solicitud DELETE a la API para eliminar la liga
-     const response = await fetch(`${URL_API}/${leagueId}`, {
-        method: "DELETE",
-      });
-      const infoDelete = await response.json()
-      await get().fetchLeagues()
+      const infoDelete = await axios.delete(`${URL_API}/${leagueId}`);
+      await get().fetchLeagues();
       return infoDelete
-      // Verificar si la solicitud fue exitosa
-      // if (response.ok) {
-      //   // Actualizar el estado local eliminando la liga
-      //   set((state) => ({
-      //     leagues: state.leagues.filter((league) => league.id !== leagueId),
-      //   }));
-      // } else {
-      //   // Manejar errores si la solicitud falla
-      //   console.error('Error deleting league:', response.statusText);
-      // }
     } catch (error) {
       console.error("Error deleting league:", error);
     }
   },
-  // Función para leer todas las ligas
+
   getLeagueDetail: async ({ idLeague }) => {
     if (idLeague === null) {
-      console.log("VOY A LKIMPIAR EL ESTADO");
       set({ leagueDetail: {} });
       return;
     }
-    // Lógica para obtener todas las ligas utilizando la API
     try {
-      // Hacer una solicitud GET a la API para obtener todas las ligas
-      const response = await fetch(URL_API + "/" + idLeague);
-      console.log(response);
-      const league = await response.json();
+      const response = await axios.get(`${URL_API}/${idLeague}`);
+      const league = response.data;
       set({ leagueDetail: league });
-      // Verificar si la solicitud fue exitosa
-      // if (response.ok) {
-      //   const data = await response.json();
-      //   set({ leagues: data });
-      // } else {
-      //   // Manejar errores si la solicitud falla
-      //   console.error('Error fetching leagues:', response.statusText);
-      // }
     } catch (error) {
-      console.error("Error fetching leagues:", error);
+      console.error("Error fetching league detail:", error);
     }
   },
 });

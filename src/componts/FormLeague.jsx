@@ -22,7 +22,6 @@ const FormLeague = () => {
   const [severity, setSeverity] = useState("");
   const [msgAlert, setMsgAlert] = useState("");
 
-
   const [countries, setCountries] = useState([]);
 
   useEffect(() => {
@@ -40,32 +39,41 @@ const FormLeague = () => {
   const handleSubmit = async (values) => {
     try {
       await validationSchema.validate(values, { abortEarly: false }); // Validar los valores con Yup
-  
+
       const response = await createLeague(values);
       await fetchLeagues();
       setOpenCreateDialog(false);
-      if (response?.state === "ok") {
-        setSeverity("success");
+      console.log("RESPONSE----", response);
+         setSeverity("success");
         setMsgAlert("Liga creada exitosamente");
         setIsAlertOpen(true);
-      } else {
-        setSeverity("error");
-        setMsgAlert("Error al crear la liga");
-        setIsAlertOpen(true);
-      }
+      // if (response?.status === 200) {
+      //   setSeverity("success");
+      //   setMsgAlert("Liga creada exitosamente");
+      //   setIsAlertOpen(true);
+      // } else {
+      //   setSeverity("error");
+      //   setMsgAlert("Error al crear la liga");
+      //   setIsAlertOpen(true);
+      // }
     } catch (error) {
       if (error.name === "ValidationError") {
         // Capturar errores de validación de Yup
         const errorMessage = error.errors.join(", ");
+        console.log("Error de yup,", errorMessage)
         setSeverity("error");
         setMsgAlert(errorMessage);
         setIsAlertOpen(true);
       } else {
         console.error("Error al validar el formulario:", error);
+        const errorMessage = error.join(", ");
+        setSeverity("error");
+        setMsgAlert(errorMessage);
+        setIsAlertOpen(true);
       }
     }
+    
   };
-  
 
   return (
     <Formik
@@ -114,7 +122,12 @@ const FormLeague = () => {
             ))}
           </Field>
 
-          <Button type="button" onClick={()=>setOpenCreateDialog(true)} variant="contained" color="primary">
+          <Button
+            type="button"
+            onClick={() => setOpenCreateDialog(true)}
+            variant="contained"
+            color="primary"
+          >
             Crear Liga
           </Button>
           {/* <AlertDialog
@@ -129,7 +142,7 @@ const FormLeague = () => {
           <AlertDialogCopy
             open={openCreateDialog}
             onClose={() => setOpenCreateDialog(false)}
-            onConfirm= { async() => await handleSubmit(values)}
+            onConfirm={async () => await handleSubmit(values)}
             handleSubmit
             formValues
             textDialog
@@ -142,6 +155,7 @@ const FormLeague = () => {
 
           {isAlertOpen && (
             <AlertMessageCopy
+              isAlertOpen={isAlertOpen}
               severity={severity}
               textAlert={msgAlert}
               setIsAlertOpen={setIsAlertOpen}

@@ -26,6 +26,8 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 import "dayjs/locale/es"; // Importar la localización en español
 import { styled } from '@mui/material/styles';
 import { useBoundStore } from "../stores";
+import { useState } from "react";
+import { useEffect } from "react";
 
 
 const StatsTable = ({ homeStats, awayStats, statsLessThan }) => {
@@ -222,14 +224,33 @@ export default function StatisticsTablecopy({
       getTeamDetails(null)
     }
   }, [idHomeTeam, idAwayTeam, getTeamDetails]);
-
+  
+  
   // Utilizamos los selectores para obtener los detalles de cada equipo
-  const teamDetails1 = teamDetails && teamDetails[idHomeTeam];
-  const teamDetails2 = teamDetails && teamDetails[idAwayTeam];
+  const [teamDetails1, setTeamDetails1] = useState({})
+  const [teamDetails2, setTeamDetails2] = useState({})
+  // const teamDetails1 = teamDetails && teamDetails[idHomeTeam];
+  // const teamDetails2 = teamDetails && teamDetails[idAwayTeam];
+  useEffect(() => {
+    if(teamDetails){
+      setTeamDetails1(teamDetails[idHomeTeam])
+      setTeamDetails2( teamDetails[idAwayTeam])
+    }
+    return () => {
+      setTeamDetails1({});
+      setTeamDetails2({})
+    };
+    
+  }, [idHomeTeam,idAwayTeam,teamDetails])
+  
+  console.log("teamDetails",teamDetails)
+
   const {  homeStatYellowCard,  awayStatYellowCard,   homeStatGoals,  homeStatCorners,  awayStatCorners,  awayStatGoals  } = useBoundStore((state) => state);
   const UnderlinedTypography = styled(Typography)({
     textDecoration: 'underline',
   });
+
+
   const displayResultDate = ({ match }) => {
     dayjs.extend(localizedFormat);
     // Configurar dayjs para usar la localización en español

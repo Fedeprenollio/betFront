@@ -264,6 +264,7 @@ const FormAdminSeasonWithTeams = () => {
 
           {isAlertOpen && (
             <AlertMessageCopy
+            isAlertOpen={isAlertOpen}
               severity={severity}
               textAlert={msgAlert}
               setIsAlertOpen={setIsAlertOpen}
