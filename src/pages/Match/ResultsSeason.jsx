@@ -2,16 +2,24 @@
 /* eslint-disable react/prop-types */
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { TextField, Button, MenuItem, Container, Accordion, AccordionSummary, Typography, AccordionDetails } from "@mui/material";
+import {
+  TextField,
+  Button,
+  MenuItem,
+  Container,
+  Accordion,
+  AccordionSummary,
+  Typography,
+  AccordionDetails,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ExpandMore } from "@mui/icons-material";
 import { useBoundStore } from "../../stores";
 import FormAddResult from "./FormAddResult";
 
-
 // Componente de formulario con Formik y Yup
-const RoundForm = ({ arrayOfRounds, setRoundSelect }) => {
+const RoundForm = ({ arrayOfRounds, setRoundSelect, roundSelect }) => {
   // Esquema de validación con Yup
   const validationSchema = Yup.object().shape({
     round: Yup.number().required("Round is required"),
@@ -24,10 +32,7 @@ const RoundForm = ({ arrayOfRounds, setRoundSelect }) => {
   };
 
   return (
-    <Formik
-      initialValues={{ round: "" }}
-      validationSchema={validationSchema}
-    >
+    <Formik initialValues={{ round: roundSelect }} validationSchema={validationSchema}>
       {({ values, handleChange }) => (
         <Form>
           <Field
@@ -80,7 +85,6 @@ export const ResultsSeason = () => {
     );
     setArrayOfRounds(listOfRounds);
   }, [seasonById]);
-  
 
   useEffect(() => {
     setMatchesByRound({ seasonId: idSeason, round: roundSelect });
@@ -94,6 +98,7 @@ export const ResultsSeason = () => {
       <RoundForm
         arrayOfRounds={arrayOfRounds}
         setRoundSelect={setRoundSelect}
+        roundSelect={roundSelect}
       />
       {matchesByRound?.matches?.map((match) => (
         <Accordion key={match._id}>
@@ -107,7 +112,11 @@ export const ResultsSeason = () => {
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <FormAddResult matchId={match._id} localName={match.homeTeam.name} visitorName={match.awayTeam.name} />
+            <FormAddResult
+              matchId={match._id}
+              localName={match.homeTeam.name}
+              visitorName={match.awayTeam.name}
+            />
           </AccordionDetails>
         </Accordion>
       ))}
