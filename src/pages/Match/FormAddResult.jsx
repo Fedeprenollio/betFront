@@ -1,12 +1,11 @@
+/* eslint-disable react/prop-types */
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { TextField, Button, Grid, Typography } from "@mui/material";
 import * as Yup from "yup";
-import { useParams } from "react-router-dom";
-import { useBoundStore } from "../stores";
 import { useEffect } from "react";
+import { useBoundStore } from "../../stores";
 
-const FormResult = () => {
-  const { matchId } = useParams();
+const FormAddResult = ({ matchId, visitorName, localName }) => {
   const initialValues = {
     goalsHome: "",
     goalsAway: "",
@@ -45,16 +44,16 @@ const FormResult = () => {
     passesAway: Yup.number().min(0),
   });
 
-  const { addMatchResult, getMatchDetail,matchDetail } = useBoundStore((state) => state);
+  const { addMatchResult, getMatchDetail, matchDetail } = useBoundStore(
+    (state) => state
+  );
   useEffect(() => {
-    getMatchDetail({idMatch: matchId})     
-  }, [getMatchDetail, matchId])
-  console.log("DETALLE," , matchDetail)
-  
+    getMatchDetail({ idMatch: matchId });
+  }, [getMatchDetail, matchId]);
 
-  const handleSubmit = async(values) => {
-    console.log("VALUE", values);
- await   addMatchResult(matchId, {
+  const handleSubmit = async (values) => {
+    console.log("VALUES DEL RESULTAD", values)
+    await addMatchResult(matchId, {
       goalsHome: parseInt(values.goalsHome),
       goalsAway: parseInt(values.goalsAway),
       teamStatistics: {
@@ -89,21 +88,19 @@ const FormResult = () => {
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      {({ values, handleChange }) => (
-        <Form  >
-          <Grid  container spacing={2} alignItems="center">
-
-          <Grid item xs={6} sx={{maxWidth:"300px"}}>
+      {() => (
+        <Form>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item xs={6} sx={{ maxWidth: "200px" }}>
               <Typography variant="h6" gutterBottom align="center">
-                {matchDetail?.homeTeam?.name}
+                {localName}
               </Typography>
             </Grid>
             <Grid item xs={6}>
               <Typography variant="h6" gutterBottom align="center">
-              {matchDetail?.awayTeam?.name}
+                {visitorName}
               </Typography>
             </Grid>
-
 
             <Grid item xs={6}>
               <Field
@@ -296,4 +293,4 @@ const FormResult = () => {
   );
 };
 
-export default FormResult;
+export default FormAddResult;

@@ -21,6 +21,7 @@ import { FilterLeague } from "../../componts/Filters/FilterLeague";
 import ConfirmationDialog from "../../componts/feedback/ConfirmationDialog ";
 import AlertDialogCopy from "../../componts/feedback/AlertDialogCopy";
 import { AlertMessageCopy } from "../../componts/feedback/AlertMessageCopy";
+import { Link } from "react-router-dom";
 
 export const ListLeagues = () => {
   const { fetchLeagues, leagues, deleteLeague } = useBoundStore(
@@ -59,7 +60,7 @@ export const ListLeagues = () => {
 
   const handleDelete = async (leagueId) => {
     const response = await deleteLeague(leagueId);
-    console.log(response)
+    console.log(response);
     if (response) {
       setSeverity("success");
       setMsgAlert("Liga eliminada exitosamente");
@@ -89,7 +90,6 @@ export const ListLeagues = () => {
         setFilteredLeagues={setFilteredLeagues}
         getSortedLeagues={getSortedLeagues}
       />
-      <h3>Aca la lista</h3>
 
       <AlertDialogCopy
         open={openDeleteDialog}
@@ -107,7 +107,7 @@ export const ListLeagues = () => {
 
       {isAlertOpen && (
         <AlertMessageCopy
-        isAlertOpen={isAlertOpen}
+          isAlertOpen={isAlertOpen}
           severity={severity}
           textAlert={msgAlert}
           setIsAlertOpen={setIsAlertOpen}
@@ -139,7 +139,14 @@ export const ListLeagues = () => {
                   <IconButton onClick={() => handleDeleteClick(league)}>
                     <DeleteIcon />
                   </IconButton>
-                  <EditIcon onClick={() => handleEdit(league._id)} />
+                  <IconButton>
+                    <EditIcon onClick={() => handleEdit(league._id)} />
+                  </IconButton>
+                  <IconButton>
+                    <Link to={`/league/detail/${league._id}`}>
+                      <EditIcon />
+                    </Link>
+                  </IconButton>
                 </ListItemIcon>
               </Grid>
             </Grid>
@@ -164,6 +171,9 @@ export const ListLeagues = () => {
                       <ListItemIcon>
                         {/* <DeleteIcon onClick={() => deleteSeason(season._id)} /> */}
                         {/* <EditIcon onClick={() => handleEditSeason(season._id)} /> */}
+                        <Link to={`/match/results/${season._id}`}>
+                          <EditIcon />
+                        </Link>
                       </ListItemIcon>
                     </Grid>
                   </Grid>

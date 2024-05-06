@@ -13,6 +13,7 @@ import { Register } from "../pages/user/Register";
 import PrivateRoute from "./PrivateRoute";
 import { TeamStatistics } from "../pages/Statistics/TeamStatistics";
 import { StatisticsPage } from "../pages/Statistics/StatisticsPage";
+import { ResultsSeason } from "../pages/Match/ResultsSeason";
 
 const RoutesComponent = () => {
   return (
@@ -33,6 +34,8 @@ const RoutesComponent = () => {
           <Route path="new" element={<AdminMatch />} />
           <Route path="edit/:matchId" element={<AdminMatch />} />
           <Route path="addResults" element={<FormResult />} />
+          <Route path="results/:idSeason" element={<ResultsSeason />} />
+
         </Route>
       </Route>
       <Route path="/league">

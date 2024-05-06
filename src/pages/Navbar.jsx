@@ -133,6 +133,15 @@ const  navigate = useNavigate()
                   Administrar Partidos
                 </MenuItem>
               )}
+               {isAuthenticated && (
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
+                  to="/match/results"
+                >
+                  Cargar Resultados
+                </MenuItem>
+              )}
               {/* <MenuItem
                 onClick={handleClose}
                 component={Link}

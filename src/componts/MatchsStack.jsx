@@ -30,7 +30,6 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
  export const MatchList3 = ({ match }) => {
-  console.log(match);
   const fecha = new Date(match.date);
   const hora = dayjs(fecha).format("HH:mm");
 
@@ -137,7 +136,6 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export const MatchsStack = () => {
   const { matches } = useBoundStore((state) => state);
-
   const [myMatches, setMyMatches] = useState([]);
 
   useEffect(() => {

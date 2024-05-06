@@ -43,7 +43,7 @@ const createSeasonStore = (set) => ({
     if(seasonId=== null && round=== null){
       return set({ matchesByRound: {} });
     }
-
+    console.log(round)
     try {
       // Obtener los partidos filtrados por ronda desde la API
       const response = await fetch(`${URL_API}/${seasonId}/matches?round=${round}`);
@@ -56,16 +56,16 @@ const createSeasonStore = (set) => ({
     }
   },
   // Función para crear una nueva temporada
-  createSeason: async ({ league, year }) => {
+  createSeason: async ({ league, year, numberOfRounds }) => {
     const leagueId = league;
-    console.log(leagueId, year);
+    console.log(leagueId, year, numberOfRounds);
     try {
       const response = await fetch(URL_API, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ leagueId, year }),
+        body: JSON.stringify({ leagueId, year, numberOfRounds }),
       });
      const data = await response.json()
       console.log(data);

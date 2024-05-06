@@ -6,13 +6,10 @@ import * as yup from "yup";
 import {
   Button,
   FormControl,
-  InputLabel,
   MenuItem,
-  Select,
   Typography,
 } from "@mui/material";
 import { useBoundStore } from "../stores";
-import AlertDialog from "./feedback/AlertDialog";
 import AlertDialogCopy from "./feedback/AlertDialogCopy";
 import { AlertMessageCopy } from "./feedback/AlertMessageCopy";
 
@@ -20,7 +17,13 @@ const validationSchema = yup.object({
   country: yup.string().required("El país es obligatorio"),
   league: yup.string().required("La liga es obligatoria"),
   year: yup.string().required("El año es obligatorio"),
+  numberOfRounds: yup
+    .number()
+    .required("La cantidad de rondas es obligatoria")
+    .positive("La cantidad de rondas debe ser un número positivo")
+    .integer("La cantidad de rondas debe ser un número entero"),
 });
+
 
 const FormSeason = () => {
   // const { leagues, fetchLeagues } = crateLeagueStore();
@@ -104,6 +107,7 @@ const FormSeason = () => {
         country: "",
         league: "",
         year: "",
+        numberOfRounds: "",
       }}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
@@ -175,6 +179,24 @@ const FormSeason = () => {
             {touched.year && errors.year && (
               <Typography variant="caption" color="error">
                 {errors.year}
+              </Typography>
+            )}
+          </FormControl>
+
+          <FormControl fullWidth margin="normal">
+            <Field
+              as={TextField}
+              label="Cantidad de Rondas"
+              id="numberOfRounds"
+              name="numberOfRounds"
+              value={values.numberOfRounds}
+              onChange={(event) =>
+                setFieldValue("numberOfRounds", event.target.value)
+              }
+            />
+            {touched.numberOfRounds && errors.numberOfRounds && (
+              <Typography variant="caption" color="error">
+                {errors.numberOfRounds}
               </Typography>
             )}
           </FormControl>

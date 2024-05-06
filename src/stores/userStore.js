@@ -25,8 +25,9 @@ const createUserStore = (set, get) => ({
   },
 
   loginUser: async ({ values }) => {
-    const { username, password } = values;
+    console.log(values)
     try {
+      const { username, password } = values;
       const response = await axios.post(
         `${URL_API}/login`,
         {
@@ -35,22 +36,31 @@ const createUserStore = (set, get) => ({
         },
         { withCredentials: true }
       );
-      const infoUser = response.data;
-      console.log("repuesta login",response);
-      if (infoUser.status === "ok") {
+      const infoUser = response?.data;
+      console.log("repuesta login", response);
+      if (infoUser?.status === "ok") {
         // Configura el estado isAuthenticated en true si el inicio de sesión es exitoso
         set({ isAuthenticated: true });
+        return infoUser;
+      } else {
+        set({ isAuthenticated: false });
       }
       // Devuelve la información del usuario en caso de éxito
-      return infoUser;
     } catch (error) {
-      console.error("Error al realizar la solicitud----:", error.message);
-      // Configura el estado de error para que el componente pueda mostrar un mensaje de error al usuario
-      set({ error: error.message });
-      // Devuelve el mensaje de error para que el componente pueda manejarlo adecuadamente
-      return error.message;
+      console.log("Error al realizar la solicitud:", error);
+      // Si el error proviene del servidor y tiene un mensaje, captúralo y devuélvelo
+      if (error.response && error.response.data && error.response.data.message) {
+        const errorMessage = error.response.data.message;
+        console.log("Mensaje de error:", errorMessage);
+        set({error: errorMessage})
+        // Aquí puedes manejar el mensaje de error como desees
+        return errorMessage;
+      }
+      // Si no se pudo obtener un mensaje de error del servidor, devuelve un mensaje genérico
+      return "Ha ocurrido un error al iniciar sesión.";
     }
   },
+  
   
   decodeTokenFromCookie: (cookieToken) => {
     const tokenCookie = cookieToken

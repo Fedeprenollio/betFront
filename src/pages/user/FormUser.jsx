@@ -4,7 +4,7 @@ import * as yup from "yup";
 import { Button, TextField, Typography } from "@mui/material";
 import { useBoundStore } from "../../stores";
 import { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate de react-router-dom
+import { Navigate, useNavigate } from "react-router-dom"; // Importa useNavigate de react-router-dom
 
 const validationSchema = yup.object({
   username: yup.string().required("Usuario es requerido"),
@@ -12,49 +12,50 @@ const validationSchema = yup.object({
 });
 
 const FormUser = ({ action }) => {
-  const { loginUser ,registerUser, error} = useBoundStore((state) => state);
+  const {
+    loginUser,
+    registerUser,
+    error,
+    isAuthenticated,
+    decodeTokenFromCookie,
+  } = useBoundStore((state) => state);
   const [loginError, setLoginError] = useState(null);
   const navigate = useNavigate(); // Inicializa navigate usando useNavigate
 
-console.log(error)
+  console.log(error)
 
   const handleSubmit = async (values, { resetForm }) => {
     // alert(JSON.stringify(values, null, 2));
     try {
       if (action === "register") {
         console.log(values);
-        await registerUser({values})
+        await registerUser({ values });
       } else if (action === "login") {
         const loginResponse = await loginUser({ values });
-        console.log("loginResponse", loginResponse)
+        console.log("loginResponse", loginResponse);
         if (loginResponse?.status === "ok") {
           // Redireccionar a la página de administrador si el inicio de sesión es exitoso
           navigate("/teams/adm");
-          }else if(loginResponse ==="Network Error"){
-            setLoginError(loginResponse)
-          }
-        
-        else {
+        } else {
           // Si el inicio de sesión falla, mostrar un mensaje de error al usuario
-          setLoginError(loginResponse?.message || error);
+          setLoginError(error);
         }
-  
-        
       }
       resetForm();
     } catch (error) {
-      console.log("EROR LOGIN", error)
-      setLoginError("Ocurrió un error en la solicitud. Por favor, inténtalo de nuevo más tarde.");    }
-  
+      console.log("EROR LOGIN", error);
+      setLoginError(
+        "Ocurrió un error en la solicitud. Por favor, inténtalo de nuevo más tarde."
+      );
+    }
   };
-
- 
+  if (isAuthenticated) {
+    return <Navigate to="/" />;
+  }
   // useEffect(() => {
   //     setLoginError( prevState=> error)
-    
 
   // }, [error])
-    
 
   return (
     <Formik
@@ -94,7 +95,11 @@ console.log(error)
             error={touched.password && Boolean(errors.password)}
             helperText={touched.password && errors.password}
           />
-           {loginError && <Typography variant="body2" color="error">{loginError}</Typography>}
+          {loginError && (
+            <Typography variant="body2" color="error">
+              {loginError}
+            </Typography>
+          )}
           <Button type="submit" variant="contained" color="primary">
             Iniciar sesión
           </Button>

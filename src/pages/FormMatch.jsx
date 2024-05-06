@@ -12,7 +12,7 @@ import { useBoundStore } from "../stores";
 const validationSchema = Yup.object().shape({
   homeTeam: Yup.string().required("Required"),
   awayTeam: Yup.string().required("Required"),
-  date: Yup.date().required("Required"),
+  date: Yup.date().optional().nullable(),
   league: Yup.string().required("Required"),
   country: Yup.string().required("Required"),
   seasonYear: Yup.string().required("Required"),
@@ -45,9 +45,15 @@ const MyDateTimePicker = ({ field, form }) => {
     </LocalizationProvider>
   );
 };
-
-const FormMatch = ({matchId}) => {
-  const { fetchLeagues, leagues, addMatchesToSeason} = useBoundStore(state=> state)
+//PARA LUEGO EDITARR PARTDOS voy a usar luego los matchId
+const FormMatch = ({ matchId }) => {
+  const {
+    fetchLeagues,
+    leagues,
+    addMatchesToSeason,
+    getSeasonById,
+    seasonById,
+  } = useBoundStore((state) => state);
 
   const [countries, setCountries] = useState([]);
   const [leaguesByCountry, setLeaguesByCountry] = useState({});
@@ -57,6 +63,13 @@ const FormMatch = ({matchId}) => {
   useEffect(() => {
     fetchLeagues();
   }, [fetchLeagues]);
+  console.log("QUE HAY EN LEAGUES?", leagues);
+  console.log("selectedSeason", selectedSeason);
+  console.log("seasonById", seasonById);
+
+  useEffect(() => {
+    getSeasonById(selectedSeason);
+  }, [getSeasonById, selectedSeason]);
 
   useEffect(() => {
     // Obtener países únicos de los equipos
@@ -188,6 +201,16 @@ const FormMatch = ({matchId}) => {
           <ErrorMessage name="seasonYear" component="div" />
           <Field
             as={TextField}
+            name="round"
+            label="Ronda"
+            type="number"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+          />
+          <ErrorMessage name="round" component="div" />
+          {/* <Field
+            as={TextField}
             select
             name="homeTeam"
             label="Equipo Local"
@@ -208,6 +231,26 @@ const FormMatch = ({matchId}) => {
                   })
                 )}
           </Field>
+          <ErrorMessage name="homeTeam" component="div" /> */}
+          <Field
+            as={TextField}
+            select
+            name="homeTeam"
+            label="Equipo Local"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+          >
+            {selectedLeague &&
+              seasonById?.teams?.map((team) => {
+                    return (
+                      <MenuItem key={team._id} value={team._id}>
+                        {team.name}
+                      </MenuItem>
+                    );
+                  })
+                }
+          </Field>
           <ErrorMessage name="homeTeam" component="div" />
 
           <Field
@@ -219,18 +262,15 @@ const FormMatch = ({matchId}) => {
             fullWidth
             margin="normal"
           >
-            {selectedLeague &&
-              leagues
-                .find((league) => league._id === selectedLeague) // Encontrar la liga seleccionada
-                ?.season.map((season) =>
-                  season.teams.map((team) => {
+             {selectedLeague &&
+              seasonById?.teams?.map((team) => {
                     return (
                       <MenuItem key={team._id} value={team._id}>
                         {team.name}
                       </MenuItem>
                     );
                   })
-                )}
+                }
           </Field>
           <ErrorMessage name="awayTeam" component="div" />
 
@@ -242,17 +282,6 @@ const FormMatch = ({matchId}) => {
             )}
           </Field>
           <ErrorMessage name="date" component="div" />
-
-          <Field
-            as={TextField}
-            name="round"
-            label="Ronda"
-            type="number"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-          />
-          <ErrorMessage name="round" component="div" />
 
           <Button type="submit" variant="contained" color="primary">
             Submit
