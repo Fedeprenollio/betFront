@@ -60,7 +60,6 @@ export const FilterLeague = ({ setFilteredLeagues, getSortedLeagues }) => {
   }, [leagues]);
 
   const handleCountryChange = (event, setFieldValue) => {
-    console.log("HOLA");
     const selectedCountry = event.target.value;
     setSelectedCountry(selectedCountry);
     setSelectedLeague(""); // Reinicia la selección de la liga
@@ -103,8 +102,6 @@ export const FilterLeague = ({ setFilteredLeagues, getSortedLeagues }) => {
     setFieldValue("league", selectedLeague);
   };
 
-  console.log("LAS LIGAS", leaguesByCountry);
-
   const handleSubmit = (values) => {
     console.log(values);
     // Aquí puedes realizar la acción que necesites con los valores seleccionados
@@ -126,14 +123,18 @@ export const FilterLeague = ({ setFilteredLeagues, getSortedLeagues }) => {
             Filtrar Ligas
           </Typography>
           <FormControl fullWidth sx={{ m: 1, minWidth: 120 }}>
+            <InputLabel>País</InputLabel>
             <Field
-              as={TextField}
+              as={Select}
               label="País"
-              select
+              // select
               name="country"
               value={selectedCountry}
               onChange={(event) => handleCountryChange(event, setFieldValue)}
             >
+              <MenuItem value="">
+                <em>Selecciona un país</em>
+              </MenuItem>
               {countries.map((country) => (
                 <MenuItem key={country} value={country}>
                   {country}
@@ -143,15 +144,19 @@ export const FilterLeague = ({ setFilteredLeagues, getSortedLeagues }) => {
           </FormControl>
 
           <FormControl fullWidth sx={{ m: 1, minWidth: 120 }}>
+          <InputLabel>Liga</InputLabel>
+
             <Field
-              as={TextField}
-              select
+              as={Select}
               label="Liga"
               name="league"
               value={selectedLeague}
               onChange={(event) => handleLeagueChange(event, setFieldValue)}
               disabled={!selectedCountry}
             >
+                <MenuItem value="">
+                <em>Selecciona una liga</em>
+              </MenuItem>
               {leaguesByCountry[selectedCountry]?.map((league) => (
                 <MenuItem key={league._id} value={league._id}>
                   {league.name}

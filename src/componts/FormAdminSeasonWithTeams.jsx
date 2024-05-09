@@ -102,7 +102,7 @@ const FormAdminSeasonWithTeams = () => {
 
       const response = await addTeamsToSeason(values.season, values.teams);
       await fetchLeagues();
-
+console.log("RESPONSE ADD EQUIPO", response)
       setOpenAddTeamsDialog(false);
       setIsAlertOpen(true);
 
@@ -112,7 +112,7 @@ const FormAdminSeasonWithTeams = () => {
         setIsAlertOpen(true);
       } else {
         setSeverity("error");
-        setMsgAlert("Error al cargar equipos");
+        setMsgAlert(response.error);
         setIsAlertOpen(true);
       }
     } catch (error) {

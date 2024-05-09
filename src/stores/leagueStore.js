@@ -6,14 +6,17 @@ const URL_API = `${BACKEND_URL_BASE}/league`;
 const crateLeagueStore = (set, get) => ({
   leagues: [],
   leagueDetail: {},
+  
 
   createLeague: async (newLeague) => {
+    const token = get().token; 
+    const config = {
+      headers:{
+        Authorization: token
+      }
+    }
     try {
-      const response = await axios.post(URL_API, newLeague, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axios.post(URL_API, newLeague, config);
       const data = response.data;
   
       // Actualizar el estado local con la nueva liga
@@ -39,12 +42,14 @@ const crateLeagueStore = (set, get) => ({
   },
 
   updateLeague: async (updatedLeague) => {
+    const token = get().token; 
+    const config = {
+      headers:{
+        Authorization: token
+      }
+    }
     try {
-      const response = await axios.put(`${URL_API}/${updatedLeague.id}`, updatedLeague, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axios.put(`${URL_API}/${updatedLeague.id}`, updatedLeague, config);
       const data = response.data;
       set((state) => ({
         leagues: state.leagues.map((league) =>
@@ -57,8 +62,15 @@ const crateLeagueStore = (set, get) => ({
   },
 
   deleteLeague: async (leagueId) => {
+    const token = get().token; 
+    const config = {
+      headers:{
+        Authorization: token
+      }
+    }
+    console.log("CONFIG----",config)
     try {
-      const infoDelete = await axios.delete(`${URL_API}/${leagueId}`);
+      const infoDelete = await axios.delete(`${URL_API}/${leagueId}`, config);
       await get().fetchLeagues();
       return infoDelete
     } catch (error) {

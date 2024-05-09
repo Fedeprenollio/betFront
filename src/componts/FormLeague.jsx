@@ -14,7 +14,7 @@ const validationSchema = yup.object({
 });
 
 const FormLeague = () => {
-  const { teams, setTeams, createLeague, fetchLeagues } = useBoundStore(
+  const { teams, setTeams, createLeague, fetchLeagues, user, token } = useBoundStore(
     (state) => state
   );
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
@@ -23,7 +23,7 @@ const FormLeague = () => {
   const [msgAlert, setMsgAlert] = useState("");
 
   const [countries, setCountries] = useState([]);
-
+console.log("TOKEN", token)
   useEffect(() => {
     setTeams();
   }, [setTeams]);
@@ -39,7 +39,7 @@ const FormLeague = () => {
   const handleSubmit = async (values) => {
     try {
       await validationSchema.validate(values, { abortEarly: false }); // Validar los valores con Yup
-
+      // const token = user.token
       const response = await createLeague(values);
       await fetchLeagues();
       setOpenCreateDialog(false);
@@ -65,10 +65,10 @@ const FormLeague = () => {
         setMsgAlert(errorMessage);
         setIsAlertOpen(true);
       } else {
-        console.error("Error al validar el formulario:", error);
-        const errorMessage = error.join(", ");
+        console.log("Error al validar el formulario:", error);
+        // const errorMessage = error.join(", ");
         setSeverity("error");
-        setMsgAlert(errorMessage);
+        setMsgAlert(error);
         setIsAlertOpen(true);
       }
     }

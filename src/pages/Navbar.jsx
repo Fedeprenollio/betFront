@@ -23,14 +23,13 @@ const  navigate = useNavigate()
   const [anchorElPartidos, setAnchorElPartidos] = useState(null);
   const [anchorElEquipos, setAnchorElEquipos] = useState(null);
   const [anchorLeagues, setAnchorLeagues] = useState(null);
-  const { decodeTokenFromCookie, user, isAuthenticated,logout } = useBoundStore(
+  const {  user, isAuthenticated,logout } = useBoundStore(
     (state) => state
   );
+console.log("USUARIO LOGEADO?", user)
 
-  useEffect(() => {
-    const cookie = document.cookie;
-    decodeTokenFromCookie(cookie);
-  }, [decodeTokenFromCookie]);
+
+
 
   const handleMenuPartidos = (event) => {
     setAnchorElPartidos(event.currentTarget);
@@ -77,7 +76,7 @@ const  navigate = useNavigate()
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <h4>Hola {user?.user}</h4>
+          { isAuthenticated &&  <h4>Hola {user?.user}</h4>}  
           <IconButton
             component={Link}
             to="/"
@@ -208,7 +207,7 @@ const  navigate = useNavigate()
                 Ver ligas
               </MenuItem>
               {isAuthenticated && (
-                <MenuItem onClick={handleClose} component={Link} to="/league">
+                <MenuItem onClick={handleClose} component={Link} to="/league/admin">
                   Administrar ligas
                 </MenuItem>
               )}

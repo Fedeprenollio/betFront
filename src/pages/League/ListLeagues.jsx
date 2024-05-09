@@ -139,8 +139,8 @@ export const ListLeagues = () => {
                   <IconButton onClick={() => handleDeleteClick(league)}>
                     <DeleteIcon />
                   </IconButton>
-                  <IconButton>
-                    <EditIcon onClick={() => handleEdit(league._id)} />
+                  <IconButton  onClick={() => handleEdit(league._id)}>
+                    <EditIcon  />
                   </IconButton>
                   <IconButton>
                     <Link to={`/league/detail/${league._id}`}>

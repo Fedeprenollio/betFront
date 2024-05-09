@@ -7,7 +7,12 @@ const URL_API = `${BACKEND_URL_BASE}/user`;
 const createUserStore = (set, get) => ({
   user: {},
   isAuthenticated: false,
+  setIsAuthenticated: (boolean)=> set({isAuthenticated: boolean }) , 
   error: null,
+  token: `Bearer ${JSON.parse(window.localStorage.getItem("loggedUser")).token}`  || "",
+  setToken: (newToken)=>{
+      set({token:`Bearer ${newToken}`})
+  },
 
 
   registerUser: async ({ values }) => {
@@ -18,14 +23,13 @@ const createUserStore = (set, get) => ({
         password,
       });
       const infoUser = response.data;
-      console.log(infoUser);
+      set({user: infoUser})
     } catch (error) {
       console.error("Error al realizar la solicitud:", error.message);
     }
   },
 
   loginUser: async ({ values }) => {
-    console.log(values)
     try {
       const { username, password } = values;
       const response = await axios.post(
@@ -36,11 +40,15 @@ const createUserStore = (set, get) => ({
         },
         { withCredentials: true }
       );
+
       const infoUser = response?.data;
+
+
       console.log("repuesta login", response);
       if (infoUser?.status === "ok") {
         // Configura el estado isAuthenticated en true si el inicio de sesión es exitoso
         set({ isAuthenticated: true });
+        set({user: infoUser})
         return infoUser;
       } else {
         set({ isAuthenticated: false });
@@ -62,16 +70,17 @@ const createUserStore = (set, get) => ({
   },
   
   
-  decodeTokenFromCookie: (cookieToken) => {
-    const tokenCookie = cookieToken
-      ?.split("; ")
-      .find((cookie) => cookie.startsWith("jwt="));
+  decodeTokenFromLocalStorage: (token) => {
+    const tokenCookie = JSON.parse(token)
+    
     if (tokenCookie) {
       try {
-        const token = tokenCookie.split("=")[1];
-        const decodedToken = jwtDecode(token);
-        set({ user: decodedToken });
-        set({ isAuthenticated: true });
+        
+        const decodedToken = jwtDecode(token.token);
+        console.log("QUE HAY", decodedToken)
+        return decodedToken
+        // set({ user: decodedToken });
+        // set({ isAuthenticated: true });
       } catch (error) {
         console.error("Error al decodificar el token:", error.message);
       }
@@ -81,7 +90,9 @@ const createUserStore = (set, get) => ({
   logout: async () => {
     try {
       await axios.get(`${URL_API}/logout`, { withCredentials: true });
+      set({token: null})
       set({ user: {}, isAuthenticated: false });
+      window.localStorage.removeItem("loggedUser")
     } catch (error) {
       console.error("Error al realizar logout:", error.message);
     }

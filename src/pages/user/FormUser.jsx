@@ -17,21 +17,40 @@ const FormUser = ({ action }) => {
     registerUser,
     error,
     isAuthenticated,
-    decodeTokenFromCookie,
+    setToken
   } = useBoundStore((state) => state);
   const [loginError, setLoginError] = useState(null);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate(); // Inicializa navigate usando useNavigate
 
-  console.log(error)
+  useEffect(() => {
+   const loggedUserJSON = window.localStorage.getItem("loggedUser")
+   if(loggedUserJSON){
+    const user = JSON.parse(loggedUserJSON)
+    setUser(user)
+    setToken(user?.token)
+   }
+  }, [])
+  
 
   const handleSubmit = async (values, { resetForm }) => {
     // alert(JSON.stringify(values, null, 2));
-    try {
-      if (action === "register") {
-        console.log(values);
+
+    if (action === "register") {
+      console.log(values);
+      try {
         await registerUser({ values });
-      } else if (action === "login") {
+      } catch (error) {
+        console.log("Error en register");
+      }
+    } else if (action === "login") {
+      try {
         const loginResponse = await loginUser({ values });
+        window.localStorage.setItem("loggedUser", JSON.stringify(loginResponse))
+
+
+        setUser(loginResponse);
+        setToken(loginResponse.token)
         console.log("loginResponse", loginResponse);
         if (loginResponse?.status === "ok") {
           // Redireccionar a la página de administrador si el inicio de sesión es exitoso
@@ -40,23 +59,20 @@ const FormUser = ({ action }) => {
           // Si el inicio de sesión falla, mostrar un mensaje de error al usuario
           setLoginError(error);
         }
+      } catch (error) {
+        console.log("EROR LOGIN", error);
+        setLoginError(
+          "Error en credenciales"
+        );
       }
-      resetForm();
-    } catch (error) {
-      console.log("EROR LOGIN", error);
-      setLoginError(
-        "Ocurrió un error en la solicitud. Por favor, inténtalo de nuevo más tarde."
-      );
     }
+    resetForm();
   };
+
   if (isAuthenticated) {
     return <Navigate to="/" />;
   }
-  // useEffect(() => {
-  //     setLoginError( prevState=> error)
-
-  // }, [error])
-
+console.log("ERROR EN LOGIN", loginError, user)
   return (
     <Formik
       initialValues={{
