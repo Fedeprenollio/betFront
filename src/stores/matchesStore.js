@@ -1,3 +1,4 @@
+import axios from "axios"
 import { BACKEND_URL_BASE } from "./url_base";
 
 // const API_URL ="http://localhost:1234/match"
@@ -88,17 +89,19 @@ const createMatchesStore = ((set, get) => ({
     }
   },
   addMatchResult: async (matchId, resultData) => {
-    console.log("ID PARTIDO,", matchId)
-    console.log("BODY,", resultData)
+    console.log("ID PARTIDO,", matchId);
+    console.log("BODY,", resultData);
+    
+    const token = get().token;
+    const config = {
+      headers: {
+        Authorization: token
+      }
+    };
+  
     try {
-      const response = await fetch(`${URL_API}/${matchId}/result`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(resultData),
-      });
-      const match = await response.json();
+      const response = await axios.put(`${URL_API}/${matchId}/result`, resultData, config);
+      const match = response.data;
       set((state) => ({
         matches: state.matches.map((m) =>
           m.id === matchId ? { ...m, ...match } : m

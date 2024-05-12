@@ -9,7 +9,7 @@ const createUserStore = (set, get) => ({
   isAuthenticated: false,
   setIsAuthenticated: (boolean)=> set({isAuthenticated: boolean }) , 
   error: null,
-  token: `Bearer ${JSON.parse(window.localStorage.getItem("loggedUser")).token}`  || "",
+  token: `Bearer ${JSON.parse(window.localStorage.getItem("loggedUser"))?.token}`  || "",
   setToken: (newToken)=>{
       set({token:`Bearer ${newToken}`})
   },

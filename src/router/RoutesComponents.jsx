@@ -44,6 +44,7 @@ const RoutesComponent = () => {
         <Route element={<PrivateRoute />}>
           {/* leaaguePage en espete momento es para administrar ligas */}
           <Route path="admin" element={<LeaguePage />} />
+          <Route path="detail/:idLeague" element={<DetailLeague />} />
           {/* <Route path="new" element={<AdminMatch />} />
           <Route path="addResults" element={<FormResult />} />
           <Route path="detail/:idLeague" element={<DetailLeague />} /> */}

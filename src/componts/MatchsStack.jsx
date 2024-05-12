@@ -141,7 +141,7 @@ export const MatchsStack = () => {
   useEffect(() => {
     setMyMatches(matches);
   }, [matches]);
-  
+  console.log("MIS PARTIDAS", myMatches)
   return (
     <Container sx={{ backgroundColor: "#84828244", height: "100vh", padding:"0.3rem" }}>
       {Object.entries(

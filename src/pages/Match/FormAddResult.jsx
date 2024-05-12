@@ -32,8 +32,8 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
     offsidesAway: Yup.number().min(0),
     yellowCardsHome: Yup.number().min(0),
     yellowCardsAway: Yup.number().min(0),
-    redCardsHome: Yup.number().min(0),
-    redCardsAway: Yup.number().min(0),
+    // redCardsHome: Yup.number().min(0),
+    // redCardsAway: Yup.number().min(0),
     cornersHome: Yup.number().min(0),
     cornersAway: Yup.number().min(0),
     possessionHome: Yup.number().min(0),
@@ -125,6 +125,99 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
               <ErrorMessage name="goalsAway" component="div" />
             </Grid>
 
+
+            <Grid item xs={6}>
+              <Field
+                as={TextField}
+                name="shotsHome"
+                label="Tiros Equipo Local"
+                type="number"
+                variant="outlined"
+                fullWidth
+              />
+              <ErrorMessage name="shotsHome" component="div" />
+            </Grid>
+            <Grid item xs={6}>
+              <Field
+                as={TextField}
+                name="shotsAway"
+                label="Tiros Equipo Visitante"
+                type="number"
+                variant="outlined"
+                fullWidth
+              />
+              <ErrorMessage name="shotsAway" component="div" />
+            </Grid>
+
+            <Grid item xs={6}>
+              <Field
+                as={TextField}
+                name="shotsHome"
+                label="Tiros al arco Equipo Local"
+                type="number"
+                variant="outlined"
+                fullWidth
+              />
+              <ErrorMessage name="shotsHome" component="div" />
+            </Grid>
+            <Grid item xs={6}>
+              <Field
+                as={TextField}
+                name="shotsAway"
+                label="Tiros al arco Equipo Visitante"
+                type="number"
+                variant="outlined"
+                fullWidth
+              />
+              <ErrorMessage name="shotsAway" component="div" />
+            </Grid>
+
+            <Grid item xs={6}>
+              <Field
+                as={TextField}
+                name="possessionHome"
+                label="Posesión (%) Equipo Local"
+                type="number"
+                variant="outlined"
+                fullWidth
+              />
+              <ErrorMessage name="possessionHome" component="div" />
+            </Grid>
+            <Grid item xs={6}>
+              <Field
+                as={TextField}
+                name="possessionAway"
+                label="Posesión (%) Equipo Visitante"
+                type="number"
+                variant="outlined"
+                fullWidth
+              />
+              <ErrorMessage name="possessionAway" component="div" />
+            </Grid>
+       
+            <Grid item xs={6}>
+              <Field
+                as={TextField}
+                name="possessionHome"
+                label="Faltas local"
+                type="number"
+                variant="outlined"
+                fullWidth
+              />
+              <ErrorMessage name="possessionHome" component="div" />
+            </Grid>
+            <Grid item xs={6}>
+              <Field
+                as={TextField}
+                name="possessionAway"
+                label="Faltas Visitante"
+                type="number"
+                variant="outlined"
+                fullWidth
+              />
+              <ErrorMessage name="possessionAway" component="div" />
+            </Grid>
+       
             <Grid item xs={6}>
               <Field
                 as={TextField}
@@ -148,7 +241,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
               />
               <ErrorMessage name="yellowCardsAway" component="div" />
             </Grid>
-            <Grid item xs={6}>
+            {/* <Grid item xs={6}>
               <Field
                 as={TextField}
                 name="redCardsHome"
@@ -169,7 +262,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
                 fullWidth
               />
               <ErrorMessage name="redCardsAway" component="div" />
-            </Grid>
+            </Grid> */}
             <Grid item xs={6}>
               <Field
                 as={TextField}
@@ -192,51 +285,11 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
               />
               <ErrorMessage name="cornersAway" component="div" />
             </Grid>
-            <Grid item xs={6}>
-              <Field
-                as={TextField}
-                name="possessionHome"
-                label="Posesión (%) Equipo Local"
-                type="number"
-                variant="outlined"
-                fullWidth
-              />
-              <ErrorMessage name="possessionHome" component="div" />
-            </Grid>
-            <Grid item xs={6}>
-              <Field
-                as={TextField}
-                name="possessionAway"
-                label="Posesión (%) Equipo Visitante"
-                type="number"
-                variant="outlined"
-                fullWidth
-              />
-              <ErrorMessage name="possessionAway" component="div" />
-            </Grid>
-            <Grid item xs={6}>
-              <Field
-                as={TextField}
-                name="shotsHome"
-                label="Tiros Equipo Local"
-                type="number"
-                variant="outlined"
-                fullWidth
-              />
-              <ErrorMessage name="shotsHome" component="div" />
-            </Grid>
-            <Grid item xs={6}>
-              <Field
-                as={TextField}
-                name="shotsAway"
-                label="Tiros Equipo Visitante"
-                type="number"
-                variant="outlined"
-                fullWidth
-              />
-              <ErrorMessage name="shotsAway" component="div" />
-            </Grid>
-            <Grid item xs={6}>
+          
+
+            
+
+            {/* <Grid item xs={6}>
               <Field
                 as={TextField}
                 name="passesHome"
@@ -257,7 +310,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
                 fullWidth
               />
               <ErrorMessage name="passesAway" component="div" />
-            </Grid>
+            </Grid> */}
             <Grid item xs={6}>
               <Field
                 as={TextField}
