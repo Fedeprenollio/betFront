@@ -14,6 +14,7 @@ import PrivateRoute from "./PrivateRoute";
 import { TeamStatistics } from "../pages/Statistics/TeamStatistics";
 import { StatisticsPage } from "../pages/Statistics/StatisticsPage";
 import { ResultsSeason } from "../pages/Match/ResultsSeason";
+import { TableAllTeamSeason } from "../pages/Statistics/tableAllTeamSeason/TableAllTeamSeason";
 
 const RoutesComponent = () => {
   return (
@@ -35,7 +36,6 @@ const RoutesComponent = () => {
           <Route path="edit/:matchId" element={<AdminMatch />} />
           <Route path="addResults" element={<FormResult />} />
           <Route path="results/:idSeason" element={<ResultsSeason />} />
-
         </Route>
       </Route>
       <Route path="/league">
@@ -58,6 +58,8 @@ const RoutesComponent = () => {
         <Route
           path=":idHomeTeam/:idAwayTeam/:idMatch"
           element={<StatisticsPage />}
+        />
+          <Route path="teams/tableSeason/:seasonId" element={<TableAllTeamSeason />}
         />
         <Route element={<PrivateRoute />}>
           <Route path="form/:matchId" element={<FormResult />} />

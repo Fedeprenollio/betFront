@@ -164,7 +164,10 @@ export const ListLeagues = () => {
                         {/* <ListItemIcon>
                       <StarBorder />
                     </ListItemIcon> */}
+                      <Link to={`/stats/teams/tableSeason/${season._id}`}>
+                      
                         <ListItemText primary={season.year} />
+                      </Link>
                       </ListItemButton>
                     </Grid>
                     <Grid item xs={1}>

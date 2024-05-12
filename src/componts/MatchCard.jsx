@@ -33,7 +33,6 @@ const ExpandMore = styled((props) => {
 
 const MatchCard = ({ homeTeam, awayTeam, round,idMatch }) => {
 
-  // const { onDeleteMatch} = useMatchesStore(state=> state)
   const { onDeleteMatch} = useBoundStore(state=> state)
 
 

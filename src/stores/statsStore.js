@@ -1,10 +1,11 @@
 import { BACKEND_URL_BASE } from "./url_base";
-
-const URL_API = `${BACKEND_URL_BASE}/match/statsAc`
+import axios from "axios";
+const URL_API = `${BACKEND_URL_BASE}/match/statsAc`;
+const URL_API_STATS_SEASON = `${BACKEND_URL_BASE}/match/team-stats`;
 
 
 // Definir el store
-const createTeamStatsStore = ((set) => ({
+const createTeamStatsStore = (set) => ({
   homeStatYellowCard: {},
   homeStatCorners: {},
   homeStatGoals: {},
@@ -12,9 +13,10 @@ const createTeamStatsStore = ((set) => ({
   awayStatCorners: {},
   awayStatGoals: {},
   homeTeam: "",
-  awayTeam:"",
-  localMatches:[],
-  visitorMatches:[],
+  awayTeam: "",
+  localMatches: [],
+  visitorMatches: [],
+  teamStatsForSeason: [],
   statsLessThan: false, // Valor inicial para statsLessThan
   setStatsLessThan: (newValue) => set({ statsLessThan: newValue }), // Función para actualizar statsLessThan
 
@@ -29,9 +31,9 @@ const createTeamStatsStore = ((set) => ({
     );
 
     const homeYc = await data.json();
-console.log("QUE TRAE ESTI", homeYc)
-    set({ homeStatYellowCard: homeYc  });
-    set({localMatches: homeYc?.matches})
+    console.log("QUE TRAE ESTI", homeYc);
+    set({ homeStatYellowCard: homeYc });
+    set({ localMatches: homeYc?.matches });
   },
   setAwayStatYellowCard: async ({
     idAwayTeam,
@@ -40,7 +42,8 @@ console.log("QUE TRAE ESTI", homeYc)
     statsLessThan,
   }) => {
     const data = await fetch(
-      `${URL_API}/${idAwayTeam}?statistic=yellowCards&lowerLimit=0.5&upperLimit=12.5&matchesCount=10&homeOnly=${homeMateshAwayTeam}&awayOnly=${visitingMatchesAwayTeam}&lessThan=${statsLessThan}`    );
+      `${URL_API}/${idAwayTeam}?statistic=yellowCards&lowerLimit=0.5&upperLimit=12.5&matchesCount=10&homeOnly=${homeMateshAwayTeam}&awayOnly=${visitingMatchesAwayTeam}&lessThan=${statsLessThan}`
+    );
     const awayYc = await data.json();
 
     set({ awayStatYellowCard: awayYc });
@@ -82,7 +85,7 @@ console.log("QUE TRAE ESTI", homeYc)
     const awayCorners = await data.json();
 
     set({ awayStatCorners: awayCorners.corners });
-    set({visitorMatches: awayCorners?.matches})
+    set({ visitorMatches: awayCorners?.matches });
   },
   setAwayStatGoals: async ({
     idAwayTeam,
@@ -97,7 +100,14 @@ console.log("QUE TRAE ESTI", homeYc)
 
     set({ awayStatGoals: awayGoals.goals });
   },
-}));
+  getTeamStatsForSeason: async ({ seasonId }) => {
+    const response = await axios(`${URL_API_STATS_SEASON}/${seasonId}`);
+    console.log("RESPONSE", response)
+    const teamStats = response.data
+
+    set({ teamStatsForSeason: teamStats });
+  },
+});
 
 export default createTeamStatsStore;
 // setHomeStatCorners
