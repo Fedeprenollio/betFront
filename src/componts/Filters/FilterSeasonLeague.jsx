@@ -40,7 +40,6 @@
 //     };
 //   }, [setMatchesByRound]);
 
-  
 //   return (
 //     <Formik
 //       initialValues={{ season: "", round: "" }}
@@ -48,7 +47,7 @@
 //       onSubmit={(values) => {
 //         setMatchesByRound({ seasonId: values.season, round: values.round });
 //       }}
-     
+
 //     >
 //       {({ handleSubmit, values, setFieldValue }) => (
 //         <Form onSubmit={handleSubmit}>
@@ -81,7 +80,7 @@
 //               name="round"
 //               onChange={(e) => {
 //                 setFieldValue("round", e.target.value);
-                
+
 //               }}
 //               value={values.round}
 //             >
@@ -103,13 +102,7 @@
 
 /* eslint-disable react/prop-types */
 import { Formik, Form, Field } from "formik";
-import {
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Button,
-} from "@mui/material";
+import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import * as Yup from "yup";
 import { useEffect, useState } from "react";
 import { useBoundStore } from "../../stores";
@@ -119,10 +112,9 @@ const validationSchema = Yup.object().shape({
   round: Yup.string().required("Debes seleccionar una jornada"),
 });
 
-export const FilterSeasonLeague = ({ seasons }) => {
+export const FilterSeasonLeague = ({ seasons, setRounds, rounds }) => {
   const { setMatchesByRound } = useBoundStore((state) => state);
   const [seasonSelected, setSeasonSelected] = useState("");
-  const [rounds, setRounds] = useState([]);
 
   useEffect(() => {
     const seasonDetail = seasons?.find(
@@ -133,13 +125,33 @@ export const FilterSeasonLeague = ({ seasons }) => {
     );
     const sortedRounds = rounds.sort((a, b) => a - b); // Ordenar de menor a mayor
     setRounds(sortedRounds);
-  }, [seasonSelected, seasons]);
+   
+    if (seasonSelected === "") {
+      const isCurrentSeason = seasons?.find(
+        (season) => season?.isCurrentSeason
+      );
+      console.log(isCurrentSeason);
+      setMatchesByRound({
+        seasonId: isCurrentSeason?._id,
+        round:9,
+      });
+    }
 
+ 
+    
+  }, [seasonSelected, seasons]);
+  console.log("seasons", seasons);
   useEffect(() => {
+    console.log("ULTIMA RONDA", rounds);
+    setMatchesByRound({
+      seasonId: seasonSelected,
+      round: rounds[rounds.length - 1],
+    });
+
     return () => {
       setMatchesByRound({ seasonId: null, round: null });
     };
-  }, [setMatchesByRound]);
+  }, [setMatchesByRound, rounds, seasonSelected]);
 
   return (
     <Formik
@@ -155,6 +167,7 @@ export const FilterSeasonLeague = ({ seasons }) => {
             <InputLabel id="season-select-label">Temporada</InputLabel>
             <Field
               as={Select}
+              label="Temporada"
               labelId="season-select-label"
               id="season-select"
               name="season"

@@ -16,7 +16,7 @@ const validationSchema = Yup.object().shape({
   league: Yup.string().required("Required"),
   country: Yup.string().required("Required"),
   seasonYear: Yup.string().required("Required"),
-  round: Yup.number().required("Required"),
+  round: Yup.string().required("Required"),
 });
 
 const MyDateTimePicker = ({ field, form }) => {
@@ -203,7 +203,7 @@ const FormMatch = ({ matchId }) => {
             as={TextField}
             name="round"
             label="Ronda"
-            type="number"
+            type="text"
             variant="outlined"
             fullWidth
             margin="normal"
@@ -242,7 +242,7 @@ const FormMatch = ({ matchId }) => {
             margin="normal"
           >
             {selectedLeague &&
-              seasonById?.teams?.map((team) => {
+              seasonById?.season?.teams?.map((team) => {
                     return (
                       <MenuItem key={team._id} value={team._id}>
                         {team.name}
@@ -263,7 +263,7 @@ const FormMatch = ({ matchId }) => {
             margin="normal"
           >
              {selectedLeague &&
-              seasonById?.teams?.map((team) => {
+              seasonById?.season?.teams?.map((team) => {
                     return (
                       <MenuItem key={team._id} value={team._id}>
                         {team.name}

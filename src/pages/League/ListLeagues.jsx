@@ -10,6 +10,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Tooltip,
 } from "@mui/material";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
@@ -22,6 +23,11 @@ import ConfirmationDialog from "../../componts/feedback/ConfirmationDialog ";
 import AlertDialogCopy from "../../componts/feedback/AlertDialogCopy";
 import { AlertMessageCopy } from "../../componts/feedback/AlertMessageCopy";
 import { Link } from "react-router-dom";
+import InfoIcon from "@mui/icons-material/Info";
+import PlusOneIcon from "@mui/icons-material/PlusOne";
+import { SelectedCurrentSeason } from "./SelectedCurrentSeason";
+import axios from "axios";
+import { BACKEND_URL_BASE } from "../../stores/url_base";
 
 export const ListLeagues = () => {
   const { fetchLeagues, leagues, deleteLeague } = useBoundStore(
@@ -35,18 +41,34 @@ export const ListLeagues = () => {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [severity, setSeverity] = useState("");
   const [msgAlert, setMsgAlert] = useState("");
+  const [currentSeasonId, setCurrentSeasonId] = useState('');
+  const URL_API = `${BACKEND_URL_BASE}/season/league`;
+
   useEffect(() => {
     fetchLeagues();
   }, []);
 
   useEffect(() => {
-    // Ordenar las ligas por país por defecto
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${URL_API}/${idLeague}`);
+        setCurrentSeasonId(response.data.currentSeason._id);
+      } catch (error) {
+        console.error('Error al obtener las temporadas:', error);
+      }
+    };
+  
+    fetchData();
+  }, [idLeague]);
+
+  useEffect(() => {
     const sortedLeagues = getSortedLeagues({ leagues });
     setFilteredLeagues(sortedLeagues);
   }, [leagues]);
 
-  const handleClick = (index) => {
+  const handleClick = (index, leagueId) => {
     setOpenCollapseIndex(openCollapseIndex === index ? -1 : index);
+    setIdLeague(leagueId);
   };
 
   const getSortedLeagues = ({ leagues }) => {
@@ -60,14 +82,13 @@ export const ListLeagues = () => {
 
   const handleDelete = async (leagueId) => {
     const response = await deleteLeague(leagueId);
-    console.log(response);
     if (response) {
       setSeverity("success");
       setMsgAlert("Liga eliminada exitosamente");
       setIsAlertOpen(true);
     } else {
       setSeverity("error");
-      setMsgAlert("Error al eiminar la liga");
+      setMsgAlert("Error al eliminar la liga");
       setIsAlertOpen(true);
     }
 
@@ -75,9 +96,9 @@ export const ListLeagues = () => {
   };
 
   const handleDeleteClick = (league) => {
-    setIdLeague(league._id); // Actualiza el estado del ID de la liga
+    setIdLeague(league._id);
     setNameLeague(league.name);
-    setOpenDeleteDialog(true); // Abre el diálogo de confirmación
+    setOpenDeleteDialog(true);
   };
 
   const handleEdit = (leagueId) => {
@@ -119,10 +140,7 @@ export const ListLeagues = () => {
           <Container key={league._id}>
             <Grid container alignItems="center" justifyContent="space-between">
               <Grid item xs={11}>
-                <ListItemButton onClick={() => handleClick(index)}>
-                  {/* <ListItemIcon>
-                <InboxIcon />
-              </ListItemIcon> */}
+                <ListItemButton onClick={() => handleClick(index, league._id)}>
                   <ListItemText
                     primary={`${league.country} - ${league.name}`}
                   />
@@ -136,17 +154,23 @@ export const ListLeagues = () => {
 
               <Grid item xs={1}>
                 <ListItemIcon>
-                  <IconButton onClick={() => handleDeleteClick(league)}>
-                    <DeleteIcon />
-                  </IconButton>
-                  <IconButton  onClick={() => handleEdit(league._id)}>
-                    <EditIcon  />
-                  </IconButton>
-                  <IconButton>
-                    <Link to={`/league/detail/${league._id}`}>
+                  <Tooltip title="Eliminar liga">
+                    <IconButton onClick={() => handleDeleteClick(league)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Editar liga">
+                    <IconButton onClick={() => handleEdit(league._id)}>
                       <EditIcon />
-                    </Link>
-                  </IconButton>
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Ver detalle de la liga">
+                    <IconButton>
+                      <Link to={`/league/detail/${league._id}`}>
+                        <InfoIcon />
+                      </Link>
+                    </IconButton>
+                  </Tooltip>
                 </ListItemIcon>
               </Grid>
             </Grid>
@@ -161,21 +185,26 @@ export const ListLeagues = () => {
                   <Grid key={season._id} container>
                     <Grid item xs={11}>
                       <ListItemButton sx={{ pl: 4 }}>
-                        {/* <ListItemIcon>
-                      <StarBorder />
-                    </ListItemIcon> */}
-                      <Link to={`/stats/teams/tableSeason/${season._id}`}>
-                      
-                        <ListItemText primary={season.year} />
-                      </Link>
+                        <SelectedCurrentSeason
+                          leagueId={league._id}
+                          seasonId={season._id}
+                          isCurrent={season._id === currentSeasonId}
+                          setCurrentSeasonId={setCurrentSeasonId}
+                        />
+                        <Link
+                          className="link-no-underline"
+                          to={`/stats/teams/tableSeason/${season._id}`}
+                        >
+                          <ListItemText primary={season.year} />
+                        </Link>
                       </ListItemButton>
                     </Grid>
                     <Grid item xs={1}>
                       <ListItemIcon>
-                        {/* <DeleteIcon onClick={() => deleteSeason(season._id)} /> */}
-                        {/* <EditIcon onClick={() => handleEditSeason(season._id)} /> */}
                         <Link to={`/match/results/${season._id}`}>
-                          <EditIcon />
+                          <Tooltip title="Agregar resultados a la temporada">
+                            <PlusOneIcon />
+                          </Tooltip>
                         </Link>
                       </ListItemIcon>
                     </Grid>

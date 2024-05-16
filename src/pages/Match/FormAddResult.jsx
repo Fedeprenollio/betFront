@@ -19,8 +19,12 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
     cornersAway: "",
     possessionHome: "",
     possessionAway: "",
+    faultsHome: "",
+    faultsAway: "",
     shotsHome: "",
     shotsAway: "",
+    totalShotsHome: "",
+    totalShotsAway: "",
     passesHome: "",
     passesAway: "",
   };
@@ -33,13 +37,17 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
     yellowCardsHome: Yup.number().min(0),
     yellowCardsAway: Yup.number().min(0),
     // redCardsHome: Yup.number().min(0),
-    // redCardsAway: Yup.number().min(0),
+    // redCardsAway: Yup.number().min(0),faults
     cornersHome: Yup.number().min(0),
     cornersAway: Yup.number().min(0),
     possessionHome: Yup.number().min(0),
     possessionAway: Yup.number().min(0),
+    faultsHome: Yup.number().min(0),
+    faultsAway: Yup.number().min(0),
     shotsHome: Yup.number().min(0),
     shotsAway: Yup.number().min(0),
+    totalShotsHome: Yup.number().min(0),
+    totalShotsAway: Yup.number().min(0),
     passesHome: Yup.number().min(0),
     passesAway: Yup.number().min(0),
   });
@@ -129,8 +137,8 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
             <Grid item xs={6}>
               <Field
                 as={TextField}
-                name="shotsHome"
-                label="Tiros Equipo Local"
+                name="totalShotsHome"
+                label="Tiros Total Equipo Local"
                 type="number"
                 variant="outlined"
                 fullWidth
@@ -140,8 +148,8 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
             <Grid item xs={6}>
               <Field
                 as={TextField}
-                name="shotsAway"
-                label="Tiros Equipo Visitante"
+                name="totalShotsAway"
+                label="Tiros Total Equipo Visitante"
                 type="number"
                 variant="outlined"
                 fullWidth
@@ -198,7 +206,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
             <Grid item xs={6}>
               <Field
                 as={TextField}
-                name="possessionHome"
+                name="faultsHome"
                 label="Faltas local"
                 type="number"
                 variant="outlined"
@@ -209,7 +217,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
             <Grid item xs={6}>
               <Field
                 as={TextField}
-                name="possessionAway"
+                name="faultsAway"
                 label="Faltas Visitante"
                 type="number"
                 variant="outlined"

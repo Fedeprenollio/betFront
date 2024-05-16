@@ -28,9 +28,9 @@ const countries = [
 const FormTeam = () => {
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Required"),
-    city: Yup.string().required("Required"),
+    // city: Yup.string().required("Required"),
     country: Yup.string().required("Required"),
-    league: Yup.string().required("Required"),
+    // league: Yup.string().required("Required"),
   });
   const [selectedLeague, setSelectedLeague] = useState("");
   const [leaguesByCountry, setLeaguesByCountry] = useState({});
@@ -51,10 +51,7 @@ const FormTeam = () => {
   //   console.log("SOY LEAGUEDATA", leaguesData)
   //   setLeaguesByCountry(leaguesData);
   // }, [leagues]);
-  console.log(countries);
-  console.log("ligas", leagues);
-
-  console.log(leaguesByCountry);
+ 
 
   const handleSubmit =  (values) => {
      newTeam({ values });
@@ -90,7 +87,7 @@ const handleCountryChange=(e)=>{
           />
           <ErrorMessage name="name" component="div" />
 
-          <Field
+          {/* <Field
             as={TextField}
             name="city"
             label="Ciudad"
@@ -98,7 +95,7 @@ const handleCountryChange=(e)=>{
             fullWidth
             margin="normal"
           />
-          <ErrorMessage name="city" component="div" />
+          <ErrorMessage name="city" component="div" /> */}
 
           <Field
             as={TextField}
@@ -122,7 +119,7 @@ const handleCountryChange=(e)=>{
           </Field>
           <ErrorMessage name="country" component="div" />
 
-          <Field
+          {/* <Field
             as={TextField}
             select
             name="league"
@@ -141,7 +138,7 @@ const handleCountryChange=(e)=>{
                 </MenuItem>
               ))
             )}
-          </Field>
+          </Field> */}
 
           <ErrorMessage name="league" component="div" />
 

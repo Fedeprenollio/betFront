@@ -1,3 +1,4 @@
+import axios from "axios";
 import { BACKEND_URL_BASE } from "./url_base";
 const URL_API = `${BACKEND_URL_BASE}/team`;
 // const API_URL = `http://localhost:1234/team`;
@@ -28,16 +29,16 @@ const createTeamStore = (set, get) => ({
   teamDetailsSelector: (teamId) => (state) => state.teamDetails[teamId],
   newTeam: async ({ values }) => {
     const { name, city, league, country } = values;
+    const token = get().token; 
+    const config = {
+      headers:{
+        Authorization: token
+      }
+    }
     console.log(values);
     try {
-      const response = await fetch(URL_API, {
-        method: "POST",
-         credentials:"include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, city, league, country }),
-      });
+      const response = await axios.post(URL_API,{ name, city, league, country }, config
+     );
       console.log(response);
       // if (response.ok) {
       //   console.log("Equipo creado exitosamente");

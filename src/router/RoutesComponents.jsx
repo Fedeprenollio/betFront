@@ -15,6 +15,7 @@ import { TeamStatistics } from "../pages/Statistics/TeamStatistics";
 import { StatisticsPage } from "../pages/Statistics/StatisticsPage";
 import { ResultsSeason } from "../pages/Match/ResultsSeason";
 import { TableAllTeamSeason } from "../pages/Statistics/tableAllTeamSeason/TableAllTeamSeason";
+import { AddResults } from "../pages/results/AddResults";
 
 const RoutesComponent = () => {
   return (
@@ -36,6 +37,8 @@ const RoutesComponent = () => {
           <Route path="edit/:matchId" element={<AdminMatch />} />
           <Route path="addResults" element={<FormResult />} />
           <Route path="results/:idSeason" element={<ResultsSeason />} />
+          <Route path="newResults" element={<AddResults />} />
+
         </Route>
       </Route>
       <Route path="/league">

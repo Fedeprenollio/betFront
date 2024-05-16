@@ -15,6 +15,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import { Link, useNavigate } from "react-router-dom";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useBoundStore } from "../stores";
+import TemporaryDrawer from "./drawer/TemporaryDrawer";
 
 // const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
@@ -75,6 +76,7 @@ console.log("USUARIO LOGEADO?", user)
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
+     
         <Toolbar disableGutters>
           { isAuthenticated &&  <h4>Hola {user?.user}</h4>}  
           <IconButton
@@ -102,8 +104,9 @@ console.log("USUARIO LOGEADO?", user)
           >
             LOGO
           </Typography>
-
+          <TemporaryDrawer/>
           <Box sx={{ flexGrow: 1 }}>
+           
             <Button
               id="partidos-button"
               aria-controls="partidos-menu"
@@ -132,15 +135,15 @@ console.log("USUARIO LOGEADO?", user)
                   Administrar Partidos
                 </MenuItem>
               )}
-               {isAuthenticated && (
+               {/* {isAuthenticated && (
                 <MenuItem
                   onClick={handleClose}
                   component={Link}
-                  to="/match/results"
+                  to="/match/newResults"
                 >
                   Cargar Resultados
                 </MenuItem>
-              )}
+              )} */}
               {/* <MenuItem
                 onClick={handleClose}
                 component={Link}

@@ -8,13 +8,17 @@ import {
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useBoundStore } from "../../stores";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FilterSeasonLeague } from "../../componts/Filters/FilterSeasonLeague";
 import { MatchList3 } from "../../componts/MatchsStack";
 
 export const DetailLeague = () => {
   const { idLeague } = useParams();
-  const { getLeagueDetail, leagueDetail, matchesByRound } = useBoundStore((state) => state);
+  const { getLeagueDetail, leagueDetail, matchesByRound } = useBoundStore(
+    (state) => state
+  );
+  const [rounds, setRounds] = useState([]);
+
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
     ...theme.typography.body2,
@@ -23,20 +27,22 @@ export const DetailLeague = () => {
     color: theme.palette.text.secondary,
   }));
 
-console.log("PARTIDOS POR RONDA", matchesByRound)
+  console.log("PARTIDOS POR RONDA", leagueDetail);
   useEffect(() => {
     getLeagueDetail({ idLeague });
-    return ()=>{
-      getLeagueDetail({idLeague: null})
-    }
+    return () => {
+      getLeagueDetail({ idLeague: null });
+    };
   }, [idLeague, getLeagueDetail]);
 
-
-   
   return (
     <Container>
-      <FilterSeasonLeague seasons={leagueDetail?.season}/>
-      <Typography>{`Temporada: ${matchesByRound?.season?.year ? matchesByRound?.season?.year : "Seleccione una temporada y jornada"}`}</Typography>
+      <FilterSeasonLeague seasons={leagueDetail?.season} lastRound={leagueDetail} setRounds={setRounds} rounds={rounds} />
+      <Typography>{`Temporada: ${
+        matchesByRound?.season?.year
+          ?`${ matchesByRound?.season?.year } - Ronda: ${rounds}`
+          : "Seleccione una temporada y jornada"
+      }`}</Typography>
       <Stack
         spacing={1}
         sx={{ margin: "2rem 0" }}
@@ -56,19 +62,9 @@ console.log("PARTIDOS POR RONDA", matchesByRound)
         </Item>
       </Stack>
 
-          {   
-          matchesByRound?.matches?.map(match=> {
-            return (
-             <MatchList3 key={match._id} match={match} />
-            )
-          })
-          
-          
-          }
-   
-
-
-
+      {matchesByRound?.matches?.map((match) => {
+        return <MatchList3 key={match._id} match={match} />;
+      })}
     </Container>
   );
 };

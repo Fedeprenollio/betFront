@@ -26,7 +26,6 @@ const createSeasonStore = (set) => ({
   },
   //Función para cargar una temporada por id
   getSeasonById: async (seasonId) => {
-    console.log("ESOTT BUSCANDO ID", seasonId);
     try {
       const response = await fetch(URL_API + "/" + seasonId);
       // if (!response.ok) {
@@ -43,7 +42,8 @@ const createSeasonStore = (set) => ({
     if(seasonId=== null && round=== null){
       return set({ matchesByRound: {} });
     }
-    console.log(round)
+    console.log("ID SEASON", seasonId)
+    console.log("RONDA",round)
     try {
       // Obtener los partidos filtrados por ronda desde la API
       const response = await fetch(`${URL_API}/${seasonId}/matches?round=${round}`);
