@@ -7,7 +7,6 @@ const URL_API2 = `${BACKEND_URL_BASE}/season/league`;
 
 
 export const SelectedCurrentSeason = ({ seasonId, leagueId, isCurrent, setCurrentSeasonId }) => {
- console.log("IS CURRENT", isCurrent)
 
   const handleSeasonSelection = async (event) => {
     const isChecked = event.target.checked;

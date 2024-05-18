@@ -10,7 +10,6 @@ export const StatisticsPage = () => {
       const { idHomeTeam, idAwayTeam, idMatch } = useParams();
 
   const [statsLessThan, setStatsLessThan] = useState(false);
-  const [match, setMatch] = useState({});
 
   const [activeTab, setActiveTab] = useState(0);
 
@@ -20,7 +19,7 @@ export const StatisticsPage = () => {
   return (
     <>
       <div>LeaguePage</div>
-        <FilterStatistics idMatch={idMatch} idHomeTeam={idHomeTeam} idAwayTeam={idAwayTeam} setMatch={setMatch} setStatsLessThan={setStatsLessThan} statsLessThan={statsLessThan} match={match}/>
+        <FilterStatistics idMatch={idMatch} idHomeTeam={idHomeTeam} idAwayTeam={idAwayTeam} setStatsLessThan={setStatsLessThan} statsLessThan={statsLessThan}/>
       <div>
         <Tabs value={activeTab} onChange={handleTabChange} aria-label="Tabs">
           <Tab label="Estadística" />

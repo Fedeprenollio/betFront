@@ -43,4 +43,5 @@
 
 .link-no-underline {
   text-decoration: none; /* Elimina el subrayado */
+  /* width: 100%; */
 }

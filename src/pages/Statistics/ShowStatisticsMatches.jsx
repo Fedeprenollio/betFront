@@ -1,17 +1,13 @@
-import { Grid, Paper, styled, Typography, Box } from "@mui/material";
-import React from "react";
+/* eslint-disable react/prop-types */
+import React, { useState, useEffect } from "react";
+import { Grid, Tabs, Tab, Box } from "@mui/material";
 import { useBoundStore } from "../../stores";
-import { useState } from "react";
-import { useEffect } from "react";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import dayjs from "dayjs";
 import { TableMatches } from "./TableMatches";
 
 export const ShowStatisticsMatches = ({ idHomeTeam, idAwayTeam }) => {
   const { localMatches, visitorMatches, teamDetails, getTeamDetails } =
     useBoundStore((state) => state);
+  
   React.useEffect(() => {
     getTeamDetails(idHomeTeam);
     getTeamDetails(idAwayTeam);
@@ -20,7 +16,6 @@ export const ShowStatisticsMatches = ({ idHomeTeam, idAwayTeam }) => {
     };
   }, [idHomeTeam, idAwayTeam, getTeamDetails]);
 
-  // Utilizamos los selectores para obtener los detalles de cada equipo
   const [teamDetails1, setTeamDetails1] = useState({});
   const [teamDetails2, setTeamDetails2] = useState({});
 
@@ -35,41 +30,61 @@ export const ShowStatisticsMatches = ({ idHomeTeam, idAwayTeam }) => {
     };
   }, [idHomeTeam, idAwayTeam, teamDetails]);
 
-  
+  const [activeTab, setActiveTab] = useState(0);
+
+  const handleTabChange = (event, newValue) => {
+    setActiveTab(newValue);
+  };
 
   return (
-    <Grid container spacing={2}>
-      <TableMatches
-        teamMatches={localMatches}
-        statistic="goals"
-        teamDetail={teamDetails1}
-      />
-      <TableMatches
-        teamMatches={visitorMatches}
-        statistic="goals"
-        teamDetail={teamDetails2}
-      />
-
-      <TableMatches
-        teamMatches={localMatches}
-        statistic="corners"
-        teamDetail={teamDetails1}
-      />
-      <TableMatches
-        teamMatches={visitorMatches}
-        statistic="corners"
-        teamDetail={teamDetails2}
-      />
-       <TableMatches
-        teamMatches={localMatches}
-        statistic="yellowCards"
-        teamDetail={teamDetails1}
-      />
-      <TableMatches
-        teamMatches={visitorMatches}
-        statistic="yellowCards"
-        teamDetail={teamDetails2}
-      />
-    </Grid>
+    <Box>
+      <Tabs value={activeTab} onChange={handleTabChange} aria-label="Statistics Tabs">
+        <Tab label="Goles" />
+        <Tab label="Corners" />
+        <Tab label="Tarjetas Amarillas" />
+      </Tabs>
+      {activeTab === 0 && (
+        <Grid container spacing={2}>
+          <TableMatches
+            teamMatches={localMatches}
+            statistic="goals"
+            teamDetail={teamDetails1}
+          />
+          <TableMatches
+            teamMatches={visitorMatches}
+            statistic="goals"
+            teamDetail={teamDetails2}
+          />
+        </Grid>
+      )}
+      {activeTab === 1 && (
+        <Grid container spacing={2}>
+          <TableMatches
+            teamMatches={localMatches}
+            statistic="corners"
+            teamDetail={teamDetails1}
+          />
+          <TableMatches
+            teamMatches={visitorMatches}
+            statistic="corners"
+            teamDetail={teamDetails2}
+          />
+        </Grid>
+      )}
+      {activeTab === 2 && (
+        <Grid container spacing={2}>
+          <TableMatches
+            teamMatches={localMatches}
+            statistic="yellowCards"
+            teamDetail={teamDetails1}
+          />
+          <TableMatches
+            teamMatches={visitorMatches}
+            statistic="yellowCards"
+            teamDetail={teamDetails2}
+          />
+        </Grid>
+      )}
+    </Box>
   );
 };

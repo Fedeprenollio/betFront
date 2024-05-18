@@ -243,8 +243,6 @@ export default function StatisticsTablecopy({
     
   }, [idHomeTeam,idAwayTeam,teamDetails])
   
-  console.log("teamDetails",teamDetails)
-
   const {  homeStatYellowCard,  awayStatYellowCard,   homeStatGoals,  homeStatCorners,  awayStatCorners,  awayStatGoals  } = useBoundStore((state) => state);
   const UnderlinedTypography = styled(Typography)({
     textDecoration: 'underline',

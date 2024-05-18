@@ -16,6 +16,7 @@ import { StatisticsPage } from "../pages/Statistics/StatisticsPage";
 import { ResultsSeason } from "../pages/Match/ResultsSeason";
 import { TableAllTeamSeason } from "../pages/Statistics/tableAllTeamSeason/TableAllTeamSeason";
 import { AddResults } from "../pages/results/AddResults";
+import { ShowResultsForFecha } from "../pages/Match/ShowResultsForFecha";
 
 const RoutesComponent = () => {
   return (
@@ -43,6 +44,8 @@ const RoutesComponent = () => {
       </Route>
       <Route path="/league">
         <Route path="view" element={<ListLeagues />} />
+        <Route path="showResults/:seasonId" element={<ShowResultsForFecha />} />
+
 
         <Route element={<PrivateRoute />}>
           {/* leaaguePage en espete momento es para administrar ligas */}

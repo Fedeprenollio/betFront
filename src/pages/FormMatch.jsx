@@ -1,7 +1,14 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { TextField, Button, MenuItem } from "@mui/material";
+import {
+  TextField,
+  Button,
+  MenuItem,
+  Container,
+  Grid,
+  InputLabel,
+} from "@mui/material";
 import * as Yup from "yup";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -17,6 +24,7 @@ const validationSchema = Yup.object().shape({
   country: Yup.string().required("Required"),
   seasonYear: Yup.string().required("Required"),
   round: Yup.string().required("Required"),
+  order: Yup.number().required("Required"),
 });
 
 const MyDateTimePicker = ({ field, form }) => {
@@ -125,6 +133,7 @@ const FormMatch = ({ matchId }) => {
         country: "",
         seasonYear: "",
         round: "",
+        order: "",
       }}
       onSubmit={handleSubmit}
       validationSchema={validationSchema}
@@ -177,10 +186,17 @@ const FormMatch = ({ matchId }) => {
               ))}
           </Field>
           <ErrorMessage name="league" component="div" />
-          <Select
+
+          {/* <InputLabel id="season-select-label">Temporada</InputLabel> */}
+          <Field
+            sx={{ width: "150px" }}
+            as={TextField}
+            label="Temporada"
+            select
+            labelId="season-select-label"
             id="seasonYear"
             name="seasonYear"
-            label="Temporada"
+          
             value={selectedSeason}
             onChange={(event) => {
               handleChange(event);
@@ -196,19 +212,36 @@ const FormMatch = ({ matchId }) => {
                   {season.year}
                 </MenuItem>
               ))}
-          </Select>
-
+          </Field>
           <ErrorMessage name="seasonYear" component="div" />
-          <Field
-            as={TextField}
-            name="round"
-            label="Ronda"
-            type="text"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-          />
-          <ErrorMessage name="round" component="div" />
+
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <Field
+                as={TextField}
+                name="round"
+                label="Ronda"
+                type="text"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+              />
+              <ErrorMessage name="round" component="div" />
+            </Grid>
+            <Grid item xs={6}>
+              <Field
+                as={TextField}
+                name="order"
+                label="Orden"
+                type="text"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+              />
+              <ErrorMessage name="order" component="div" />
+            </Grid>
+          </Grid>
+
           {/* <Field
             as={TextField}
             select
@@ -243,13 +276,12 @@ const FormMatch = ({ matchId }) => {
           >
             {selectedLeague &&
               seasonById?.season?.teams?.map((team) => {
-                    return (
-                      <MenuItem key={team._id} value={team._id}>
-                        {team.name}
-                      </MenuItem>
-                    );
-                  })
-                }
+                return (
+                  <MenuItem key={team._id} value={team._id}>
+                    {team.name}
+                  </MenuItem>
+                );
+              })}
           </Field>
           <ErrorMessage name="homeTeam" component="div" />
 
@@ -262,15 +294,14 @@ const FormMatch = ({ matchId }) => {
             fullWidth
             margin="normal"
           >
-             {selectedLeague &&
+            {selectedLeague &&
               seasonById?.season?.teams?.map((team) => {
-                    return (
-                      <MenuItem key={team._id} value={team._id}>
-                        {team.name}
-                      </MenuItem>
-                    );
-                  })
-                }
+                return (
+                  <MenuItem key={team._id} value={team._id}>
+                    {team.name}
+                  </MenuItem>
+                );
+              })}
           </Field>
           <ErrorMessage name="awayTeam" component="div" />
 

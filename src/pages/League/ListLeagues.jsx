@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useBoundStore } from "../../stores";
 import {
+  Button,
   Collapse,
   Container,
   Grid,
@@ -41,7 +42,7 @@ export const ListLeagues = () => {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [severity, setSeverity] = useState("");
   const [msgAlert, setMsgAlert] = useState("");
-  const [currentSeasonId, setCurrentSeasonId] = useState('');
+  const [currentSeasonId, setCurrentSeasonId] = useState("");
   const URL_API = `${BACKEND_URL_BASE}/season/league`;
 
   useEffect(() => {
@@ -54,10 +55,10 @@ export const ListLeagues = () => {
         const response = await axios.get(`${URL_API}/${idLeague}`);
         setCurrentSeasonId(response.data.currentSeason._id);
       } catch (error) {
-        console.error('Error al obtener las temporadas:', error);
+        console.error("Error al obtener las temporadas:", error);
       }
     };
-  
+
     fetchData();
   }, [idLeague]);
 
@@ -104,7 +105,7 @@ export const ListLeagues = () => {
   const handleEdit = (leagueId) => {
     // Lógica para editar la liga
   };
-
+console.log("filteredLeagues",filteredLeagues)
   return (
     <Container>
       <FilterLeague
@@ -183,6 +184,7 @@ export const ListLeagues = () => {
               <List component="div" disablePadding>
                 {league.season.map((season) => (
                   <Grid key={season._id} container>
+                    
                     <Grid item xs={11}>
                       <ListItemButton sx={{ pl: 4 }}>
                         <SelectedCurrentSeason
@@ -191,11 +193,24 @@ export const ListLeagues = () => {
                           isCurrent={season._id === currentSeasonId}
                           setCurrentSeasonId={setCurrentSeasonId}
                         />
-                        <Link
+                        {/* <Link
                           className="link-no-underline"
                           to={`/stats/teams/tableSeason/${season._id}`}
                         >
                           <ListItemText primary={season.year} />
+                        </Link> */}
+                        <ListItemText primary={season.year} />
+                        <Link
+                          className="link-no-underline"
+                          to={`/league/showResults/${season._id}`}
+                        >
+                          <Button>Resultados</Button>
+                        </Link>
+                        <Link
+                          className="link-no-underline"
+                          to={`/stats/teams/tableSeason/${season._id}`}
+                        >
+                          <Button>Estadisticas</Button>
                         </Link>
                       </ListItemButton>
                     </Grid>
