@@ -45,3 +45,11 @@
   text-decoration: none; /* Elimina el subrayado */
   /* width: 100%; */
 }
+
+.alert-message-container {
+  position: fixed; /* Establece la posición fija */
+  top: 100px; /* Establece la distancia desde el borde superior de la pantalla */
+  left: 50%; /* Centra horizontalmente */
+  transform: translateX(-50%); /* Centra horizontalmente */
+  z-index: 9999; /* Establece el z-index por encima de todo */
+}

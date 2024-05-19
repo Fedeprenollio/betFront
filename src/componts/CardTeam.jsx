@@ -7,7 +7,6 @@ import { Button, CardActionArea, CardActions } from '@mui/material';
 import { useBoundStore } from '../stores';
 
 export default function CardTeam({ team, onStatisticsClick, onEditClick }) {
-// const {deleteTeam} = createTeamStore(state=> state)
 const { deleteTeam } = useBoundStore((state) => state);
 
 

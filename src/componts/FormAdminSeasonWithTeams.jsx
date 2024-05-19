@@ -102,7 +102,6 @@ const FormAdminSeasonWithTeams = () => {
 
       const response = await addTeamsToSeason(values.season, values.teams);
       await fetchLeagues();
-console.log("RESPONSE ADD EQUIPO", response)
       setOpenAddTeamsDialog(false);
       setIsAlertOpen(true);
 

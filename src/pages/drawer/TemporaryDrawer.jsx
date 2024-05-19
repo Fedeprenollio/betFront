@@ -74,7 +74,7 @@ export default function TemporaryDrawer() {
                   {leagues
                     .filter((league) => league.country === country)
                     .map((league) => {
-                      const currentSeason = league.season.find(
+                      const currentSeason = league?.season?.find(
                         (season) => season.isCurrentSeason
                       );
                       return (
@@ -93,7 +93,7 @@ export default function TemporaryDrawer() {
                                 <ListItemText sx={{ fontSize: "small" }}>
                                   <Link
                                     className="link-no-underline"
-                                    to={`/stats/teams/tableSeason/${currentSeason._id}`}
+                                    to={`/stats/teams/tableSeason/${currentSeason?._id}`}
                                   >
                                     Tabla de estadísticas
                                   </Link>
@@ -108,7 +108,7 @@ export default function TemporaryDrawer() {
                                 <ListItemText sx={{ fontSize: "small" }}>
                                   <Link
                                     className="link-no-underline"
-                                    to={`/league/showResults/${currentSeason._id}`}
+                                    to={`/league/showResults/${currentSeason?._id}`}
                                   >
                                     Resultados
                                   </Link>
