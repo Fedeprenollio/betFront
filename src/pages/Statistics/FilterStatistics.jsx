@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect } from "react";
+import  { useEffect } from "react";
 import { RadioButtonStatsLessThan } from "../../componts/RadioButtonStatsLessThan";
 import { RadioButtonHomeAway } from "../../componts/RadioButtonHomeAway";
 import { Container } from "@mui/material";
@@ -13,6 +13,7 @@ export const FilterStatistics = ({
   // setMatch,
   setStatsLessThan,
   statsLessThan,
+  singleTeam
  
 }) => {
   const { getMatchDetail } = useBoundStore((state) => state);
@@ -39,7 +40,7 @@ export const FilterStatistics = ({
   const [homeMatchesLocalTeam, setHomeMatchesLocalTeam] = useState(true);
 
   const handleChangeCheckbox = (event) => {
-    const { name, checked } = event.target;
+    const { name } = event.target;
     if (name === "teamHome-home") {
       setHomeMatchesLocalTeam(!homeMatchesLocalTeam);
     } else if (name === "teamHome-visitor") {
@@ -53,12 +54,156 @@ export const FilterStatistics = ({
 
   const {
     setHomeStatYellowCard,
-    setAwayStatYellowCard,
     setHomeStatGoals,
     setHomeStatCorners,
+    setHomeStatShots,
+    setHomeStatShotsOnTarget,
+    setHomeStatPossession,
+    setHomeStatFouls,
+    setHomeStatOffsides,
+    
+
+
+
+    setAwayStatYellowCard,
     setAwayStatCorners,
     setAwayStatGoals,
+    setAwayStatShots,
+    setAwayStatShotsOnTarget,
+    setAwayStatPossession,
+    setAwayStatFouls,
+    setAwayStatOffsides
+    
   } = useBoundStore((state) => state);
+
+  
+    //OFFSIDE:
+    useEffect(() => {
+      setHomeStatOffsides({
+        idHomeTeam,
+        statsLessThan,
+        visitingmathgesLocalTeam,
+        homeMatchesLocalTeam,
+      });
+    }, [
+      idHomeTeam,
+      statsLessThan,
+      visitingmathgesLocalTeam,
+      homeMatchesLocalTeam,
+      setHomeStatOffsides,
+    ]);
+  
+    useEffect(() => {
+      setAwayStatOffsides({
+        idAwayTeam,
+        statsLessThan,
+        homeMateshAwayTeam,
+        visitingMatchesAwayTeam,
+      });
+    }, [
+      idAwayTeam,
+      statsLessThan,
+      homeMateshAwayTeam,
+      visitingMatchesAwayTeam,
+      setAwayStatOffsides,
+    ]);
+  
+  //TIROS AL ARCO:
+  useEffect(() => {
+    setHomeStatShotsOnTarget({
+      idHomeTeam,
+      statsLessThan,
+      visitingmathgesLocalTeam,
+      homeMatchesLocalTeam,
+    });
+  }, [
+    idHomeTeam,
+    statsLessThan,
+    visitingmathgesLocalTeam,
+    homeMatchesLocalTeam,
+    setHomeStatShotsOnTarget,
+  ]);
+
+  useEffect(() => {
+    setAwayStatShotsOnTarget({
+      idAwayTeam,
+      statsLessThan,
+      homeMateshAwayTeam,
+      visitingMatchesAwayTeam,
+    });
+  }, [
+    idAwayTeam,
+    statsLessThan,
+    homeMateshAwayTeam,
+    visitingMatchesAwayTeam,
+    setAwayStatShotsOnTarget,
+  ]);
+
+    //POSESION:
+    useEffect(() => {
+      setHomeStatPossession({
+        idHomeTeam,
+        statsLessThan,
+        visitingmathgesLocalTeam,
+        homeMatchesLocalTeam,
+      });
+    }, [
+      idHomeTeam,
+      statsLessThan,
+      visitingmathgesLocalTeam,
+      homeMatchesLocalTeam,
+      setHomeStatPossession,
+    ]);
+  
+    useEffect(() => {
+      setAwayStatPossession({
+        idAwayTeam,
+        statsLessThan,
+        homeMateshAwayTeam,
+        visitingMatchesAwayTeam,
+      });
+    }, [
+      idAwayTeam,
+      statsLessThan,
+      homeMateshAwayTeam,
+      visitingMatchesAwayTeam,
+      setAwayStatPossession,
+    ]);
+    
+    //FALTAS:
+    useEffect(() => {
+      setHomeStatFouls({
+        idHomeTeam,
+        statsLessThan,
+        visitingmathgesLocalTeam,
+        homeMatchesLocalTeam,
+      });
+    }, [
+      idHomeTeam,
+      statsLessThan,
+      visitingmathgesLocalTeam,
+      homeMatchesLocalTeam,
+      setHomeStatFouls,
+    ]);
+  
+    useEffect(() => {
+      setAwayStatFouls({
+        idAwayTeam,
+        statsLessThan,
+        homeMateshAwayTeam,
+        visitingMatchesAwayTeam,
+      });
+    }, [
+      idAwayTeam,
+      statsLessThan,
+      homeMateshAwayTeam,
+      visitingMatchesAwayTeam,
+      setAwayStatFouls,
+    ]);
+  
+  
+
+
 
   useEffect(() => {
     setHomeStatYellowCard({
@@ -152,6 +297,38 @@ export const FilterStatistics = ({
     setAwayStatGoals,
   ]);
 
+    //TIROS:
+    useEffect(() => {
+      setHomeStatShots({
+        idHomeTeam,
+        statsLessThan,
+        visitingmathgesLocalTeam,
+        homeMatchesLocalTeam,
+      });
+    }, [
+      idHomeTeam,
+      statsLessThan,
+      visitingmathgesLocalTeam,
+      homeMatchesLocalTeam,
+      setHomeStatShots,
+    ]);
+  
+    useEffect(() => {
+      setAwayStatShots({
+        idAwayTeam,
+        statsLessThan,
+        homeMateshAwayTeam,
+        visitingMatchesAwayTeam,
+      });
+    }, [
+      idAwayTeam,
+      statsLessThan,
+      homeMateshAwayTeam,
+      visitingMatchesAwayTeam,
+      setAwayStatShots,
+    ]);
+  
+
   return (
     <Container>
       <RadioButtonStatsLessThan
@@ -159,11 +336,13 @@ export const FilterStatistics = ({
         statsLessThan={statsLessThan}
       />
       <RadioButtonHomeAway
+      
         handleChangeCheckbox={handleChangeCheckbox}
         homeMateshAwayTeam={homeMateshAwayTeam}
         visitingMatchesAwayTeam={visitingMatchesAwayTeam}
         visitingmathgesLocalTeam={visitingmathgesLocalTeam}
         homeMatchesLocalTeam={homeMatchesLocalTeam}
+        singleTeam={singleTeam}
       />
     </Container>
   );

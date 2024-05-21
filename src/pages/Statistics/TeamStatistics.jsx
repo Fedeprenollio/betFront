@@ -1,10 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
 import StatisticsTablecopy from "../../componts/StatisticsTablecopy";
-import { RadioButtonStatsLessThan } from "../../componts/RadioButtonStatsLessThan";
-import { RadioButtonHomeAway } from "../../componts/RadioButtonHomeAway";
-import { useParams } from "react-router-dom";
-import { useBoundStore } from "../../stores";
 
 export const TeamStatistics = ({idHomeTeam, idAwayTeam, idMatch, match, statsLessThan }) => {
   // const [statsLessThan, setStatsLessThan] = useState(false);
@@ -150,19 +145,7 @@ export const TeamStatistics = ({idHomeTeam, idAwayTeam, idMatch, match, statsLes
   return (
     <>
       <div>Ultimos 10 partidos</div>
-      {/* Filters: */}
-      {/* <RadioButtonStatsLessThan
-        handleChangeRadioButton={handleChangeRadioButton}
-        statsLessThan={statsLessThan}
-      />
-      <RadioButtonHomeAway
-        handleChangeCheckbox={handleChangeCheckbox}
-        homeMateshAwayTeam={homeMateshAwayTeam}
-        visitingMatchesAwayTeam={visitingMatchesAwayTeam}
-        visitingmathgesLocalTeam={visitingmathgesLocalTeam}
-        homeMatchesLocalTeam={homeMatchesLocalTeam}
-      /> */}
-      <StatisticsTablecopy
+         <StatisticsTablecopy
         match={match}
         statsLessThan={statsLessThan}
         idHomeTeam={idHomeTeam}

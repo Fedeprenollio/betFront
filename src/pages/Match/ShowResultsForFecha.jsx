@@ -10,6 +10,8 @@ import {
   Card,
   CardContent,
   Grid,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 
 export const ShowResultsForFecha = () => {
@@ -18,7 +20,10 @@ export const ShowResultsForFecha = () => {
   const [selectedFecha, setSelectedFecha] = useState(null);
   const [selectedSeason, setSelectedSeason] = useState("");
   const navigate = useNavigate();
-  
+
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   useEffect(() => {
     getSeasonById(seasonId);
   }, [seasonId, getSeasonById]);
@@ -34,7 +39,15 @@ export const ShowResultsForFecha = () => {
           : null
       );
     }
-  }, [seasonById]);
+
+    // Identificar la temporada actual y establecerla como seleccionada
+    if (seasonById?.season?.league?.season) {
+      const currentSeason = seasonById.season.league.season.find(
+        (season) => season._id === seasonId
+      );
+      setSelectedSeason(currentSeason?._id || "");
+    }
+  }, [seasonById, seasonId]);
 
   const handleFechaClick = (fecha) => {
     setSelectedFecha(fecha);
@@ -45,17 +58,16 @@ export const ShowResultsForFecha = () => {
     getSeasonById(seasonId);
   };
 
-  console.log("seasonById", seasonById);
   return (
     <Container>
-      <Grid container spacing={3}>
-        <Grid item xs={2}>
+      <Grid container spacing={3} alignItems="center">
+        <Grid item xs={12} sm={2}>
           <Typography variant="h6" gutterBottom>
             Temporadas:
           </Typography>
         </Grid>
-        <Grid item sx={10}>
-          <Container style={{ display: "flex", gap: "10px" }}>
+        <Grid item xs={12} sm={10}>
+          <Container style={{ display: "flex", flexWrap: "wrap", gap: "10px", padding: 0 }}>
             {seasonById?.season?.league?.season?.map((season) => (
               <Button
                 color="inherit"
@@ -70,14 +82,14 @@ export const ShowResultsForFecha = () => {
         </Grid>
       </Grid>
 
-      <Grid container spacing={1}>
-        <Grid item xs={1}>
+      <Grid container spacing={1} alignItems="center">
+        <Grid item xs={12} sm={2}>
           <Typography variant="h6" gutterBottom>
             Fechas:
           </Typography>
         </Grid>
-        <Grid item sx={11}>
-          <Container style={{ display: "flex", gap: "6px" }}>
+        <Grid item xs={12} sm={10}>
+          <Container style={{ display: "flex", flexWrap: "wrap", gap: "6px", padding: 0 }}>
             {seasonById?.season?.fechas?.map((fecha) => (
               <Button
                 color={selectedFecha?._id === fecha._id ? "primary" : "inherit"}
@@ -105,20 +117,23 @@ export const ShowResultsForFecha = () => {
                 ?.find((fecha) => fecha._id === selectedFecha._id)
                 ?.matches?.map((match) => (
                   <ListItem key={match._id} disableGutters>
-                    <Link className="link-no-underline" style={{width:"100%"}} to={`/stats/${match.homeTeam._id}/${match.awayTeam._id}/${match._id}`}>
-                    <Card style={{ width: "100%", marginBottom: "10px" }}>
-                      <CardContent>
-                        <Typography variant="h6" component="div">
-                          {`${match.homeTeam.name} - ${match.awayTeam.name}`}
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary">
-                          {match.isFinished
-                            ? `${match.teamStatistics.local.goals} - ${match.teamStatistics.visitor.goals}`
-                            : "Upcoming Match"}
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                    
+                    <Link
+                      className="link-no-underline"
+                      style={{ width: "100%" }}
+                      to={`/stats/${match.homeTeam._id}/${match.awayTeam._id}/${match._id}`}
+                    >
+                      <Card style={{ width: "100%", marginBottom: "10px" }}>
+                        <CardContent>
+                          <Typography variant="h6" component="div">
+                            {`${match.homeTeam.name} - ${match.awayTeam.name}`}
+                          </Typography>
+                          <Typography variant="body2" color="textSecondary">
+                            {match.isFinished
+                              ? `${match.teamStatistics.local.goals} - ${match.teamStatistics.visitor.goals}`
+                              : "Upcoming Match"}
+                          </Typography>
+                        </CardContent>
+                      </Card>
                     </Link>
                   </ListItem>
                 ))}

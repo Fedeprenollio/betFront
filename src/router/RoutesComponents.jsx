@@ -22,8 +22,10 @@ const RoutesComponent = () => {
   return (
     <Routes>
       <Route path="/" element={<App />} />
+
       <Route path="/teams">
         <Route index element={<Teams />} />
+        <Route path=":idHomeTeam/statistics" element={<StatisticsPage />} />
 
         <Route element={<PrivateRoute />}>
           <Route path="adm" element={<FormTeam />} />

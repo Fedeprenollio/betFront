@@ -9,9 +9,21 @@ const createTeamStatsStore = (set) => ({
   homeStatYellowCard: {},
   homeStatCorners: {},
   homeStatGoals: {},
+  homeStatShots: {},
+  homeStatShotsOnTarget: {},
+  homeStatPossession: {},
+  homeStatFouls: {},
+  homeStatOffsides: {},
+
   awayStatYellowCard: {},
   awayStatCorners: {},
   awayStatGoals: {},
+  awayStatShots: {},
+  awayStatShotsOnTarget: {},
+  awayStatPossession: {},
+  awayStatFouls: {},
+  awayStatOffsides: {},
+
   homeTeam: "",
   awayTeam: "",
   localMatches: [],
@@ -31,7 +43,6 @@ const createTeamStatsStore = (set) => ({
     );
 
     const homeYc = await data.json();
-    console.log("QUE TRAE ESTI", homeYc);
     set({ homeStatYellowCard: homeYc });
     set({ localMatches: homeYc?.matches });
   },
@@ -100,6 +111,161 @@ const createTeamStatsStore = (set) => ({
 
     set({ awayStatGoals: awayGoals.goals });
   },
+
+
+  setHomeStatShots: async ({
+    idHomeTeam,
+    homeMatchesLocalTeam,
+    visitingmathgesLocalTeam,
+    statsLessThan,
+  }) => {
+    // Llamada a la API para obtener estadísticas de tiros del equipo local
+    const data = await fetch(
+      `${URL_API}/${idHomeTeam}?statistic=shots&lowerLimit=0.5&upperLimit=22.5&matchesCount=10&homeOnly=${homeMatchesLocalTeam}&awayOnly=${visitingmathgesLocalTeam}&lessThan=${statsLessThan}`
+    );
+    const homeShots = await data.json();
+console.log("STATS", homeShots)
+    set({ homeStatShots: homeShots.shots });
+  },
+
+  setHomeStatShotsOnTarget: async ({
+    idHomeTeam,
+    homeMatchesLocalTeam,
+    visitingmathgesLocalTeam,
+    statsLessThan,
+  }) => {
+    // Llamada a la API para obtener estadísticas de tiros al arco del equipo local
+    const data = await fetch(
+      `${URL_API}/${idHomeTeam}?statistic=shotsOnTarget&lowerLimit=0.5&upperLimit=22.5&matchesCount=10&homeOnly=${homeMatchesLocalTeam}&awayOnly=${visitingmathgesLocalTeam}&lessThan=${statsLessThan}`
+    );
+    const stats = await data.json();
+    console.log("STATS", stats)
+
+    set({ homeStatShotsOnTarget: stats.shotsOnTarget });
+  },
+
+  setHomeStatPossession: async ({
+    idHomeTeam,
+    homeMatchesLocalTeam,
+    visitingmathgesLocalTeam,
+    statsLessThan,
+  }) => {
+    // Llamada a la API para obtener estadísticas de posesión del equipo local
+    const data = await fetch(
+      `${URL_API}/${idHomeTeam}?statistic=possession&lowerLimit=30.5&upperLimit=85.5&matchesCount=10&homeOnly=${homeMatchesLocalTeam}&awayOnly=${visitingmathgesLocalTeam}&lessThan=${statsLessThan}`
+    );
+    const stats = await data.json();
+
+    set({ homeStatPossession: stats.possession });
+  },
+
+  setHomeStatFouls: async ({
+    idHomeTeam,
+    homeMatchesLocalTeam,
+    visitingmathgesLocalTeam,
+    statsLessThan,
+  }) => {
+    // Llamada a la API para obtener estadísticas de faltas del equipo local
+    const data = await fetch(
+      `${URL_API}/${idHomeTeam}?statistic=foults&lowerLimit=0.5&upperLimit=20.5&matchesCount=10&homeOnly=${homeMatchesLocalTeam}&awayOnly=${visitingmathgesLocalTeam}&lessThan=${statsLessThan}`
+    );
+    const stats = await data.json();
+
+    set({ homeStatFouls: stats.foults });
+  },
+
+  setHomeStatOffsides: async ({
+    idHomeTeam,
+    homeMatchesLocalTeam,
+    visitingmathgesLocalTeam,
+    statsLessThan,
+  }) => {
+    // Llamada a la API para obtener estadísticas de offsides del equipo local
+    const data = await fetch(
+      `${URL_API}/${idHomeTeam}?statistic=offsides&lowerLimit=0.5&upperLimit=20.5&matchesCount=10&homeOnly=${homeMatchesLocalTeam}&awayOnly=${visitingmathgesLocalTeam}&lessThan=${statsLessThan}`
+    );
+    const stats = await data.json();
+
+    set({ homeStatOffsides: stats.offsides });
+  },
+
+  setAwayStatShots: async ({
+    idAwayTeam,
+    homeMateshAwayTeam,
+    visitingMatchesAwayTeam,
+    statsLessThan,
+  }) => {
+    // Llamada a la API para obtener estadísticas de tiros del equipo vivistante
+    const data = await fetch(
+      `${URL_API}/${idAwayTeam}?statistic=shots&lowerLimit=0.5&upperLimit=22.5&matchesCount=10&homeOnly=${homeMateshAwayTeam}&awayOnly=${visitingMatchesAwayTeam}&lessThan=${statsLessThan}`
+    );
+    const stats = await data.json();
+
+    set({ awayStatShots: stats.shots });
+  },
+
+  setAwayStatShotsOnTarget: async ({
+    idAwayTeam,
+    homeMateshAwayTeam,
+    visitingMatchesAwayTeam,
+    statsLessThan,
+  }) => {
+    // Llamada a la API para obtener estadísticas de tiros al arco del equipo local
+    const data = await fetch(
+      `${URL_API}/${idAwayTeam}?statistic=shotsOnTarget&lowerLimit=0.5&upperLimit=22.5&matchesCount=10&homeOnly=${homeMateshAwayTeam}&awayOnly=${visitingMatchesAwayTeam}&lessThan=${statsLessThan}`
+    );
+    const stats = await data.json();
+
+    set({ awayStatShotsOnTarget: stats.shotsOnTarget });
+  },
+
+  setAwayStatPossession: async ({
+    idAwayTeam,
+    homeMateshAwayTeam,
+    visitingMatchesAwayTeam,
+    statsLessThan,
+  }) => {
+    // Llamada a la API para obtener estadísticas de posesión del equipo local
+    const data = await fetch(
+      `${URL_API}/${idAwayTeam}?statistic=possession&lowerLimit=30.5&upperLimit=85.5&matchesCount=10&homeOnly=${homeMateshAwayTeam}&awayOnly=${visitingMatchesAwayTeam}&lessThan=${statsLessThan}`
+    );
+    const stats = await data.json();
+
+    set({ awayStatPossession: stats.possession });
+  },
+
+  setAwayStatFouls: async ({
+    idAwayTeam,
+    homeMateshAwayTeam,
+    visitingMatchesAwayTeam,
+    statsLessThan,
+  }) => {
+    // Llamada a la API para obtener estadísticas de faltas del equipo local
+    const data = await fetch(
+      `${URL_API}/${idAwayTeam}?statistic=foults&lowerLimit=0.5&upperLimit=20.5&matchesCount=10&homeOnly=${homeMateshAwayTeam}&awayOnly=${visitingMatchesAwayTeam}&lessThan=${statsLessThan}`
+    );
+    const stats = await data.json();
+
+    set({ awayStatFouls: stats.foults });
+  },
+
+  setAwayStatOffsides: async ({
+    idAwayTeam,
+    homeMateshAwayTeam,
+    visitingMatchesAwayTeam,
+    statsLessThan,
+  }) => {
+    // Llamada a la API para obtener estadísticas de offsides del equipo local
+    const data = await fetch(
+      `${URL_API}/${idAwayTeam}?statistic=offsides&lowerLimit=0.5&upperLimit=20.5&matchesCount=10&homeOnly=${homeMateshAwayTeam}&awayOnly=${visitingMatchesAwayTeam}&lessThan=${statsLessThan}`
+    );
+    const stats = await data.json();
+
+    set({ awayStatOffsides: stats.offsides });
+  },
+
+
+  
   getTeamStatsForSeason: async ({ seasonId }) => {
     const response = await axios(`${URL_API_STATS_SEASON}/${seasonId}`);
     console.log("RESPONSE", response)

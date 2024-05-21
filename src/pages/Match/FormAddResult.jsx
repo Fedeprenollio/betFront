@@ -17,16 +17,24 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
     redCardsAway: "",
     cornersHome: "",
     cornersAway: "",
+
+
     possessionHome: "",
     possessionAway: "",
+
     faultsHome: "",
     faultsAway: "",
-    shotsHome: "",
-    shotsAway: "",
+
+    shotsOnTargetHome: "",
+    shotsOnTargetAway: "",
+    
     totalShotsHome: "",
     totalShotsAway: "",
-    passesHome: "",
-    passesAway: "",
+
+
+    foultsHome: "",
+    foultsAway: "",
+
   };
 
   const validationSchema = Yup.object().shape({
@@ -40,19 +48,19 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
     // redCardsAway: Yup.number().min(0),faults
     cornersHome: Yup.number().min(0),
     cornersAway: Yup.number().min(0),
-    possessionHome: Yup.number().min(0),
-    possessionAway: Yup.number().min(0),
+    possessionHome: Yup.number().min(0).max(100),
+    possessionAway: Yup.number().min(0).max(100),
     faultsHome: Yup.number().min(0),
     faultsAway: Yup.number().min(0),
-    shotsHome: Yup.number().min(0),
-    shotsAway: Yup.number().min(0),
+    shotsOnTargetHome: Yup.number().min(0),
+    shotsOnTargetAway: Yup.number().min(0),
     totalShotsHome: Yup.number().min(0),
     totalShotsAway: Yup.number().min(0),
-    passesHome: Yup.number().min(0),
-    passesAway: Yup.number().min(0),
+    foultsHome: Yup.number().min(0),
+    foultsAway: Yup.number().min(0),
   });
 
-  const { addMatchResult, getMatchDetail, matchDetail } = useBoundStore(
+  const { addMatchResult, getMatchDetail } = useBoundStore(
     (state) => state
   );
   useEffect(() => {
@@ -72,18 +80,22 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
           redCards: parseInt(values.redCardsHome),
           corners: parseInt(values.cornersHome),
           possession: parseInt(values.possessionHome),
-          shots: parseInt(values.shotsHome),
-          passes: parseInt(values.passesHome),
+          totalShots: parseInt(values.totalShotsHome),
+          shotsOnTarget: parseInt(values.shotsOnTargetHome),
+          foults: parseInt(values.foultsHome),
         },
         visitor: {
           goals: parseInt(values.goalsAway),
-          offsides: parseInt(values.offsidesAway),
-          yellowCards: parseInt(values.yellowCardsAway),
-          redCards: parseInt(values.redCardsAway),
-          corners: parseInt(values.cornersAway),
+          totalShots: parseInt(values.totalShotsAway),
+          shotsOnTarget: parseInt(values.shotsOnTargetAway),
           possession: parseInt(values.possessionAway),
-          shots: parseInt(values.shotsAway),
-          passes: parseInt(values.passesAway),
+          //faltas
+          yellowCards: parseInt(values.yellowCardsAway),
+          corners: parseInt(values.cornersAway),
+          offsides: parseInt(values.offsidesAway),
+          foults: parseInt(values.foultsAway),
+
+          redCards: parseInt(values.redCardsAway),
         },
       },
       isFinished: true,
@@ -160,24 +172,24 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
             <Grid item xs={6}>
               <Field
                 as={TextField}
-                name="shotsHome"
+                name="shotsOnTargetHome"
                 label="Tiros al arco Equipo Local"
                 type="number"
                 variant="outlined"
                 fullWidth
               />
-              <ErrorMessage name="shotsHome" component="div" />
+              <ErrorMessage name="shotsOnTargetHome" component="div" />
             </Grid>
             <Grid item xs={6}>
               <Field
                 as={TextField}
-                name="shotsAway"
+                name="shotsOnTargetAway"
                 label="Tiros al arco Equipo Visitante"
                 type="number"
                 variant="outlined"
                 fullWidth
               />
-              <ErrorMessage name="shotsAway" component="div" />
+              <ErrorMessage name="shotsOnTargetAway" component="div" />
             </Grid>
 
             <Grid item xs={6}>
@@ -297,28 +309,29 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
 
             
 
-            {/* <Grid item xs={6}>
+            <Grid item xs={6}>
               <Field
                 as={TextField}
-                name="passesHome"
-                label="Pases Equipo Local"
+                name="foultsHome"
+                label="Faltas Equipo Local"
                 type="number"
                 variant="outlined"
                 fullWidth
               />
-              <ErrorMessage name="passesHome" component="div" />
+              <ErrorMessage name="foultsHome" component="div" />
             </Grid>
             <Grid item xs={6}>
               <Field
                 as={TextField}
-                name="passesAway"
+                name="foultsAway"
                 label="Pases Equipo Visitante"
                 type="number"
                 variant="outlined"
                 fullWidth
               />
-              <ErrorMessage name="passesAway" component="div" />
-            </Grid> */}
+              <ErrorMessage name="foultsAway" component="div" />
+            </Grid>
+
             <Grid item xs={6}>
               <Field
                 as={TextField}

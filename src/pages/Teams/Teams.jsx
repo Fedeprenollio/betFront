@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useBoundStore } from "../../stores";
+import { useNavigate } from 'react-router-dom'; // Importa useNavigate
 import {
   Table,
   TableBody,
@@ -32,6 +33,8 @@ export const Teams = () => {
   const [alertSeverity, setAlertSeverity] = useState("success");
   const [alertMessage, setAlertMessage] = useState("");
   const [isAlertOpen, setIsAlertOpen] = useState(false);
+
+  const navigate = useNavigate(); // Inicializa useNavigate
 
   useEffect(() => {
     setTeams();
@@ -98,6 +101,10 @@ export const Teams = () => {
     setAlertTeamId(null);
   };
 
+  const handleStatisticsClick = (teamId) => {
+    navigate(`/teams/${teamId}/statistics`);
+  };
+
   return (
     <>
       <Typography variant="h6" gutterBottom>
@@ -133,7 +140,9 @@ export const Teams = () => {
           <TableHead>
             <TableRow>
               <TableCell>Nombre del Equipo</TableCell>
-              <TableCell>Ciudad</TableCell>
+              <TableCell>País</TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
@@ -145,7 +154,7 @@ export const Teams = () => {
                     <TableCell>{team.name}</TableCell>
                     <TableCell>{team.country}</TableCell>
                     <TableCell>
-                      <Button>Estadistica</Button>
+                      <Button onClick={() => handleStatisticsClick(team._id)}>Estadistica</Button>
                     </TableCell>
                     <TableCell>
                       <Button>Editar</Button>
