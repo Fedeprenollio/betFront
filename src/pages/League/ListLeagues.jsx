@@ -12,20 +12,23 @@ import {
   ListItemIcon,
   ListItemText,
   Tooltip,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from "@mui/material";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import StarBorder from "@mui/icons-material/StarBorder";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import InfoIcon from "@mui/icons-material/Info";
+import PlusOneIcon from "@mui/icons-material/PlusOne";
 import { FilterLeague } from "../../componts/Filters/FilterLeague";
-import ConfirmationDialog from "../../componts/feedback/ConfirmationDialog ";
 import AlertDialogCopy from "../../componts/feedback/AlertDialogCopy";
 import { AlertMessageCopy } from "../../componts/feedback/AlertMessageCopy";
 import { Link } from "react-router-dom";
-import InfoIcon from "@mui/icons-material/Info";
-import PlusOneIcon from "@mui/icons-material/PlusOne";
 import { SelectedCurrentSeason } from "./SelectedCurrentSeason";
 import axios from "axios";
 import { BACKEND_URL_BASE } from "../../stores/url_base";
@@ -105,9 +108,9 @@ export const ListLeagues = () => {
   const handleEdit = (leagueId) => {
     // Lógica para editar la liga
   };
-console.log("filteredLeagues",filteredLeagues)
+
   return (
-    <Container>
+    <>
       <FilterLeague
         setFilteredLeagues={setFilteredLeagues}
         getSortedLeagues={getSortedLeagues}
@@ -138,7 +141,7 @@ console.log("filteredLeagues",filteredLeagues)
 
       <List>
         {filteredLeagues.map((league, index) => (
-          <Container key={league._id}>
+          <Container key={league._id} style={{padding:0}}> 
             <Grid container alignItems="center" justifyContent="space-between">
               <Grid item xs={11}>
                 <ListItemButton onClick={() => handleClick(index, league._id)}>
@@ -181,55 +184,63 @@ console.log("filteredLeagues",filteredLeagues)
               timeout="auto"
               unmountOnExit
             >
-              <List component="div" disablePadding>
-                {league.season.map((season) => (
-                  <Grid key={season._id} container>
-                    
-                    <Grid item xs={11}>
-                      <ListItemButton sx={{ pl: 4 }}>
-                        <SelectedCurrentSeason
-                          leagueId={league._id}
-                          seasonId={season._id}
-                          isCurrent={season._id === currentSeasonId}
-                          setCurrentSeasonId={setCurrentSeasonId}
-                        />
-                        {/* <Link
-                          className="link-no-underline"
-                          to={`/stats/teams/tableSeason/${season._id}`}
-                        >
-                          <ListItemText primary={season.year} />
-                        </Link> */}
-                        <ListItemText primary={season.year} />
-                        <Link
-                          className="link-no-underline"
-                          to={`/league/showResults/${season._id}`}
-                        >
-                          <Button>Resultados</Button>
-                        </Link>
-                        <Link
-                          className="link-no-underline"
-                          to={`/stats/teams/tableSeason/${season._id}`}
-                        >
-                          <Button>Estadisticas</Button>
-                        </Link>
-                      </ListItemButton>
-                    </Grid>
-                    <Grid item xs={1}>
-                      <ListItemIcon>
-                        <Link to={`/match/results/${season._id}`}>
-                          <Tooltip title="Agregar resultados a la temporada">
-                            <PlusOneIcon />
-                          </Tooltip>
-                        </Link>
-                      </ListItemIcon>
-                    </Grid>
-                  </Grid>
-                ))}
-              </List>
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Temp actual</TableCell>
+                      <TableCell>Año de temporada</TableCell>
+                      <TableCell>Acciones</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {league.season.map((season) => (
+                      <TableRow key={season._id}>
+                        <TableCell>
+                          <SelectedCurrentSeason
+                            leagueId={league._id}
+                            seasonId={season._id}
+                            isCurrent={season._id === currentSeasonId}
+                            setCurrentSeasonId={setCurrentSeasonId}
+                          />
+                        </TableCell>
+                        <TableCell>{season.year}</TableCell>
+                        <TableCell style={{padding:"0"}}>
+                          <Grid container >
+                            <Grid item>
+                              <Link
+                                className="link-no-underline"
+                                to={`/league/showResults/${season._id}`}
+                              >
+                                <Button>Resultados</Button>
+                              </Link>
+                            </Grid>
+                            <Grid item>
+                              <Link
+                                className="link-no-underline"
+                                to={`/stats/teams/tableSeason/${season._id}`}
+                              >
+                                <Button>Estadísticas</Button>
+                              </Link>
+                            </Grid>
+                            <Grid item>
+                              <Tooltip title="Agregar resultados a la temporada">
+                                <Link to={`/match/results/${season._id}`}>
+                                  <Button>+ resultados</Button>
+                                </Link>
+                              </Tooltip>
+                            </Grid>
+                          </Grid>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </Collapse>
           </Container>
         ))}
       </List>
-    </Container>
+    </>
   );
 };

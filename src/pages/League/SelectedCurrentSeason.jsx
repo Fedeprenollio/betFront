@@ -27,10 +27,9 @@ export const SelectedCurrentSeason = ({ seasonId, leagueId, isCurrent, setCurren
   };
 
   return (
-    <div>
-        Temp Actual:
-      <Checkbox checked={isCurrent} onChange={handleSeasonSelection} />
-    </div>
+    <>
+       <Checkbox checked={isCurrent} onChange={handleSeasonSelection} />
+    </>
   );
 };
 
