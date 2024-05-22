@@ -130,8 +130,8 @@ export const MatchList3 = ({ match }) => {
         <Collapse in={isOpen} timeout="auto" unmountOnExit>
           <FormAddResult
             matchId={match._id}
-            localName={match.homeTeam.name}
-            visitorName={match.awayTeam.name}
+            localName={match.homeTeam?.name}
+            visitorName={match.awayTeam?.name}
           />
         </Collapse>
       </Grid>
