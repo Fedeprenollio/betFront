@@ -1,12 +1,16 @@
-/* eslint-disable react/prop-types */
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { TextField, Button, Grid, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { useEffect } from "react";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 import { useBoundStore } from "../../stores";
 
+// eslint-disable-next-line react/prop-types
 const FormAddResult = ({ matchId, visitorName, localName }) => {
-  const initialValues = {
+  const { addMatchResult, getMatchDetail, matchDetail } = useBoundStore((state) => state);
+  const [initialValues, setInitialValues] = useState({
     goalsHome: "",
     goalsAway: "",
     offsidesHome: "",
@@ -17,26 +21,51 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
     redCardsAway: "",
     cornersHome: "",
     cornersAway: "",
-
-
     possessionHome: "",
     possessionAway: "",
-
     faultsHome: "",
     faultsAway: "",
-
     shotsOnTargetHome: "",
     shotsOnTargetAway: "",
-    
     totalShotsHome: "",
     totalShotsAway: "",
+    foultsHome: "", // Updated to match form field name
+  foultsAway: "", // Updated to match form field name
+  });
 
+  useEffect(() => {
+    const fetchMatchDetail = async () => {
+      await getMatchDetail({ idMatch: matchId });
+    };
+    fetchMatchDetail();
+  }, [getMatchDetail, matchId]);
 
-    foultsHome: "",
-    foultsAway: "",
-
-  };
-
+  useEffect(() => {
+    if (matchDetail) {
+      setInitialValues({
+        goalsHome: matchDetail?.teamStatistics?.local?.goals || "",
+        goalsAway: matchDetail?.teamStatistics?.visitor?.goals || "",
+        offsidesHome: matchDetail?.teamStatistics?.local?.offsides || "",
+        offsidesAway: matchDetail?.teamStatistics?.visitor?.offsides || "",
+        yellowCardsHome: matchDetail?.teamStatistics?.local?.yellowCards || "",
+        yellowCardsAway: matchDetail?.teamStatistics?.visitor?.yellowCards || "",
+        redCardsHome: matchDetail?.teamStatistics?.local?.redCards || "",
+        redCardsAway: matchDetail?.teamStatistics?.visitor?.redCards || "",
+        cornersHome: matchDetail?.teamStatistics?.local?.corners || "",
+        cornersAway: matchDetail?.teamStatistics?.visitor?.corners || "",
+        possessionHome: matchDetail?.teamStatistics?.local?.possession || "",
+        possessionAway: matchDetail?.teamStatistics?.visitor?.possession || "",
+       
+        shotsOnTargetHome: matchDetail?.teamStatistics?.local?.shotsOnTarget || "",
+        shotsOnTargetAway: matchDetail?.teamStatistics?.visitor?.shotsOnTarget || "",
+        totalShotsHome: matchDetail?.teamStatistics?.local?.shots || "",
+        totalShotsAway: matchDetail?.teamStatistics?.visitor?.shots || "",
+        foultsHome: matchDetail?.teamStatistics?.local?.foults || "", // Updated to match form field name
+      foultsAway: matchDetail?.teamStatistics?.visitor?.foults || "", // Updated to match form field name
+      });
+    }
+  }, [matchDetail]);
+console.log(" matchDetail?.teamStatistics?.visitor?.foults",  matchDetail?.teamStatistics?.visitor?.foults)
   const validationSchema = Yup.object().shape({
     goalsHome: Yup.number().required("Campo requerido").min(0),
     goalsAway: Yup.number().required("Campo requerido").min(0),
@@ -44,8 +73,8 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
     offsidesAway: Yup.number().min(0),
     yellowCardsHome: Yup.number().min(0),
     yellowCardsAway: Yup.number().min(0),
-    // redCardsHome: Yup.number().min(0),
-    // redCardsAway: Yup.number().min(0),faults
+    redCardsHome: Yup.number().min(0),
+    redCardsAway: Yup.number().min(0),
     cornersHome: Yup.number().min(0),
     cornersAway: Yup.number().min(0),
     possessionHome: Yup.number().min(0).max(100),
@@ -60,15 +89,8 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
     foultsAway: Yup.number().min(0),
   });
 
-  const { addMatchResult, getMatchDetail } = useBoundStore(
-    (state) => state
-  );
-  useEffect(() => {
-    getMatchDetail({ idMatch: matchId });
-  }, [getMatchDetail, matchId]);
-
   const handleSubmit = async (values) => {
-    console.log("VALUES DEL RESULTAD", values)
+    console.log("VALUES", values)
     await addMatchResult(matchId, {
       goalsHome: parseInt(values.goalsHome),
       goalsAway: parseInt(values.goalsAway),
@@ -82,19 +104,17 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
           possession: parseInt(values.possessionHome),
           totalShots: parseInt(values.totalShotsHome),
           shotsOnTarget: parseInt(values.shotsOnTargetHome),
-          foults: parseInt(values.foultsHome),
+          foults: parseInt(values.faultsHome    ),
         },
         visitor: {
           goals: parseInt(values.goalsAway),
           totalShots: parseInt(values.totalShotsAway),
           shotsOnTarget: parseInt(values.shotsOnTargetAway),
           possession: parseInt(values.possessionAway),
-          //faltas
           yellowCards: parseInt(values.yellowCardsAway),
           corners: parseInt(values.cornersAway),
           offsides: parseInt(values.offsidesAway),
-          foults: parseInt(values.foultsAway),
-
+          foults: parseInt(values.faultsAway ),
           redCards: parseInt(values.redCardsAway),
         },
       },
@@ -104,6 +124,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
 
   return (
     <Formik
+      enableReinitialize
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
@@ -121,7 +142,6 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
                 {visitorName}
               </Typography>
             </Grid>
-
             <Grid item xs={6}>
               <Field
                 as={TextField}
@@ -144,8 +164,6 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
               />
               <ErrorMessage name="goalsAway" component="div" />
             </Grid>
-
-
             <Grid item xs={6}>
               <Field
                 as={TextField}
@@ -168,7 +186,6 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
               />
               <ErrorMessage name="shotsAway" component="div" />
             </Grid>
-
             <Grid item xs={6}>
               <Field
                 as={TextField}
@@ -191,7 +208,6 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
               />
               <ErrorMessage name="shotsOnTargetAway" component="div" />
             </Grid>
-
             <Grid item xs={6}>
               <Field
                 as={TextField}
@@ -214,30 +230,28 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
               />
               <ErrorMessage name="possessionAway" component="div" />
             </Grid>
-       
             <Grid item xs={6}>
               <Field
                 as={TextField}
-                name="faultsHome"
+                name="foultsHome" // Updated to match initial values name
                 label="Faltas local"
                 type="number"
                 variant="outlined"
                 fullWidth
               />
-              <ErrorMessage name="possessionHome" component="div" />
+              <ErrorMessage name="foultsHome" component="div" />
             </Grid>
             <Grid item xs={6}>
               <Field
                 as={TextField}
-                name="faultsAway"
+                name="foultsAway" // Updated to match initial values name
                 label="Faltas Visitante"
                 type="number"
                 variant="outlined"
                 fullWidth
               />
-              <ErrorMessage name="possessionAway" component="div" />
+              <ErrorMessage name="foultsAway" component="div" />
             </Grid>
-       
             <Grid item xs={6}>
               <Field
                 as={TextField}
@@ -249,7 +263,6 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
               />
               <ErrorMessage name="yellowCardsHome" component="div" />
             </Grid>
-
             <Grid item xs={6}>
               <Field
                 as={TextField}
@@ -261,28 +274,6 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
               />
               <ErrorMessage name="yellowCardsAway" component="div" />
             </Grid>
-            {/* <Grid item xs={6}>
-              <Field
-                as={TextField}
-                name="redCardsHome"
-                label="Tarjetas Rojas Equipo Local"
-                type="number"
-                variant="outlined"
-                fullWidth
-              />
-              <ErrorMessage name="redCardsHome" component="div" />
-            </Grid>
-            <Grid item xs={6}>
-              <Field
-                as={TextField}
-                name="redCardsAway"
-                label="Tarjetas Rojas Equipo Visitante"
-                type="number"
-                variant="outlined"
-                fullWidth
-              />
-              <ErrorMessage name="redCardsAway" component="div" />
-            </Grid> */}
             <Grid item xs={6}>
               <Field
                 as={TextField}
@@ -305,10 +296,6 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
               />
               <ErrorMessage name="cornersAway" component="div" />
             </Grid>
-          
-
-            
-
             <Grid item xs={6}>
               <Field
                 as={TextField}
@@ -331,7 +318,6 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
               />
               <ErrorMessage name="foultsAway" component="div" />
             </Grid>
-
             <Grid item xs={6}>
               <Field
                 as={TextField}
@@ -354,7 +340,6 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
               />
               <ErrorMessage name="offsidesAway" component="div" />
             </Grid>
-
             <Grid item xs={12}>
               <Button type="submit" variant="contained" color="primary">
                 Actualizar Resultado

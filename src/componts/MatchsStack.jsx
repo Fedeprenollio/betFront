@@ -18,8 +18,12 @@ import { Link } from "react-router-dom";
 import "../App.css";
 import DeleteIcon from "@mui/icons-material/Delete";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import Collapse from "@mui/material/Collapse";
 import { useBoundStore } from "../stores";
 import { useMediaQuery } from "@mui/material";
+import FormAddResult from "../pages/Match/FormAddResult";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -29,31 +33,35 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
- export const MatchList3 = ({ match }) => {
+export const MatchList3 = ({ match }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const fecha = new Date(match.date);
   const hora = dayjs(fecha).format("HH:mm");
 
- // Utilizamos useMediaQuery para detectar si estamos en un dispositivo móvil
- const isMobile = useMediaQuery((theme) => theme?.breakpoints?.down('sm'));
+  // Utilizamos useMediaQuery para detectar si estamos en un dispositivo móvil
+  const isMobile = useMediaQuery((theme) => theme?.breakpoints?.down('sm'));
+
+  const toggleForm = () => {
+    setIsOpen(!isOpen);
+  };
 
   return (
     <Grid container spacing={2} alignItems="center">
-      <Grid item xs={10} sx={{paddingX:"0rem"}}>
+      <Grid item xs={10} sx={{ paddingX: "0rem" }}>
         <Link
-          // to={`/stats/${match?.homeTeam?._id}/${match?.awayTeam?._id}/${match._id}`}
           to={`/stats/${match?.homeTeam?._id}/${match?.awayTeam?._id}/${match._id}`}
           className="link-no-underline"
         >
-          <ListItemButton component="div" sx={{paddingX:"0.2rem"}}>
-            <Grid container spacing={2} alignItems="center" sx={{paddingX:"0.2rem"}}>
-              <Grid item xs={5} >
+          <ListItemButton component="div" sx={{ paddingX: "0.2rem" }}>
+            <Grid container spacing={2} alignItems="center" sx={{ paddingX: "0.2rem" }}>
+              <Grid item xs={5}>
                 <ListItemText
-                  sx={{paddingX:"0.2rem"}}
+                  sx={{ paddingX: "0.2rem" }}
                   align="end"
                   primary={
                     <>
                       <Typography
-                       sx={{ display: "inline", fontSize: isMobile ? "0.8rem" : "inherit" }}
+                        sx={{ display: "inline", fontSize: isMobile ? "0.8rem" : "inherit" }}
                         component="h6"
                         variant="h6"
                         color="grey"
@@ -62,23 +70,11 @@ const Item = styled(Paper)(({ theme }) => ({
                       </Typography>
                     </>
                   }
-                  // secondary={
-                  //   <>
-                  //     <Typography
-                  //       sx={{ display: "inline" }}
-                  //       component="h6"
-                  //       variant="body2"
-                  //       color="black"
-                  //     >
-                  //       4to
-                  //     </Typography>
-                  //   </>
-                  // }
                 />
               </Grid>
-              <Grid item xs={2} sx={{paddingX:"0.2rem"}}>
+              <Grid item xs={2} sx={{ paddingX: "0.2rem" }}>
                 <ListItemText
-                sx={{paddingX:"0.3rem"}}
+                  sx={{ paddingX: "0.3rem" }}
                   align="center"
                   primary={
                     <>
@@ -96,9 +92,9 @@ const Item = styled(Paper)(({ theme }) => ({
                   }
                 />
               </Grid>
-              <Grid item xs={5} sx={{paddingX:"0.2rem"}}>
+              <Grid item xs={5} sx={{ paddingX: "0.2rem" }}>
                 <ListItemText
-                  sx={{paddingX:"0.2rem"}}
+                  sx={{ paddingX: "0.2rem" }}
                   align="start"
                   primary={
                     <>
@@ -125,14 +121,24 @@ const Item = styled(Paper)(({ theme }) => ({
           </IconButton>
         </Tooltip>
         <Tooltip title="+ Estadística">
-          <IconButton component={Link} to={`/stats/form/${match._id}`}>
-            <QueryStatsIcon />
+          <IconButton onClick={toggleForm}>
+            {isOpen ? <ExpandLess /> : <ExpandMore />}
           </IconButton>
         </Tooltip>
+      </Grid>
+      <Grid item xs={12}>
+        <Collapse in={isOpen} timeout="auto" unmountOnExit>
+          <FormAddResult
+            matchId={match._id}
+            localName={match.homeTeam.name}
+            visitorName={match.awayTeam.name}
+          />
+        </Collapse>
       </Grid>
     </Grid>
   );
 };
+
 
 export const MatchsStack = () => {
   const { matches } = useBoundStore((state) => state);

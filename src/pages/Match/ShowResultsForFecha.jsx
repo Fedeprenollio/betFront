@@ -60,16 +60,15 @@ export const ShowResultsForFecha = () => {
 
   return (
     <Container>
-      <Grid container spacing={3} alignItems="center">
-        <Grid item xs={12} sm={2}>
-          <Typography variant="h6" gutterBottom>
+      <Grid container  alignItems="center">
+      <Typography variant="h6" gutterBottom>
             Temporadas:
           </Typography>
-        </Grid>
-        <Grid item xs={12} sm={10}>
-          <Container style={{ display: "flex", flexWrap: "wrap", gap: "10px", padding: 0 }}>
+        <Grid item xs={12} sm={12}>
+          {/* <Container style={{ display: "flex", flexWrap: "wrap", gap: "2px", padding: 0 }}> */}
             {seasonById?.season?.league?.season?.map((season) => (
               <Button
+                style={{padding:"2px"}}
                 color="inherit"
                 key={season._id}
                 onClick={() => handleSeasonClick(season._id)}
@@ -78,20 +77,21 @@ export const ShowResultsForFecha = () => {
                 {season.year}
               </Button>
             ))}
-          </Container>
+          {/* </Container> */}
         </Grid>
       </Grid>
 
-      <Grid container spacing={1} alignItems="center">
-        <Grid item xs={12} sm={2}>
+      <Grid container  alignItems="center">
           <Typography variant="h6" gutterBottom>
             Fechas:
           </Typography>
-        </Grid>
+       
         <Grid item xs={12} sm={10}>
-          <Container style={{ display: "flex", flexWrap: "wrap", gap: "6px", padding: 0 }}>
+          {/* <Container style={{ display: "flex", flexWrap: "wrap", gap: "6px", padding: 0 }}> */}
             {seasonById?.season?.fechas?.map((fecha) => (
               <Button
+              style={{padding:"2px"}}
+
                 color={selectedFecha?._id === fecha._id ? "primary" : "inherit"}
                 key={fecha._id}
                 onClick={() =>
@@ -102,14 +102,14 @@ export const ShowResultsForFecha = () => {
                 {fecha.number}
               </Button>
             ))}
-          </Container>
+          {/* </Container> */}
         </Grid>
       </Grid>
 
-      <Container>
+      <>
         {selectedFecha && (
-          <Container>
-            <Typography variant="h6" gutterBottom>
+          <>
+            <Typography variant="h6" >
               Partidos para la Fecha {selectedFecha.number}
             </Typography>
             <List>
@@ -138,9 +138,9 @@ export const ShowResultsForFecha = () => {
                   </ListItem>
                 ))}
             </List>
-          </Container>
+          </>
         )}
-      </Container>
+      </>
     </Container>
   );
 };

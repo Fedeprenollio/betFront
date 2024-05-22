@@ -34,7 +34,7 @@ import axios from "axios";
 import { BACKEND_URL_BASE } from "../../stores/url_base";
 
 export const ListLeagues = () => {
-  const { fetchLeagues, leagues, deleteLeague } = useBoundStore(
+  const { fetchLeagues, leagues, deleteLeague,isAuthenticated } = useBoundStore(
     (state) => state
   );
   const [idLeague, setIdLeague] = useState("");
@@ -223,6 +223,8 @@ export const ListLeagues = () => {
                                 <Button>Estadísticas</Button>
                               </Link>
                             </Grid>
+                              { isAuthenticated && 
+                              
                             <Grid item>
                               <Tooltip title="Agregar resultados a la temporada">
                                 <Link to={`/match/results/${season._id}`}>
@@ -230,6 +232,8 @@ export const ListLeagues = () => {
                                 </Link>
                               </Tooltip>
                             </Grid>
+                              }
+
                           </Grid>
                         </TableCell>
                       </TableRow>

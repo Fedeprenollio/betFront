@@ -2,12 +2,14 @@
 import axios from 'axios';
 import Checkbox from '@mui/material/Checkbox';
 import { BACKEND_URL_BASE } from '../../stores/url_base';
+import { useBoundStore } from '../../stores';
+import CheckIcon from '@mui/icons-material/Check';
 const URL_API = `${BACKEND_URL_BASE}/season`;
 const URL_API2 = `${BACKEND_URL_BASE}/season/league`;
 
 
 export const SelectedCurrentSeason = ({ seasonId, leagueId, isCurrent, setCurrentSeasonId }) => {
-
+  const {  isAuthenticated } = useBoundStore((state) => state);
   const handleSeasonSelection = async (event) => {
     const isChecked = event.target.checked;
 
@@ -28,7 +30,12 @@ export const SelectedCurrentSeason = ({ seasonId, leagueId, isCurrent, setCurren
 
   return (
     <>
-       <Checkbox checked={isCurrent} onChange={handleSeasonSelection} />
+        { isAuthenticated ? 
+        <Checkbox checked={isCurrent} onChange={handleSeasonSelection} /> :
+        isCurrent ?  <CheckIcon  /> : <null></null>
+        
+      }
+
     </>
   );
 };
