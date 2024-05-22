@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useBoundStore } from "../../stores";
 import {
   Button,
@@ -12,14 +12,19 @@ import {
   Grid,
   useMediaQuery,
   useTheme,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ShowResultMatch from "./ShowResultMatch";
 
 export const ShowResultsForFecha = () => {
   const { seasonId } = useParams();
   const { seasonById, getSeasonById } = useBoundStore((state) => state);
   const [selectedFecha, setSelectedFecha] = useState(null);
   const [selectedSeason, setSelectedSeason] = useState("");
-  const navigate = useNavigate();
+  const [expandedMatchId, setExpandedMatchId] = useState(null);
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -40,7 +45,6 @@ export const ShowResultsForFecha = () => {
       );
     }
 
-    // Identificar la temporada actual y establecerla como seleccionada
     if (seasonById?.season?.league?.season) {
       const currentSeason = seasonById.season.league.season.find(
         (season) => season._id === seasonId
@@ -58,89 +62,123 @@ export const ShowResultsForFecha = () => {
     getSeasonById(seasonId);
   };
 
+  const handleAccordionToggle = (matchId) => {
+    setExpandedMatchId(expandedMatchId === matchId ? null : matchId);
+  };
+
   return (
     <Container>
-      <Grid container  alignItems="center">
-      <Typography variant="h6" gutterBottom>
-            Temporadas:
-          </Typography>
+      <Grid container alignItems="center">
+        <Typography variant="h6" gutterBottom>
+          Temporadas de {seasonById?.season?.league.name} :
+        </Typography>
         <Grid item xs={12} sm={12}>
-          {/* <Container style={{ display: "flex", flexWrap: "wrap", gap: "2px", padding: 0 }}> */}
-            {seasonById?.season?.league?.season?.map((season) => (
-              <Button
-                style={{padding:"2px"}}
-                color="inherit"
-                key={season._id}
-                onClick={() => handleSeasonClick(season._id)}
-                variant={selectedSeason === season._id ? "outlined" : "text"}
-              >
-                {season.year}
-              </Button>
-            ))}
-          {/* </Container> */}
+          {seasonById?.season?.league?.season?.map((season) => (
+            <Button
+              style={{ padding: "2px" }}
+              color="inherit"
+              key={season._id}
+              onClick={() => handleSeasonClick(season._id)}
+              variant={selectedSeason === season._id ? "outlined" : "text"}
+            >
+              {season.year}
+            </Button>
+          ))}
         </Grid>
       </Grid>
 
-      <Grid container  alignItems="center">
-          <Typography variant="h6" gutterBottom>
-            Fechas:
-          </Typography>
-       
+      <Grid container alignItems="center">
+        <Typography variant="h6" gutterBottom>
+          Fechas:
+        </Typography>
         <Grid item xs={12} sm={10}>
-          {/* <Container style={{ display: "flex", flexWrap: "wrap", gap: "6px", padding: 0 }}> */}
-            {seasonById?.season?.fechas?.map((fecha) => (
-              <Button
-              style={{padding:"2px"}}
-
-                color={selectedFecha?._id === fecha._id ? "primary" : "inherit"}
-                key={fecha._id}
-                onClick={() =>
-                  handleFechaClick({ _id: fecha._id, number: fecha.number })
-                }
-                variant={selectedFecha?._id === fecha._id ? "outlined" : "text"}
-              >
-                {fecha.number}
-              </Button>
-            ))}
-          {/* </Container> */}
+          {seasonById?.season?.fechas?.map((fecha) => (
+            <Button
+              style={{ padding: "2px" }}
+              color={selectedFecha?._id === fecha._id ? "primary" : "inherit"}
+              key={fecha._id}
+              onClick={() =>
+                handleFechaClick({ _id: fecha._id, number: fecha.number })
+              }
+              variant={selectedFecha?._id === fecha._id ? "outlined" : "text"}
+            >
+              {fecha.number}
+            </Button>
+          ))}
         </Grid>
       </Grid>
 
-      <>
-        {selectedFecha && (
-          <>
-            <Typography variant="h6" >
-              Partidos para la Fecha {selectedFecha.number}
-            </Typography>
-            <List>
-              {seasonById?.season?.fechas
-                ?.find((fecha) => fecha._id === selectedFecha._id)
-                ?.matches?.map((match) => (
-                  <ListItem key={match._id} disableGutters>
-                    <Link
-                      className="link-no-underline"
-                      style={{ width: "100%" }}
-                      to={`/stats/${match.homeTeam._id}/${match.awayTeam._id}/${match._id}`}
-                    >
-                      <Card style={{ width: "100%", marginBottom: "10px" }}>
-                        <CardContent>
-                          <Typography variant="h6" component="div">
-                            {`${match.homeTeam.name} - ${match.awayTeam.name}`}
-                          </Typography>
-                          <Typography variant="body2" color="textSecondary">
-                            {match.isFinished
-                              ? `${match.teamStatistics.local.goals} - ${match.teamStatistics.visitor.goals}`
-                              : "Upcoming Match"}
-                          </Typography>
-                        </CardContent>
-                      </Card>
-                    </Link>
-                  </ListItem>
-                ))}
-            </List>
-          </>
-        )}
-      </>
+      {selectedFecha && (
+        <>
+          <Typography variant="h6">
+            Partidos para la Fecha {selectedFecha.number}
+          </Typography>
+          <List>
+            {seasonById?.season?.fechas
+              ?.find((fecha) => fecha._id === selectedFecha._id)
+              ?.matches?.map((match) => (
+                <ListItem key={match._id} disableGutters>
+                  <Card style={{ width: "100%", marginBottom: "10px" }}>
+                    <CardContent>
+                      <Typography variant="h6" component="div">
+                        {`${match.homeTeam.name} - ${match.awayTeam.name}`}
+                      </Typography>
+                      
+                      <Typography variant="body2" color="textSecondary">
+                        {match.date ? 
+                          new Date(match.date).toLocaleDateString("es-ES", {day: "numeric", month: "short"}) :
+                          "Fecha sin definir"
+                        }
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {match.isFinished
+                          ? `${match.teamStatistics.local.goals} - ${match.teamStatistics.visitor.goals}`
+                          : "Esperando el resultado"}
+                      </Typography>
+                      <Button
+                        component={Link}
+                        to={`/stats/${match.homeTeam._id}/${match.awayTeam._id}/${match._id}`}
+                        variant="contained"
+                        color="primary"
+                        style={{ marginTop: "10px", marginRight: "10px" }}
+                      >
+                        Ver Estadísticas
+                      </Button>
+                      {match.isFinished && (
+                        <>
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            style={{ marginTop: "10px" }}
+                            onClick={() => handleAccordionToggle(match._id)}
+                          >
+                          {expandedMatchId === match._id ? "Ocultar Resultado" : "Ver Resultado"}
+                          </Button>
+                          {expandedMatchId === match._id && (
+                            <Accordion expanded>
+                              <AccordionSummary>
+                                <Typography>Detalles del Partido</Typography>
+                              </AccordionSummary>
+                              <AccordionDetails>
+                                <ShowResultMatch
+                                  matchId={match._id}
+                                  visitorName={match.awayTeam.name}
+                                  localName={match.homeTeam.name}
+                                />
+                              </AccordionDetails>
+                            </Accordion>
+                          )}
+                        </>
+                      )}
+                    </CardContent>
+                  </Card>
+                </ListItem>
+              ))}
+          </List>
+        </>
+      )}
     </Container>
   );
 };
+
+export default ShowResultsForFecha;

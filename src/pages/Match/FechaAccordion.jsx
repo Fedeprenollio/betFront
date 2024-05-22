@@ -4,8 +4,13 @@ import { Accordion, AccordionDetails, AccordionSummary, Typography, Divider, Con
 import { ExpandMore } from '@mui/icons-material';
 import { SelectedCurrentFecha } from './SelectedCurrentFecha';
 import FormAddResult from './FormAddResult';
+import ShowResultMatch from './ShowResultMatch';
+import { useBoundStore } from '../../stores';
 
 export const FechaAccordion = ({ fecha, idSeason, currentFechaId, setCurrentFechaId }) => {
+  const {   isAuthenticated } = useBoundStore(
+    (state) => state
+  );
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleChange = () => {
@@ -58,6 +63,11 @@ export const FechaAccordion = ({ fecha, idSeason, currentFechaId, setCurrentFech
                   localName={match.homeTeam.name}
                   visitorName={match.awayTeam.name}
                 />
+                {/* {isAuthenticated ? (
+    <FormAddResult matchId={match._id} visitorName={match.awayTeam.name} localName={match.homeTeam.name} />
+  ) : (
+    <ShowResultMatch matchId={match._id} visitorName={match.awayTeam.name} localName={match.homeTeam.name} />
+  )} */}
               </AccordionDetails>
             </Accordion>
           ))}
