@@ -7,9 +7,9 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useBoundStore } from "../../stores";
 
-// eslint-disable-next-line react/prop-types
 const FormAddResult = ({ matchId, visitorName, localName }) => {
   const { addMatchResult, getMatchDetail, matchDetail } = useBoundStore((state) => state);
+  console.log("matchDetail",matchDetail?.teamStatistics?.local?.goals)
   const [initialValues, setInitialValues] = useState({
     goalsHome: "",
     goalsAway: "",
@@ -29,19 +29,23 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
     shotsOnTargetAway: "",
     totalShotsHome: "",
     totalShotsAway: "",
-    foultsHome: "", // Updated to match form field name
-  foultsAway: "", // Updated to match form field name
+    foultsHome: "",
+    foultsAway: "",
   });
 
   useEffect(() => {
     const fetchMatchDetail = async () => {
       await getMatchDetail({ idMatch: matchId });
     };
-    fetchMatchDetail();
+    fetchMatchDetail(); 
+    // return () => {
+    //   getMatchDetail({ idMatch: null });
+    // };
   }, [getMatchDetail, matchId]);
 
   useEffect(() => {
-    if (matchDetail) {
+    if (matchDetail && matchDetail._id === matchId) {
+      console.log("ENTRANDO")
       setInitialValues({
         goalsHome: matchDetail?.teamStatistics?.local?.goals || "",
         goalsAway: matchDetail?.teamStatistics?.visitor?.goals || "",
@@ -55,17 +59,16 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
         cornersAway: matchDetail?.teamStatistics?.visitor?.corners || "",
         possessionHome: matchDetail?.teamStatistics?.local?.possession || "",
         possessionAway: matchDetail?.teamStatistics?.visitor?.possession || "",
-       
         shotsOnTargetHome: matchDetail?.teamStatistics?.local?.shotsOnTarget || "",
         shotsOnTargetAway: matchDetail?.teamStatistics?.visitor?.shotsOnTarget || "",
         totalShotsHome: matchDetail?.teamStatistics?.local?.shots || "",
         totalShotsAway: matchDetail?.teamStatistics?.visitor?.shots || "",
-        foultsHome: matchDetail?.teamStatistics?.local?.foults || "", // Updated to match form field name
-      foultsAway: matchDetail?.teamStatistics?.visitor?.foults || "", // Updated to match form field name
+        foultsHome: matchDetail?.teamStatistics?.local?.foults || "",
+        foultsAway: matchDetail?.teamStatistics?.visitor?.foults || "",
       });
     }
-  }, [matchDetail]);
-console.log(" matchDetail?.teamStatistics?.visitor?.foults",  matchDetail?.teamStatistics?.visitor?.foults)
+  }, [matchDetail, matchId]);
+
   const validationSchema = Yup.object().shape({
     goalsHome: Yup.number().required("Campo requerido").min(0),
     goalsAway: Yup.number().required("Campo requerido").min(0),
@@ -90,7 +93,6 @@ console.log(" matchDetail?.teamStatistics?.visitor?.foults",  matchDetail?.teamS
   });
 
   const handleSubmit = async (values) => {
-    console.log("VALUES", values)
     await addMatchResult(matchId, {
       goalsHome: parseInt(values.goalsHome),
       goalsAway: parseInt(values.goalsAway),
@@ -104,7 +106,7 @@ console.log(" matchDetail?.teamStatistics?.visitor?.foults",  matchDetail?.teamS
           possession: parseInt(values.possessionHome),
           totalShots: parseInt(values.totalShotsHome),
           shotsOnTarget: parseInt(values.shotsOnTargetHome),
-          foults: parseInt(values.faultsHome    ),
+          foults: parseInt(values.faultsHome),
         },
         visitor: {
           goals: parseInt(values.goalsAway),
@@ -114,7 +116,7 @@ console.log(" matchDetail?.teamStatistics?.visitor?.foults",  matchDetail?.teamS
           yellowCards: parseInt(values.yellowCardsAway),
           corners: parseInt(values.cornersAway),
           offsides: parseInt(values.offsidesAway),
-          foults: parseInt(values.faultsAway ),
+          foults: parseInt(values.faultsAway),
           redCards: parseInt(values.redCardsAway),
         },
       },
@@ -173,7 +175,7 @@ console.log(" matchDetail?.teamStatistics?.visitor?.foults",  matchDetail?.teamS
                 variant="outlined"
                 fullWidth
               />
-              <ErrorMessage name="shotsHome" component="div" />
+              <ErrorMessage name="totalShotsHome" component="div" />
             </Grid>
             <Grid item xs={6}>
               <Field
@@ -184,7 +186,7 @@ console.log(" matchDetail?.teamStatistics?.visitor?.foults",  matchDetail?.teamS
                 variant="outlined"
                 fullWidth
               />
-              <ErrorMessage name="shotsAway" component="div" />
+              <ErrorMessage name="totalShotsAway" component="div" />
             </Grid>
             <Grid item xs={6}>
               <Field
@@ -233,8 +235,8 @@ console.log(" matchDetail?.teamStatistics?.visitor?.foults",  matchDetail?.teamS
             <Grid item xs={6}>
               <Field
                 as={TextField}
-                name="foultsHome" // Updated to match initial values name
-                label="Faltas local"
+                name="foultsHome"
+                label="Faltas Equipo Local"
                 type="number"
                 variant="outlined"
                 fullWidth
@@ -244,8 +246,8 @@ console.log(" matchDetail?.teamStatistics?.visitor?.foults",  matchDetail?.teamS
             <Grid item xs={6}>
               <Field
                 as={TextField}
-                name="foultsAway" // Updated to match initial values name
-                label="Faltas Visitante"
+                name="foultsAway"
+                label="Faltas Equipo Visitante"
                 type="number"
                 variant="outlined"
                 fullWidth
@@ -295,28 +297,6 @@ console.log(" matchDetail?.teamStatistics?.visitor?.foults",  matchDetail?.teamS
                 fullWidth
               />
               <ErrorMessage name="cornersAway" component="div" />
-            </Grid>
-            <Grid item xs={6}>
-              <Field
-                as={TextField}
-                name="foultsHome"
-                label="Faltas Equipo Local"
-                type="number"
-                variant="outlined"
-                fullWidth
-              />
-              <ErrorMessage name="foultsHome" component="div" />
-            </Grid>
-            <Grid item xs={6}>
-              <Field
-                as={TextField}
-                name="foultsAway"
-                label="Pases Equipo Visitante"
-                type="number"
-                variant="outlined"
-                fullWidth
-              />
-              <ErrorMessage name="foultsAway" component="div" />
             </Grid>
             <Grid item xs={6}>
               <Field
