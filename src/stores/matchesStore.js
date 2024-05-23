@@ -121,7 +121,7 @@ const createMatchesStore = ((set, get) => ({
           "Content-Type": "application/json",
         },       
       });
-      // get().setMatches()
+      get().setMatches()
 
       // if (response.ok) {
       //   console.log("Partido eliminado exitosamente");
