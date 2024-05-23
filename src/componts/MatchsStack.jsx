@@ -21,9 +21,9 @@ import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import Collapse from "@mui/material/Collapse";
-import { useBoundStore } from "../stores";
 import { useMediaQuery } from "@mui/material";
 import FormAddResult from "../pages/Match/FormAddResult";
+import { useBoundStore } from "../stores";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -34,6 +34,8 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export const MatchList3 = ({ match }) => {
+  const { onDeleteMatch} = useBoundStore(state=> state)
+
   const [isOpen, setIsOpen] = useState(false);
   const fecha = new Date(match.date);
   const hora = dayjs(fecha).format("HH:mm");
@@ -45,6 +47,11 @@ export const MatchList3 = ({ match }) => {
     setIsOpen(!isOpen);
   };
 
+  const handleDelete = (idMatch) => {
+    // Ejecutar la función onDelete pasada como prop
+    console.log("DELETE")
+    onDeleteMatch(idMatch);
+  };
   return (
     <Grid container spacing={2} alignItems="center">
       <Grid item xs={10} sx={{ paddingX: "0rem" }}>
@@ -116,8 +123,8 @@ export const MatchList3 = ({ match }) => {
       </Grid>
       <Grid item xs={2}>
         <Tooltip title="Delete">
-          <IconButton>
-            <DeleteIcon />
+          <IconButton  onClick={()=>handleDelete(match._id)}>
+            <DeleteIcon  />
           </IconButton>
         </Tooltip>
         <Tooltip title="+ Estadística">

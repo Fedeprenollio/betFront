@@ -113,6 +113,7 @@ const createMatchesStore = ((set, get) => ({
   },
 
   onDeleteMatch: async (idMatch)=>{
+    console.log("ID DELETE", idMatch)
     try {
      await fetch(`${URL_API}/${idMatch}`, {
         method: "DELETE",
