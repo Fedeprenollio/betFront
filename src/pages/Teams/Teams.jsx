@@ -173,14 +173,14 @@ export const Teams = () => {
         </Table>
       </TableContainer>
       {isAlertOpen && (
-        <div className="alert-message-container">
+       
           <AlertMessageCopy
             isAlertOpen={isAlertOpen}
             severity={alertSeverity}
             textAlert={alertMessage}
             setIsAlertOpen={setIsAlertOpen}
           />
-        </div>
+    
       )}
       <AlertDialogCopy
         open={openDialog}

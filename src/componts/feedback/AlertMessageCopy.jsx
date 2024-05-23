@@ -17,10 +17,13 @@ export const AlertMessageCopy = ({isAlertOpen, severity, textAlert, setIsAlertOp
     }    
   }, [isAlertOpen,setIsAlertOpen])
   return (
+    <div className="alert-message-container">
+
     <Stack sx={{ width: "100%" }} spacing={2}>
       <Alert onClose={handleCloseAlert} severity={severity} elevation={1}>
         {textAlert}
       </Alert>
     </Stack>
+    </div>
   );
 };
