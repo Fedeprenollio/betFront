@@ -69,6 +69,7 @@ const createTeamStatsStore = (set) => ({
       `${URL_API}/${idHomeTeam}?statistic=goals&lowerLimit=0.5&upperLimit=12.5&matchesCount=10&homeOnly=${homeMatchesLocalTeam}&awayOnly=${visitingmathgesLocalTeam}&lessThan=${statsLessThan}`
     );
     const info = await data.json();
+    console.log("STATS GOLES LOCAL", info)
     set({ homeStatGoals: info.goals });
   },
 
@@ -108,6 +109,7 @@ const createTeamStatsStore = (set) => ({
       `${URL_API}/${idAwayTeam}?statistic=goals&lowerLimit=0.5&upperLimit=12.5&matchesCount=10&homeOnly=${homeMateshAwayTeam}&awayOnly=${visitingMatchesAwayTeam}&lessThan=${statsLessThan}`
     );
     const awayGoals = await data.json();
+    console.log("STATS GOLES VISI", awayGoals)
 
     set({ awayStatGoals: awayGoals.goals });
   },
@@ -139,7 +141,7 @@ console.log("STATS", homeShots)
       `${URL_API}/${idHomeTeam}?statistic=shotsOnTarget&lowerLimit=0.5&upperLimit=22.5&matchesCount=10&homeOnly=${homeMatchesLocalTeam}&awayOnly=${visitingmathgesLocalTeam}&lessThan=${statsLessThan}`
     );
     const stats = await data.json();
-    console.log("STATS", stats)
+    
 
     set({ homeStatShotsOnTarget: stats.shotsOnTarget });
   },

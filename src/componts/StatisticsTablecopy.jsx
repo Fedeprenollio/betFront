@@ -16,6 +16,7 @@ import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import Switch from "@mui/material/Switch"; // Importar Switch de MUI
 import createTeamStatsStore from "../stores/statsStore";
 import createTeamStore from "../stores/teamStore";
 import List from "@mui/material/List";
@@ -24,29 +25,55 @@ import ListItemText from "@mui/material/ListItemText";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import "dayjs/locale/es"; // Importar la localización en español
-import { styled } from '@mui/material/styles';
 import { useBoundStore } from "../stores";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import * as ss from "simple-statistics";
+import { Label } from "@mui/icons-material";
+import { FormControlLabel } from "@mui/material";
 
 
- export const StatsTable = ({ homeStats, awayStats, statsLessThan }) => {
-  // if (!homeStats || !awayStats) {
-  //   return 
-  // }
-  console.log(homeStats,"----", awayStats)
+export const calculateStats = (values) => {
+  console.log("VALUE", values)
+  if (!Array.isArray(values)) {
+    console.error("El parámetro proporcionado no es un array");
+    return {};
+  }
+  const stats = {
+    matchesTotalFinished: values?.length,
+    total: ss.sum(values),
+    values: values,
+    mediana: ss.median(values),
+    desviacion: parseFloat(ss.standardDeviation(values).toFixed(2)),
+    promedio: parseFloat(ss.mean(values).toFixed(2)),
+  };
+
+  return stats;
+};
+
+export const StatsTable = ({
+  homeStats,
+  awayStats,
+  statsLessThan,
+  isAdvanced,
+}) => {
   const homeFilteredStats = Object.keys(homeStats).filter(
-    (key) => key !== "total" && key !== "matchesTotalFinished"
+    (key) =>
+      key !== "total" &&
+      key !== "matchesTotalFinished" &&
+      key !== "receivedStats" &&
+      key !== "values"
   );
 
   const awayFilteredStats = Object.keys(awayStats).filter(
-    (key) => key !== "total" && key !== "matchesTotalFinished"
+    (key) =>
+      key !== "total" &&
+      key !== "matchesTotalFinished" &&
+      key !== "receivedStats" &&
+      key !== "values"
   );
 
   const getDisplayName = ({ key, statsLessThan, min = 4.5 }) => {
-    //statsLessThan puede ser "menos" o "más" según buscamos "partidos con menos de "equis" cantidad de goles o más" y es un booleano
     const stringType = statsLessThan ? "menos" : "más";
-
     switch (key) {
       case "few":
         return `Partidos con ${stringType} de ${min}`;
@@ -122,41 +149,66 @@ import { useEffect } from "react";
   };
 
   return (
-    <>
+    <>  
       {homeFilteredStats.map((key) => (
         <TableRow key={key}>
-          <TableCell>{homeStats[key]}</TableCell>
+          <TableCell style={{ textAlign: "center" }}>{homeStats[key]}</TableCell>
           <TableCell align="center">
             {getDisplayName({ key, statsLessThan })}
           </TableCell>
-          <TableCell align="right">{awayStats[key]}</TableCell>
+          <TableCell style={{ textAlign: "center" }}>{awayStats[key]}</TableCell>
         </TableRow>
       ))}
-      <TableRow>
-        <TableCell style={{ fontWeight: "bold", fontSize: "1.2rem" }}>
-          {homeStats.matchesTotalFinished}
-        </TableCell>
-        <TableCell
-          align="center"
-          style={{ fontWeight: "bold", fontSize: "1.2rem" }}
-        >
-          Partidos contabilizados finalizados
-        </TableCell>
-        <TableCell
-          align="right"
-          style={{ fontWeight: "bold", fontSize: "1.2rem" }}
-        >
-          {" "}
-          <b>{awayStats.matchesTotalFinished}</b>
-        </TableCell>
-      </TableRow>
+      {isAdvanced && (
+        <TableRow>
+          <TableCell style={{ fontWeight: "bold", fontSize: "1.2rem", textAlign: "center" }}>
+            {homeStats.matchesTotalFinished}
+          </TableCell>
+          <TableCell
+            align="center"
+            style={{ fontWeight: "bold", fontSize: "1.2rem" }}
+          >
+            Partidos contabilizados finalizados
+          </TableCell>
+          <TableCell
+            style={{ fontWeight: "bold", fontSize: "1.2rem", textAlign: "center" }}
+          >
+            <b>{awayStats.matchesTotalFinished}</b>
+          </TableCell>
+        </TableRow>
+      )}
     </>
   );
+  
 };
 
- export function Row({ homeStatistics, awayStatistics, name, statsLessThan }) {
-  const [open, setOpen] = React.useState(false);
-
+export function Row({
+  homeStatistics,
+  awayStatistics,
+  name,
+  statsLessThan,
+  isAdvanced,
+  homeTeamName,
+  awayTeamName,
+}) {
+  const [open, setOpen] = useState(false);
+  const homeCalculatedStats = useMemo(
+    () => calculateStats(homeStatistics?.values),
+    [homeStatistics]
+  );
+  const awayCalculatedStats = useMemo(
+    () => calculateStats(awayStatistics?.values),
+    [awayStatistics]
+  );
+  const homeCalculatedReceivedStats = useMemo(
+    () => calculateStats(homeStatistics?.receivedStats?.values),
+    [homeStatistics]
+  );
+  const awayCalculatedReceivedStats = useMemo(
+    () => calculateStats(awayStatistics?.receivedStats?.values),
+    [awayStatistics]
+  );
+  console.log("homeCalculatedStats", homeStatistics)
   return (
     <>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
@@ -169,40 +221,74 @@ import { useEffect } from "react";
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        {/* <TableCell component="th" scope="row">
-          {name}
-        </TableCell> */}
-        <TableCell align="center">{homeStatistics?.total}</TableCell>
-        <TableCell align="center">{name}</TableCell>
-        <TableCell align="center">{awayStatistics?.total}</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              {/* <Typography variant="h6" gutterBottom component="div">
-                History
-              </Typography> */}
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Veces</TableCell>
-                    <TableCell align="right"> </TableCell>
-                    <TableCell align="right">Veces</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <StatsTable
-                    homeStats={homeStatistics}
-                    awayStats={awayStatistics}
-                    statsLessThan={statsLessThan}
-                  ></StatsTable>
-                </TableBody>
-              </Table>
-            </Box>
-          </Collapse>
+        <TableCell align="center">
+          {homeCalculatedStats?.total} ({homeCalculatedReceivedStats?.total})
         </TableCell>
+        <TableCell align="center" style={{fontWeight:"bold"}}>
+        <span> {homeCalculatedStats?.promedio}</span>  (
+          {/* {homeCalculatedReceivedStats?.promedio}) */}
+            <span style={{color:"red"}}>{homeCalculatedReceivedStats?.total}</span>)
+        </TableCell>
+        {isAdvanced && (
+          <>
+            <TableCell align="center">
+              {homeCalculatedStats?.mediana} (
+              {homeCalculatedReceivedStats?.mediana})
+            </TableCell>
+            <TableCell align="center">
+              {homeCalculatedStats?.desviacion} (
+              {homeCalculatedReceivedStats?.desviacion})
+            </TableCell>
+          </>
+        )}
+        <TableCell align="center">{name}</TableCell>
+        <TableCell align="center">
+          {awayCalculatedStats?.total} ({awayCalculatedReceivedStats?.total})
+        </TableCell>
+        <TableCell align="center">
+          {awayCalculatedStats?.promedio} (
+          {awayCalculatedReceivedStats?.promedio})
+        </TableCell>
+        {isAdvanced && (
+          <>
+            <TableCell align="center">
+              {awayCalculatedStats?.mediana} (
+              {awayCalculatedReceivedStats?.mediana})
+            </TableCell>
+            <TableCell align="center">
+              {awayCalculatedStats?.desviacion} (
+              {awayCalculatedReceivedStats?.desviacion})
+            </TableCell>
+          </>
+        )}
       </TableRow>
+      {isAdvanced && (
+        <TableRow>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              <Box sx={{ margin: 1 }}>
+                <Table size="small" aria-label="purchases">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Veces</TableCell>
+                      <TableCell align="right"> </TableCell>
+                      <TableCell align="right">Veces</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <StatsTable
+                      homeStats={homeStatistics}
+                      awayStats={awayStatistics}
+                      statsLessThan={statsLessThan}
+                      isAdvanced={isAdvanced}
+                    />
+                  </TableBody>
+                </Table>
+              </Box>
+            </Collapse>
+          </TableCell>
+        </TableRow>
+      )}
     </>
   );
 }
@@ -213,38 +299,38 @@ export default function StatisticsTablecopy({
   idHomeTeam,
   idAwayTeam,
 }) {
-  const {  getTeamDetails, teamDetails } = useBoundStore((state) => state);
+  const { getTeamDetails, teamDetails } = useBoundStore((state) => state);
+  const [isAdvanced, setIsAdvanced] = useState(false); // Estado para alternar entre estadísticas simples y avanzadas
 
-
-  //Valor para definir si las estadisticas son "mas de" o "menos de", True es lessThan
-  React.useEffect(() => {
+  useEffect(() => {
     getTeamDetails(idHomeTeam);
     getTeamDetails(idAwayTeam);
-    return()=>{
-      getTeamDetails(null)
-    }
+    return () => {
+      getTeamDetails(null);
+    };
   }, [idHomeTeam, idAwayTeam, getTeamDetails]);
-  
-  
-  // Utilizamos los selectores para obtener los detalles de cada equipo
-  const [teamDetails1, setTeamDetails1] = useState({})
-  const [teamDetails2, setTeamDetails2] = useState({})
-  // const teamDetails1 = teamDetails && teamDetails[idHomeTeam];
-  // const teamDetails2 = teamDetails && teamDetails[idAwayTeam];
+
+  const [teamDetails1, setTeamDetails1] = useState({});
+  const [teamDetails2, setTeamDetails2] = useState({});
+
   useEffect(() => {
-    if(teamDetails){
-      setTeamDetails1(teamDetails[idHomeTeam])
-      setTeamDetails2( teamDetails[idAwayTeam])
+    if (teamDetails) {
+      setTeamDetails1(teamDetails[idHomeTeam]);
+      setTeamDetails2(teamDetails[idAwayTeam]);
     }
     return () => {
       setTeamDetails1({});
-      setTeamDetails2({})
+      setTeamDetails2({});
     };
-    
-  }, [idHomeTeam,idAwayTeam,teamDetails])
-  
-  const {  homeStatYellowCard,  awayStatYellowCard,   homeStatGoals,  homeStatCorners,  awayStatCorners,  awayStatGoals,
+  }, [idHomeTeam, idAwayTeam, teamDetails]);
 
+  const {
+    homeStatYellowCard,
+    awayStatYellowCard,
+    homeStatGoals,
+    homeStatCorners,
+    awayStatCorners,
+    awayStatGoals,
     homeStatShots,
     homeStatShotsOnTarget,
     homeStatPossession,
@@ -254,223 +340,179 @@ export default function StatisticsTablecopy({
     awayStatShotsOnTarget,
     awayStatPossession,
     awayStatFouls,
-    awayStatOffsides
-    } = useBoundStore((state) => state);
-  const UnderlinedTypography = styled(Typography)({
-    textDecoration: 'underline',
-  });
-
-console.log("homeStatFouls",awayStatFouls)
-  const displayResultDate = ({ match }) => {
-    dayjs.extend(localizedFormat);
-    // Configurar dayjs para usar la localización en español
-    dayjs.locale("es");
-    const formatCustomDate = (dateString) => {
-      const date = dayjs(dateString);
-      const today = dayjs();
-
-      // Comprobar si la fecha es hoy
-      if (date.isSame(today, "day")) {
-        return `HOY ${date.format("HH:mm")}`;
-      }
-
-      // Formatear la fecha según el formato deseado
-      // return
-      return (
-        <>
-          <UnderlinedTypography  fontWeight="bold">{date.format("dddd", { locale: "es" }).toUpperCase()}</UnderlinedTypography>
-          <Typography>{date.format("DD MMM", { locale: "es" })}</Typography>
-        </>
-      );
-    };
-
-    if (match?.isFinished) {
-      return (
-        <List>
-          <ListItem alignItems="flex-start">
-            <ListItemText
-              primary={
-                <Typography
-                  align="center"
-                  // sx={{ display: "inline" }}
-                  // component="span"
-                  variant="h6"
-                  color="text.primary"
-                >
-                  FIN
-                </Typography>
-              }
-              secondary={
-                <React.Fragment>
-                  <Typography variant="h3" fontWeight="bold" align="center">
-                    {`${match?.teamStatistics?.local?.goals} - ${match?.teamStatistics?.visitor?.goals}`}
-                  </Typography>
-                  <Typography
-                    align="center"
-                    // sx={{ display: "inline" }}
-                    // component="span"
-                    variant="h6"
-                    color="text.primary"
-                  >
-                    {` ${match?.league?.name}`}
-                  </Typography>
-                </React.Fragment>
-              }
-            />
-          </ListItem>
-        </List>
-      );
-    } else {
-      return (
-        <List>
-          <ListItem alignItems="flex-start">
-            <ListItemText
-              primary={
-                <Typography
-                  align="center"
-                  // sx={{ display: "inline" }}
-                  // component="span"
-                  variant="h6"
-                  color="text.primary"
-                >
-                  {formatCustomDate(match.date)}
-                </Typography>
-              }
-              secondary={
-                <React.Fragment>
-                  <Typography
-                    align="center"
-                    // sx={{ display: "inline" }}
-                    component="h5"
-                    variant="span"
-                    color="text.primary"
-                  >
-                    {` ${match?.league?.name}`}
-                  </Typography>
-                </React.Fragment>
-              }
-            />
-          </ListItem>
-        </List>
-      );
-    }
-  };
+    awayStatOffsides,
+  } = useBoundStore((state) => state);
+console.log("homeStatYellowCard", homeStatYellowCard.yellowCards)
+console.log("homeStatShotsOnTarget", homeStatShotsOnTarget)
+  const data = [
+    {
+      homeStatistics: homeStatGoals,
+      awayStatistics: awayStatGoals,
+      name: "Goles",
+      statsLessThan,
+    },
+    {
+      homeStatistics: homeStatCorners,
+      awayStatistics: awayStatCorners,
+      name: "Corners",
+      statsLessThan,
+    },
+    {
+      homeStatistics: homeStatYellowCard.yellowCards,
+      awayStatistics: awayStatYellowCard.yellowCards,
+      name: "Tarjetas Amarillas",
+      statsLessThan,
+    },
+    {
+      homeStatistics: homeStatShots,
+      awayStatistics: awayStatShots,
+      name: "Disparos",
+      statsLessThan,
+    },
+    {
+      homeStatistics: homeStatShotsOnTarget,
+      awayStatistics: awayStatShotsOnTarget,
+      name: "Disparos al Arco",
+      statsLessThan,
+    },
+    {
+      homeStatistics: homeStatPossession,
+      awayStatistics: awayStatPossession,
+      name: "Posesión",
+      statsLessThan,
+    },
+    {
+      homeStatistics: homeStatFouls,
+      awayStatistics: awayStatFouls,
+      name: "Faltas",
+      statsLessThan,
+    },
+    {
+      homeStatistics: homeStatOffsides,
+      awayStatistics: awayStatOffsides,
+      name: "Offsides",
+      statsLessThan,
+    },
+  ];
 
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="collapsible table">
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell align="center">
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <Avatar src={teamDetails1?.logoUrl} alt={teamDetails1?.name} />
-                <Typography
-                  variant="h5"
-                  style={{ fontWeight: "bold", marginLeft: "8px" }}
+    <>
+    
+    <FormControlLabel
+        control={
+          <Switch
+            checked={isAdvanced}
+            onChange={() => setIsAdvanced(!isAdvanced)}
+            name="isAdvanced"
+            color="primary"
+          />
+        }
+        label="Activar estadísticas avanzadas"
+      />
+      <TableContainer component={Paper}>
+        <Table aria-label="collapsible table">
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell />
+              {isAdvanced && (
+                <>
+                  <TableCell />
+                  <TableCell />
+                </>
+              )}
+              <TableCell align="center">
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
                 >
-                  {teamDetails1?.name}
-                </Typography>
-              </div>
-            </TableCell>
-            <TableCell align="center">
-              {match && displayResultDate({ match })}
-            </TableCell>
-            <TableCell align="center">
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <Avatar src={teamDetails2?.logoUrl} alt={teamDetails2?.name} />
-                <Typography
-                  variant="h5"
-                  style={{ fontWeight: "bold", marginLeft: "8px" }}
-                >
-                  {teamDetails2?.name}
-                </Typography>
-              </div>
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell />
-            <TableCell align="center">Total</TableCell>
-            <TableCell align="center">-</TableCell>
-            <TableCell align="center">Total</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <Row
-            homeStatistics={homeStatGoals}
-            awayStatistics={awayStatGoals}
-            name="Goles"
-            statsLessThan={statsLessThan}
-          />
-          {/* <Row
-            homeStatistics={homeStatistics.offsides}
-            awayStatistics={awayStatistics.offsides}
-            name="Offsides"
-          /> */}
-          <Row
-            homeStatistics={homeStatYellowCard.yellowCards}
-            awayStatistics={awayStatYellowCard.yellowCards}
-            name="Amarillas"
-            statsLessThan={statsLessThan}
-          />
-          <Row
-            homeStatistics={homeStatCorners}
-            awayStatistics={awayStatCorners}
-            name="Corners"
-            statsLessThan={statsLessThan}
-          />
+                  <Avatar
+                    src={teamDetails1?.logoUrl}
+                    alt={teamDetails1?.name}
+                  />
+                  <Typography
+                    variant="h5"
+                    style={{ fontWeight: "bold", marginLeft: "8px" }}
+                  >
+                    {teamDetails1?.name}
+                  </Typography>
+                </div>
+              </TableCell>
+              <TableCell />
+              {isAdvanced && (
+                <>
+                
+                 
+                </>
+              )}
 
-          {/* <Row
-            homeStatistics={homeStatistics.redCards}
-            awayStatistics={awayStatistics.redCards}
-            name="Rojas"
-          />
-          */}
-           <Row
-            homeStatistics={homeStatShots}
-            awayStatistics={awayStatShots}
-            name="Tiros"
-            statsLessThan={statsLessThan}
-          />
-          <Row
-            homeStatistics={homeStatShotsOnTarget}
-            awayStatistics={awayStatShotsOnTarget}
-            name="Tiros al arco"
-            statsLessThan={statsLessThan}
-          />
-          <Row
-            homeStatistics={homeStatPossession}
-            awayStatistics={awayStatPossession}
-            name="Posesión"
-            statsLessThan={statsLessThan}
-          />
-          <Row
-            homeStatistics={homeStatFouls}
-            awayStatistics={awayStatFouls}
-            name="Faltas"
-            statsLessThan={statsLessThan}
-          />
-          <Row
-            homeStatistics={homeStatOffsides}
-            awayStatistics={awayStatOffsides}
-            name="Offsides"
-            statsLessThan={statsLessThan}
-          />
-        </TableBody>
-      </Table>
-    </TableContainer>
+              <TableCell align="center">
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <Avatar
+                    src={teamDetails2?.logoUrl}
+                    alt={teamDetails2?.name}
+                  />
+                  <Typography
+                    variant="h5"
+                    style={{ fontWeight: "bold", marginLeft: "8px" }}
+                  >
+                    {teamDetails2?.name}
+                  </Typography>
+                </div>
+              </TableCell>
+              <TableCell />
+              <TableCell />
+            </TableRow>
+            <TableRow>
+              <TableCell />
+
+              <TableCell align="center">Total(Rec)</TableCell>
+              <TableCell align="center">Prom(Rec)</TableCell>
+              {isAdvanced && (
+                <>
+                  <TableCell align="center">Mediana(Rec)</TableCell>
+                  <TableCell align="center">Desv(Rec)</TableCell>
+                </>
+              )}
+
+              <TableCell />
+
+              <TableCell align="center">Total(Rec)</TableCell>
+              <TableCell align="center">Prom(Rec)</TableCell>
+              {isAdvanced && (
+                <>
+                  <TableCell align="center">Mediana(Rec)</TableCell>
+                  <TableCell align="center">Desv(Rec)</TableCell>
+                </>
+              )}
+            </TableRow>
+          </TableHead>
+
+          <TableBody>
+            {data.map((stat) => (
+              <Row
+                key={stat.name}
+                homeStatistics={stat.homeStatistics}
+                awayStatistics={stat.awayStatistics}
+                name={stat.name}
+                statsLessThan={stat.statsLessThan}
+                isAdvanced={isAdvanced}
+                homeTeamName={teamDetails1?.name}
+                awayTeamName={teamDetails2?.name}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 }
-
