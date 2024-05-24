@@ -31,9 +31,8 @@ import * as ss from "simple-statistics";
 import { Label } from "@mui/icons-material";
 import { FormControlLabel } from "@mui/material";
 
-
 export const calculateStats = (values) => {
-  console.log("VALUE", values)
+  console.log("VALUE", values);
   if (!Array.isArray(values)) {
     console.error("El parámetro proporcionado no es un array");
     return {};
@@ -149,19 +148,29 @@ export const StatsTable = ({
   };
 
   return (
-    <>  
+    <>
       {homeFilteredStats.map((key) => (
         <TableRow key={key}>
-          <TableCell style={{ textAlign: "center" }}>{homeStats[key]}</TableCell>
+          <TableCell style={{ textAlign: "center" }}>
+            {homeStats[key]}
+          </TableCell>
           <TableCell align="center">
             {getDisplayName({ key, statsLessThan })}
           </TableCell>
-          <TableCell style={{ textAlign: "center" }}>{awayStats[key]}</TableCell>
+          <TableCell style={{ textAlign: "center" }}>
+            {awayStats[key]}
+          </TableCell>
         </TableRow>
       ))}
       {isAdvanced && (
         <TableRow>
-          <TableCell style={{ fontWeight: "bold", fontSize: "1.2rem", textAlign: "center" }}>
+          <TableCell
+            style={{
+              fontWeight: "bold",
+              fontSize: "1.2rem",
+              textAlign: "center",
+            }}
+          >
             {homeStats.matchesTotalFinished}
           </TableCell>
           <TableCell
@@ -171,7 +180,11 @@ export const StatsTable = ({
             Partidos contabilizados finalizados
           </TableCell>
           <TableCell
-            style={{ fontWeight: "bold", fontSize: "1.2rem", textAlign: "center" }}
+            style={{
+              fontWeight: "bold",
+              fontSize: "1.2rem",
+              textAlign: "center",
+            }}
           >
             <b>{awayStats.matchesTotalFinished}</b>
           </TableCell>
@@ -179,7 +192,6 @@ export const StatsTable = ({
       )}
     </>
   );
-  
 };
 
 export function Row({
@@ -208,10 +220,10 @@ export function Row({
     () => calculateStats(awayStatistics?.receivedStats?.values),
     [awayStatistics]
   );
-  console.log("homeCalculatedStats", homeStatistics)
+  console.log("homeCalculatedStats", homeStatistics);
   return (
     <>
-      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
         <TableCell>
           <IconButton
             aria-label="expand row"
@@ -224,10 +236,12 @@ export function Row({
         <TableCell align="center">
           {homeCalculatedStats?.total} ({homeCalculatedReceivedStats?.total})
         </TableCell>
-        <TableCell align="center" style={{fontWeight:"bold"}}>
-        <span> {homeCalculatedStats?.promedio}</span>  (
-          {/* {homeCalculatedReceivedStats?.promedio}) */}
-            <span style={{color:"red"}}>{homeCalculatedReceivedStats?.total}</span>)
+        <TableCell align="center" style={{ fontWeight: 'bold' }}>
+          <span> {homeCalculatedStats?.promedio}</span> (
+          <span style={{ color: 'red' }}>
+            {homeCalculatedReceivedStats?.total}
+          </span>
+          )
         </TableCell>
         {isAdvanced && (
           <>
@@ -262,17 +276,25 @@ export function Row({
           </>
         )}
       </TableRow>
-      {isAdvanced && (
-        <TableRow>
-          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-            <Collapse in={open} timeout="auto" unmountOnExit>
-              <Box sx={{ margin: 1 }}>
+
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%',
+              }}
+            >
+              <Box sx={{ margin: 1, width: 'fit-content' }}>
                 <Table size="small" aria-label="purchases">
                   <TableHead>
-                    <TableRow>
-                      <TableCell>Veces</TableCell>
-                      <TableCell align="right"> </TableCell>
-                      <TableCell align="right">Veces</TableCell>
+                    <TableRow style={{ width: '100%' }}>
+                      <TableCell align="center">Veces</TableCell>
+                      <TableCell align="center"></TableCell>
+                      <TableCell align="center">Veces</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -285,10 +307,10 @@ export function Row({
                   </TableBody>
                 </Table>
               </Box>
-            </Collapse>
-          </TableCell>
-        </TableRow>
-      )}
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
     </>
   );
 }
@@ -342,8 +364,8 @@ export default function StatisticsTablecopy({
     awayStatFouls,
     awayStatOffsides,
   } = useBoundStore((state) => state);
-console.log("homeStatYellowCard", homeStatYellowCard.yellowCards)
-console.log("homeStatShotsOnTarget", homeStatShotsOnTarget)
+  console.log("homeStatYellowCard", homeStatYellowCard.yellowCards);
+  console.log("homeStatShotsOnTarget", homeStatShotsOnTarget);
   const data = [
     {
       homeStatistics: homeStatGoals,
@@ -397,8 +419,7 @@ console.log("homeStatShotsOnTarget", homeStatShotsOnTarget)
 
   return (
     <>
-    
-    <FormControlLabel
+      <FormControlLabel
         control={
           <Switch
             checked={isAdvanced}
@@ -442,12 +463,7 @@ console.log("homeStatShotsOnTarget", homeStatShotsOnTarget)
                 </div>
               </TableCell>
               <TableCell />
-              {isAdvanced && (
-                <>
-                
-                 
-                </>
-              )}
+              {isAdvanced && <></>}
 
               <TableCell align="center">
                 <div

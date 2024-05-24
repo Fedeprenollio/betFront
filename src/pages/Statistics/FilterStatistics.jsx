@@ -5,6 +5,7 @@ import { RadioButtonHomeAway } from "../../componts/RadioButtonHomeAway";
 import { Container } from "@mui/material";
 import { useState } from "react";
 import { useBoundStore } from "../../stores";
+import NumberOfMatchesInput from "../../componts/Filters/NumberOfMatchesInput ";
 
 export const FilterStatistics = ({
   idMatch,
@@ -22,10 +23,6 @@ export const FilterStatistics = ({
     getMatchDetail({ idMatch });
   }, [getMatchDetail, idMatch]);
 
-  // useEffect(() => {
-  //   setMatch(matchDetail);
-  // }, [matchDetail]);
-
   const handleChangeRadioButton = () => {
     setStatsLessThan(!statsLessThan);
   };
@@ -38,6 +35,7 @@ export const FilterStatistics = ({
   const [visitingmathgesLocalTeam, setVisitingmathgesLocalTeam] =
     useState(true);
   const [homeMatchesLocalTeam, setHomeMatchesLocalTeam] = useState(true);
+  const [numberOfMatches, setNumberOfMatches] = useState(10); // default value
 
   const handleChangeCheckbox = (event) => {
     const { name } = event.target;
@@ -84,13 +82,14 @@ export const FilterStatistics = ({
         statsLessThan,
         visitingmathgesLocalTeam,
         homeMatchesLocalTeam,
+        numberOfMatches
       });
     }, [
       idHomeTeam,
       statsLessThan,
       visitingmathgesLocalTeam,
       homeMatchesLocalTeam,
-      setHomeStatOffsides,
+      setHomeStatOffsides,numberOfMatches
     ]);
   
     useEffect(() => {
@@ -98,14 +97,14 @@ export const FilterStatistics = ({
         idAwayTeam,
         statsLessThan,
         homeMateshAwayTeam,
-        visitingMatchesAwayTeam,
+        visitingMatchesAwayTeam,numberOfMatches
       });
     }, [
       idAwayTeam,
       statsLessThan,
       homeMateshAwayTeam,
       visitingMatchesAwayTeam,
-      setAwayStatOffsides,
+      setAwayStatOffsides,numberOfMatches
     ]);
   
   //TIROS AL ARCO:
@@ -114,14 +113,14 @@ export const FilterStatistics = ({
       idHomeTeam,
       statsLessThan,
       visitingmathgesLocalTeam,
-      homeMatchesLocalTeam,
+      homeMatchesLocalTeam,numberOfMatches
     });
   }, [
     idHomeTeam,
     statsLessThan,
     visitingmathgesLocalTeam,
     homeMatchesLocalTeam,
-    setHomeStatShotsOnTarget,
+    setHomeStatShotsOnTarget,numberOfMatches
   ]);
 
   useEffect(() => {
@@ -129,14 +128,14 @@ export const FilterStatistics = ({
       idAwayTeam,
       statsLessThan,
       homeMateshAwayTeam,
-      visitingMatchesAwayTeam,
+      visitingMatchesAwayTeam,numberOfMatches
     });
   }, [
     idAwayTeam,
     statsLessThan,
     homeMateshAwayTeam,
     visitingMatchesAwayTeam,
-    setAwayStatShotsOnTarget,
+    setAwayStatShotsOnTarget,numberOfMatches
   ]);
 
     //POSESION:
@@ -145,14 +144,14 @@ export const FilterStatistics = ({
         idHomeTeam,
         statsLessThan,
         visitingmathgesLocalTeam,
-        homeMatchesLocalTeam,
+        homeMatchesLocalTeam,numberOfMatches
       });
     }, [
       idHomeTeam,
       statsLessThan,
       visitingmathgesLocalTeam,
       homeMatchesLocalTeam,
-      setHomeStatPossession,
+      setHomeStatPossession,numberOfMatches
     ]);
   
     useEffect(() => {
@@ -160,14 +159,14 @@ export const FilterStatistics = ({
         idAwayTeam,
         statsLessThan,
         homeMateshAwayTeam,
-        visitingMatchesAwayTeam,
+        visitingMatchesAwayTeam,numberOfMatches
       });
     }, [
       idAwayTeam,
       statsLessThan,
       homeMateshAwayTeam,
       visitingMatchesAwayTeam,
-      setAwayStatPossession,
+      setAwayStatPossession,numberOfMatches
     ]);
     
     //FALTAS:
@@ -176,14 +175,14 @@ export const FilterStatistics = ({
         idHomeTeam,
         statsLessThan,
         visitingmathgesLocalTeam,
-        homeMatchesLocalTeam,
+        homeMatchesLocalTeam,numberOfMatches
       });
     }, [
       idHomeTeam,
       statsLessThan,
       visitingmathgesLocalTeam,
       homeMatchesLocalTeam,
-      setHomeStatFouls,
+      setHomeStatFouls,numberOfMatches
     ]);
   
     useEffect(() => {
@@ -191,14 +190,14 @@ export const FilterStatistics = ({
         idAwayTeam,
         statsLessThan,
         homeMateshAwayTeam,
-        visitingMatchesAwayTeam,
+        visitingMatchesAwayTeam,numberOfMatches
       });
     }, [
       idAwayTeam,
       statsLessThan,
       homeMateshAwayTeam,
       visitingMatchesAwayTeam,
-      setAwayStatFouls,
+      setAwayStatFouls,numberOfMatches
     ]);
   
   
@@ -210,14 +209,14 @@ export const FilterStatistics = ({
       idHomeTeam,
       statsLessThan,
       visitingmathgesLocalTeam,
-      homeMatchesLocalTeam,
+      homeMatchesLocalTeam,numberOfMatches
     });
   }, [
     idHomeTeam,
     statsLessThan,
     visitingmathgesLocalTeam,
     homeMatchesLocalTeam,
-    setHomeStatYellowCard,
+    setHomeStatYellowCard,numberOfMatches
   ]);
 
   useEffect(() => {
@@ -225,14 +224,14 @@ export const FilterStatistics = ({
       idAwayTeam,
       statsLessThan,
       homeMateshAwayTeam,
-      visitingMatchesAwayTeam,
+      visitingMatchesAwayTeam,numberOfMatches
     });
   }, [
     idAwayTeam,
     statsLessThan,
     homeMateshAwayTeam,
     visitingMatchesAwayTeam,
-    setAwayStatYellowCard,
+    setAwayStatYellowCard,numberOfMatches
   ]);
 
   //CORNERS:
@@ -241,14 +240,14 @@ export const FilterStatistics = ({
       idHomeTeam,
       statsLessThan,
       visitingmathgesLocalTeam,
-      homeMatchesLocalTeam,
+      homeMatchesLocalTeam,numberOfMatches
     });
   }, [
     idHomeTeam,
     statsLessThan,
     visitingmathgesLocalTeam,
     homeMatchesLocalTeam,
-    setHomeStatCorners,
+    setHomeStatCorners,numberOfMatches
   ]);
 
   useEffect(() => {
@@ -256,14 +255,14 @@ export const FilterStatistics = ({
       idAwayTeam,
       statsLessThan,
       homeMateshAwayTeam,
-      visitingMatchesAwayTeam,
+      visitingMatchesAwayTeam,numberOfMatches
     });
   }, [
     idAwayTeam,
     statsLessThan,
     homeMateshAwayTeam,
     visitingMatchesAwayTeam,
-    setAwayStatCorners,
+    setAwayStatCorners,numberOfMatches
   ]);
 
   //GOLES:
@@ -272,14 +271,14 @@ export const FilterStatistics = ({
       idHomeTeam,
       statsLessThan,
       visitingmathgesLocalTeam,
-      homeMatchesLocalTeam,
+      homeMatchesLocalTeam,numberOfMatches
     });
   }, [
     idHomeTeam,
     statsLessThan,
     visitingmathgesLocalTeam,
     homeMatchesLocalTeam,
-    setHomeStatGoals,
+    setHomeStatGoals,numberOfMatches
   ]);
 
   useEffect(() => {
@@ -287,14 +286,14 @@ export const FilterStatistics = ({
       idAwayTeam,
       statsLessThan,
       homeMateshAwayTeam,
-      visitingMatchesAwayTeam,
+      visitingMatchesAwayTeam,numberOfMatches
     });
   }, [
     idAwayTeam,
     statsLessThan,
     homeMateshAwayTeam,
     visitingMatchesAwayTeam,
-    setAwayStatGoals,
+    setAwayStatGoals,numberOfMatches
   ]);
 
     //TIROS:
@@ -303,14 +302,14 @@ export const FilterStatistics = ({
         idHomeTeam,
         statsLessThan,
         visitingmathgesLocalTeam,
-        homeMatchesLocalTeam,
+        homeMatchesLocalTeam,numberOfMatches
       });
     }, [
       idHomeTeam,
       statsLessThan,
       visitingmathgesLocalTeam,
       homeMatchesLocalTeam,
-      setHomeStatShots,
+      setHomeStatShots,numberOfMatches
     ]);
   
     useEffect(() => {
@@ -318,14 +317,14 @@ export const FilterStatistics = ({
         idAwayTeam,
         statsLessThan,
         homeMateshAwayTeam,
-        visitingMatchesAwayTeam,
+        visitingMatchesAwayTeam,numberOfMatches
       });
     }, [
       idAwayTeam,
       statsLessThan,
       homeMateshAwayTeam,
       visitingMatchesAwayTeam,
-      setAwayStatShots,
+      setAwayStatShots,numberOfMatches
     ]);
   
 
@@ -335,8 +334,8 @@ export const FilterStatistics = ({
         handleChangeRadioButton={handleChangeRadioButton}
         statsLessThan={statsLessThan}
       />
-      <RadioButtonHomeAway
-      
+      <NumberOfMatchesInput  onNumberOfMatchesChange={setNumberOfMatches}/>
+      <RadioButtonHomeAway      
         handleChangeCheckbox={handleChangeCheckbox}
         homeMateshAwayTeam={homeMateshAwayTeam}
         visitingMatchesAwayTeam={visitingMatchesAwayTeam}

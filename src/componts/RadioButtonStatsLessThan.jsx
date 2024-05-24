@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { RadioGroup, Radio, FormControlLabel, Typography, FormGroup, FormControl, FormLabel } from '@mui/material';
+import { RadioGroup, Radio, FormControlLabel, FormGroup, FormControl, FormLabel } from '@mui/material';
 
 export const RadioButtonStatsLessThan = ({handleChangeRadioButton,statsLessThan}) => {
 
@@ -16,7 +16,7 @@ export const RadioButtonStatsLessThan = ({handleChangeRadioButton,statsLessThan}
           value={statsLessThan}
           onChange={handleChangeRadioButton}
         >
-          <FormControlLabel value={false} control={<Radio />} label="Más de..." />
+          <FormControlLabel value={false} control={<Radio />} label="Más de..."  />
           <FormControlLabel value={true} control={<Radio />} label="Menos de..." />
         </RadioGroup>
       </FormControl>
