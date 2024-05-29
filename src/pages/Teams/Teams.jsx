@@ -16,7 +16,7 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  Collapse,
+  TableSortLabel
 } from "@mui/material";
 import AlertDialogCopy from "../../componts/feedback/AlertDialogCopy";
 import { AlertMessageCopy } from "../../componts/feedback/AlertMessageCopy";
@@ -36,6 +36,9 @@ export const Teams = () => {
 
   const navigate = useNavigate(); // Inicializa useNavigate
 
+  const [orderBy, setOrderBy] = useState("country");
+  const [order, setOrder] = useState("asc");
+
   useEffect(() => {
     setTeams();
   }, [setTeams]);
@@ -53,8 +56,16 @@ export const Teams = () => {
       filtered = filtered.filter((team) => team.country === selectedCountry);
     }
 
+    filtered = filtered.sort((a, b) => {
+      if (orderBy === "country") {
+        return (a.country.localeCompare(b.country) || a.name.localeCompare(b.name)) * (order === "asc" ? 1 : -1);
+      } else {
+        return a[orderBy].localeCompare(b[orderBy]) * (order === "asc" ? 1 : -1);
+      }
+    });
+
     setFilteredTeams(filtered);
-  }, [teams, searchQuery, selectedCountry]);
+  }, [teams, searchQuery, selectedCountry, orderBy, order]);
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
@@ -79,7 +90,6 @@ export const Teams = () => {
   };
 
   const handleConfirmDelete = async () => {
-    console.log("SOY SELECTEDTEAMID", selectedTeamId);
     if (selectedTeamId) {
       try {
         await deleteTeam(selectedTeamId);
@@ -103,6 +113,12 @@ export const Teams = () => {
 
   const handleStatisticsClick = (teamId) => {
     navigate(`/teams/${teamId}/statistics`);
+  };
+
+  const handleRequestSort = (property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
   };
 
   return (
@@ -139,8 +155,24 @@ export const Teams = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Nombre del Equipo</TableCell>
-              <TableCell>País</TableCell>
+              <TableCell sortDirection={orderBy === "name" ? order : false}>
+                <TableSortLabel
+                  active={orderBy === "name"}
+                  direction={orderBy === "name" ? order : "asc"}
+                  onClick={() => handleRequestSort("name")}
+                >
+                  Nombre del Equipo
+                </TableSortLabel>
+              </TableCell>
+              <TableCell sortDirection={orderBy === "country" ? order : false}>
+                <TableSortLabel
+                  active={orderBy === "country"}
+                  direction={orderBy === "country" ? order : "asc"}
+                  onClick={() => handleRequestSort("country")}
+                >
+                  País
+                </TableSortLabel>
+              </TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
@@ -154,7 +186,7 @@ export const Teams = () => {
                     <TableCell>{team.name}</TableCell>
                     <TableCell>{team.country}</TableCell>
                     <TableCell>
-                      <Button onClick={() => handleStatisticsClick(team._id)}>Estadistica</Button>
+                      <Button onClick={() => handleStatisticsClick(team._id)}>Estadística</Button>
                     </TableCell>
                     <TableCell>
                       <Button>Editar</Button>
