@@ -202,6 +202,7 @@ export function Row({
   isAdvanced,
   homeTeamName,
   awayTeamName,
+  isSingle,
 }) {
   const [open, setOpen] = useState(false);
   const homeCalculatedStats = useMemo(
@@ -220,10 +221,10 @@ export function Row({
     () => calculateStats(awayStatistics?.receivedStats?.values),
     [awayStatistics]
   );
-  console.log("homeCalculatedStats", homeStatistics);
+  console.log("isSigle", isSingle);
   return (
     <>
-      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
         <TableCell>
           <IconButton
             aria-label="expand row"
@@ -234,67 +235,97 @@ export function Row({
           </IconButton>
         </TableCell>
         <TableCell align="center">
-          {homeCalculatedStats?.total} ({homeCalculatedReceivedStats?.total})
-        </TableCell>
-        <TableCell align="center" style={{ fontWeight: 'bold' }}>
-          <span> {homeCalculatedStats?.promedio}</span> (
-          <span style={{ color: 'red' }}>
+          <span>{homeCalculatedStats?.total}</span> (
+          <span style={{ color: "red" }}>
             {homeCalculatedReceivedStats?.total}
           </span>
           )
         </TableCell>
-        {isAdvanced && (
-          <>
-            <TableCell align="center">
-              {homeCalculatedStats?.mediana} (
-              {homeCalculatedReceivedStats?.mediana})
-            </TableCell>
-            <TableCell align="center">
-              {homeCalculatedStats?.desviacion} (
-              {homeCalculatedReceivedStats?.desviacion})
-            </TableCell>
-          </>
-        )}
-        <TableCell align="center">{name}</TableCell>
-        <TableCell align="center">
-          {awayCalculatedStats?.total} ({awayCalculatedReceivedStats?.total})
+        <TableCell align="center" style={{ fontWeight: "bold" }}>
+          <span>{homeCalculatedStats?.promedio}</span> (
+          <span style={{ color: "red" }}>
+            {homeCalculatedReceivedStats?.promedio}
+          </span>
+          )
         </TableCell>
-        <TableCell align="center">
-          {awayCalculatedStats?.promedio} (
-          {awayCalculatedReceivedStats?.promedio})
-        </TableCell>
-        {isAdvanced && (
-          <>
-            <TableCell align="center">
-              {awayCalculatedStats?.mediana} (
-              {awayCalculatedReceivedStats?.mediana})
-            </TableCell>
-            <TableCell align="center">
-              {awayCalculatedStats?.desviacion} (
-              {awayCalculatedReceivedStats?.desviacion})
-            </TableCell>
-          </>
-        )}
+  
+        <>
+          {isAdvanced && (
+            <>
+              <TableCell align="center">
+                <span>{homeCalculatedStats?.mediana}</span> (
+                <span style={{ color: "red" }}>
+                  {homeCalculatedReceivedStats?.mediana}
+                </span>
+                )
+              </TableCell>
+              <TableCell align="center">
+                <span>{homeCalculatedStats?.desviacion}</span> (
+                <span style={{ color: "red" }}>
+                  {homeCalculatedReceivedStats?.desviacion}
+                </span>
+                )
+              </TableCell>
+            </>
+          )}
+          <TableCell align="center">{name}</TableCell>
+          {!isSingle ? (
+            <>
+              <TableCell align="center">
+                <span>{awayCalculatedStats?.total}</span> (
+                <span style={{ color: "red" }}>
+                  {awayCalculatedReceivedStats?.total}
+                </span>
+                )
+              </TableCell>
+              <TableCell align="center">
+                <span>{awayCalculatedStats?.promedio}</span> (
+                <span style={{ color: "red" }}>
+                  {awayCalculatedReceivedStats?.promedio}
+                </span>
+                )
+              </TableCell>
+              {isAdvanced && (
+                <>
+                  <TableCell align="center">
+                    <span>{awayCalculatedStats?.mediana}</span> (
+                    <span style={{ color: "red" }}>
+                      {awayCalculatedReceivedStats?.mediana}
+                    </span>
+                    )
+                  </TableCell>
+                  <TableCell align="center">
+                    <span>{awayCalculatedStats?.desviacion}</span> (
+                    <span style={{ color: "red" }}>
+                      {awayCalculatedReceivedStats?.desviacion}
+                    </span>
+                    )
+                  </TableCell>
+                </>
+              )}
+            </>
+          ) : null}
+        </>
       </TableRow>
-
+  
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box
               sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '100%',
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
               }}
             >
-              <Box sx={{ margin: 1, width: 'fit-content' }}>
+              <Box sx={{ margin: 1, width: "fit-content" }}>
                 <Table size="small" aria-label="purchases">
                   <TableHead>
-                    <TableRow style={{ width: '100%' }}>
+                    <TableRow style={{ width: "100%" }}>
                       <TableCell align="center">Veces</TableCell>
                       <TableCell align="center"></TableCell>
-                      <TableCell align="center">Veces</TableCell>
+                      {!isSingle && <TableCell align="center">Veces</TableCell>}
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -313,20 +344,21 @@ export function Row({
       </TableRow>
     </>
   );
+  
 }
 
 export default function StatisticsTablecopy({
-  match,
   statsLessThan,
   idHomeTeam,
   idAwayTeam,
+  isSingle,
 }) {
   const { getTeamDetails, teamDetails } = useBoundStore((state) => state);
   const [isAdvanced, setIsAdvanced] = useState(false); // Estado para alternar entre estadísticas simples y avanzadas
-
+  console.log("idAwayTeam", idAwayTeam);
   useEffect(() => {
-    getTeamDetails(idHomeTeam);
-    getTeamDetails(idAwayTeam);
+    idHomeTeam && getTeamDetails(idHomeTeam);
+    idAwayTeam && getTeamDetails(idAwayTeam);
     return () => {
       getTeamDetails(null);
     };
@@ -337,8 +369,8 @@ export default function StatisticsTablecopy({
 
   useEffect(() => {
     if (teamDetails) {
-      setTeamDetails1(teamDetails[idHomeTeam]);
-      setTeamDetails2(teamDetails[idAwayTeam]);
+      idHomeTeam && setTeamDetails1(teamDetails[idHomeTeam]);
+      idAwayTeam && setTeamDetails2(teamDetails[idAwayTeam]);
     }
     return () => {
       setTeamDetails1({});
@@ -365,53 +397,53 @@ export default function StatisticsTablecopy({
     awayStatOffsides,
   } = useBoundStore((state) => state);
   console.log("homeStatYellowCard", homeStatYellowCard.yellowCards);
-  console.log("homeStatShotsOnTarget", homeStatShotsOnTarget);
+  console.log("awayStatShotsOnTarget", homeStatShotsOnTarget);
   const data = [
     {
       homeStatistics: homeStatGoals,
-      awayStatistics: awayStatGoals,
+      awayStatistics: awayStatGoals || null,
       name: "Goles",
       statsLessThan,
     },
     {
       homeStatistics: homeStatCorners,
-      awayStatistics: awayStatCorners,
+      awayStatistics: awayStatCorners || null,
       name: "Corners",
       statsLessThan,
     },
     {
       homeStatistics: homeStatYellowCard.yellowCards,
-      awayStatistics: awayStatYellowCard.yellowCards,
+      awayStatistics: awayStatYellowCard || null,
       name: "Tarjetas Amarillas",
       statsLessThan,
     },
     {
       homeStatistics: homeStatShots,
-      awayStatistics: awayStatShots,
+      awayStatistics: awayStatShots || null,
       name: "Disparos",
       statsLessThan,
     },
     {
       homeStatistics: homeStatShotsOnTarget,
-      awayStatistics: awayStatShotsOnTarget,
+      awayStatistics: awayStatShotsOnTarget || null,
       name: "Disparos al Arco",
       statsLessThan,
     },
     {
       homeStatistics: homeStatPossession,
-      awayStatistics: awayStatPossession,
+      awayStatistics: awayStatPossession || null,
       name: "Posesión",
       statsLessThan,
     },
     {
       homeStatistics: homeStatFouls,
-      awayStatistics: awayStatFouls,
+      awayStatistics: awayStatFouls || null,
       name: "Faltas",
       statsLessThan,
     },
     {
       homeStatistics: homeStatOffsides,
-      awayStatistics: awayStatOffsides,
+      awayStatistics: awayStatOffsides || null,
       name: "Offsides",
       statsLessThan,
     },
@@ -463,28 +495,29 @@ export default function StatisticsTablecopy({
                 </div>
               </TableCell>
               <TableCell />
-              {isAdvanced && <></>}
-
-              <TableCell align="center">
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  <Avatar
-                    src={teamDetails2?.logoUrl}
-                    alt={teamDetails2?.name}
-                  />
-                  <Typography
-                    variant="h5"
-                    style={{ fontWeight: "bold", marginLeft: "8px" }}
+              {idAwayTeam && (
+                <TableCell align="center">
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
                   >
-                    {teamDetails2?.name}
-                  </Typography>
-                </div>
-              </TableCell>
+                    <Avatar
+                      src={teamDetails2?.logoUrl}
+                      alt={teamDetails2?.name}
+                    />
+                    <Typography
+                      variant="h5"
+                      style={{ fontWeight: "bold", marginLeft: "8px" }}
+                    >
+                      {teamDetails2?.name}
+                    </Typography>
+                  </div>
+                </TableCell>
+              )}
+
               <TableCell />
               <TableCell />
             </TableRow>
@@ -501,13 +534,16 @@ export default function StatisticsTablecopy({
               )}
 
               <TableCell />
-
-              <TableCell align="center">Total(Rec)</TableCell>
-              <TableCell align="center">Prom(Rec)</TableCell>
-              {isAdvanced && (
+              {idAwayTeam && (
                 <>
-                  <TableCell align="center">Mediana(Rec)</TableCell>
-                  <TableCell align="center">Desv(Rec)</TableCell>
+                  <TableCell align="center">Total(Rec) VIS</TableCell>
+                  <TableCell align="center">Prom(Rec)</TableCell>
+                  {isAdvanced && (
+                    <>
+                      <TableCell align="center">Mediana(Rec)</TableCell>
+                      <TableCell align="center">Desv(Rec)</TableCell>
+                    </>
+                  )}
                 </>
               )}
             </TableRow>
@@ -519,6 +555,7 @@ export default function StatisticsTablecopy({
                 key={stat.name}
                 homeStatistics={stat.homeStatistics}
                 awayStatistics={stat.awayStatistics}
+                isSingle={isSingle}
                 name={stat.name}
                 statsLessThan={stat.statsLessThan}
                 isAdvanced={isAdvanced}

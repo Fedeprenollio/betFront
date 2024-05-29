@@ -46,8 +46,9 @@ export const StatisticsPage = () => {
         {/* Contenido de las pestañas */}
         {activeTab === 0 && 
           (singleTeam ? 
-            <StatisticsTable idHomeTeam={singleTeam} statsLessThan={statsLessThan} /> : 
+            <StatisticsTablecopy idHomeTeam={singleTeam} statsLessThan={statsLessThan} isSingle={true} /> : 
             <StatisticsTablecopy
+            isSingle={false}
             statsLessThan={statsLessThan}
             idHomeTeam={idHomeTeam}
             idAwayTeam={idAwayTeam}
