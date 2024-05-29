@@ -5,15 +5,12 @@ import {
   TextField,
   Button,
   MenuItem,
-  Container,
   Grid,
-  InputLabel,
 } from "@mui/material";
 import * as Yup from "yup";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { Select } from "@mui/material";
 import { useBoundStore } from "../stores";
 
 const validationSchema = Yup.object().shape({
@@ -71,9 +68,7 @@ const FormMatch = ({ matchId }) => {
   useEffect(() => {
     fetchLeagues();
   }, [fetchLeagues]);
-  console.log("QUE HAY EN LEAGUES?", leagues);
-  console.log("selectedSeason", selectedSeason);
-  console.log("seasonById", seasonById);
+ 
 
   useEffect(() => {
     getSeasonById(selectedSeason);
@@ -242,29 +237,7 @@ const FormMatch = ({ matchId }) => {
             </Grid>
           </Grid>
 
-          {/* <Field
-            as={TextField}
-            select
-            name="homeTeam"
-            label="Equipo Local"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-          >
-            {selectedLeague &&
-              leagues
-                .find((league) => league._id === selectedLeague) // Encontrar la liga seleccionada
-                ?.season.map((season) =>
-                  season.teams.map((team) => {
-                    return (
-                      <MenuItem key={team._id} value={team._id}>
-                        {team.name}
-                      </MenuItem>
-                    );
-                  })
-                )}
-          </Field>
-          <ErrorMessage name="homeTeam" component="div" /> */}
+         
           <Field
             as={TextField}
             select
@@ -275,13 +248,16 @@ const FormMatch = ({ matchId }) => {
             margin="normal"
           >
             {selectedLeague &&
-              seasonById?.season?.teams?.map((team) => {
-                return (
-                  <MenuItem key={team._id} value={team._id}>
-                    {team.name}
-                  </MenuItem>
-                );
-              })}
+              seasonById?.season?.teams
+                ?.slice()
+                ?.sort((a, b) => a.name.localeCompare(b.name)) // Ordenar alfabéticamente
+                ?.map((team) => {
+                  return (
+                    <MenuItem key={team._id} value={team._id}>
+                      {team.name}
+                    </MenuItem>
+                  );
+                })}
           </Field>
           <ErrorMessage name="homeTeam" component="div" />
 
@@ -295,13 +271,16 @@ const FormMatch = ({ matchId }) => {
             margin="normal"
           >
             {selectedLeague &&
-              seasonById?.season?.teams?.map((team) => {
-                return (
-                  <MenuItem key={team._id} value={team._id}>
-                    {team.name}
-                  </MenuItem>
-                );
-              })}
+              seasonById?.season?.teams
+                ?.slice()
+                ?.sort((a, b) => a.name.localeCompare(b.name)) // Ordenar alfabéticamente
+                ?.map((team) => {
+                  return (
+                    <MenuItem key={team._id} value={team._id}>
+                      {team.name}
+                    </MenuItem>
+                  );
+                })}
           </Field>
           <ErrorMessage name="awayTeam" component="div" />
 
