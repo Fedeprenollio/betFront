@@ -46,6 +46,11 @@ export const ShowStatisticsMatches = ({ idHomeTeam, idAwayTeam, singleTeam }) =>
         <Tab label="Goles" />
         <Tab label="Corners" />
         <Tab label="Tarjetas Amarillas" />
+        <Tab label="Disparos" />
+        <Tab label="Disparos al arco" />
+        <Tab label="Posesión" />
+        <Tab label="Faltas" />
+        <Tab label="Offsides" />
       </Tabs>
       {activeTab === 0 && (
         <Grid container spacing={2}>
@@ -91,6 +96,86 @@ export const ShowStatisticsMatches = ({ idHomeTeam, idAwayTeam, singleTeam }) =>
           <TableMatches
             teamMatches={localMatches}
             statistic="yellowCards"
+            teamDetail={teamDetails1}
+          />
+        </Grid>
+      )}
+      {activeTab === 3 && (
+        <Grid container spacing={2}>
+          {!singleTeam && (
+            <TableMatches
+              teamMatches={visitorMatches}
+              statistic="shots"
+              teamDetail={teamDetails2}
+            />
+          )}
+          <TableMatches
+            teamMatches={localMatches}
+            statistic="shots"
+            teamDetail={teamDetails1}
+          />
+        </Grid>
+      )}
+      {activeTab === 4 && (
+        <Grid container spacing={2}>
+          {!singleTeam && (
+            <TableMatches
+              teamMatches={visitorMatches}
+              statistic="shotsOnTarget"
+              teamDetail={teamDetails2}
+            />
+          )}
+          <TableMatches
+            teamMatches={localMatches}
+            statistic="shotsOnTarget"
+            teamDetail={teamDetails1}
+          />
+        </Grid>
+      )}
+      {activeTab === 5 && (
+        <Grid container spacing={2}>
+          {!singleTeam && (
+            <TableMatches
+              teamMatches={visitorMatches}
+              statistic="possession"
+              teamDetail={teamDetails2}
+            />
+          )}
+          <TableMatches
+            teamMatches={localMatches}
+            statistic="possession"
+            teamDetail={teamDetails1}
+          />
+        </Grid>
+      )}
+      {activeTab === 6 && (
+        <Grid container spacing={2}>
+          {!singleTeam && (
+            <TableMatches
+              teamMatches={visitorMatches}
+              statistic="fouls"
+              teamDetail={teamDetails2}
+            />
+          )}
+          <TableMatches
+            teamMatches={localMatches}
+            statistic="fouls"
+            teamDetail={teamDetails1}
+          />
+        </Grid>
+      )}
+      {activeTab === 7 && (
+        <Grid container spacing={2}>
+          {!singleTeam && (
+            <TableMatches
+              teamMatches={visitorMatches}
+              statistic="offsides"
+              teamDetail={teamDetails2}
+            />
+          )}
+          <TableMatches
+            teamMatches={localMatches}
+            statistic="offsides"
             teamDetail={teamDetails1}
           />
         </Grid>
