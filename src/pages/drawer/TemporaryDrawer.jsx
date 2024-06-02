@@ -115,6 +115,21 @@ export default function TemporaryDrawer() {
                                 </ListItemText>
                               </ListItemButton>
                             </ListItem>
+                            <ListItem disablePadding>
+                              <ListItemButton>
+                                <ListItemIcon>
+                                  <SportsSoccerIcon />
+                                </ListItemIcon>
+                                <ListItemText sx={{ fontSize: "small" }}>
+                                  <Link
+                                    className="link-no-underline"
+                                    to={`/league/positions/${currentSeason?._id}`}
+                                  >
+                                    Tabla posiciones
+                                  </Link>
+                                </ListItemText>
+                              </ListItemButton>
+                            </ListItem>
                           </List>
                         </React.Fragment>
                       );

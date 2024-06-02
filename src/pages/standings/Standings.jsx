@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useBoundStore } from "../../stores";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox, FormControlLabel, FormGroup } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 export const Standings = () => {
-  const {seasonId} = useParams()
+  const { seasonId } = useParams()
   const { getTableSeason, tableSeason } = useBoundStore((state) => state);
   const [showHome, setShowHome] = useState(true);
   const [showVisitor, setShowVisitor] = useState(true);
@@ -39,7 +39,7 @@ export const Standings = () => {
   });
 
   return (
-    <div>
+    <>
       <h2>Tabla de posiciones</h2>
       <FormGroup row>
         <FormControlLabel
@@ -73,7 +73,9 @@ export const Standings = () => {
               return (
                 <TableRow key={t.team._id}>
                   <TableCell>{index + 1}</TableCell>
-                  <TableCell>{t.team.name}</TableCell>
+                  <Link to={`/teams/${t.team._id}/statistics`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    {t.team.name}
+                  </Link>
                   <TableCell>{stats.points}</TableCell>
                   <TableCell>{stats.matchesPlayed}</TableCell>
                   <TableCell>{stats.matchesWon}</TableCell>
@@ -88,6 +90,6 @@ export const Standings = () => {
           </TableBody>
         </Table>
       </TableContainer>
-    </div>
+    </>
   );
 };
