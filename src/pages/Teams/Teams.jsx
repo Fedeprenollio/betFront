@@ -75,7 +75,7 @@ export const Teams = () => {
     setSelectedCountry(event.target.value);
   };
 
-  const uniqueCountries = [...new Set(teams.map((team) => team.country))];
+  const uniqueCountries = [...new Set(teams?.map((team) => team.country))];
 
   const handleOpenDialog = (id, name) => {
     setSelectedTeamId(id);

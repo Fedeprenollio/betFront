@@ -20,10 +20,16 @@ export const TableAllTeamSeason = () => {
   const { getTeamStatsForSeason, teamStatsForSeason } = useBoundStore(
     (state) => state
   );
+const [listTeams, setListTeams] = useState([])
 
   useEffect(() => {
     getTeamStatsForSeason({ seasonId });
   }, [seasonId, getTeamStatsForSeason]);
+
+useEffect(() => {
+  setListTeams(teamStatsForSeason)
+
+}, [teamStatsForSeason])
 
   const [orderBy, setOrderBy] = useState("teamName");
   const [order, setOrder] = useState("asc");
@@ -34,36 +40,40 @@ export const TableAllTeamSeason = () => {
   });
 
   const handleSortRequest = (property) => {
-    let newOrderBy = property;
-    let newOrder = "desc";
-
-    if (orderBy === property && order === "desc") {
-      newOrder = "asc";
-    }
-
-    switch (property) {
-      case "teamName":
-        // Ordenar por nombre del equipo
-        newOrderBy = "teamName";
-        break;
-      case "goals":
-      case "offsides":
-      case "yellowCards":
-      case "corners":
-      case "shots":
-      case "shotsOnTarget":
-      case "possession":
-      case "fouls":
-        // Ordenar por estadísticas individuales
-        newOrderBy = `statistics.${property}.total`;
-        break;
-      default:
-        break;
-    }
-
-    setOrder(newOrder);
-    setOrderBy(newOrderBy);
+    const isAscending = orderBy === property && order === 'asc';
+    const sortedTeams = [...listTeams].sort((a, b) => {
+      let aValue, bValue;
+    
+      if (property.includes('received.')) {
+        // Si la propiedad incluye 'received', ordena por estadísticas recibidas
+        const statKey = property.split('.')[1];
+        const type = property.split('.')[2];
+        aValue = parseFloat(a.received[statKey]?.[type] || 0);
+        bValue = parseFloat(b.received[statKey]?.[type] || 0);
+      } else if (property.includes('statistics.')) {
+        // Si la propiedad incluye 'statistics', ordena por estadísticas propias
+        const statKey = property.split('.')[1];
+        const type = property.split('.')[2];
+        aValue = parseFloat(a.statistics[statKey]?.[type] || 0);
+        bValue = parseFloat(b.statistics[statKey]?.[type] || 0);
+      } else {
+        // De lo contrario, ordena por el nombre del equipo
+        aValue = a.teamName;
+        bValue = b.teamName;
+      }
+    
+      if (aValue < bValue) return isAscending ? -1 : 1;
+      if (aValue > bValue) return isAscending ? 1 : -1;
+      return 0;
+    });
+    
+    setOrder(isAscending ? 'desc' : 'asc');
+    setOrderBy(property);
+    setListTeams(sortedTeams);
   };
+  
+  
+
 
   const stats = [
     { key: "goals", label: "Goles" },
@@ -81,64 +91,6 @@ export const TableAllTeamSeason = () => {
       ...prevState,
       [key]: !prevState[key],
     }));
-  };
-
-  const renderAdvancedStats = (team, statKey, index, rowIndex) => {
-    const { promedio, mediana, desviacion } = team.statistics[statKey];
-    const {
-      promedio: receivedPromedio,
-      mediana: receivedMediana,
-      desviacion: receivedDesviacion,
-    } = team.received[statKey];
-    const backgroundColor = rowIndex % 2 === 0 ? "#f0f0f0" : "#ffffff";
-    const borderStyle = { borderRight: "1px solid grey" };
-
-    return (
-      <>
-        {showAdvancedStats.promedio && (
-          <>
-            <TableCell
-              style={{ width: "50px", backgroundColor, ...borderStyle }}
-            >
-              {promedio}
-            </TableCell>
-            <TableCell
-              style={{ width: "50px", backgroundColor, ...borderStyle }}
-            >
-              {receivedPromedio}
-            </TableCell>
-          </>
-        )}
-        {showAdvancedStats.mediana && (
-          <>
-            <TableCell
-              style={{ width: "50px", backgroundColor, ...borderStyle }}
-            >
-              {mediana}
-            </TableCell>
-            <TableCell
-              style={{ width: "50px", backgroundColor, ...borderStyle }}
-            >
-              {receivedMediana}
-            </TableCell>
-          </>
-        )}
-        {showAdvancedStats.desviacion && (
-          <>
-            <TableCell
-              style={{ width: "50px", backgroundColor, ...borderStyle }}
-            >
-              {desviacion}
-            </TableCell>
-            <TableCell
-              style={{ width: "50px", backgroundColor, ...borderStyle }}
-            >
-              {receivedDesviacion}
-            </TableCell>
-          </>
-        )}
-      </>
-    );
   };
 
   return (
@@ -200,26 +152,20 @@ export const TableAllTeamSeason = () => {
                     borderRight: "1px solid grey",
                   }}
                 >
-                  <TableSortLabel
-                    active={orderBy === `statistics.${stat.key}.total`}
-                    direction={
-                      orderBy === `statistics.${stat.key}.total` ? order : "asc"
-                    }
-                    onClick={() =>
-                      handleSortRequest(`statistics.${stat.key}.total`)
-                    }
-                  >
-                    {stat.label}
-                  </TableSortLabel>
+                  {stat.label}
                 </TableCell>
               ))}
             </TableRow>
             <TableRow>
               <TableCell></TableCell>
-              {stats.map((stat, index) => (
+              {stats.map((stat) => (
                 <React.Fragment key={stat.key}>
                   <TableCell
-                    style={{ width: "50px", borderRight: "1px solid grey" }}
+                    style={{
+                      width: "50px",
+                      backgroundColor: "#e6f7e6", // Verde claro para propios
+                      borderRight: "1px solid grey",
+                    }}
                   >
                     <TableSortLabel
                       active={orderBy === `statistics.${stat.key}.total`}
@@ -235,13 +181,90 @@ export const TableAllTeamSeason = () => {
                       Propios
                     </TableSortLabel>
                   </TableCell>
+                  {showAdvancedStats.promedio && (
+                    <TableCell
+                      style={{
+                        width: "50px",
+                        backgroundColor: "#e6f7e6", // Verde claro para propios avanzados
+                        borderRight: "1px solid grey",
+                      }}
+                    >
+                      <TableSortLabel
+                        active={orderBy === `statistics.${stat.key}.promedio`}
+                        direction={
+                          orderBy === `statistics.${stat.key}.promedio`
+                            ? order
+                            : "asc"
+                        }
+                        onClick={() =>
+                          handleSortRequest(`statistics.${stat.key}.promedio`)
+                        }
+                      >
+                        Promedio
+                      </TableSortLabel>
+                    </TableCell>
+                  )}
+                  {showAdvancedStats.mediana && (
+                    <TableCell
+                      style={{
+                        width: "50px",
+                        backgroundColor: "#e6f7e6", // Verde claro para propios avanzados
+                        borderRight: "1px solid grey",
+                      }}
+                    >
+                      <TableSortLabel
+                        active={orderBy === `statistics.${stat.key}.mediana`}
+                        direction={
+                          orderBy === `statistics.${stat.key}.mediana`
+                            ? order
+                            : "asc"
+                        }
+                        onClick={() =>
+                          handleSortRequest(`statistics.${stat.key}.mediana`)
+                        }
+                      >
+                        Mediana
+                      </TableSortLabel>
+                    </TableCell>
+                  )}
+                  {showAdvancedStats.desviacion && (
+                    <TableCell
+                      style={{
+                        width: "50px",
+                        backgroundColor: "#e6f7e6", // Verde claro para propios avanzados
+                        borderRight: "1px solid grey",
+                      }}
+                    >
+                      <TableSortLabel
+                        active={orderBy === `statistics.${stat.key}.desviacion`}
+                        direction={
+                          orderBy === `statistics.${stat.key}.desviacion`
+                            ? order
+                            : "asc"
+                        }
+                        onClick={() =>
+                          handleSortRequest(
+                            `statistics.${stat.key}.desviacion`
+                          )
+                        }
+                      >
+                        Desviación
+                      </TableSortLabel>
+                    </TableCell>
+                  )}
                   <TableCell
-                    style={{ width: "50px", borderRight: "1px solid grey" }}
+                    style={{
+                      width: "50px",
+                      backgroundColor: "#f7e6e6", // Rojo claro para recibidos
+                      borderRight: "1px solid grey",
+                    }}
                   >
                     <TableSortLabel
                       active={orderBy === `received.${stat.key}.total`}
                       direction={
-                        orderBy === `received.${stat.key}.total` ? order : "asc"
+                        orderBy === `received.${stat.key}.total`
+                          ? order
+                          : "asc"
                       }
                       onClick={() =>
                         handleSortRequest(`received.${stat.key}.total`)
@@ -251,129 +274,80 @@ export const TableAllTeamSeason = () => {
                     </TableSortLabel>
                   </TableCell>
                   {showAdvancedStats.promedio && (
-                    <>
-                      <TableCell
-                        style={{ width: "50px", borderRight: "1px solid grey" }}
+                    <TableCell
+                      style={{
+                        width: "50px",
+                        backgroundColor: "#f7e6e6", // Rojo claro para recibidos avanzados
+                        borderRight: "1px solid grey",
+                      }}
+                    >
+                      <TableSortLabel
+                        active={orderBy === `received.${stat.key}.promedio`}
+                        direction={
+                          orderBy === `received.${stat.key}.promedio`
+                            ? order
+                            : "asc"
+                        }
+                        onClick={() =>
+                          handleSortRequest(`received.${stat.key}.promedio`)
+                        }
                       >
-                        <TableSortLabel
-                          active={orderBy === `statistics.${stat.key}.promedio`}
-                          direction={
-                            orderBy === `statistics.${stat.key}.promedio`
-                              ? order
-                              : "asc"
-                          }
-                          onClick={() =>
-                            handleSortRequest(`statistics.${stat.key}.promedio`)
-                          }
-                        >
-                          Promedio
-                        </TableSortLabel>
-                      </TableCell>
-                      <TableCell
-                        style={{ width: "50px", borderRight: "1px solid grey" }}
-                      >
-                        <TableSortLabel
-                          active={orderBy === `received.${stat.key}.promedio`}
-                          direction={
-                            orderBy === `received.${stat.key}.promedio`
-                              ? order
-                              : "asc"
-                          }
-                          onClick={() =>
-                            handleSortRequest(`received.${stat.key}.promedio`)
-                          }
-                        >
-                          Promedio Rec.
-                        </TableSortLabel>
-                      </TableCell>
-                    </>
+                        Promedio
+                      </TableSortLabel>
+                    </TableCell>
                   )}
                   {showAdvancedStats.mediana && (
-                    <>
-                      <TableCell
-                        style={{ width: "50px", borderRight: "1px solid grey" }}
+                    <TableCell
+                      style={{
+                        width: "50px",
+                        backgroundColor: "#f7e6e6", // Rojo claro para recibidos avanzados
+                        borderRight: "1px solid grey",
+                      }}
+                    >
+                      <TableSortLabel
+                        active={orderBy === `received.${stat.key}.mediana`}
+                        direction={
+                          orderBy === `received.${stat.key}.mediana`
+                            ? order
+                            : "asc"
+                        }
+                        onClick={() =>
+                          handleSortRequest(`received.${stat.key}.mediana`)
+                        }
                       >
-                        <TableSortLabel
-                          active={orderBy === `statistics.${stat.key}.mediana`}
-                          direction={
-                            orderBy === `statistics.${stat.key}.mediana`
-                              ? order
-                              : "asc"
-                          }
-                          onClick={() =>
-                            handleSortRequest(`statistics.${stat.key}.mediana`)
-                          }
-                        >
-                          Mediana
-                        </TableSortLabel>
-                      </TableCell>
-                      <TableCell
-                        style={{ width: "50px", borderRight: "1px solid grey" }}
-                      >
-                        <TableSortLabel
-                          active={orderBy === `received.${stat.key}.mediana`}
-                          direction={
-                            orderBy === `received.${stat.key}.mediana`
-                              ? order
-                              : "asc"
-                          }
-                          onClick={() =>
-                            handleSortRequest(`received.${stat.key}.mediana`)
-                          }
-                        >
-                          Mediana Rec.
-                        </TableSortLabel>
-                      </TableCell>
-                    </>
+                        Mediana
+                      </TableSortLabel>
+                    </TableCell>
                   )}
                   {showAdvancedStats.desviacion && (
-                    <>
-                      <TableCell
-                        style={{ width: "50px", borderRight: "1px solid grey" }}
+                    <TableCell
+                      style={{
+                        width: "50px",
+                        backgroundColor: "#f7e6e6", // Rojo claro para recibidos avanzados
+                        borderRight: "1px solid grey",
+                      }}
+                    >
+                      <TableSortLabel
+                        active={orderBy === `received.${stat.key}.desviacion`}
+                        direction={
+                          orderBy === `received.${stat.key}.desviacion`
+                            ? order
+                            : "asc"
+                        }
+                        onClick={() =>
+                          handleSortRequest(`received.${stat.key}.desviacion`)
+                        }
                       >
-                        <TableSortLabel
-                          active={
-                            orderBy === `statistics.${stat.key}.desviacion`
-                          }
-                          direction={
-                            orderBy === `statistics.${stat.key}.desviacion`
-                              ? order
-                              : "asc"
-                          }
-                          onClick={() =>
-                            handleSortRequest(
-                              `statistics.${stat.key}.desviacion`
-                            )
-                          }
-                        >
-                          Desviación
-                        </TableSortLabel>
-                      </TableCell>
-                      <TableCell
-                        style={{ width: "50px", borderRight: "1px solid grey" }}
-                      >
-                        <TableSortLabel
-                          active={orderBy === `received.${stat.key}.desviacion`}
-                          direction={
-                            orderBy === `received.${stat.key}.desviacion`
-                              ? order
-                              : "asc"
-                          }
-                          onClick={() =>
-                            handleSortRequest(`received.${stat.key}.desviacion`)
-                          }
-                        >
-                          Desviación Rec.
-                        </TableSortLabel>
-                      </TableCell>
-                    </>
+                        Desviación
+                      </TableSortLabel>
+                    </TableCell>
                   )}
                 </React.Fragment>
               ))}
             </TableRow>
           </TableHead>
           <TableBody>
-            {teamStatsForSeason.map((team, rowIndex) => (
+            {listTeams.map((team, rowIndex) => (
               <TableRow key={team.teamId}>
                 <TableCell
                   style={{
@@ -387,90 +361,86 @@ export const TableAllTeamSeason = () => {
                     <TableCell
                       style={{
                         backgroundColor:
-                          rowIndex % 2 === 0 ? "#f0f0f0" : "#ffffff",
+                          rowIndex % 2 === 0 ? "#e6f7e6" : "#d0f0d0", // Verde claro para propios
                         borderRight: "1px solid grey",
                       }}
                     >
                       {team.statistics[stat.key]?.total}
                     </TableCell>
                     {showAdvancedStats.promedio && (
-                      <>
-                        <TableCell
-                          style={{
-                            backgroundColor:
-                              rowIndex % 2 === 0 ? "#f0f0f0" : "#ffffff",
-                            borderRight: "1px solid grey",
-                          }}
-                        >
-                          {team.statistics[stat.key]?.promedio}
-                        </TableCell>
-                      </>
+                      <TableCell
+                        style={{
+                          backgroundColor:
+                            rowIndex % 2 === 0 ? "#e6f7e6" : "#d0f0d0", // Verde claro para propios avanzados
+                          borderRight: "1px solid grey",
+                        }}
+                      >
+                        {team.statistics[stat.key]?.promedio}
+                      </TableCell>
+                    )}
+                    {showAdvancedStats.mediana && (
+                      <TableCell
+                        style={{
+                          backgroundColor:
+                            rowIndex % 2 === 0 ? "#e6f7e6" : "#d0f0d0", // Verde claro para propios avanzados
+                          borderRight: "1px solid grey",
+                        }}
+                      >
+                        {team.statistics[stat.key]?.mediana}
+                      </TableCell>
+                    )}
+                    {showAdvancedStats.desviacion && (
+                      <TableCell
+                        style={{
+                          backgroundColor:
+                            rowIndex % 2 === 0 ? "#e6f7e6" : "#d0f0d0", // Verde claro para propios avanzados
+                          borderRight: "1px solid grey",
+                        }}
+                      >
+                        {team.statistics[stat.key]?.desviacion}
+                      </TableCell>
                     )}
                     <TableCell
                       style={{
                         backgroundColor:
-                          rowIndex % 2 === 0 ? "#f0f0f0" : "#ffffff",
+                          rowIndex % 2 === 0 ? "#f7e6e6" : "#f0d0d0", // Rojo claro para recibidos
                         borderRight: "1px solid grey",
                       }}
                     >
                       {team.received[stat.key]?.total}
                     </TableCell>
                     {showAdvancedStats.promedio && (
-                      <>
-                        <TableCell
-                          style={{
-                            backgroundColor:
-                              rowIndex % 2 === 0 ? "#f0f0f0" : "#ffffff",
-                            borderRight: "1px solid grey",
-                          }}
-                        >
-                          {team.received[stat.key]?.promedio}
-                        </TableCell>
-                      </>
+                      <TableCell
+                        style={{
+                          backgroundColor:
+                            rowIndex % 2 === 0 ? "#f7e6e6" : "#f0d0d0", // Rojo claro para recibidos avanzados
+                          borderRight: "1px solid grey",
+                        }}
+                      >
+                        {team.received[stat.key]?.promedio}
+                      </TableCell>
                     )}
                     {showAdvancedStats.mediana && (
-                      <>
-                        <TableCell
-                          style={{
-                            backgroundColor:
-                              rowIndex % 2 === 0 ? "#f0f0f0" : "#ffffff",
-                            borderRight: "1px solid grey",
-                          }}
-                        >
-                          {team.statistics[stat.key]?.mediana}
-                        </TableCell>
-                        <TableCell
-                          style={{
-                            backgroundColor:
-                              rowIndex % 2 === 0 ? "#f0f0f0" : "#ffffff",
-                            borderRight: "1px solid grey",
-                          }}
-                        >
-                          {team.received[stat.key]?.mediana}
-                        </TableCell>
-                      </>
+                      <TableCell
+                        style={{
+                          backgroundColor:
+                            rowIndex % 2 === 0 ? "#f7e6e6" : "#f0d0d0", // Rojo claro para recibidos avanzados
+                          borderRight: "1px solid grey",
+                        }}
+                      >
+                        {team.received[stat.key]?.mediana}
+                      </TableCell>
                     )}
                     {showAdvancedStats.desviacion && (
-                      <>
-                        <TableCell
-                          style={{
-                            backgroundColor:
-                              rowIndex % 2 === 0 ? "#f0f0f0" : "#ffffff",
-                            borderRight: "1px solid grey",
-                          }}
-                        >
-                          {team.statistics[stat.key]?.desviacion}
-                        </TableCell>
-                        <TableCell
-                          style={{
-                            backgroundColor:
-                              rowIndex % 2 === 0 ? "#f0f0f0" : "#ffffff",
-                            borderRight: "1px solid grey",
-                          }}
-                        >
-                          {team.received[stat.key]?.desviacion}
-                        </TableCell>
-                      </>
+                      <TableCell
+                        style={{
+                          backgroundColor:
+                            rowIndex % 2 === 0 ? "#f7e6e6" : "#f0d0d0", // Rojo claro para recibidos avanzados
+                          borderRight: "1px solid grey",
+                        }}
+                      >
+                        {team.received[stat.key]?.desviacion}
+                      </TableCell>
                     )}
                   </React.Fragment>
                 ))}
