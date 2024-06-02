@@ -18,6 +18,7 @@ import { TableAllTeamSeason } from "../pages/Statistics/tableAllTeamSeason/Table
 import { AddResults } from "../pages/results/AddResults";
 import { ShowResultsForFecha } from "../pages/Match/ShowResultsForFecha";
 import FormAddResult from "../pages/Match/FormAddResult";
+import { Standings } from "../pages/standings/Standings";
 
 const RoutesComponent = () => {
   return (
@@ -48,7 +49,7 @@ const RoutesComponent = () => {
       <Route path="/league">
         <Route path="view" element={<ListLeagues />} />
         <Route path="showResults/:seasonId" element={<ShowResultsForFecha />} />
-
+        <Route path="positions/:seasonId" element={<Standings />} />
 
         <Route element={<PrivateRoute />}>
           {/* leaaguePage en espete momento es para administrar ligas */}

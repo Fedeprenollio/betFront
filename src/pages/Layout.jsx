@@ -1,7 +1,6 @@
 import Navbar from "./Navbar";
 import RoutesComponent from "../router/RoutesComponents";
 import Container from "@mui/material/Container";
-import { Standings } from "./standings/Standings";
 
 
 const Layout = () => {
@@ -10,7 +9,6 @@ const Layout = () => {
       <Navbar />
 
       <RoutesComponent />
-      <Standings/>
     </Container>
   );
 };

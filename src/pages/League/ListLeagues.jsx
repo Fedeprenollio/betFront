@@ -223,6 +223,14 @@ export const ListLeagues = () => {
                                 <Button>Estadísticas</Button>
                               </Link>
                             </Grid>
+                            <Grid item>
+                              <Link
+                                className="link-no-underline"
+                                to={`/league/positions/${season._id}`}
+                              >
+                                <Button>Posisiones</Button>
+                              </Link>
+                            </Grid>
                               { isAuthenticated && 
                               
                             <Grid item>

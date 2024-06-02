@@ -1,27 +1,93 @@
-/* eslint-disable react/prop-types */
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useBoundStore } from "../../stores";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox, FormControlLabel, FormGroup } from "@mui/material";
+import { useParams } from "react-router-dom";
 
-export const Standings = ({seasonId= "6637dbf7b2a2deab04a69a97"}) => {
-    const {  getTableSeason,tableSeason } = useBoundStore(
-        (state) => state
-      );
+export const Standings = () => {
+  const {seasonId} = useParams()
+  const { getTableSeason, tableSeason } = useBoundStore((state) => state);
+  const [showHome, setShowHome] = useState(true);
+  const [showVisitor, setShowVisitor] = useState(true);
 
+  useEffect(() => {
+    getTableSeason({ seasonId });
+  }, [seasonId]);
 
-      useEffect(() => {
-        getTableSeason({seasonId})
-      }, [seasonId])
-      console.log("tableSeason",tableSeason)
+  const handleShowHomeChange = (event) => {
+    setShowHome(event.target.checked);
+  };
+
+  const handleShowVisitorChange = (event) => {
+    setShowVisitor(event.target.checked);
+  };
+
+  const getFilteredStats = (team) => {
+    if (showHome && showVisitor) {
+      return team.allStats;
+    } else if (showHome) {
+      return team.statsHome;
+    } else if (showVisitor) {
+      return team.statsVisitor;
+    }
+    return {};
+  };
+
+  const sortedTable = tableSeason?.table?.slice().sort((teamA, teamB) => {
+    const statsA = getFilteredStats(teamA);
+    const statsB = getFilteredStats(teamB);
+    return statsB.points - statsA.points || statsB.goalDifference - statsA.goalDifference || statsB.goalsFor - statsA.goalsFor;
+  });
+
   return (
     <div>
-        <h2>Tabla de posuciones</h2>
-
-        {/* {tableSeason?.table?.map( t=> {
-            return (
-                <h3 key={t.team._id}>{t.team.name} - Ptos: {t.allStats?.points}</h3>
-            )
-        })} */}
-
+      <h2>Tabla de posiciones</h2>
+      <FormGroup row>
+        <FormControlLabel
+          control={<Checkbox checked={showHome} onChange={handleShowHomeChange} />}
+          label="Local"
+        />
+        <FormControlLabel
+          control={<Checkbox checked={showVisitor} onChange={handleShowVisitorChange} />}
+          label="Visitante"
+        />
+      </FormGroup>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>#</TableCell>
+              <TableCell>Equipo</TableCell>
+              <TableCell>Pts</TableCell>
+              <TableCell>PJ</TableCell>
+              <TableCell>PG</TableCell>
+              <TableCell>PE</TableCell>
+              <TableCell>PP</TableCell>
+              <TableCell>GF</TableCell>
+              <TableCell>GC</TableCell>
+              <TableCell>DIF</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {sortedTable?.map((t, index) => {
+              const stats = getFilteredStats(t);
+              return (
+                <TableRow key={t.team._id}>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>{t.team.name}</TableCell>
+                  <TableCell>{stats.points}</TableCell>
+                  <TableCell>{stats.matchesPlayed}</TableCell>
+                  <TableCell>{stats.matchesWon}</TableCell>
+                  <TableCell>{stats.matchesDrawn}</TableCell>
+                  <TableCell>{stats.matchesLost}</TableCell>
+                  <TableCell>{stats.goalsFor}</TableCell>
+                  <TableCell>{stats.goalsAgainst}</TableCell>
+                  <TableCell>{stats.goalDifference}</TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
-  )
-}
+  );
+};

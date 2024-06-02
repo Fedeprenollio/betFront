@@ -396,8 +396,7 @@ export default function StatisticsTablecopy({
     awayStatFouls,
     awayStatOffsides,
   } = useBoundStore((state) => state);
-  console.log("homeStatYellowCard", homeStatYellowCard.yellowCards);
-  console.log("awayStatShotsOnTarget", homeStatShotsOnTarget);
+  
   const data = [
     {
       homeStatistics: homeStatGoals,
