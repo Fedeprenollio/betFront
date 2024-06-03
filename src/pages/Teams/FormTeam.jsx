@@ -23,6 +23,10 @@ const countries = [
     value: "Italia",
     label: "Italia",
   },
+  {
+    value: "EstadosUnidos",
+    label: "Estados Unidos",
+  },
 ];
 
 const FormTeam = () => {
