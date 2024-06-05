@@ -6,6 +6,7 @@ import { Container } from "@mui/material";
 import { useState } from "react";
 import { useBoundStore } from "../../stores";
 import NumberOfMatchesInput from "../../componts/Filters/NumberOfMatchesInput ";
+import { FilterStatsSeasonAndPosition } from "../../componts/FilterStatsSeasonAndPosition";
 
 export const FilterStatistics = ({
   idMatch,
@@ -18,7 +19,8 @@ export const FilterStatistics = ({
  
 }) => {
   const { getMatchDetail } = useBoundStore((state) => state);
-
+const [currentSeason, setCurrentSeason] = useState("")
+const [position, setPosition] = useState("1-50")
   useEffect(() => {
     getMatchDetail({ idMatch });
   }, [getMatchDetail, idMatch]);
@@ -26,7 +28,6 @@ export const FilterStatistics = ({
   const handleChangeRadioButton = () => {
     setStatsLessThan(!statsLessThan);
   };
-
   //Seleccionar partidos local/visitante para cada equipo
   //Equipo visitante, estadisticas de local y/o visitante:
   const [homeMateshAwayTeam, setHomeMathesAwayTeam] = useState(true);
@@ -82,14 +83,17 @@ export const FilterStatistics = ({
         statsLessThan,
         visitingmathgesLocalTeam,
         homeMatchesLocalTeam,
-        numberOfMatches
+        numberOfMatches,
+        currentSeason,
+    position
       });
     }, [
       idHomeTeam,
       statsLessThan,
       visitingmathgesLocalTeam,
       homeMatchesLocalTeam,
-      setHomeStatOffsides,numberOfMatches
+      setHomeStatOffsides,numberOfMatches,currentSeason,
+      position
     ]);
   
     useEffect(() => {
@@ -97,14 +101,16 @@ export const FilterStatistics = ({
         idAwayTeam,
         statsLessThan,
         homeMateshAwayTeam,
-        visitingMatchesAwayTeam,numberOfMatches
+        visitingMatchesAwayTeam,numberOfMatches,currentSeason,
+        position
       });
     }, [
       idAwayTeam,
       statsLessThan,
       homeMateshAwayTeam,
       visitingMatchesAwayTeam,
-      setAwayStatOffsides,numberOfMatches
+      setAwayStatOffsides,numberOfMatches,currentSeason,
+      position
     ]);
   
   //TIROS AL ARCO:
@@ -113,14 +119,16 @@ export const FilterStatistics = ({
       idHomeTeam,
       statsLessThan,
       visitingmathgesLocalTeam,
-      homeMatchesLocalTeam,numberOfMatches
+      homeMatchesLocalTeam,numberOfMatches,currentSeason,
+      position
     });
   }, [
     idHomeTeam,
     statsLessThan,
     visitingmathgesLocalTeam,
     homeMatchesLocalTeam,
-    setHomeStatShotsOnTarget,numberOfMatches
+    setHomeStatShotsOnTarget,numberOfMatches,currentSeason,
+    position
   ]);
 
   useEffect(() => {
@@ -128,14 +136,16 @@ export const FilterStatistics = ({
       idAwayTeam,
       statsLessThan,
       homeMateshAwayTeam,
-      visitingMatchesAwayTeam,numberOfMatches
+      visitingMatchesAwayTeam,numberOfMatches,currentSeason,
+      position
     });
   }, [
     idAwayTeam,
     statsLessThan,
     homeMateshAwayTeam,
     visitingMatchesAwayTeam,
-    setAwayStatShotsOnTarget,numberOfMatches
+    setAwayStatShotsOnTarget,numberOfMatches,currentSeason,
+    position
   ]);
 
     //POSESION:
@@ -144,14 +154,16 @@ export const FilterStatistics = ({
         idHomeTeam,
         statsLessThan,
         visitingmathgesLocalTeam,
-        homeMatchesLocalTeam,numberOfMatches
+        homeMatchesLocalTeam,numberOfMatches,currentSeason,
+        position
       });
     }, [
       idHomeTeam,
       statsLessThan,
       visitingmathgesLocalTeam,
       homeMatchesLocalTeam,
-      setHomeStatPossession,numberOfMatches
+      setHomeStatPossession,numberOfMatches,currentSeason,
+      position
     ]);
   
     useEffect(() => {
@@ -159,14 +171,16 @@ export const FilterStatistics = ({
         idAwayTeam,
         statsLessThan,
         homeMateshAwayTeam,
-        visitingMatchesAwayTeam,numberOfMatches
+        visitingMatchesAwayTeam,numberOfMatches,currentSeason,
+        position
       });
     }, [
       idAwayTeam,
       statsLessThan,
       homeMateshAwayTeam,
       visitingMatchesAwayTeam,
-      setAwayStatPossession,numberOfMatches
+      setAwayStatPossession,numberOfMatches,currentSeason,
+      position
     ]);
     
     //FALTAS:
@@ -175,14 +189,16 @@ export const FilterStatistics = ({
         idHomeTeam,
         statsLessThan,
         visitingmathgesLocalTeam,
-        homeMatchesLocalTeam,numberOfMatches
+        homeMatchesLocalTeam,numberOfMatches,currentSeason,
+        position
       });
     }, [
       idHomeTeam,
       statsLessThan,
       visitingmathgesLocalTeam,
       homeMatchesLocalTeam,
-      setHomeStatFouls,numberOfMatches
+      setHomeStatFouls,numberOfMatches,currentSeason,
+      position
     ]);
   
     useEffect(() => {
@@ -190,14 +206,16 @@ export const FilterStatistics = ({
         idAwayTeam,
         statsLessThan,
         homeMateshAwayTeam,
-        visitingMatchesAwayTeam,numberOfMatches
+        visitingMatchesAwayTeam,numberOfMatches,currentSeason,
+        position
       });
     }, [
       idAwayTeam,
       statsLessThan,
       homeMateshAwayTeam,
       visitingMatchesAwayTeam,
-      setAwayStatFouls,numberOfMatches
+      setAwayStatFouls,numberOfMatches,currentSeason,
+      position
     ]);
   
   
@@ -209,14 +227,17 @@ export const FilterStatistics = ({
       idHomeTeam,
       statsLessThan,
       visitingmathgesLocalTeam,
-      homeMatchesLocalTeam,numberOfMatches
+      homeMatchesLocalTeam,numberOfMatches,
+      currentSeason,
+    position
     });
   }, [
     idHomeTeam,
     statsLessThan,
     visitingmathgesLocalTeam,
     homeMatchesLocalTeam,
-    setHomeStatYellowCard,numberOfMatches
+    setHomeStatYellowCard,numberOfMatches,currentSeason,
+    position
   ]);
 
   useEffect(() => {
@@ -224,14 +245,16 @@ export const FilterStatistics = ({
       idAwayTeam,
       statsLessThan,
       homeMateshAwayTeam,
-      visitingMatchesAwayTeam,numberOfMatches
+      visitingMatchesAwayTeam,numberOfMatches,currentSeason,
+      position
     });
   }, [
     idAwayTeam,
     statsLessThan,
     homeMateshAwayTeam,
     visitingMatchesAwayTeam,
-    setAwayStatYellowCard,numberOfMatches
+    setAwayStatYellowCard,numberOfMatches,currentSeason,
+    position
   ]);
 
   //CORNERS:
@@ -240,14 +263,16 @@ export const FilterStatistics = ({
       idHomeTeam,
       statsLessThan,
       visitingmathgesLocalTeam,
-      homeMatchesLocalTeam,numberOfMatches
+      homeMatchesLocalTeam,numberOfMatches,currentSeason,
+      position
     });
   }, [
     idHomeTeam,
     statsLessThan,
     visitingmathgesLocalTeam,
     homeMatchesLocalTeam,
-    setHomeStatCorners,numberOfMatches
+    setHomeStatCorners,numberOfMatches,currentSeason,
+    position
   ]);
 
   useEffect(() => {
@@ -255,14 +280,16 @@ export const FilterStatistics = ({
       idAwayTeam,
       statsLessThan,
       homeMateshAwayTeam,
-      visitingMatchesAwayTeam,numberOfMatches
+      visitingMatchesAwayTeam,numberOfMatches,currentSeason,
+      position
     });
   }, [
     idAwayTeam,
     statsLessThan,
     homeMateshAwayTeam,
     visitingMatchesAwayTeam,
-    setAwayStatCorners,numberOfMatches
+    setAwayStatCorners,numberOfMatches,currentSeason,
+    position
   ]);
 
   //GOLES:
@@ -271,14 +298,16 @@ export const FilterStatistics = ({
       idHomeTeam,
       statsLessThan,
       visitingmathgesLocalTeam,
-      homeMatchesLocalTeam,numberOfMatches
+      homeMatchesLocalTeam,numberOfMatches,currentSeason,
+      position
     });
   }, [
     idHomeTeam,
     statsLessThan,
     visitingmathgesLocalTeam,
     homeMatchesLocalTeam,
-    setHomeStatGoals,numberOfMatches
+    setHomeStatGoals,numberOfMatches,currentSeason,
+    position
   ]);
 
   useEffect(() => {
@@ -286,14 +315,16 @@ export const FilterStatistics = ({
       idAwayTeam,
       statsLessThan,
       homeMateshAwayTeam,
-      visitingMatchesAwayTeam,numberOfMatches
+      visitingMatchesAwayTeam,numberOfMatches,currentSeason,
+      position
     });
   }, [
     idAwayTeam,
     statsLessThan,
     homeMateshAwayTeam,
     visitingMatchesAwayTeam,
-    setAwayStatGoals,numberOfMatches
+    setAwayStatGoals,numberOfMatches,currentSeason,
+    position
   ]);
 
     //TIROS:
@@ -302,14 +333,16 @@ export const FilterStatistics = ({
         idHomeTeam,
         statsLessThan,
         visitingmathgesLocalTeam,
-        homeMatchesLocalTeam,numberOfMatches
+        homeMatchesLocalTeam,numberOfMatches,currentSeason,
+        position
       });
     }, [
       idHomeTeam,
       statsLessThan,
       visitingmathgesLocalTeam,
       homeMatchesLocalTeam,
-      setHomeStatShots,numberOfMatches
+      setHomeStatShots,numberOfMatches,currentSeason,
+      position
     ]);
   
     useEffect(() => {
@@ -317,14 +350,16 @@ export const FilterStatistics = ({
         idAwayTeam,
         statsLessThan,
         homeMateshAwayTeam,
-        visitingMatchesAwayTeam,numberOfMatches
+        visitingMatchesAwayTeam,numberOfMatches,currentSeason,
+        position
       });
     }, [
       idAwayTeam,
       statsLessThan,
       homeMateshAwayTeam,
       visitingMatchesAwayTeam,
-      setAwayStatShots,numberOfMatches
+      setAwayStatShots,numberOfMatches,currentSeason,
+      position
     ]);
   
 
@@ -343,6 +378,7 @@ export const FilterStatistics = ({
         homeMatchesLocalTeam={homeMatchesLocalTeam}
         singleTeam={singleTeam}
       />
+      <FilterStatsSeasonAndPosition setPosition={setPosition}position={position} setCurrentSeason={setCurrentSeason} idHomeTeam={idHomeTeam} />
     </Container>
   );
 };

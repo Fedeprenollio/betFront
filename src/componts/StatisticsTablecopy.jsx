@@ -221,7 +221,7 @@ export function Row({
     () => calculateStats(awayStatistics?.receivedStats?.values),
     [awayStatistics]
   );
-  console.log("isSigle", isSingle);
+
   return (
     <>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
@@ -355,13 +355,14 @@ export default function StatisticsTablecopy({
 }) {
   const { getTeamDetails, teamDetails } = useBoundStore((state) => state);
   const [isAdvanced, setIsAdvanced] = useState(false); // Estado para alternar entre estadísticas simples y avanzadas
-  console.log("idAwayTeam", idAwayTeam);
+  console.log("idAwayTeam", idHomeTeam,
+  idAwayTeam);
   useEffect(() => {
     idHomeTeam && getTeamDetails(idHomeTeam);
     idAwayTeam && getTeamDetails(idAwayTeam);
-    return () => {
-      getTeamDetails(null);
-    };
+    // return () => {
+    //   getTeamDetails(null);
+    // };
   }, [idHomeTeam, idAwayTeam, getTeamDetails]);
 
   const [teamDetails1, setTeamDetails1] = useState({});
@@ -396,7 +397,8 @@ export default function StatisticsTablecopy({
     awayStatFouls,
     awayStatOffsides,
   } = useBoundStore((state) => state);
-  
+  console.log("SALDRA? homeStatGoals", homeStatGoals)
+  console.log("SALDRA2? awayStatGoals", awayStatGoals)
   const data = [
     {
       homeStatistics: homeStatGoals,
@@ -411,7 +413,7 @@ export default function StatisticsTablecopy({
       statsLessThan,
     },
     {
-      homeStatistics: homeStatYellowCard.yellowCards,
+      homeStatistics: homeStatYellowCard?.yellowCards,
       awayStatistics: awayStatYellowCard || null,
       name: "Tarjetas Amarillas",
       statsLessThan,

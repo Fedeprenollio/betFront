@@ -8,7 +8,7 @@ export const Standings = () => {
   const { getTableSeason, tableSeason } = useBoundStore((state) => state);
   const [showHome, setShowHome] = useState(true);
   const [showVisitor, setShowVisitor] = useState(true);
-
+console.log("tableSeason",tableSeason)
   useEffect(() => {
     getTableSeason({ seasonId });
   }, [seasonId]);

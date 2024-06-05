@@ -5,6 +5,7 @@ const URL_API = `${BACKEND_URL_BASE}/team`;
 const createTeamStore = (set, get) => ({
   teams: [],
   teamDetails: {},
+  teamSeason: {},
   setTeams: async () => {
     const res = await fetch(URL_API);
     const teams = await res.json();
@@ -94,6 +95,13 @@ const createTeamStore = (set, get) => ({
     } catch (error) {
       console.error("Error al eliminar equipo:", error);
     }
+  },
+  getTeamSeasons: async (teamId) => {
+    
+    // Aquí realizarías la llamada a la API para obtener los detalles del equipo
+    const response = await fetch(`${URL_API}/${teamId}/leagues-seasons`);
+    const infoLeague = await response.json();
+    set({teamSeason: infoLeague});
   },
 });
 
