@@ -20,7 +20,7 @@ export const FilterStatistics = ({
 }) => {
   const { getMatchDetail } = useBoundStore((state) => state);
 const [currentSeason, setCurrentSeason] = useState("")
-const [position, setPosition] = useState("1-50")
+const [position, setPosition] = useState(false)
   useEffect(() => {
     getMatchDetail({ idMatch });
   }, [getMatchDetail, idMatch]);

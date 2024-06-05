@@ -33,10 +33,15 @@ import { FormControlLabel } from "@mui/material";
 
 export const calculateStats = (values) => {
   console.log("VALUE", values);
-  if (!Array.isArray(values)) {
-    console.error("El parámetro proporcionado no es un array");
-    return {};
+  if (!values || values.length === 0) {
+    return {
+      total: 0,
+      promedio: 0,
+      mediana: 0,
+      desviacion: 0,
+    };
   }
+
   const stats = {
     matchesTotalFinished: values?.length,
     total: ss.sum(values),
@@ -221,7 +226,8 @@ export function Row({
     () => calculateStats(awayStatistics?.receivedStats?.values),
     [awayStatistics]
   );
-
+  console.log("ROW ERROR?",homeStatistics,
+  awayStatistics,)
   return (
     <>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
@@ -414,7 +420,7 @@ export default function StatisticsTablecopy({
     },
     {
       homeStatistics: homeStatYellowCard?.yellowCards,
-      awayStatistics: awayStatYellowCard || null,
+      awayStatistics: awayStatYellowCard?.yellowCards || null,
       name: "Tarjetas Amarillas",
       statsLessThan,
     },
