@@ -166,29 +166,7 @@ export const ResultsSeason = () => {
   />
 ))}
 
-      {/* {matchesByRound?.matches?.map((match) => (
-        <Accordion key={match._id}>
-          <AccordionSummary
-            expandIcon={<ExpandMore />}
-            aria-controls={`panel-${match._id}-content`}
-            id={`panel-${match._id}-header`}
-          >
-            <Typography>
-              {match.homeTeam.name} - {match.awayTeam.name}
-            </Typography>
-            {match.isFinished ? <Typography sx={{marginLeft: "1rem"}} >
-               {match.teamStatistics.local.goals} - {match.teamStatistics.visitor.goals}
-          </Typography> : null}
-          </AccordionSummary>
-          <AccordionDetails>
-            <FormAddResult
-              matchId={match._id}
-              localName={match.homeTeam.name}
-              visitorName={match.awayTeam.name}
-            />
-          </AccordionDetails>
-        </Accordion>
-      ))} */}
+  
     </Container>
   );
 };
