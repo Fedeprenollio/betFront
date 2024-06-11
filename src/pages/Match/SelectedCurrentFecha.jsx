@@ -3,7 +3,6 @@
 import { Checkbox, FormControlLabel } from "@mui/material";
 import axios from "axios";
 import { BACKEND_URL_BASE } from "../../stores/url_base";
-import { useEffect, useState } from "react";
 import { useBoundStore } from "../../stores";
 
 const URL_API = `${BACKEND_URL_BASE}/fecha`;

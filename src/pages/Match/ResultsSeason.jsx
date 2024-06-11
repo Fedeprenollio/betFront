@@ -104,7 +104,7 @@ export const ResultsSeason = () => {
   console.log(seasonById);
 
   return (
-    <Container>
+    <>
       {/* <h2>Results</h2>
       <RoundForm
         arrayOfRounds={arrayOfRounds}
@@ -167,6 +167,6 @@ export const ResultsSeason = () => {
 ))}
 
   
-    </Container>
+    </>
   );
 };
