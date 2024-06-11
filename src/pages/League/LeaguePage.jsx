@@ -4,6 +4,7 @@ import FormSeason from "../../componts/FormSeason";
 import FormAdminSeasonWithTeams from "../../componts/FormAdminSeasonWithTeams";
 import { Tabs, Tab } from "@mui/material";
 import { useBoundStore } from "../../stores";
+import CreateZone from "./CreateZone";
 
 // const Item = styled(Paper)(({ theme }) => ({
 //   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -35,11 +36,13 @@ export const LeaguePage = () => {
           <Tab label="Crar ligas" />
           <Tab label="Crear temporadas" />
           <Tab label="Agregar equipos a las temporadas" />
+          <Tab label="Crear zonas" />
         </Tabs>
         {/* Contenido de las pestañas */}
         {activeTab === 0 && <AdminLeague />}
         {activeTab === 1 && <FormSeason />}
         {activeTab === 2 && <FormAdminSeasonWithTeams />}
+        {activeTab === 3 && <CreateZone />}
       </div>
     </>
   );

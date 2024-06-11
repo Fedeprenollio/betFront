@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useBoundStore } from "../../stores";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox, FormControlLabel, FormGroup } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox, FormControlLabel, FormGroup, Typography } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 
 export const Standings = () => {
-  const { seasonId } = useParams()
+  const { seasonId } = useParams();
   const { getTableSeason, tableSeason } = useBoundStore((state) => state);
   const [showHome, setShowHome] = useState(true);
   const [showVisitor, setShowVisitor] = useState(true);
-console.log("tableSeason",tableSeason)
+
+  console.log("tableSeason?", tableSeason);
+
   useEffect(() => {
     getTableSeason({ seasonId });
   }, [seasonId]);
@@ -40,7 +42,8 @@ console.log("tableSeason",tableSeason)
 
   return (
     <>
-      <h2>Tabla de posiciones</h2>
+     <Typography  variant="h4" gutterBottom>{tableSeason?.season?.league?.name} </Typography >
+      <Typography  variant="h5" gutterBottom>Tabla de posiciones {tableSeason?.season?.year} </Typography >
       <FormGroup row>
         <FormControlLabel
           control={<Checkbox checked={showHome} onChange={handleShowHomeChange} />}
@@ -51,6 +54,59 @@ console.log("tableSeason",tableSeason)
           label="Visitante"
         />
       </FormGroup>
+
+      {tableSeason?.zoneTables?.map((zone, zoneIndex) => (
+        <div key={zoneIndex}>
+          <Typography variant="h6">{zone.zoneName}</Typography>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>#</TableCell>
+                  <TableCell>Equipo</TableCell>
+                  <TableCell>Pts</TableCell>
+                  <TableCell>PJ</TableCell>
+                  <TableCell>PG</TableCell>
+                  <TableCell>PE</TableCell>
+                  <TableCell>PP</TableCell>
+                  <TableCell>GF</TableCell>
+                  <TableCell>GC</TableCell>
+                  <TableCell>DIF</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {zone.teams?.slice().sort((teamA, teamB) => {
+                  const statsA = getFilteredStats(teamA);
+                  const statsB = getFilteredStats(teamB);
+                  return statsB.points - statsA.points || statsB.goalDifference - statsA.goalDifference || statsB.goalsFor - statsA.goalsFor;
+                }).map((t, index) => {
+                  const stats = getFilteredStats(t);
+                  return (
+                    <TableRow key={t.team._id}>
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell>
+                        <Link to={`/teams/${t.team._id}/statistics`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                          {t.team.name}
+                        </Link>
+                      </TableCell>
+                      <TableCell>{stats.points}</TableCell>
+                      <TableCell>{stats.matchesPlayed}</TableCell>
+                      <TableCell>{stats.matchesWon}</TableCell>
+                      <TableCell>{stats.matchesDrawn}</TableCell>
+                      <TableCell>{stats.matchesLost}</TableCell>
+                      <TableCell>{stats.goalsFor}</TableCell>
+                      <TableCell>{stats.goalsAgainst}</TableCell>
+                      <TableCell>{stats.goalDifference}</TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </div>
+      ))}
+
+      <Typography variant="h6">Tabla General</Typography>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -73,9 +129,11 @@ console.log("tableSeason",tableSeason)
               return (
                 <TableRow key={t.team._id}>
                   <TableCell>{index + 1}</TableCell>
-                  <Link to={`/teams/${t.team._id}/statistics`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                    {t.team.name}
-                  </Link>
+                  <TableCell>
+                    <Link to={`/teams/${t.team._id}/statistics`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                      {t.team.name}
+                    </Link>
+                  </TableCell>
                   <TableCell>{stats.points}</TableCell>
                   <TableCell>{stats.matchesPlayed}</TableCell>
                   <TableCell>{stats.matchesWon}</TableCell>

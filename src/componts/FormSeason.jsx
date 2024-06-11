@@ -1,14 +1,8 @@
 import { useEffect, useState } from "react";
 import { Formik, Form, Field } from "formik";
 import { TextField } from "@mui/material";
-
 import * as yup from "yup";
-import {
-  Button,
-  FormControl,
-  MenuItem,
-  Typography,
-} from "@mui/material";
+import { Button, FormControl, MenuItem, Typography } from "@mui/material";
 import { useBoundStore } from "../stores";
 import AlertDialogCopy from "./feedback/AlertDialogCopy";
 import { AlertMessageCopy } from "./feedback/AlertMessageCopy";
@@ -23,7 +17,6 @@ const validationSchema = yup.object({
     .positive("La cantidad de rondas debe ser un número positivo")
     .integer("La cantidad de rondas debe ser un número entero"),
 });
-
 
 const FormSeason = () => {
   // const { leagues, fetchLeagues } = crateLeagueStore();
@@ -75,7 +68,7 @@ const FormSeason = () => {
   const handleSubmit = async (values) => {
     try {
       await validationSchema.validate(values, { abortEarly: false }); // Validar los valores con Yup
-  
+
       const response = await createSeason(values);
       await fetchLeagues();
       setOpenCreateDialog(false);
@@ -100,7 +93,7 @@ const FormSeason = () => {
       }
     }
   };
-  
+
   return (
     <Formik
       initialValues={{
@@ -201,18 +194,15 @@ const FormSeason = () => {
             )}
           </FormControl>
 
-          <Button type="button" onClick={()=>setOpenCreateDialog(true)} variant="contained" color="primary">
+          <Button
+            type="button"
+            onClick={() => setOpenCreateDialog(true)}
+            variant="contained"
+            color="primary"
+          >
             Crear Temporada
           </Button>
-          {/* <AlertDialog
-            textButton={"Crear la temporada"}
-            textDialog="¿Estás seguro en crear la temporada?"
-            handleSubmit={handleSubmit}
-            formValues={values}
-            textSuccess={`Temporada ${values.year} creada exitosamente`}
-            textError={"Error al crear la temporada"}
-          ></AlertDialog> */}
-
+      
           <AlertDialogCopy
             open={openCreateDialog}
             onClose={() => setOpenCreateDialog(false)}
@@ -229,7 +219,7 @@ const FormSeason = () => {
 
           {isAlertOpen && (
             <AlertMessageCopy
-            isAlertOpen={isAlertOpen}
+              isAlertOpen={isAlertOpen}
               severity={severity}
               textAlert={msgAlert}
               setIsAlertOpen={setIsAlertOpen}

@@ -147,7 +147,7 @@ const createTeamStatsStore = (set) => ({
       `${URL_API}/${idHomeTeam}?statistic=shots&lowerLimit=0.5&upperLimit=22.5&matchesCount=${numberOfMatches}&homeOnly=${homeMatchesLocalTeam}&awayOnly=${visitingmathgesLocalTeam}&lessThan=${statsLessThan}&currentSeason=${currentSeason}&position=${position}`
     );
     const homeShots = await data.json();
-console.log("STATS", homeShots)
+console.log("STATS HOMETeam", homeShots)
     set({ homeStatShots: homeShots.shots });
   },
 
@@ -233,6 +233,7 @@ console.log("STATS", homeShots)
       `${URL_API}/${idAwayTeam}?statistic=shots&lowerLimit=0.5&upperLimit=22.5&matchesCount=${numberOfMatches}&homeOnly=${homeMateshAwayTeam}&awayOnly=${visitingMatchesAwayTeam}&lessThan=${statsLessThan}&currentSeason=${currentSeason}&position=${position}`
     );
     const stats = await data.json();
+    console.log("STATS Visit", stats)
 
     set({ awayStatShots: stats.shots });
   },
