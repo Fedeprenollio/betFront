@@ -12,6 +12,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/L
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { useBoundStore } from "../stores";
+import { AutoFillOrder } from "./AutoFillOrder";
 
 const validationSchema = Yup.object().shape({
   homeTeam: Yup.string().required("Required"),
@@ -118,6 +119,7 @@ const FormMatch = ({ matchId }) => {
   const handleLeagueChange = (event) => {
     setSelectedLeague(event.target.value);
   };
+ 
   return (
     <Formik
       initialValues={{
@@ -135,6 +137,7 @@ const FormMatch = ({ matchId }) => {
     >
       {({ values, handleChange, setFieldValue }) => (
         <Form>
+           <AutoFillOrder values={values} setFieldValue={setFieldValue} />
           <Field
             as={TextField}
             select
@@ -216,6 +219,7 @@ const FormMatch = ({ matchId }) => {
                 as={TextField}
                 name="round"
                 label="Ronda"
+                placeholder="por ej 1 o cuarto de final"
                 type="text"
                 variant="outlined"
                 fullWidth
