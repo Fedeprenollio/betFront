@@ -14,24 +14,24 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
   const { addMatchResult, getMatchDetail, matchDetail } = useBoundStore((state) => state);
 
   const [initialValues, setInitialValues] = useState({
-    goalsHome: "",
-    goalsAway: "",
-    offsidesHome: "",
-    offsidesAway: "",
-    yellowCardsHome: "",
-    yellowCardsAway: "",
-    redCardsHome: "",
-    redCardsAway: "",
-    cornersHome: "",
-    cornersAway: "",
-    possessionHome: "",
-    possessionAway: "",
-    foultsHome: "",
-    foultsAway: "",
-    shotsOnTargetHome: "",
-    shotsOnTargetAway: "",
-    totalShotsHome: "",
-    totalShotsAway: "",
+    goalsHome: 0,
+    goalsAway: 0,
+    offsidesHome: 0,
+    offsidesAway: 0,
+    yellowCardsHome: 0,
+    yellowCardsAway:0,
+    redCardsHome: 0,
+    redCardsAway: 0,
+    cornersHome: 0,
+    cornersAway: 0,
+    possessionHome: 0,
+    possessionAway: 0,
+    foultsHome: 0,
+    foultsAway: 0,
+    shotsOnTargetHome: 0,
+    shotsOnTargetAway: 0,
+    totalShotsHome: 0,
+    totalShotsAway: 0,
   });
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -371,14 +371,14 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
 };
 const AutoFillPossession = ({ values, setFieldValue }) => {
   useEffect(() => {
-    if (values.possessionHome !== 0) {
+    if (values.possessionHome !== 0 && values.possessionHome !== "") {
       const updatedPossessionAway = 100 - parseInt(values.possessionHome);
       setFieldValue("possessionAway", updatedPossessionAway > 0 ? updatedPossessionAway : 0);
     }
   }, [values.possessionHome, setFieldValue]);
 
   useEffect(() => {
-    if (values.possessionAway !== 0) {
+    if (values.possessionAway !== 0 && values.possessionAway !== "") {
       const updatedPossessionHome = 100 - parseInt(values.possessionAway);
       setFieldValue("possessionHome", updatedPossessionHome > 0 ? updatedPossessionHome : 0);
     }
