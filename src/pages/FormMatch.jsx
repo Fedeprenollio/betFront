@@ -137,7 +137,6 @@ const FormMatch = ({ matchId }) => {
       console.error(error); // handle error
     }
   };
-  console.log("LISTA CREADA", listMatchesCreated);
   const handleCountryChange = (event) => {
     console.log(event.target.value);
     setSelectedCountry(event.target.value);
