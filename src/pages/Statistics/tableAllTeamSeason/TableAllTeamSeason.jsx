@@ -20,16 +20,15 @@ export const TableAllTeamSeason = () => {
   const { getTeamStatsForSeason, teamStatsForSeason } = useBoundStore(
     (state) => state
   );
-const [listTeams, setListTeams] = useState([])
+  const [listTeams, setListTeams] = useState([]);
 
   useEffect(() => {
     getTeamStatsForSeason({ seasonId });
   }, [seasonId, getTeamStatsForSeason]);
 
-useEffect(() => {
-  setListTeams(teamStatsForSeason)
-
-}, [teamStatsForSeason])
+  useEffect(() => {
+    setListTeams(teamStatsForSeason);
+  }, [teamStatsForSeason]);
 
   const [orderBy, setOrderBy] = useState("teamName");
   const [order, setOrder] = useState("asc");
@@ -45,19 +44,16 @@ useEffect(() => {
       let aValue, bValue;
     
       if (property.includes('received.')) {
-        // Si la propiedad incluye 'received', ordena por estadísticas recibidas
         const statKey = property.split('.')[1];
         const type = property.split('.')[2];
         aValue = parseFloat(a.received[statKey]?.[type] || 0);
         bValue = parseFloat(b.received[statKey]?.[type] || 0);
       } else if (property.includes('statistics.')) {
-        // Si la propiedad incluye 'statistics', ordena por estadísticas propias
         const statKey = property.split('.')[1];
         const type = property.split('.')[2];
         aValue = parseFloat(a.statistics[statKey]?.[type] || 0);
         bValue = parseFloat(b.statistics[statKey]?.[type] || 0);
       } else {
-        // De lo contrario, ordena por el nombre del equipo
         aValue = a.teamName;
         bValue = b.teamName;
       }
@@ -71,9 +67,6 @@ useEffect(() => {
     setOrderBy(property);
     setListTeams(sortedTeams);
   };
-  
-  
-
 
   const stats = [
     { key: "goals", label: "Goles" },
@@ -124,11 +117,12 @@ useEffect(() => {
           label="Desviación Estándar"
         />
       </Box>
-      <TableContainer component={Paper}>
-        <Table>
+      <Paper>
+      <TableContainer sx={{ maxHeight: 640 }} component={Paper} style={{ overflowX: 'auto' }}>
+        <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell style={{ width: "100px" }}>
+              <TableCell style={{ width: "100px", position: "sticky", top: 0, left: 0, backgroundColor: "#fff", zIndex: 2 }}>
                 <TableSortLabel
                   active={orderBy === "teamName"}
                   direction={orderBy === "teamName" ? order : "asc"}
@@ -150,6 +144,9 @@ useEffect(() => {
                     backgroundColor: "#f0f0f0",
                     textAlign: "center",
                     borderRight: "1px solid grey",
+                    position: 'sticky',
+                    top: 0,
+                    zIndex: 1
                   }}
                 >
                   {stat.label}
@@ -157,14 +154,17 @@ useEffect(() => {
               ))}
             </TableRow>
             <TableRow>
-              <TableCell></TableCell>
+              <TableCell style={{ position: "sticky", top: 49, left: 0, backgroundColor: "#fff", zIndex: 2 }}></TableCell>
               {stats.map((stat) => (
                 <React.Fragment key={stat.key}>
                   <TableCell
                     style={{
                       width: "50px",
-                      backgroundColor: "#e6f7e6", // Verde claro para propios
+                      backgroundColor: "#e6f7e6",
                       borderRight: "1px solid grey",
+                      position: 'sticky',
+                      top: 49,
+                      zIndex: 1
                     }}
                   >
                     <TableSortLabel
@@ -185,8 +185,11 @@ useEffect(() => {
                     <TableCell
                       style={{
                         width: "50px",
-                        backgroundColor: "#e6f7e6", // Verde claro para propios avanzados
+                        backgroundColor: "#e6f7e6",
                         borderRight: "1px solid grey",
+                        position: 'sticky',
+                        top: 49,
+                        zIndex: 1
                       }}
                     >
                       <TableSortLabel
@@ -208,8 +211,11 @@ useEffect(() => {
                     <TableCell
                       style={{
                         width: "50px",
-                        backgroundColor: "#e6f7e6", // Verde claro para propios avanzados
+                        backgroundColor: "#e6f7e6",
                         borderRight: "1px solid grey",
+                        position: 'sticky',
+                        top: 49,
+                        zIndex: 1
                       }}
                     >
                       <TableSortLabel
@@ -231,8 +237,11 @@ useEffect(() => {
                     <TableCell
                       style={{
                         width: "50px",
-                        backgroundColor: "#e6f7e6", // Verde claro para propios avanzados
+                        backgroundColor: "#e6f7e6",
                         borderRight: "1px solid grey",
+                        position: 'sticky',
+                        top: 49,
+                        zIndex: 1
                       }}
                     >
                       <TableSortLabel
@@ -243,9 +252,7 @@ useEffect(() => {
                             : "asc"
                         }
                         onClick={() =>
-                          handleSortRequest(
-                            `statistics.${stat.key}.desviacion`
-                          )
+                          handleSortRequest(`statistics.${stat.key}.desviacion`)
                         }
                       >
                         Desviación
@@ -255,8 +262,11 @@ useEffect(() => {
                   <TableCell
                     style={{
                       width: "50px",
-                      backgroundColor: "#f7e6e6", // Rojo claro para recibidos
+                      backgroundColor: "#f7e6e6",
                       borderRight: "1px solid grey",
+                      position: 'sticky',
+                      top: 49,
+                      zIndex: 1
                     }}
                   >
                     <TableSortLabel
@@ -277,8 +287,11 @@ useEffect(() => {
                     <TableCell
                       style={{
                         width: "50px",
-                        backgroundColor: "#f7e6e6", // Rojo claro para recibidos avanzados
+                        backgroundColor: "#f7e6e6",
                         borderRight: "1px solid grey",
+                        position: 'sticky',
+                        top: 49,
+                        zIndex: 1
                       }}
                     >
                       <TableSortLabel
@@ -300,8 +313,11 @@ useEffect(() => {
                     <TableCell
                       style={{
                         width: "50px",
-                        backgroundColor: "#f7e6e6", // Rojo claro para recibidos avanzados
+                        backgroundColor: "#f7e6e6",
                         borderRight: "1px solid grey",
+                        position: 'sticky',
+                        top: 49,
+                        zIndex: 1
                       }}
                     >
                       <TableSortLabel
@@ -323,8 +339,11 @@ useEffect(() => {
                     <TableCell
                       style={{
                         width: "50px",
-                        backgroundColor: "#f7e6e6", // Rojo claro para recibidos avanzados
+                        backgroundColor: "#f7e6e6",
                         borderRight: "1px solid grey",
+                        position: 'sticky',
+                        top: 49,
+                        zIndex: 1
                       }}
                     >
                       <TableSortLabel
@@ -346,12 +365,16 @@ useEffect(() => {
               ))}
             </TableRow>
           </TableHead>
+          
           <TableBody>
             {listTeams.map((team, rowIndex) => (
               <TableRow key={team.teamId}>
                 <TableCell
                   style={{
                     backgroundColor: rowIndex % 2 === 0 ? "#f0f0f0" : "#ffffff",
+                    position: "sticky",
+                    left: 0,
+                    zIndex: 1
                   }}
                 >
                   {team.teamName}
@@ -361,7 +384,7 @@ useEffect(() => {
                     <TableCell
                       style={{
                         backgroundColor:
-                          rowIndex % 2 === 0 ? "#e6f7e6" : "#d0f0d0", // Verde claro para propios
+                          rowIndex % 2 === 0 ? "#e6f7e6" : "#d0f0d0",
                         borderRight: "1px solid grey",
                       }}
                     >
@@ -371,7 +394,7 @@ useEffect(() => {
                       <TableCell
                         style={{
                           backgroundColor:
-                            rowIndex % 2 === 0 ? "#e6f7e6" : "#d0f0d0", // Verde claro para propios avanzados
+                            rowIndex % 2 === 0 ? "#e6f7e6" : "#d0f0d0",
                           borderRight: "1px solid grey",
                         }}
                       >
@@ -382,7 +405,7 @@ useEffect(() => {
                       <TableCell
                         style={{
                           backgroundColor:
-                            rowIndex % 2 === 0 ? "#e6f7e6" : "#d0f0d0", // Verde claro para propios avanzados
+                            rowIndex % 2 === 0 ? "#e6f7e6" : "#d0f0d0",
                           borderRight: "1px solid grey",
                         }}
                       >
@@ -393,7 +416,7 @@ useEffect(() => {
                       <TableCell
                         style={{
                           backgroundColor:
-                            rowIndex % 2 === 0 ? "#e6f7e6" : "#d0f0d0", // Verde claro para propios avanzados
+                            rowIndex % 2 === 0 ? "#e6f7e6" : "#d0f0d0",
                           borderRight: "1px solid grey",
                         }}
                       >
@@ -403,7 +426,7 @@ useEffect(() => {
                     <TableCell
                       style={{
                         backgroundColor:
-                          rowIndex % 2 === 0 ? "#f7e6e6" : "#f0d0d0", // Rojo claro para recibidos
+                          rowIndex % 2 === 0 ? "#f7e6e6" : "#f0d0d0",
                         borderRight: "1px solid grey",
                       }}
                     >
@@ -413,7 +436,7 @@ useEffect(() => {
                       <TableCell
                         style={{
                           backgroundColor:
-                            rowIndex % 2 === 0 ? "#f7e6e6" : "#f0d0d0", // Rojo claro para recibidos avanzados
+                            rowIndex % 2 === 0 ? "#f7e6e6" : "#f0d0d0",
                           borderRight: "1px solid grey",
                         }}
                       >
@@ -424,7 +447,7 @@ useEffect(() => {
                       <TableCell
                         style={{
                           backgroundColor:
-                            rowIndex % 2 === 0 ? "#f7e6e6" : "#f0d0d0", // Rojo claro para recibidos avanzados
+                            rowIndex % 2 === 0 ? "#f7e6e6" : "#f0d0d0",
                           borderRight: "1px solid grey",
                         }}
                       >
@@ -435,7 +458,7 @@ useEffect(() => {
                       <TableCell
                         style={{
                           backgroundColor:
-                            rowIndex % 2 === 0 ? "#f7e6e6" : "#f0d0d0", // Rojo claro para recibidos avanzados
+                            rowIndex % 2 === 0 ? "#f7e6e6" : "#f0d0d0",
                           borderRight: "1px solid grey",
                         }}
                       >
@@ -449,6 +472,8 @@ useEffect(() => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      </Paper>
     </Box>
   );
 };
