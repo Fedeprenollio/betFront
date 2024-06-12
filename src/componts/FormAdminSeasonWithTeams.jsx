@@ -96,7 +96,6 @@ const FormAdminSeasonWithTeams = () => {
   };
 
   const handleSubmit = async (values) => {
-    console.log("VALUES", values)
     try {
       await validationSchema.validate(values, { abortEarly: false });
 

@@ -117,7 +117,6 @@ const createSeasonStore = (set) => ({
 
   // Función para agregar partidos a una temporada
   addMatchesToSeason: async ({ seasonId, matches }) => {
-    console.log(seasonId, matches);
     try {
       const response = await fetch(`${URL_API}/${seasonId}/matches`, {
         method: "POST",
@@ -126,13 +125,16 @@ const createSeasonStore = (set) => ({
         },
         body: JSON.stringify({ matches }),
       });
-      console.log(response);
+      const data = await response.json()
+      console.log(data);
+      return data
       // if (!response.ok) {
       //   throw new Error('Failed to add matches to season');
       // }
       // Aquí podrías manejar la respuesta si es necesario
     } catch (error) {
       console.error("Error adding matches to season:", error);
+      return error
     }
   },
 });

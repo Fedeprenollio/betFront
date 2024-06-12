@@ -4,7 +4,6 @@ import { useEffect } from "react";
 
 export const AlertMessageCopy = ({isAlertOpen, severity, textAlert, setIsAlertOpen }) => {
   const handleCloseAlert = () => {
-    console.log("GOla");
     setIsAlertOpen(false);
   };
 
