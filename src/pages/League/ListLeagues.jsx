@@ -207,7 +207,15 @@ export const ListLeagues = () => {
                         <TableCell>{season.year}</TableCell>
                         <TableCell style={{padding:"0"}}>
                           <Grid container >
-                            <Grid item>
+                          <Grid item>
+                              <Link
+                                className="link-no-underline"
+                                to={`/league/${season._id}/positions`}
+                              >
+                                <Button>Detalle</Button>
+                              </Link>
+                            </Grid>
+                            {/* <Grid item>
                               <Link
                                 className="link-no-underline"
                                 to={`/league/showResults/${season._id}`}
@@ -230,7 +238,7 @@ export const ListLeagues = () => {
                               >
                                 <Button>Posisiones</Button>
                               </Link>
-                            </Grid>
+                            </Grid> */}
                               { isAuthenticated && 
                               
                             <Grid item>

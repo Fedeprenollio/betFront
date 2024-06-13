@@ -93,7 +93,7 @@ export default function TemporaryDrawer() {
                                 <ListItemText sx={{ fontSize: "small" }}>
                                   <Link
                                     className="link-no-underline"
-                                    to={`/stats/teams/tableSeason/${currentSeason?._id}`}
+                                    to={`/league/${currentSeason?._id}/tableSeason`}
                                   >
                                     Tabla de estadísticas
                                   </Link>
@@ -108,7 +108,7 @@ export default function TemporaryDrawer() {
                                 <ListItemText sx={{ fontSize: "small" }}>
                                   <Link
                                     className="link-no-underline"
-                                    to={`/league/showResults/${currentSeason?._id}`}
+                                    to={`/league/${currentSeason?._id}/showResults`}
                                   >
                                     Resultados
                                   </Link>
@@ -123,7 +123,7 @@ export default function TemporaryDrawer() {
                                 <ListItemText sx={{ fontSize: "small" }}>
                                   <Link
                                     className="link-no-underline"
-                                    to={`/league/positions/${currentSeason?._id}`}
+                                    to={`/league/${currentSeason?._id}/positions`}
                                   >
                                     Tabla posiciones
                                   </Link>

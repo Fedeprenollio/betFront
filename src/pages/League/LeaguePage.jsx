@@ -32,7 +32,14 @@ export const LeaguePage = () => {
       <div>LeaguePage</div>
 
       <div>
-        <Tabs value={activeTab} onChange={handleTabChange} aria-label="Tabs">
+        <Tabs
+          value={activeTab}
+          onChange={handleTabChange}
+          aria-label="Tabs"
+          variant="scrollable"
+          scrollButtons
+          allowScrollButtonsMobile
+        >
           <Tab label="Crar ligas" />
           <Tab label="Crear temporadas" />
           <Tab label="Agregar equipos a las temporadas" />
