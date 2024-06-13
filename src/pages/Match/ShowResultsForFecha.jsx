@@ -15,9 +15,14 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  IconButton,
+  Tooltip
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ShowResultMatch from "./ShowResultMatch";
+import BarChartIcon from "@mui/icons-material/BarChart";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 export const ShowResultsForFecha = () => {
   const { seasonId } = useParams();
@@ -120,10 +125,34 @@ export const ShowResultsForFecha = () => {
                 <ListItem key={match._id} disableGutters>
                   <Card style={{ width: "100%", marginBottom: "10px" }}>
                     <CardContent>
-                      <Typography variant="h6" component="div">
-                        {`${match.homeTeam.name} - ${match.awayTeam.name}`}
-                      </Typography>
-                      
+                      <Grid container alignItems="center">
+                        <Grid item xs={8}>
+                          <Typography variant="h6" component="div">
+                            {`${match.homeTeam.name} - ${match.awayTeam.name}`}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={4} container justifyContent="flex-end">
+                          <Tooltip title="Ver Estadísticas">
+                            <IconButton
+                              component={Link}
+                              to={`/stats/${match.homeTeam._id}/${match.awayTeam._id}/${match._id}`}
+                              color="primary"
+                            >
+                              <BarChartIcon />
+                            </IconButton>
+                          </Tooltip>
+                          {match.isFinished && (
+                            <Tooltip title={expandedMatchId === match._id ? "Ocultar Resultado" : "Ver Resultado"}>
+                              <IconButton
+                                color="secondary"
+                                onClick={() => handleAccordionToggle(match._id)}
+                              >
+                                {expandedMatchId === match._id ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                              </IconButton>
+                            </Tooltip>
+                          )}
+                        </Grid>
+                      </Grid>
                       <Typography variant="body2" color="textSecondary">
                         {match.date ? 
                           new Date(match.date).toLocaleDateString("es-ES", {day: "numeric", month: "short"}) :
@@ -135,40 +164,19 @@ export const ShowResultsForFecha = () => {
                           ? `${match.teamStatistics.local.goals} - ${match.teamStatistics.visitor.goals}`
                           : "Esperando el resultado"}
                       </Typography>
-                      <Button
-                        component={Link}
-                        to={`/stats/${match.homeTeam._id}/${match.awayTeam._id}/${match._id}`}
-                        variant="contained"
-                        color="primary"
-                        style={{ marginTop: "10px", marginRight: "10px" }}
-                      >
-                        Ver Estadísticas
-                      </Button>
-                      {match.isFinished && (
-                        <>
-                          <Button
-                            variant="contained"
-                            color="secondary"
-                            style={{ marginTop: "10px" }}
-                            onClick={() => handleAccordionToggle(match._id)}
-                          >
-                          {expandedMatchId === match._id ? "Ocultar Resultado" : "Ver Resultado"}
-                          </Button>
-                          {expandedMatchId === match._id && (
-                            <Accordion expanded>
-                              <AccordionSummary>
-                                <Typography>Detalles del Partido</Typography>
-                              </AccordionSummary>
-                              <AccordionDetails>
-                                <ShowResultMatch
-                                  matchId={match._id}
-                                  visitorName={match.awayTeam.name}
-                                  localName={match.homeTeam.name}
-                                />
-                              </AccordionDetails>
-                            </Accordion>
-                          )}
-                        </>
+                      {expandedMatchId === match._id && (
+                        <Accordion expanded>
+                          <AccordionSummary>
+                            <Typography>Detalles del Partido</Typography>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                            <ShowResultMatch
+                              matchId={match._id}
+                              visitorName={match.awayTeam.name}
+                              localName={match.homeTeam.name}
+                            />
+                          </AccordionDetails>
+                        </Accordion>
                       )}
                     </CardContent>
                   </Card>
