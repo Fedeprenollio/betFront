@@ -29,33 +29,50 @@ export const StatisticsPage = () => {
   return (
     <>
       <div>LeaguePage</div>
-      <FilterStatistics 
-        idMatch={idMatch} 
-        idHomeTeam={idHomeTeam} 
-        idAwayTeam={idAwayTeam} 
-        setStatsLessThan={setStatsLessThan} 
+      <FilterStatistics
+        idMatch={idMatch}
+        idHomeTeam={idHomeTeam}
+        idAwayTeam={idAwayTeam}
+        setStatsLessThan={setStatsLessThan}
         statsLessThan={statsLessThan}
         singleTeam={singleTeam}
       />
       <div>
-        <Tabs value={activeTab} onChange={handleTabChange} aria-label="Tabs">
+        <Tabs
+          value={activeTab}
+          onChange={handleTabChange}
+          aria-label="Tabs"
+          variant="scrollable"
+          scrollButtons
+          allowScrollButtonsMobile
+        >
           <Tab label="Estadística" />
           <Tab label="Últimos partidos" />
           <Tab label="Algo mas?" />
         </Tabs>
         {/* Contenido de las pestañas */}
-        {activeTab === 0 && 
-          (singleTeam ? 
-            <StatisticsTablecopy idHomeTeam={singleTeam} statsLessThan={statsLessThan} isSingle={true} /> : 
+        {activeTab === 0 &&
+          (singleTeam ? (
             <StatisticsTablecopy
-            isSingle={false}
-            statsLessThan={statsLessThan}
+              idHomeTeam={singleTeam}
+              statsLessThan={statsLessThan}
+              isSingle={true}
+            />
+          ) : (
+            <StatisticsTablecopy
+              isSingle={false}
+              statsLessThan={statsLessThan}
+              idHomeTeam={idHomeTeam}
+              idAwayTeam={idAwayTeam}
+            ></StatisticsTablecopy>
+          ))}
+        {activeTab === 1 && (
+          <ShowStatisticsMatches
+            singleTeam={singleTeam}
             idHomeTeam={idHomeTeam}
             idAwayTeam={idAwayTeam}
-          ></StatisticsTablecopy>
-          )
-        }
-        {activeTab === 1 && <ShowStatisticsMatches singleTeam={singleTeam} idHomeTeam={idHomeTeam} idAwayTeam={idAwayTeam} />}
+          />
+        )}
         {activeTab === 2 && <h2>OTRA COSA POR MOSTRAR?</h2>}
       </div>
     </>

@@ -4,10 +4,14 @@ import { Grid, Tabs, Tab, Box } from "@mui/material";
 import { useBoundStore } from "../../stores";
 import { TableMatches } from "./TableMatches";
 
-export const ShowStatisticsMatches = ({ idHomeTeam, idAwayTeam, singleTeam }) => {
+export const ShowStatisticsMatches = ({
+  idHomeTeam,
+  idAwayTeam,
+  singleTeam,
+}) => {
   const { localMatches, visitorMatches, teamDetails, getTeamDetails } =
     useBoundStore((state) => state);
-  
+
   React.useEffect(() => {
     getTeamDetails(idHomeTeam);
     if (!singleTeam) {
@@ -42,7 +46,14 @@ export const ShowStatisticsMatches = ({ idHomeTeam, idAwayTeam, singleTeam }) =>
 
   return (
     <Box>
-      <Tabs value={activeTab} onChange={handleTabChange} aria-label="Statistics Tabs">
+      <Tabs
+        value={activeTab}
+        onChange={handleTabChange}
+        aria-label="Statistics Tabs"
+        variant="scrollable"
+        scrollButtons
+        allowScrollButtonsMobile
+      >
         <Tab label="Goles" />
         <Tab label="Corners" />
         <Tab label="Tarjetas Amarillas" />
