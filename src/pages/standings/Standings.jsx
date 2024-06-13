@@ -1,6 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useBoundStore } from "../../stores";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox, FormControlLabel, FormGroup, Typography } from "@mui/material";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  Typography,
+} from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 
 export const Standings = () => {
@@ -37,20 +49,35 @@ export const Standings = () => {
   const sortedTable = tableSeason?.table?.slice().sort((teamA, teamB) => {
     const statsA = getFilteredStats(teamA);
     const statsB = getFilteredStats(teamB);
-    return statsB.points - statsA.points || statsB.goalDifference - statsA.goalDifference || statsB.goalsFor - statsA.goalsFor;
+    return (
+      statsB.points - statsA.points ||
+      statsB.goalDifference - statsA.goalDifference ||
+      statsB.goalsFor - statsA.goalsFor
+    );
   });
 
   return (
     <>
-     <Typography  variant="h4" gutterBottom>{tableSeason?.season?.league?.name} </Typography >
-      <Typography  variant="h5" gutterBottom>Tabla de posiciones {tableSeason?.season?.year} </Typography >
+      <Typography variant="h4" gutterBottom>
+        {tableSeason?.season?.league?.name}{" "}
+      </Typography>
+      <Typography variant="h5" gutterBottom>
+        Tabla de posiciones {tableSeason?.season?.year}{" "}
+      </Typography>
       <FormGroup row>
         <FormControlLabel
-          control={<Checkbox checked={showHome} onChange={handleShowHomeChange} />}
+          control={
+            <Checkbox checked={showHome} onChange={handleShowHomeChange} />
+          }
           label="Local"
         />
         <FormControlLabel
-          control={<Checkbox checked={showVisitor} onChange={handleShowVisitorChange} />}
+          control={
+            <Checkbox
+              checked={showVisitor}
+              onChange={handleShowVisitorChange}
+            />
+          }
           label="Visitante"
         />
       </FormGroup>
@@ -58,8 +85,12 @@ export const Standings = () => {
       {tableSeason?.zoneTables?.map((zone, zoneIndex) => (
         <div key={zoneIndex}>
           <Typography variant="h6">{zone.zoneName}</Typography>
-          <TableContainer component={Paper}>
-            <Table>
+          <TableContainer
+            sx={{ maxHeight: 640 }}
+            component={Paper}
+            style={{ overflowX: "auto" }}
+          >
+            <Table size="small" stickyHeader>
               <TableHead>
                 <TableRow>
                   <TableCell>#</TableCell>
@@ -75,31 +106,41 @@ export const Standings = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {zone.teams?.slice().sort((teamA, teamB) => {
-                  const statsA = getFilteredStats(teamA);
-                  const statsB = getFilteredStats(teamB);
-                  return statsB.points - statsA.points || statsB.goalDifference - statsA.goalDifference || statsB.goalsFor - statsA.goalsFor;
-                }).map((t, index) => {
-                  const stats = getFilteredStats(t);
-                  return (
-                    <TableRow key={t.team._id}>
-                      <TableCell>{index + 1}</TableCell>
-                      <TableCell>
-                        <Link to={`/teams/${t.team._id}/statistics`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                          {t.team.name}
-                        </Link>
-                      </TableCell>
-                      <TableCell>{stats.points}</TableCell>
-                      <TableCell>{stats.matchesPlayed}</TableCell>
-                      <TableCell>{stats.matchesWon}</TableCell>
-                      <TableCell>{stats.matchesDrawn}</TableCell>
-                      <TableCell>{stats.matchesLost}</TableCell>
-                      <TableCell>{stats.goalsFor}</TableCell>
-                      <TableCell>{stats.goalsAgainst}</TableCell>
-                      <TableCell>{stats.goalDifference}</TableCell>
-                    </TableRow>
-                  );
-                })}
+                {zone.teams
+                  ?.slice()
+                  .sort((teamA, teamB) => {
+                    const statsA = getFilteredStats(teamA);
+                    const statsB = getFilteredStats(teamB);
+                    return (
+                      statsB.points - statsA.points ||
+                      statsB.goalDifference - statsA.goalDifference ||
+                      statsB.goalsFor - statsA.goalsFor
+                    );
+                  })
+                  .map((t, index) => {
+                    const stats = getFilteredStats(t);
+                    return (
+                      <TableRow key={t.team._id}>
+                        <TableCell>{index + 1}</TableCell>
+                        <TableCell>
+                          <Link
+                            to={`/teams/${t.team._id}/statistics`}
+                            style={{ textDecoration: "none", color: "inherit" }}
+                          >
+                            {t.team.name}
+                          </Link>
+                        </TableCell>
+                        <TableCell>{stats.points}</TableCell>
+                        <TableCell>{stats.matchesPlayed}</TableCell>
+                        <TableCell>{stats.matchesWon}</TableCell>
+                        <TableCell>{stats.matchesDrawn}</TableCell>
+                        <TableCell>{stats.matchesLost}</TableCell>
+                        <TableCell>{stats.goalsFor}</TableCell>
+                        <TableCell>{stats.goalsAgainst}</TableCell>
+                        <TableCell>{stats.goalDifference}</TableCell>
+                      </TableRow>
+                    );
+                  })}
               </TableBody>
             </Table>
           </TableContainer>
@@ -130,7 +171,10 @@ export const Standings = () => {
                 <TableRow key={t.team._id}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>
-                    <Link to={`/teams/${t.team._id}/statistics`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <Link
+                      to={`/teams/${t.team._id}/statistics`}
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
                       {t.team.name}
                     </Link>
                   </TableCell>
