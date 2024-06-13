@@ -52,8 +52,8 @@ export const FilterStatsSeasonAndPosition = ({ setPosition, position, idHomeTeam
           onChange={handlePositionChange}
         >
           <FormControlLabel value={false}control={<Radio />} label="No filtrar por puesto" />
-          <FormControlLabel value="1-3" control={<Radio />} label="1ro - 6to" />
-          <FormControlLabel value="4-6" control={<Radio />} label="7mo - 12mo" />
+          <FormControlLabel value="1-6" control={<Radio />} label="1ro - 6to" />
+          <FormControlLabel value="7-12" control={<Radio />} label="7mo - 12mo" />
           <FormControlLabel value="13-50" control={<Radio />} label="13ro -último" />
           <FormControlLabel value="1-50" control={<Radio />} label="Toda la temporada" />
         </RadioGroup>
