@@ -171,7 +171,7 @@ export const TableAllTeamSeason = () => {
           component={Paper}
           style={{ overflowX: "auto" }}
         >
-          <Table stickyHeader>
+          <Table stickyHeader size="small">
             <TableHead>
               <TableRow>
                 <TableCell
@@ -221,7 +221,7 @@ export const TableAllTeamSeason = () => {
                 <TableCell
                   style={{
                     position: "sticky",
-                    top: 49,
+                    top: 40,
                     left: 0,
                     backgroundColor: "#fff",
                     zIndex: 2,
@@ -237,7 +237,7 @@ export const TableAllTeamSeason = () => {
                             backgroundColor: "#e6f7e6",
                             borderRight: "1px solid grey",
                             position: "sticky",
-                            top: 49,
+                            top: 40,
                             zIndex: 1,
                           }}
                         >
@@ -262,7 +262,7 @@ export const TableAllTeamSeason = () => {
                               backgroundColor: "#e6f7e6",
                               borderRight: "1px solid grey",
                               position: "sticky",
-                              top: 49,
+                              top: 40,
                               zIndex: 1,
                             }}
                           >
@@ -292,7 +292,7 @@ export const TableAllTeamSeason = () => {
                               backgroundColor: "#e6f7e6",
                               borderRight: "1px solid grey",
                               position: "sticky",
-                              top: 49,
+                              top: 40,
                               zIndex: 1,
                             }}
                           >
@@ -322,7 +322,7 @@ export const TableAllTeamSeason = () => {
                               backgroundColor: "#e6f7e6",
                               borderRight: "1px solid grey",
                               position: "sticky",
-                              top: 49,
+                              top: 40,
                               zIndex: 1,
                             }}
                           >
@@ -351,7 +351,7 @@ export const TableAllTeamSeason = () => {
                             backgroundColor: "#f7e6e6",
                             borderRight: "1px solid grey",
                             position: "sticky",
-                            top: 49,
+                            top: 40,
                             zIndex: 1,
                           }}
                         >
@@ -376,7 +376,7 @@ export const TableAllTeamSeason = () => {
                               backgroundColor: "#f7e6e6",
                               borderRight: "1px solid grey",
                               position: "sticky",
-                              top: 49,
+                              top: 40,
                               zIndex: 1,
                             }}
                           >
@@ -406,7 +406,7 @@ export const TableAllTeamSeason = () => {
                               backgroundColor: "#f7e6e6",
                               borderRight: "1px solid grey",
                               position: "sticky",
-                              top: 49,
+                              top: 40,
                               zIndex: 1,
                             }}
                           >
@@ -436,7 +436,7 @@ export const TableAllTeamSeason = () => {
                               backgroundColor: "#f7e6e6",
                               borderRight: "1px solid grey",
                               position: "sticky",
-                              top: 49,
+                              top: 40,
                               zIndex: 1,
                             }}
                           >
