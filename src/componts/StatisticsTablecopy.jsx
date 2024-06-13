@@ -470,7 +470,7 @@ export default function StatisticsTablecopy({
         label="Activar estadísticas avanzadas"
       />
       <TableContainer component={Paper}>
-        <Table aria-label="collapsible table">
+        <Table size="small" aria-label="collapsible table">
           <TableHead>
             <TableRow>
               <TableCell />
