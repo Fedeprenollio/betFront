@@ -8,9 +8,10 @@ import {
   Checkbox
 } from '@mui/material';
 import { median } from 'simple-statistics';
+import { BACKEND_URL_BASE } from '../../../stores/url_base';
 const fetchTeamStats = async (seasonId, homeOnly, awayOnly) => {
-    const response = await axios.get(`http://localhost:1234/match/stats?season=${seasonId}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget&matchesCount=5&homeOnly=${homeOnly}&awayOnly=${awayOnly}&lowerLimit=1&upperLimit=10&lessThan=false`);
-    console.log("response.data",response.data)
+    const response = await axios.get(`${BACKEND_URL_BASE}/match/stats?season=${seasonId}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget&matchesCount=5&homeOnly=${homeOnly}&awayOnly=${awayOnly}&lowerLimit=1&upperLimit=10&lessThan=false`);
+    console.log("response.data",)
     return response.data;
   };
 
