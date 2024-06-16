@@ -12,12 +12,14 @@ const StatisticsPageTab = () => {
     "showResults": 0,
     "positions": 1,
     "tableSeason": 2,
+    "tableRange": 3,
   };
 
   const tabIndexToPath = [
     "showResults",
     "positions",
     "tableSeason",
+    "tableRange"
   ];
 
   useEffect(() => {
@@ -44,6 +46,7 @@ const StatisticsPageTab = () => {
         <Tab label="Fechas" />
         <Tab label="Posiciones" />
         <Tab label="Estadísticas" />
+        <Tab label="Estadísticas %" />
       </Tabs>
       <Outlet />
     </Box>

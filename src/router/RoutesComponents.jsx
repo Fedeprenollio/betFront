@@ -20,6 +20,7 @@ import FormAddResult from "../pages/Match/FormAddResult";
 import { Standings } from "../pages/standings/Standings";
 import StatisticsPageTab from "../pages/standings/StatisticsPage";
 import { LeaguePage } from "../pages/League/LeaguePage";
+import { RangePercentageTable } from "../pages/Statistics/rangePercentageTable/RangePercentageTable";
 
 const RoutesComponent = () => {
   return (
@@ -55,6 +56,10 @@ const RoutesComponent = () => {
             <Route path="positions" element={<Standings />} />
             <Route path="showResults" element={<ShowResultsForFecha />} />
             <Route path="tableSeason" element={<TableAllTeamSeason />} />
+            <Route path="tableRange" element={<RangePercentageTable />} />
+
+
+            
           </Route>
         <Route element={<PrivateRoute />}>
           <Route path="admin" element={<LeaguePage />} />
