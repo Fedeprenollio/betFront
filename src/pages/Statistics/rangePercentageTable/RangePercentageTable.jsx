@@ -2,13 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Tabs, Tab, Box
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Tabs, Tab, Box,
+  FormGroup,
+  FormControlLabel,
+  Checkbox
 } from '@mui/material';
 import { median } from 'simple-statistics';
-const fetchTeamStats = async (seasonId) => {
-  const response = await axios.get(`http://localhost:1234/match/stats?country=Argentina&season=${seasonId}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget&matchesCount=5&homeOnly=true&awayOnly=true&lowerLimit=1&upperLimit=10&lessThan=false`);
-  return response.data;
-};
+const fetchTeamStats = async (seasonId, homeOnly, awayOnly) => {
+    const response = await axios.get(`http://localhost:1234/match/stats?season=${seasonId}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget&matchesCount=5&homeOnly=${homeOnly}&awayOnly=${awayOnly}&lowerLimit=1&upperLimit=10&lessThan=false`);
+    console.log("response.data",response.data)
+    return response.data;
+  };
 
 const renderTable = (stats, statisticKey, matchesType) => {
     let mediaFavorHeader = '';
@@ -131,62 +135,96 @@ const TabPanel = (props) => {
 }
 
 export const RangePercentageTable = () => {
-  const { seasonId } = useParams();
-  const [stats, setStats] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [tabIndex, setTabIndex] = useState(0);
-
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const data = await fetchTeamStats(seasonId);
-        setStats(data);
-        setLoading(false);
-      } catch (err) {
-        setError(err);
-        setLoading(false);
-      }
+    const { seasonId } = useParams();
+    const [stats, setStats] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [tabIndex, setTabIndex] = useState(0);
+    const [homeOnly, setHomeOnly] = useState(true);
+    const [awayOnly, setAwayOnly] = useState(true);
+  
+    useEffect(() => {
+      const fetchStats = async () => {
+        try {
+          const data = await fetchTeamStats(seasonId, homeOnly, awayOnly);
+          setStats(data);
+          setLoading(false);
+        } catch (err) {
+          setError(err);
+          setLoading(false);
+        }
+      };
+      fetchStats();
+    }, [seasonId, homeOnly, awayOnly]);
+  
+    if (loading) return <Typography>Loading...</Typography>;
+    if (error) return <Typography>Error: {error.message}</Typography>;
+    if (stats.length === 0) return <Typography>No data available</Typography>;
+  
+    const handleTabChange = (event, newValue) => {
+      setTabIndex(newValue);
     };
-    fetchStats();
-  }, [seasonId]);
-
-//   if (loading) return <LoadingSpinner />;
-  if (error) return <Typography>Error: {error.message}</Typography>;
-  if (stats.length === 0) return <Typography>No data available</Typography>;
-
-  const handleTabChange = (event, newValue) => {
-    setTabIndex(newValue);
-  };
-
-  const statisticKeys = ['goals', 'offsides', 'yellowCards', 'corners', 'shots', 'shotsOnTarget'];
-
-  return (
-    <div>
-      <Typography variant="h4" gutterBottom>
-        Estadísticas de la Temporada
-      </Typography>
-      <Tabs value={tabIndex} onChange={handleTabChange} aria-label="stat-tabs">
+  
+    const handleHomeOnlyChange = (event) => {
+      setHomeOnly(event.target.checked);
+    };
+  
+    const handleAwayOnlyChange = (event) => {
+      setAwayOnly(event.target.checked);
+    };
+  
+    const statisticKeys = ['goals', 'offsides', 'yellowCards', 'corners', 'shots', 'shotsOnTarget'];
+  
+    return (
+      <div>
+        <Typography variant="h4" gutterBottom>
+          Estadísticas de la Temporada
+        </Typography>
+        <FormGroup row>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={homeOnly}
+                onChange={handleHomeOnlyChange}
+                name="homeOnly"
+                color="primary"
+              />
+            }
+            label="Home Only"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={awayOnly}
+                onChange={handleAwayOnlyChange}
+                name="awayOnly"
+                color="primary"
+              />
+            }
+            label="Away Only"
+          />
+        </FormGroup>
+        <Tabs value={tabIndex} onChange={handleTabChange} aria-label="stat-tabs">
+          {statisticKeys.map((key, index) => (
+            <Tab label={key.charAt(0).toUpperCase() + key.slice(1)} key={key} />
+          ))}
+        </Tabs>
         {statisticKeys.map((key, index) => (
-          <Tab label={key.charAt(0).toUpperCase() + key.slice(1)} key={key} />
+          <TabPanel value={tabIndex} index={index} key={key}>
+            <Typography variant="h6" gutterBottom>
+              {key.charAt(0).toUpperCase() + key.slice(1)} - Marcado
+            </Typography>
+            {renderTable(stats, key, 'scored')}
+            <Typography variant="h6" gutterBottom>
+              {key.charAt(0).toUpperCase() + key.slice(1)} - Recibido
+            </Typography>
+            {renderTable(stats, key, 'received')}
+            <Typography variant="h6" gutterBottom>
+              {key.charAt(0).toUpperCase() + key.slice(1)} - Totales
+            </Typography>
+            {renderTable(stats, key, 'total')}
+          </TabPanel>
         ))}
-      </Tabs>
-      {statisticKeys.map((key, index) => (
-        <TabPanel value={tabIndex} index={index} key={key}>
-          <Typography variant="h6" gutterBottom>
-            {key.charAt(0).toUpperCase() + key.slice(1)} - Marcado
-          </Typography>
-          {renderTable(stats, key, 'scored')}
-          <Typography variant="h6" gutterBottom>
-            {key.charAt(0).toUpperCase() + key.slice(1)} - Recibido
-          </Typography>
-          {renderTable(stats, key, 'received')}
-          <Typography variant="h6" gutterBottom>
-            {key.charAt(0).toUpperCase() + key.slice(1)} - Totales
-          </Typography>
-          {renderTable(stats, key, 'total')}
-        </TabPanel>
-      ))}
-    </div>
-  );
-};
+      </div>
+    );
+  };
