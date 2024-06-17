@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -5,227 +6,384 @@ import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Tabs, Tab, Box,
   FormGroup,
   FormControlLabel,
-  Checkbox
+  Checkbox,
+  TableSortLabel
 } from '@mui/material';
 import { median } from 'simple-statistics';
 import { BACKEND_URL_BASE } from '../../../stores/url_base';
+import { visuallyHidden } from '@mui/utils';
+
 const fetchTeamStats = async (seasonId, homeOnly, awayOnly) => {
-    const response = await axios.get(`${BACKEND_URL_BASE}/match/stats?season=${seasonId}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget&matchesCount=5&homeOnly=${homeOnly}&awayOnly=${awayOnly}&lowerLimit=1&upperLimit=10&lessThan=false`);
-    console.log("response.data",)
-    return response.data;
+  const response = await axios.get(`${BACKEND_URL_BASE}/match/stats?season=${seasonId}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget&matchesCount=5&homeOnly=${homeOnly}&awayOnly=${awayOnly}&lowerLimit=1&upperLimit=10&lessThan=false`);
+  return response.data;
+};
+
+const descendingComparator = (a, b, orderBy) => {
+  if (b[orderBy] < a[orderBy]) return -1;
+  if (b[orderBy] > a[orderBy]) return 1;
+  return 0;
+};
+
+const getComparator = (order, orderBy) => (order === 'desc'
+  ? (a, b) => descendingComparator(a, b, orderBy)
+  : (a, b) => -descendingComparator(a, b, orderBy)
+);
+
+const stableSort = (array, comparator) => {
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
+};
+
+const EnhancedTableHead = (props) => {
+  const { order, orderBy, onRequestSort, matchesType, overRangesKeys, underRangesKeys } = props;
+  const createSortHandler = (property) => (event) => {
+    onRequestSort(event, property);
   };
 
-const renderTable = (stats, statisticKey, matchesType) => {
-    let mediaFavorHeader = '';
-    let mediaContraHeader = '';
-    let mediaTotalHeader = '';
-    let totalFavorHeader = '';
-    let totalContraHeader = '';
-  
-    switch (matchesType) {
-      case 'scored':
-        mediaFavorHeader = `Media ${statisticKey} cometidos`;
-        totalFavorHeader = `Total ${statisticKey} cometidos`;
-        break;
-      case 'received':
-        mediaContraHeader = `Media ${statisticKey} recibidos`;
-        totalContraHeader = `Total ${statisticKey} recibidos`;
-        break;
-      case 'total':
-        mediaTotalHeader = `Media ${statisticKey} cometidos + recibidos`;
-        totalFavorHeader = `Total ${statisticKey} a favor`;
-        totalContraHeader = `Total ${statisticKey} en contra`;
-        break;
-      default:
-        break;
-    }
-  
-    const exampleTeamStats = stats[0]?.stats[statisticKey][matchesType];
-    const overRangesKeys = exampleTeamStats ? Object.keys(exampleTeamStats.overRanges) : [];
-    const underRangesKeys = exampleTeamStats ? Object.keys(exampleTeamStats.underRanges) : [];
-  
-    return (
-      <TableContainer component={Paper} sx={{ marginBottom: 2 }}>
-        <Table size='small'>
-          <TableHead>
-            <TableRow>
-              <TableCell>Liga</TableCell>
-              <TableCell>Equipo</TableCell>
-              <TableCell>PJ</TableCell>
-              <TableCell>Total</TableCell> {/* Nueva columna para Totales */}
-              {mediaFavorHeader && <TableCell>{mediaFavorHeader}</TableCell>}
-              {mediaContraHeader && <TableCell>{mediaContraHeader}</TableCell>}
-              {mediaTotalHeader && <TableCell>{mediaTotalHeader}</TableCell>}
-              <TableCell>Mediana</TableCell> {/* Nueva columna para Mediana */}
-              {overRangesKeys.map(rangeKey => (
-                <TableCell key={`over-${rangeKey}`}>O{rangeKey.replace('_', '.')}FT (%)</TableCell>
-              ))}
-              {underRangesKeys.map(rangeKey => (
-                <TableCell key={`under-${rangeKey}`}>U{rangeKey.replace('_', '.')}HFT (%)</TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {stats.map(({ team, stats }) => {
-              const matchesTotalFinished = stats[statisticKey][matchesType]?.values?.length || 0;
-              const totalScored = stats[statisticKey][matchesType]?.total || 0;
-              const totalReceived = stats[statisticKey][matchesType]?.total || 0;
-  
-              // Calcular la mediana usando simple-statistics
-              const values = stats[statisticKey][matchesType]?.values || [];
-             const total =  stats[statisticKey][matchesType]?.total
-              const medianValue = values.length > 0 ? median(values) : 0;
-  
-              return (
-                <TableRow key={team._id}>
-                  <TableCell>{team.country}</TableCell>
-                  <TableCell>{team.name}</TableCell>
-                  <TableCell>{matchesTotalFinished}</TableCell>
-                  <TableCell>{total}</TableCell> {/* Mostrar el total de valores */}
-                  {mediaFavorHeader && <TableCell>{matchesTotalFinished ? (totalScored / matchesTotalFinished).toFixed(2) : '0.00'}</TableCell>}
-                  {mediaContraHeader && <TableCell>{matchesTotalFinished ? (totalReceived / matchesTotalFinished).toFixed(2) : '0.00'}</TableCell>}
-                  {mediaTotalHeader && <TableCell>{matchesTotalFinished ? ((totalScored + totalReceived) / matchesTotalFinished).toFixed(2) : '0.00'}</TableCell>}
-
-                  <TableCell>{medianValue.toFixed(2)}</TableCell> {/* Mostrar la mediana */}
-
-                  {overRangesKeys.map(rangeKey => (
-                    <TableCell key={`over-${team._id}-${rangeKey}`}>
-                      {calculatePercentage(stats[statisticKey][matchesType]?.overRanges?.[rangeKey], matchesTotalFinished)}%
-                    </TableCell>
-                  ))}
-                  {underRangesKeys.map(rangeKey => (
-                    <TableCell key={`under-${team._id}-${rangeKey}`}>
-                      {calculatePercentage(stats[statisticKey][matchesType]?.underRanges?.[rangeKey], matchesTotalFinished)}%
-                    </TableCell>
-                  ))}
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    );
-  };
-  
-  // Función auxiliar para calcular porcentajes
-  const calculatePercentage = (count, total) => {
-    if (count === undefined || total === undefined || total === 0) {
-      return '0.00';
-    }
-    return ((count / total) * 100).toFixed(2);
-  };
-  
-const TabPanel = (props) => {
-  const { children, value, index, ...other } = props;
+  const mediaFavorHeader = matchesType === 'scored' ? `Media ${matchesType} cometidos` : null;
+  const mediaContraHeader = matchesType === 'received' ? `Media ${matchesType} recibidos` : null;
+  const mediaTotalHeader = matchesType === 'total' ? `Media ${matchesType} cometidos + recibidos` : null;
 
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`tabpanel-${index}`}
-      aria-labelledby={`tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          {children}
-        </Box>
-      )}
-    </div>
+    <TableHead>
+      <TableRow>
+        <TableCell>
+          <TableSortLabel
+            active={orderBy === 'team.country'}
+            direction={orderBy === 'team.country' ? order : 'asc'}
+            onClick={createSortHandler('team.country')}
+          >
+            Liga
+            {orderBy === 'team.country' ? (
+              <Box component="span" sx={visuallyHidden}>
+                {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+              </Box>
+            ) : null}
+          </TableSortLabel>
+        </TableCell>
+        <TableCell>
+          <TableSortLabel
+            active={orderBy === 'team.name'}
+            direction={orderBy === 'team.name' ? order : 'asc'}
+            onClick={createSortHandler('team.name')}
+          >
+            Equipo
+            {orderBy === 'team.name' ? (
+              <Box component="span" sx={visuallyHidden}>
+                {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+              </Box>
+            ) : null}
+          </TableSortLabel>
+        </TableCell>
+        <TableCell>
+          <TableSortLabel
+            active={orderBy === 'matchesTotalFinished'}
+            direction={orderBy === 'matchesTotalFinished' ? order : 'asc'}
+            onClick={createSortHandler('matchesTotalFinished')}
+          >
+            PJ
+            {orderBy === 'matchesTotalFinished' ? (
+              <Box component="span" sx={visuallyHidden}>
+                {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+              </Box>
+            ) : null}
+          </TableSortLabel>
+        </TableCell>
+        <TableCell>
+          <TableSortLabel
+            active={orderBy === 'total'}
+            direction={orderBy === 'total' ? order : 'asc'}
+            onClick={createSortHandler('total')}
+          >
+            Total
+            {orderBy === 'total' ? (
+              <Box component="span" sx={visuallyHidden}>
+                {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+              </Box>
+            ) : null}
+          </TableSortLabel>
+        </TableCell>
+        {mediaFavorHeader && (
+          <TableCell>
+            <TableSortLabel
+              active={orderBy === 'mediaFavor'}
+              direction={orderBy === 'mediaFavor' ? order : 'asc'}
+              onClick={createSortHandler('mediaFavor')}
+            >
+              {mediaFavorHeader}
+              {orderBy === 'mediaFavor' ? (
+                <Box component="span" sx={visuallyHidden}>
+                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                </Box>
+              ) : null}
+            </TableSortLabel>
+          </TableCell>
+        )}
+        {mediaContraHeader && (
+          <TableCell>
+            <TableSortLabel
+              active={orderBy === 'mediaContra'}
+              direction={orderBy === 'mediaContra' ? order : 'asc'}
+              onClick={createSortHandler('mediaContra')}
+            >
+              {mediaContraHeader}
+              {orderBy === 'mediaContra' ? (
+                <Box component="span" sx={visuallyHidden}>
+                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                </Box>
+              ) : null}
+            </TableSortLabel>
+          </TableCell>
+        )}
+        {mediaTotalHeader && (
+          <TableCell>
+            <TableSortLabel
+              active={orderBy === 'mediaTotal'}
+              direction={orderBy === 'mediaTotal' ? order : 'asc'}
+              onClick={createSortHandler('mediaTotal')}
+            >
+              {mediaTotalHeader}
+              {orderBy === 'mediaTotal' ? (
+                <Box component="span" sx={visuallyHidden}>
+                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                </Box>
+              ) : null}
+            </TableSortLabel>
+          </TableCell>
+        )}
+        <TableCell>
+          <TableSortLabel
+            active={orderBy === 'medianValue'}
+            direction={orderBy === 'medianValue' ? order : 'asc'}
+            onClick={createSortHandler('medianValue')}
+          >
+            Mediana
+            {orderBy === 'medianValue' ? (
+              <Box component="span" sx={visuallyHidden}>
+                {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+              </Box>
+            ) : null}
+          </TableSortLabel>
+        </TableCell>
+        {overRangesKeys.map((rangeKey) => (
+          <TableCell key={`over-${rangeKey}`}>
+            <TableSortLabel
+              active={orderBy === `over-${rangeKey}`}
+              direction={orderBy === `over-${rangeKey}` ? order : 'asc'}
+              onClick={createSortHandler(`over-${rangeKey}`)}
+            >
+              O{rangeKey.replace('_', '.')}FT (%)
+              {orderBy === `over-${rangeKey}` ? (
+                <Box component="span" sx={visuallyHidden}>
+                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                </Box>
+              ) : null}
+            </TableSortLabel>
+          </TableCell>
+        ))}
+        {underRangesKeys.map((rangeKey) => (
+          <TableCell key={`under-${rangeKey}`}>
+            <TableSortLabel
+              active={orderBy === `under-${rangeKey}`}
+              direction={orderBy === `under-${rangeKey}` ? order : 'asc'}
+              onClick={createSortHandler(`under-${rangeKey}`)}
+            >
+              U{rangeKey.replace('_', '.')}HFT (%)
+              {orderBy === `under-${rangeKey}` ? (
+                <Box component="span" sx={visuallyHidden}>
+                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                </Box>
+              ) : null}
+            </TableSortLabel>
+          </TableCell>
+        ))}
+      </TableRow>
+    </TableHead>
   );
-}
+};
+
+const renderTable = (stats, statisticKey, matchesType, order, orderBy, onRequestSort) => {
+  const exampleTeamStats = stats[0]?.stats[statisticKey][matchesType];
+  const overRangesKeys = exampleTeamStats ? Object.keys(exampleTeamStats.overRanges) : [];
+  const underRangesKeys = exampleTeamStats ? Object.keys(exampleTeamStats.underRanges) : [];
+
+  const rows = stats.map(({ team, stats }) => {
+    const matchesTotalFinished = stats[statisticKey][matchesType]?.values?.length || 0;
+    const totalScored = stats[statisticKey][matchesType]?.total || 0;
+    const totalReceived = stats[statisticKey][matchesType]?.total || 0;
+    const values = stats[statisticKey][matchesType]?.values || [];
+    const medianValue = median(values);
+
+    const percentages = overRangesKeys.reduce((acc, key) => {
+      acc[`over-${key}`] = stats[statisticKey][matchesType].overRanges[key];
+      return acc;
+    }, {});
+
+    const underPercentages = underRangesKeys.reduce((acc, key) => {
+      acc[`under-${key}`] = stats[statisticKey][matchesType].underRanges[key];
+      return acc;
+    }, {});
+
+    return {
+      team,
+      matchesTotalFinished,
+      totalScored,
+      totalReceived,
+      medianValue,
+      ...percentages,
+      ...underPercentages,
+    };
+  });
+
+  return (
+    <TableContainer component={Paper}>
+      <Table size='small'>
+        <EnhancedTableHead
+          order={order}
+          orderBy={orderBy}
+          onRequestSort={onRequestSort}
+          matchesType={matchesType}
+          overRangesKeys={overRangesKeys}
+          underRangesKeys={underRangesKeys}
+        />
+        <TableBody>
+          {stableSort(rows, getComparator(order, orderBy)).map((row, index) => (
+            <TableRow key={index}>
+              <TableCell>{row.team.country}</TableCell>
+              <TableCell>{row.team.name}</TableCell>
+              <TableCell>{row.matchesTotalFinished}</TableCell>
+              <TableCell>{matchesType === 'scored' ? row.totalScored : row.totalReceived}</TableCell>
+              {matchesType === 'scored' && <TableCell>{row.totalScored / row.matchesTotalFinished}</TableCell>}
+              {matchesType === 'received' && <TableCell>{row.totalReceived / row.matchesTotalFinished}</TableCell>}
+              {matchesType === 'total' && <TableCell>{(row.totalScored + row.totalReceived) / row.matchesTotalFinished}</TableCell>}
+              <TableCell>{row.medianValue}</TableCell>
+              {overRangesKeys.map((rangeKey) => (
+                <TableCell key={`over-${rangeKey}-${index}`}>{row[`over-${rangeKey}`]}</TableCell>
+              ))}
+              {underRangesKeys.map((rangeKey) => (
+                <TableCell key={`under-${rangeKey}-${index}`}>{row[`under-${rangeKey}`]}</TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+};
+
+const TabPanel = ({ children, value, index }) => (
+  <div role="tabpanel" hidden={value !== index}>
+    {value === index && <Box p={3}>{children}</Box>}
+  </div>
+);
 
 export const RangePercentageTable = () => {
-    const { seasonId } = useParams();
-    const [stats, setStats] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [tabIndex, setTabIndex] = useState(0);
-    const [homeOnly, setHomeOnly] = useState(true);
-    const [awayOnly, setAwayOnly] = useState(true);
-  
-    useEffect(() => {
-      const fetchStats = async () => {
-        try {
-          const data = await fetchTeamStats(seasonId, homeOnly, awayOnly);
-          setStats(data);
-          setLoading(false);
-        } catch (err) {
-          setError(err);
-          setLoading(false);
-        }
-      };
-      fetchStats();
-    }, [seasonId, homeOnly, awayOnly]);
-  
-    if (loading) return <Typography>Loading...</Typography>;
-    if (error) return <Typography>Error: {error.message}</Typography>;
-    if (stats.length === 0) return <Typography>No data available</Typography>;
-  
-    const handleTabChange = (event, newValue) => {
-      setTabIndex(newValue);
+  const { seasonId } = useParams();
+  const [stats, setStats] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [tabIndex, setTabIndex] = useState(0);
+  const [homeOnly, setHomeOnly] = useState(false);
+  const [awayOnly, setAwayOnly] = useState(false);
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('team.country');
+
+  useEffect(() => {
+    const loadStats = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchTeamStats(seasonId, homeOnly, awayOnly);
+        setStats(data);
+        setLoading(false);
+      } catch (err) {
+        setError(err);
+        setLoading(false);
+      }
     };
-  
-    const handleHomeOnlyChange = (event) => {
-      setHomeOnly(event.target.checked);
-    };
-  
-    const handleAwayOnlyChange = (event) => {
-      setAwayOnly(event.target.checked);
-    };
-  
-    const statisticKeys = ['goals', 'offsides', 'yellowCards', 'corners', 'shots', 'shotsOnTarget'];
-  
-    return (
-      <div>
-        <Typography variant="h4" gutterBottom>
-          Estadísticas de la Temporada
-        </Typography>
-        <FormGroup row>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={homeOnly}
-                onChange={handleHomeOnlyChange}
-                name="homeOnly"
-                color="primary"
-              />
-            }
-            label="Home Only"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={awayOnly}
-                onChange={handleAwayOnlyChange}
-                name="awayOnly"
-                color="primary"
-              />
-            }
-            label="Away Only"
-          />
-        </FormGroup>
-        <Tabs value={tabIndex} onChange={handleTabChange} aria-label="stat-tabs">
-          {statisticKeys.map((key, index) => (
-            <Tab label={key.charAt(0).toUpperCase() + key.slice(1)} key={key} />
-          ))}
-        </Tabs>
-        {statisticKeys.map((key, index) => (
-          <TabPanel value={tabIndex} index={index} key={key}>
-            <Typography variant="h6" gutterBottom>
-              {key.charAt(0).toUpperCase() + key.slice(1)} - Marcado
-            </Typography>
-            {renderTable(stats, key, 'scored')}
-            <Typography variant="h6" gutterBottom>
-              {key.charAt(0).toUpperCase() + key.slice(1)} - Recibido
-            </Typography>
-            {renderTable(stats, key, 'received')}
-            <Typography variant="h6" gutterBottom>
-              {key.charAt(0).toUpperCase() + key.slice(1)} - Totales
-            </Typography>
-            {renderTable(stats, key, 'total')}
-          </TabPanel>
-        ))}
-      </div>
-    );
+
+    loadStats();
+  }, [seasonId, homeOnly, awayOnly]);
+
+  if (loading) return <Typography>Loading...</Typography>;
+  if (error) return <Typography>Error: {error.message}</Typography>;
+  if (stats.length === 0) return <Typography>No data available</Typography>;
+
+  const handleTabChange = (event, newValue) => {
+    setTabIndex(newValue);
   };
+
+  const handleHomeOnlyChange = (event) => {
+    setHomeOnly(event.target.checked);
+  };
+
+  const handleAwayOnlyChange = (event) => {
+    setAwayOnly(event.target.checked);
+  };
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+
+  const statisticKeys = ['goals', 'offsides', 'yellowCards', 'corners', 'shots', 'shotsOnTarget'];
+
+  return (
+    <div>
+      <Typography variant="h4" gutterBottom>
+        Estadísticas de la Temporada
+      </Typography>
+      <FormGroup row>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={homeOnly}
+              onChange={handleHomeOnlyChange}
+              name="homeOnly"
+              color="primary"
+            />
+          }
+          label="Home Only"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={awayOnly}
+              onChange={handleAwayOnlyChange}
+              name="awayOnly"
+              color="primary"
+            />
+          }
+          label="Away Only"
+        />
+      </FormGroup>
+      <Tabs value={tabIndex} onChange={handleTabChange} aria-label="stat-tabs">
+        {statisticKeys.map((key, index) => (
+          <Tab label={key.charAt(0).toUpperCase() + key.slice(1)} key={key} />
+        ))}
+      </Tabs>
+      {statisticKeys.map((key, index) => (
+        <TabPanel value={tabIndex} index={index} key={key}>
+          <Typography variant="h6" gutterBottom>
+            {key.charAt(0).toUpperCase() + key.slice(1)} - Marcado
+          </Typography>
+          {renderTable(stats, key, 'scored', order, orderBy, handleRequestSort)}
+          <Typography variant="h6" gutterBottom>
+            {key.charAt(0).toUpperCase() + key.slice(1)} - Recibido
+          </Typography>
+          {renderTable(stats, key, 'received', order, orderBy, handleRequestSort)}
+          <Typography variant="h6" gutterBottom>
+            {key.charAt(0).toUpperCase() + key.slice(1)} - Totales
+          </Typography>
+          {renderTable(stats, key, 'total', order, orderBy, handleRequestSort)}
+        </TabPanel>
+      ))}
+    </div>
+  );
+};
+
