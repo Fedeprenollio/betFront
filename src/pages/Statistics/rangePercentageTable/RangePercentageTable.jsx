@@ -14,7 +14,7 @@ import { BACKEND_URL_BASE } from '../../../stores/url_base';
 import { visuallyHidden } from '@mui/utils';
 
 const fetchTeamStats = async (seasonId, homeOnly, awayOnly) => {
-  const response = await axios.get(`${BACKEND_URL_BASE}/match/stats?season=${seasonId}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget&matchesCount=5&homeOnly=${homeOnly}&awayOnly=${awayOnly}&lowerLimit=1&upperLimit=10&lessThan=false`);
+  const response = await axios.get(`${BACKEND_URL_BASE}/match/stats?season=${seasonId}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget&matchesCount=5&homeOnly=${homeOnly}&awayOnly=${awayOnly}&matchesCount=20`);
   return response.data;
 };
 
@@ -288,8 +288,8 @@ export const RangePercentageTable = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [tabIndex, setTabIndex] = useState(0);
-  const [homeOnly, setHomeOnly] = useState(false);
-  const [awayOnly, setAwayOnly] = useState(false);
+  const [homeOnly, setHomeOnly] = useState(true);
+  const [awayOnly, setAwayOnly] = useState(true);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('team.country');
 
