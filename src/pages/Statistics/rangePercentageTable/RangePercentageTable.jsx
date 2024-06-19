@@ -7,11 +7,35 @@ import {
   FormGroup,
   FormControlLabel,
   Checkbox,
-  TableSortLabel
+  TableSortLabel,
+  styled,
+  tableCellClasses
 } from '@mui/material';
 import { median } from 'simple-statistics';
 import { BACKEND_URL_BASE } from '../../../stores/url_base';
 import { visuallyHidden } from '@mui/utils';
+
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 14,
+    },
+  }));
+  
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+      border: 0,
+    },
+  }));
+  
 
 const fetchTeamStats = async (seasonId, homeOnly, awayOnly) => {
   const response = await axios.get(`${BACKEND_URL_BASE}/match/stats?season=${seasonId}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget&matchesCount=5&homeOnly=${homeOnly}&awayOnly=${awayOnly}`);
@@ -295,8 +319,8 @@ const renderTable = (stats, statisticKey, matchesType, order, orderBy, onRequest
   });
 
   return (
-    <TableContainer component={Paper}>
-      <Table size='small'>
+    <TableContainer component={Paper} sx={{ maxHeight: 440 }}>
+      <Table stickyHeader  size='small'>
         <EnhancedTableHead
           order={order}
           orderBy={orderBy}
@@ -306,11 +330,20 @@ const renderTable = (stats, statisticKey, matchesType, order, orderBy, onRequest
           underRangesKeys={underRangesKeys}
           rows={rows}
         />
+
         <TableBody>
+      
           {stableSort(rows, getComparator(order, orderBy)).map((row, index) => (
-            <TableRow key={index}>
+            <StyledTableRow  key={index}>
               <TableCell>{row.team.country}</TableCell>
-              <TableCell>{row.team.name}</TableCell>
+              <TableCell   style={{
+                    width: "100px",
+                    position: "sticky",
+                    top: 0,
+                    left: 0,
+                    backgroundColor: "#fff",
+                    zIndex: 2,
+                  }}>{row.team.name}</TableCell>
               <TableCell>{row.matchesTotalFinished}</TableCell>
               <TableCell>{matchesType === 'scored' ? row.totalScored : row.totalReceived}</TableCell>
               {matchesType === 'scored' && <TableCell>{row.matchesTotalFinished !== 0 ? (row.totalScored / row.matchesTotalFinished) : 0}</TableCell>}
@@ -326,8 +359,9 @@ const renderTable = (stats, statisticKey, matchesType, order, orderBy, onRequest
                   {row[`under-${rangeKey}`]?.percentage}
                 </TableCell>
               ))}
-            </TableRow>
+            </StyledTableRow >
           ))}
+        
         </TableBody>
       </Table>
     </TableContainer>
