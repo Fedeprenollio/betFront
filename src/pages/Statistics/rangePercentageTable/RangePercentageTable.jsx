@@ -25,14 +25,41 @@ const fetchTeamStats = async (seasonId, homeOnly, awayOnly) => {
 // };
 
 const descendingComparator = (a, b, orderBy) => {
-    const valueA = orderBy.includes('over-') || orderBy.includes('under-') ? (a[orderBy]?.percentage || 0) : a[orderBy];
-    const valueB = orderBy.includes('over-') || orderBy.includes('under-') ? (b[orderBy]?.percentage || 0) : b[orderBy];
+    let valueA, valueB;
+  
+    switch (orderBy) {
+      case 'team.country':
+        valueA = a.team?.country ? a.team.country.toLowerCase() : '';
+        valueB = b.team?.country ? b.team.country.toLowerCase() : '';
+        break;
+      case 'team.name':
+        valueA = a.team?.name ? a.team.name.toLowerCase() : '';
+        valueB = b.team?.name ? b.team.name.toLowerCase() : '';
+        break;
+      case 'mediaFavor':
+        valueA = a.matchesTotalFinished !== 0 ? (a.totalScored / a.matchesTotalFinished) : 0;
+        valueB = b.matchesTotalFinished !== 0 ? (b.totalScored / b.matchesTotalFinished) : 0;
+        break;
+      case 'mediaContra':
+        valueA = a.matchesTotalFinished !== 0 ? (a.totalReceived / a.matchesTotalFinished) : 0;
+        valueB = b.matchesTotalFinished !== 0 ? (b.totalReceived / b.matchesTotalFinished) : 0;
+        break;
+      case 'mediaTotal':
+        valueA = a.matchesTotalFinished !== 0 ? ((a.totalScored + a.totalReceived) / a.matchesTotalFinished) : 0;
+        valueB = b.matchesTotalFinished !== 0 ? ((b.totalScored + b.totalReceived) / b.matchesTotalFinished) : 0;
+        break;
+      default:
+        valueA = orderBy.includes('over-') || orderBy.includes('under-') ? (a[orderBy]?.percentage || 0) : (a[orderBy] || 0);
+        valueB = orderBy.includes('over-') || orderBy.includes('under-') ? (b[orderBy]?.percentage || 0) : (b[orderBy] || 0);
+    }
+  
     console.log(`Comparing ${orderBy}:`, valueA, valueB);
-
+  
     if (valueB < valueA) return -1;
     if (valueB > valueA) return 1;
     return 0;
   };
+  
   
 
 const getComparator = (order, orderBy) => (order === 'desc'
