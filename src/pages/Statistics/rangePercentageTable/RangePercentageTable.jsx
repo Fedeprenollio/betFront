@@ -18,11 +18,22 @@ const fetchTeamStats = async (seasonId, homeOnly, awayOnly) => {
   return response.data;
 };
 
+// const descendingComparator = (a, b, orderBy) => {
+//   if (b[orderBy] < a[orderBy]) return -1;
+//   if (b[orderBy] > a[orderBy]) return 1;
+//   return 0;
+// };
+
 const descendingComparator = (a, b, orderBy) => {
-  if (b[orderBy] < a[orderBy]) return -1;
-  if (b[orderBy] > a[orderBy]) return 1;
-  return 0;
-};
+    const valueA = orderBy.includes('over-') || orderBy.includes('under-') ? (a[orderBy]?.percentage || 0) : a[orderBy];
+    const valueB = orderBy.includes('over-') || orderBy.includes('under-') ? (b[orderBy]?.percentage || 0) : b[orderBy];
+    console.log(`Comparing ${orderBy}:`, valueA, valueB);
+
+    if (valueB < valueA) return -1;
+    if (valueB > valueA) return 1;
+    return 0;
+  };
+  
 
 const getComparator = (order, orderBy) => (order === 'desc'
   ? (a, b) => descendingComparator(a, b, orderBy)
@@ -53,7 +64,6 @@ const EnhancedTableHead = (props) => {
     return rows.some(row => row[`under-${key}`] !== null);
   });
 
-  console.log("underRangesKeys",)
   const mediaFavorHeader = matchesType === 'scored' ? `Media ${matchesType} cometidos` : null;
   const mediaContraHeader = matchesType === 'received' ? `Media ${matchesType} recibidos` : null;
   const mediaTotalHeader = matchesType === 'total' ? `Media ${matchesType} cometidos + recibidos` : null;
@@ -221,10 +231,8 @@ const EnhancedTableHead = (props) => {
 
 const renderTable = (stats, statisticKey, matchesType, order, orderBy, onRequestSort) => {
   const exampleTeamStats = stats[0]?.stats[statisticKey][matchesType];
-  console.log("exampleTeamStats", exampleTeamStats);
   const overRangesKeys = exampleTeamStats ? Object.keys(exampleTeamStats.overRanges) : [];
   const underRangesKeys = exampleTeamStats ? Object.keys(exampleTeamStats.underRanges) : [];
-  console.log("underRangesKeys", underRangesKeys);
 
   const rows = stats.map(({ team, stats }) => {
     const matchesTotalFinished = stats[statisticKey][matchesType]?.values?.length || 0;
@@ -282,12 +290,13 @@ const renderTable = (stats, statisticKey, matchesType, order, orderBy, onRequest
               {matchesType === 'received' && <TableCell>{row.matchesTotalFinished !== 0 ? (row.totalReceived / row.matchesTotalFinished) : 0}</TableCell>}
               {matchesType === 'total' && <TableCell>{row.matchesTotalFinished !== 0 ? ((row.totalScored + row.totalReceived) / row.matchesTotalFinished) : 0}</TableCell>}
               <TableCell>{row.medianValue}</TableCell>
-              {overRangesKeys.map((rangeKey) => (
-                <TableCell key={`over-${rangeKey}-${index}`}>{row[`over-${rangeKey}`]}</TableCell>
-              ))}
+              {overRangesKeys.map((rangeKey) =>{ 
+                //   console.log("row[`over-${rangeKey}`]",row[`over-${rangeKey}`])                
+                return (<TableCell key={`over-${rangeKey}-${index}`}>{row[`over-${rangeKey}`]?.percentage}</TableCell>
+              )})}
               {filteredUnderRangesKeys.map((rangeKey) => (
                 <TableCell key={`under-${rangeKey}-${index}`}>
-                  {row[`under-${rangeKey}`]}
+                  {row[`under-${rangeKey}`]?.percentage}
                 </TableCell>
               ))}
             </TableRow>
