@@ -19,7 +19,8 @@ import { median } from "simple-statistics";
 import { BACKEND_URL_BASE } from "../../../stores/url_base";
 import { EnhancedTableHead } from "./EnhancedTableHead";
 import { CheckboxLocalVisitor } from "./CheckboxLocalVisitor";
-import { MatchesCount } from "./MatchesCount";
+import { MatchesCountInput } from "./MatchesCountInput";
+import LoadingSpinner from "../../../componts/loading/LoadingSpinner";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
@@ -31,9 +32,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const fetchTeamStats = async (seasonId, homeOnly, awayOnly) => {
+const fetchTeamStats = async (seasonId, homeOnly, awayOnly,matchesCount ) => {
   const response = await axios.get(
-    `${BACKEND_URL_BASE}/match/stats?season=${seasonId}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget&matchesCount=30&homeOnly=${homeOnly}&awayOnly=${awayOnly}`
+    `${BACKEND_URL_BASE}/match/stats?season=${seasonId}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}`
   );
   return response.data;
 };
@@ -97,7 +98,6 @@ const descendingComparator = (a, b, orderBy) => {
           : b[orderBy] || 0;
   }
 
-  console.log(`Comparing ${orderBy}:`, valueA, valueB);
 
   if (valueB < valueA) return -1;
   if (valueB > valueA) return 1;
@@ -125,7 +125,7 @@ const renderTable = (
   matchesType,
   order,
   orderBy,
-  onRequestSort
+  onRequestSort, loading
 ) => {
   const exampleTeamStats = stats[0]?.stats[statisticKey][matchesType];
   const overRangesKeys = exampleTeamStats
@@ -182,6 +182,7 @@ const renderTable = (
           rows={rows}
         />
 
+        {!loading ? 
         <TableBody>
           {stableSort(rows, getComparator(order, orderBy)).map((row, index) => (
             <StyledTableRow key={index}>
@@ -241,6 +242,9 @@ const renderTable = (
             </StyledTableRow>
           ))}
         </TableBody>
+        : <LoadingSpinner/>
+    }
+
       </Table>
     </TableContainer>
   );
@@ -262,12 +266,20 @@ export const RangePercentageTable = () => {
   const [awayOnly, setAwayOnly] = useState(true);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("team.country");
+  const [matchesCount, setMatchesCount] = useState(0);
+  const [inputMatchesCount, setInputMatchesCount] = useState(0);
+
 
   useEffect(() => {
     const loadStats = async () => {
       try {
         setLoading(true);
-        const data = await fetchTeamStats(seasonId, homeOnly, awayOnly);
+        const data = await fetchTeamStats(
+          seasonId,
+          homeOnly,
+          awayOnly,
+          matchesCount
+        );
         setStats(data);
         setLoading(false);
       } catch (err) {
@@ -277,10 +289,10 @@ export const RangePercentageTable = () => {
     };
 
     loadStats();
-  }, [seasonId, homeOnly, awayOnly]);
+  }, [seasonId, homeOnly, awayOnly, matchesCount]);
   console.log("stats", stats);
 
-  if (loading) return <Typography>Loading...</Typography>;
+//   if (loading) return <Typography>Loading...</Typography>;
   if (error) return <Typography>Error: {error.message}</Typography>;
   if (stats.length === 0) return <Typography>No data available</Typography>;
   const handleTabChange = (event, newValue) => {
@@ -309,6 +321,18 @@ export const RangePercentageTable = () => {
     "shots",
     "shotsOnTarget",
   ];
+  const handleInputMatchesCountChange = (event) => {
+    console.log("Numero",event.target?.value )
+    setInputMatchesCount(event.target?.value);
+  };
+
+  const updateMatchesCount = () => {
+    console.log( "matchesCount",matchesCount)
+    console.log( "inputMatchesCount",inputMatchesCount)
+
+    setMatchesCount(inputMatchesCount);
+  };
+
 
   return (
     <div>
@@ -321,18 +345,23 @@ export const RangePercentageTable = () => {
         handleHomeOnlyChange={handleHomeOnlyChange}
         handleAwayOnlyChange={handleAwayOnlyChange}
       />
-      <MatchesCount/>
+    <MatchesCountInput
+        inputMatchesCount={inputMatchesCount}
+        handleInputMatchesCountChange={handleInputMatchesCountChange}
+        updateMatchesCount={updateMatchesCount}
+      />
       <Tabs value={tabIndex} onChange={handleTabChange} aria-label="stat-tabs">
         {statisticKeys.map((key, index) => (
           <Tab label={key.charAt(0).toUpperCase() + key.slice(1)} key={key} />
         ))}
       </Tabs>
+      
       {statisticKeys.map((key, index) => (
         <TabPanel value={tabIndex} index={index} key={key}>
           <Typography variant="h6" gutterBottom>
             {key.charAt(0).toUpperCase() + key.slice(1)} - Marcado
           </Typography>
-          {renderTable(stats, key, "scored", order, orderBy, handleRequestSort)}
+          {renderTable(stats, key, "scored", order, orderBy, handleRequestSort, loading)}
           <Typography variant="h6" gutterBottom>
             {key.charAt(0).toUpperCase() + key.slice(1)} - Recibido
           </Typography>
@@ -342,12 +371,12 @@ export const RangePercentageTable = () => {
             "received",
             order,
             orderBy,
-            handleRequestSort
+            handleRequestSort, loading
           )}
           <Typography variant="h6" gutterBottom>
             {key.charAt(0).toUpperCase() + key.slice(1)} - Totales
           </Typography>
-          {renderTable(stats, key, "total", order, orderBy, handleRequestSort)}
+          {renderTable(stats, key, "total", order, orderBy, handleRequestSort, loading)}
         </TabPanel>
       ))}
     </div>

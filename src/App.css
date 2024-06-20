@@ -107,3 +107,27 @@
     transform: translateY(-75px);
   }
 }
+
+.container-spinner {
+  position: fixed; /* Establece la posición fija */
+  top: 50%; /* Establece la distancia desde el borde superior de la pantalla */
+  left: 50%; /* Centra horizontalmente */
+  transform: translateX(-50%); /* Centra horizontalmente */
+  z-index: 9999; /* Establece el z-index por encima de todo */
+}
+
+.custom-loader {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: conic-gradient(#0000 10%, #766DF4);
+  -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 8px), #000 0);
+  animation: spin 1s infinite linear;
+  margin: auto; /* Centra el spinner dentro del contenedor */
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
