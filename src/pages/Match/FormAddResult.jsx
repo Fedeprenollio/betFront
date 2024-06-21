@@ -141,6 +141,9 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
   }, [addMatchResult, matchId]);
 
   
+  const handleWheel = (event) => {
+    event.preventDefault(); // Prevenir scroll en los campos numéricos mientras están enfocados
+  };
 
   return (
     <>
@@ -171,6 +174,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
                   type="number"
                   variant="outlined"
                   fullWidth
+                 onWheel={(e) => e.target.blur()} // Manejar evento de rueda para prevenir scroll
                 />
                 <ErrorMessage name="goalsHome" component="div" />
               </Grid>
@@ -182,6 +186,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
                   type="number"
                   variant="outlined"
                   fullWidth
+                  onWheel={(e) => e.target.blur()}
                 />
                 <ErrorMessage name="goalsAway" component="div" />
               </Grid>
@@ -193,6 +198,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
                   type="number"
                   variant="outlined"
                   fullWidth
+                  onWheel={(e) => e.target.blur()}
                 />
                 <ErrorMessage name="totalShotsHome" component="div" />
               </Grid>
@@ -204,6 +210,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
                   type="number"
                   variant="outlined"
                   fullWidth
+                  onWheel={(e) => e.target.blur()}
                 />
                 <ErrorMessage name="totalShotsAway" component="div" />
               </Grid>
@@ -215,6 +222,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
                   type="number"
                   variant="outlined"
                   fullWidth
+                  onWheel={(e) => e.target.blur()}
                 />
                 <ErrorMessage name="shotsOnTargetHome" component="div" />
               </Grid>
@@ -226,6 +234,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
                   type="number"
                   variant="outlined"
                   fullWidth
+                  onWheel={(e) => e.target.blur()}
                 />
                 <ErrorMessage name="shotsOnTargetAway" component="div" />
               </Grid>
@@ -237,6 +246,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
                   type="number"
                   variant="outlined"
                   fullWidth
+                  onWheel={(e) => e.target.blur()}
                 />
                 <ErrorMessage name="possessionHome" component="div" />
               </Grid>
@@ -248,6 +258,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
                   type="number"
                   variant="outlined"
                   fullWidth
+                  onWheel={(e) => e.target.blur()}
                 />
                 <ErrorMessage name="possessionAway" component="div" />
               </Grid>
@@ -259,6 +270,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
                   type="number"
                   variant="outlined"
                   fullWidth
+                  onWheel={(e) => e.target.blur()}
                 />
                 <ErrorMessage name="foultsHome" component="div" />
               </Grid>
@@ -270,6 +282,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
                   type="number"
                   variant="outlined"
                   fullWidth
+                  onWheel={(e) => e.target.blur()}
                 />
                 <ErrorMessage name="foultsAway" component="div" />
               </Grid>
@@ -281,6 +294,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
                   type="number"
                   variant="outlined"
                   fullWidth
+                  onWheel={(e) => e.target.blur()}
                 />
                 <ErrorMessage name="yellowCardsHome" component="div" />
               </Grid>
@@ -292,6 +306,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
                   type="number"
                   variant="outlined"
                   fullWidth
+                  onWheel={(e) => e.target.blur()}
                 />
                 <ErrorMessage name="yellowCardsAway" component="div" />
               </Grid>
@@ -304,6 +319,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
                   type="number"
                   variant="outlined"
                   fullWidth
+                  onWheel={(e) => e.target.blur()}
                 />
                 <ErrorMessage name="offsidesHome" component="div" />
               </Grid>
@@ -315,6 +331,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
                   type="number"
                   variant="outlined"
                   fullWidth
+                  onWheel={(e) => e.target.blur()}
                 />
                 <ErrorMessage name="offsidesAway" component="div" />
               </Grid>
@@ -326,6 +343,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
                   type="number"
                   variant="outlined"
                   fullWidth
+                  onWheel={(e) => e.target.blur()}
                 />
                 <ErrorMessage name="cornersHome" component="div" />
               </Grid>
@@ -337,6 +355,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
                   type="number"
                   variant="outlined"
                   fullWidth
+                  onWheel={(e) => e.target.blur()}
                 />
                 <ErrorMessage name="cornersAway" component="div" />
               </Grid>
