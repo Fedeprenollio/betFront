@@ -1,21 +1,72 @@
 /* eslint-disable react/prop-types */
-import { Button, Container, TextField } from '@mui/material'
+import {
+  Button,
+  Checkbox,
+  Container,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  TextField,
+} from "@mui/material";
+import { useState } from "react";
 
-export const MatchesCountInput = ({ inputMatchesCount, handleInputMatchesCountChange, updateMatchesCount }) => {
+export const MatchesCountInput = ({
+  inputMatchesCount,
+  handleInputMatchesCountChange,
+  updateMatchesCount,
+  updateIncludeOtherSeasons
+}) => {
+  const [enablEditing, setEnablEditing] = useState(false);
+  const [includeOtherSeasons, setIncludeOtherSeasons] = useState(false);
+
+  const handleCheckboxChange = (event) => {
+    const { name, checked } = event.target;
+    if (name === 'enablEditing') {
+      setEnablEditing(checked);
+    } else if (name === 'includeOtherSeasons') {
+      setIncludeOtherSeasons(checked);
+    }
+  };
+
+  const handleUpdateClick = () => {
+    updateMatchesCount();
+    updateIncludeOtherSeasons(includeOtherSeasons);
+  };
+
   return (
-    <Container sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <Container
+      sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+    >
+      <FormControl>
+        <FormLabel component="legend">Limitar número de partidos</FormLabel>
+        <FormControlLabel
+          control={<Checkbox name="enablEditing" checked={enablEditing} onChange={handleCheckboxChange} />}
+          label="Habilitar edición"
+        />
+        <FormControlLabel
+          control={<Checkbox name="includeOtherSeasons" checked={includeOtherSeasons} onChange={handleCheckboxChange} />}
+          label="Incluir todas los torneos y/o temporadas"
+        />
+      </FormControl>
       <TextField
-        label="Limitar número de partidos"
+        disabled={!enablEditing}
+        label="Número de partidos"
         type="number"
         value={inputMatchesCount}
         onChange={handleInputMatchesCountChange}
         variant="outlined"
         margin="normal"
-        sx={{ width: '100%', maxWidth: '300px', marginBottom: '10px' }} // Ajustes de estilo para el TextField
+        sx={{ width: "100%", maxWidth: "300px", marginBottom: "10px" }} // Ajustes de estilo para el TextField
       />
-      <Button variant="contained" color="primary" onClick={updateMatchesCount} sx={{ width: '100%', maxWidth: '300px' }}>
+      <Button
+        disabled={!enablEditing}
+        variant="contained"
+        color="primary"
+        onClick={handleUpdateClick}
+        sx={{ width: "100%", maxWidth: "300px" }}
+      >
         Actualizar
       </Button>
     </Container>
-  )
-}
+  );
+};
