@@ -14,7 +14,9 @@ export const MatchesCountInput = ({
   inputMatchesCount,
   handleInputMatchesCountChange,
   updateMatchesCount,
-  updateIncludeOtherSeasons
+  updateIncludeOtherSeasons,
+  handleIncludeAllSeasonMatches,
+  inputChekBoxIncludeAllSeason
 }) => {
   const [enablEditing, setEnablEditing] = useState(false);
   const [includeOtherSeasons, setIncludeOtherSeasons] = useState(false);
@@ -24,7 +26,7 @@ export const MatchesCountInput = ({
     if (name === 'enablEditing') {
       setEnablEditing(checked);
     } else if (name === 'includeOtherSeasons') {
-      setIncludeOtherSeasons(checked);
+      handleIncludeAllSeasonMatches(checked);
     }
   };
 
@@ -44,7 +46,7 @@ export const MatchesCountInput = ({
           label="Habilitar edición"
         />
         <FormControlLabel
-          control={<Checkbox name="includeOtherSeasons" checked={includeOtherSeasons} onChange={handleCheckboxChange} />}
+          control={<Checkbox name="includeOtherSeasons" checked={inputChekBoxIncludeAllSeason} onChange={handleCheckboxChange} />}
           label="Incluir todas los torneos y/o temporadas"
         />
       </FormControl>

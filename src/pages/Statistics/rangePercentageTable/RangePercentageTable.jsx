@@ -37,31 +37,25 @@ const fetchTeamStats = async (
   homeOnly,
   awayOnly,
   matchesCount,
-  includeOtherSeasons
+  includeAllSeasonMatches
 ) => {
-  if (includeOtherSeasons) {
+
     const response = await axios.get(
-      `${BACKEND_URL_BASE}/match/stats?statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}`
+      `${BACKEND_URL_BASE}/match/stats?season=${seasonId}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}`
     );
     return response.data;
-  } else {
-    const response = await axios.get(
-      `${BACKEND_URL_BASE}/match/stats?season=${seasonId}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}`
-    );
-    return response.data;
-  }
+  
 };
 
-// const descendingComparator = (a, b, orderBy) => {
-//   if (b[orderBy] < a[orderBy]) return -1;
-//   if (b[orderBy] > a[orderBy]) return 1;
-//   return 0;
-// };
 
 const descendingComparator = (a, b, orderBy) => {
   let valueA, valueB;
-
+  console.log("orderBy", orderBy,a)
   switch (orderBy) {
+    case "total":
+      valueA = a.team?.totalScored ? a.team.totalScored.toLowerCase() : "";
+      valueB = b.team?.totalScored ? b.team.totalScored.toLowerCase() : "";
+      break;
     case "team.country":
       valueA = a.team?.country ? a.team.country.toLowerCase() : "";
       valueB = b.team?.country ? b.team.country.toLowerCase() : "";
@@ -285,7 +279,8 @@ export const RangePercentageTable = () => {
   const [orderBy, setOrderBy] = useState("team.country");
   const [matchesCount, setMatchesCount] = useState(0);
   const [inputMatchesCount, setInputMatchesCount] = useState(0);
-  const [includeOtherSeasons, setIncludeOtherSeasons] = useState(false);
+  const [includeAllSeasonMatches, setIncludeAllSeasonMatches] = useState(false)
+  const [inputChekBoxIncludeAllSeason, setInputChekBoxIncludeAllSeason] = useState(false)
 
   useEffect(() => {
     const loadStats = async () => {
@@ -296,7 +291,7 @@ export const RangePercentageTable = () => {
           homeOnly,
           awayOnly,
           matchesCount,
-          includeOtherSeasons
+          includeAllSeasonMatches
         );
         setStats(data);
         setLoading(false);
@@ -307,7 +302,7 @@ export const RangePercentageTable = () => {
     };
 
     loadStats();
-  }, [seasonId, homeOnly, awayOnly, matchesCount,includeOtherSeasons]);
+  }, [seasonId, homeOnly, awayOnly, matchesCount,includeAllSeasonMatches]);
   console.log("stats", stats);
 
   //   if (loading) return <Typography>Loading...</Typography>;
@@ -338,23 +333,25 @@ export const RangePercentageTable = () => {
     "corners",
     "shots",
     "shotsOnTarget",
+    "possession"
   ];
   const handleInputMatchesCountChange = (event) => {
     setInputMatchesCount(event.target?.value);
   };
 
   const updateMatchesCount = () => {
-    console.log("matchesCount", matchesCount);
-    console.log("inputMatchesCount", inputMatchesCount);
-
-    setMatchesCount(inputMatchesCount);
+      setMatchesCount(inputMatchesCount);
   };
 
  
-
-  const updateIncludeOtherSeasons = () => {
-    setIncludeOtherSeasons(!includeOtherSeasons);
+  const handleIncludeAllSeasonMatches = (event) => {
+    console.log("event",event)
+    setInputChekBoxIncludeAllSeason(event);
   };
+  
+  const updateIncludeOtherSeasons = () => {
+    setIncludeAllSeasonMatches(inputChekBoxIncludeAllSeason);
+    };
 
   return (
     <div>
@@ -370,8 +367,10 @@ export const RangePercentageTable = () => {
       <MatchesCountInput
         inputMatchesCount={inputMatchesCount}
         handleInputMatchesCountChange={handleInputMatchesCountChange}
+        handleIncludeAllSeasonMatches={handleIncludeAllSeasonMatches}
         updateMatchesCount={updateMatchesCount}
         updateIncludeOtherSeasons={updateIncludeOtherSeasons}
+        inputChekBoxIncludeAllSeason={inputChekBoxIncludeAllSeason}
       />
       <Tabs value={tabIndex} onChange={handleTabChange} aria-label="stat-tabs">
         {statisticKeys.map((key, index) => (
