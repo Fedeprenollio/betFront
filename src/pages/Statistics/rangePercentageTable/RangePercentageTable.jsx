@@ -50,7 +50,6 @@ const fetchTeamStats = async (
 
 const descendingComparator = (a, b, orderBy) => {
   let valueA, valueB;
-  console.log("orderBy", orderBy,a)
   switch (orderBy) {
     case "total":
       valueA = a.team?.totalScored ? a.team.totalScored.toLowerCase() : "";
@@ -125,6 +124,184 @@ const stableSort = (array, comparator) => {
   return stabilizedThis.map((el) => el[0]);
 };
 
+// const renderTable = (
+//   stats,
+//   statisticKey,
+//   matchesType,
+//   order,
+//   orderBy,
+//   onRequestSort,
+//   loading,
+//   filters
+// ) => {
+//   const exampleTeamStats = stats[0]?.stats[statisticKey][matchesType];
+//   const overRangesKeys = exampleTeamStats
+//     ? Object.keys(exampleTeamStats.overRanges)
+//     : [];
+//   const underRangesKeys = exampleTeamStats
+//     ? Object.keys(exampleTeamStats.underRanges)
+//     : [];
+
+//   const rows = stats.map(({ team, stats }) => {
+//     const matchesTotalFinished =
+//       stats[statisticKey][matchesType]?.values?.length || 0;
+//     const totalScored = stats[statisticKey][matchesType]?.total || 0;
+//     const totalReceived = stats[statisticKey][matchesType]?.total || 0;
+//     const values = stats[statisticKey][matchesType]?.values || [];
+//     const medianValue = values.length > 0 ? median(values) : 0;
+
+//     const percentages = overRangesKeys.reduce((acc, key) => {
+//       acc[`over-${key}`] = stats[statisticKey][matchesType].overRanges[key];
+//       return acc;
+//     }, {});
+
+//     const underPercentages = underRangesKeys.reduce((acc, key) => {
+//       acc[`under-${key}`] = stats[statisticKey][matchesType].underRanges[key];
+//       return acc;
+//     }, {});
+
+//     return {
+//       team,
+//       matchesTotalFinished,
+//       totalScored,
+//       totalReceived,
+//       medianValue,
+//       ...percentages,
+//       ...underPercentages,
+//     };
+//   });
+
+//   // Filtrar las claves de underRangesKeys que tienen valores no null en las filas de datos
+//   const filteredUnderRangesKeys = underRangesKeys.filter((key) => {
+//     return rows.some((row) => row[`under-${key}`] !== null);
+//   });
+
+
+
+// //--------------
+//   // Filtrar las claves de underRangesKeys que tienen valores no null en las filas de datos
+
+//   // Filtrar las filas según los filtros aplicados
+//   let filteredRows = rows.filter((row) => {
+//     for (let filterKey in filters) {
+//       // eslint-disable-next-line no-prototype-builtins
+//       if (filters.hasOwnProperty(filterKey)) {
+//         const [type, key] = filterKey.split("-");
+//         const filterValue = parseFloat(filters[filterKey]);
+  
+//         if (isNaN(filterValue)) {
+//           return true; // No aplicar filtro si el valor del filtro no es numérico
+//         }
+  
+//         // Asegúrate de que row[type + "-" + key] no sea null o undefined antes de parsear a float
+//         const rowValue = row[type + "-" + key] !== null ? parseFloat(row[type + "-" + key]) : null;
+  
+//         if (isNaN(rowValue)) {
+//           return true; // No aplicar filtro si el valor de la fila no es numérico
+//         }
+  
+//         if (type === "over" && rowValue < filterValue) {
+//           return false;
+//         }
+//         if (type === "under" && rowValue > filterValue) {
+//           return false;
+//         }
+//       }
+//     }
+//     return true; // Mantener la fila si pasa todos los filtros
+//   });
+  
+//   // Ordenar las filas según el orden y el criterio de orden
+//   filteredRows = stableSort(filteredRows, getComparator(order, orderBy));
+
+
+//   return (
+//     <TableContainer component={Paper} sx={{ maxHeight: 440 }}>
+//       <Table stickyHeader size="small">
+//         <EnhancedTableHead
+//           order={order}
+//           orderBy={orderBy}
+//           onRequestSort={onRequestSort}
+//           matchesType={matchesType}
+//           overRangesKeys={overRangesKeys}
+//           underRangesKeys={underRangesKeys}
+//           rows={rows}
+//         />
+
+//         {!loading ? (
+//           <TableBody>
+//             {stableSort(rows, getComparator(order, orderBy)).map(
+//               (row, index) => (
+//                 <StyledTableRow key={index}>
+//                   <TableCell>{row.team.country}</TableCell>
+//                   <TableCell
+//                     style={{
+//                       width: "100px",
+//                       position: "sticky",
+//                       top: 0,
+//                       left: 0,
+//                       backgroundColor: "#fff",
+//                       zIndex: 2,
+//                     }}
+//                   >
+//                     {row.team.name}
+//                   </TableCell>
+//                   <TableCell>{row.matchesTotalFinished}</TableCell>
+//                   <TableCell>
+//                     {matchesType === "scored"
+//                       ? row.totalScored
+//                       : row.totalReceived}
+//                   </TableCell>
+//                   {matchesType === "scored" && (
+//                     <TableCell>
+//                       {row.matchesTotalFinished !== 0
+//                         ? row.totalScored / row.matchesTotalFinished
+//                         : 0}
+//                     </TableCell>
+//                   )}
+//                   {matchesType === "received" && (
+//                     <TableCell>
+//                       {row.matchesTotalFinished !== 0
+//                         ? row.totalReceived / row.matchesTotalFinished
+//                         : 0}
+//                     </TableCell>
+//                   )}
+//                   {matchesType === "total" && (
+//                     <TableCell>
+//                       {row.matchesTotalFinished !== 0
+//                         ? (row.totalScored + row.totalReceived) /
+//                           row.matchesTotalFinished
+//                         : 0}
+//                     </TableCell>
+//                   )}
+//                   <TableCell>{row.medianValue}</TableCell>
+//                   {overRangesKeys.map((rangeKey) => {
+//                     //   console.log("row[`over-${rangeKey}`]",row[`over-${rangeKey}`])
+//                     return (
+//                       <TableCell key={`over-${rangeKey}-${index}`}>
+//                         {row[`over-${rangeKey}`]?.percentage}
+//                       </TableCell>
+//                     );
+//                   })}
+//                   {filteredUnderRangesKeys.map((rangeKey) => (
+//                     <TableCell key={`under-${rangeKey}-${index}`}>
+//                       {row[`under-${rangeKey}`]?.percentage}
+//                     </TableCell>
+//                   ))}
+//                 </StyledTableRow>
+//               )
+//             )}
+//           </TableBody>
+//         ) : (
+//           <LoadingSpinner />
+//         )}
+//       </Table>
+//     </TableContainer>
+//   );
+// };
+
+//// prueba:
+
 const renderTable = (
   stats,
   statisticKey,
@@ -132,7 +309,9 @@ const renderTable = (
   order,
   orderBy,
   onRequestSort,
-  loading
+  loading,
+  filters,
+  handleFilterChange
 ) => {
   const exampleTeamStats = stats[0]?.stats[statisticKey][matchesType];
   const overRangesKeys = exampleTeamStats
@@ -176,6 +355,56 @@ const renderTable = (
     return rows.some((row) => row[`under-${key}`] !== null);
   });
 
+  console.log("filters", filters);
+
+ // Función para filtrar las filas basado en los filtros aplicados
+ const filterRows = (rows, filters) => {
+  return rows.filter(row => {
+    for (let filterKey in filters) {
+      if (filters.hasOwnProperty(filterKey)) {
+        const [type, range, limit] = filterKey.split("-");
+        const filterValue = parseFloat(filters[filterKey]);
+
+        if (isNaN(filterValue)) {
+          continue;
+        }
+
+        const rowKey = `${type}-${range}`;
+        const rowValue = row[rowKey]?.percentage;
+
+        if (rowValue === undefined || rowValue === null || isNaN(rowValue)) {
+          return false;
+        }
+
+        if (limit === "from" && type === "over" && rowValue < filterValue) {
+          return false;
+        }
+
+        if (limit === "to" && type === "over" && rowValue > filterValue) {
+          return false;
+        }
+
+        if (limit === "from" && type === "under" && rowValue < filterValue) {
+          return false;
+        }
+
+        if (limit === "to" && type === "under" && rowValue > filterValue) {
+          return false;
+        }
+      }
+    }
+    return true;
+  });
+};
+
+// Aplicar filtrado a las filas basado en los filtros actuales
+let filteredRows = filterRows(rows, filters);
+
+
+  // Ordenar las filas según el orden y el criterio de orden
+  filteredRows = stableSort(filteredRows, getComparator(order, orderBy));
+
+
   return (
     <TableContainer component={Paper} sx={{ maxHeight: 440 }}>
       <Table stickyHeader size="small">
@@ -187,71 +416,68 @@ const renderTable = (
           overRangesKeys={overRangesKeys}
           underRangesKeys={underRangesKeys}
           rows={rows}
+          onFilterChange={handleFilterChange}
+
         />
 
         {!loading ? (
           <TableBody>
-            {stableSort(rows, getComparator(order, orderBy)).map(
-              (row, index) => (
-                <StyledTableRow key={index}>
-                  <TableCell>{row.team.country}</TableCell>
-                  <TableCell
-                    style={{
-                      width: "100px",
-                      position: "sticky",
-                      top: 0,
-                      left: 0,
-                      backgroundColor: "#fff",
-                      zIndex: 2,
-                    }}
-                  >
-                    {row.team.name}
-                  </TableCell>
-                  <TableCell>{row.matchesTotalFinished}</TableCell>
+            {filteredRows.map((row, index) => (
+              <StyledTableRow key={index}>
+                <TableCell>{row.team.country}</TableCell>
+                <TableCell
+                  style={{
+                    width: "100px",
+                    position: "sticky",
+                    top: 0,
+                    left: 0,
+                    backgroundColor: "#fff",
+                    zIndex: 2,
+                  }}
+                >
+                  {row.team.name}
+                </TableCell>
+                <TableCell>{row.matchesTotalFinished}</TableCell>
+                <TableCell>
+                  {matchesType === "scored"
+                    ? row.totalScored
+                    : row.totalReceived}
+                </TableCell>
+                {matchesType === "scored" && (
                   <TableCell>
-                    {matchesType === "scored"
-                      ? row.totalScored
-                      : row.totalReceived}
+                    {row.matchesTotalFinished !== 0
+                      ? row.totalScored / row.matchesTotalFinished
+                      : 0}
                   </TableCell>
-                  {matchesType === "scored" && (
-                    <TableCell>
-                      {row.matchesTotalFinished !== 0
-                        ? row.totalScored / row.matchesTotalFinished
-                        : 0}
-                    </TableCell>
-                  )}
-                  {matchesType === "received" && (
-                    <TableCell>
-                      {row.matchesTotalFinished !== 0
-                        ? row.totalReceived / row.matchesTotalFinished
-                        : 0}
-                    </TableCell>
-                  )}
-                  {matchesType === "total" && (
-                    <TableCell>
-                      {row.matchesTotalFinished !== 0
-                        ? (row.totalScored + row.totalReceived) /
-                          row.matchesTotalFinished
-                        : 0}
-                    </TableCell>
-                  )}
-                  <TableCell>{row.medianValue}</TableCell>
-                  {overRangesKeys.map((rangeKey) => {
-                    //   console.log("row[`over-${rangeKey}`]",row[`over-${rangeKey}`])
-                    return (
-                      <TableCell key={`over-${rangeKey}-${index}`}>
-                        {row[`over-${rangeKey}`]?.percentage}
-                      </TableCell>
-                    );
-                  })}
-                  {filteredUnderRangesKeys.map((rangeKey) => (
-                    <TableCell key={`under-${rangeKey}-${index}`}>
-                      {row[`under-${rangeKey}`]?.percentage}
-                    </TableCell>
-                  ))}
-                </StyledTableRow>
-              )
-            )}
+                )}
+                {matchesType === "received" && (
+                  <TableCell>
+                    {row.matchesTotalFinished !== 0
+                      ? row.totalReceived / row.matchesTotalFinished
+                      : 0}
+                  </TableCell>
+                )}
+                {matchesType === "total" && (
+                  <TableCell>
+                    {row.matchesTotalFinished !== 0
+                      ? (row.totalScored + row.totalReceived) /
+                        row.matchesTotalFinished
+                      : 0}
+                  </TableCell>
+                )}
+                <TableCell>{row.medianValue}</TableCell>
+                {overRangesKeys.map((rangeKey) => (
+                  <TableCell key={`over-${rangeKey}-${index}`}>
+                    {row[`over-${rangeKey}`]?.percentage}
+                  </TableCell>
+                ))}
+                {filteredUnderRangesKeys.map((rangeKey) => (
+                  <TableCell key={`under-${rangeKey}-${index}`}>
+                    {row[`under-${rangeKey}`]?.percentage}
+                  </TableCell>
+                ))}
+              </StyledTableRow>
+            ))}
           </TableBody>
         ) : (
           <LoadingSpinner />
@@ -260,6 +486,8 @@ const renderTable = (
     </TableContainer>
   );
 };
+
+
 
 const TabPanel = ({ children, value, index }) => (
   <div role="tabpanel" hidden={value !== index}>
@@ -281,7 +509,7 @@ export const RangePercentageTable = () => {
   const [inputMatchesCount, setInputMatchesCount] = useState(0);
   const [includeAllSeasonMatches, setIncludeAllSeasonMatches] = useState(false)
   const [inputChekBoxIncludeAllSeason, setInputChekBoxIncludeAllSeason] = useState(false)
-
+  const [filters, setFilters] = useState({});
   useEffect(() => {
     const loadStats = async () => {
       try {
@@ -353,6 +581,19 @@ export const RangePercentageTable = () => {
     setIncludeAllSeasonMatches(inputChekBoxIncludeAllSeason);
     };
 
+
+
+
+    const handleFilterChange = (newFilter) => {
+      console.log("Nuevo filtro recibido", newFilter); // Añadir esta línea para depurar
+
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        ...newFilter,
+      }));
+      // Aquí puedes agregar lógica para filtrar las filas según los nuevos filtros
+    };
+  
   return (
     <div>
       <Typography variant="h4" gutterBottom>
@@ -371,6 +612,7 @@ export const RangePercentageTable = () => {
         updateMatchesCount={updateMatchesCount}
         updateIncludeOtherSeasons={updateIncludeOtherSeasons}
         inputChekBoxIncludeAllSeason={inputChekBoxIncludeAllSeason}
+        onFilterChange={handleFilterChange}
       />
       <Tabs value={tabIndex} onChange={handleTabChange} aria-label="stat-tabs">
         {statisticKeys.map((key, index) => (
@@ -390,7 +632,9 @@ export const RangePercentageTable = () => {
             order,
             orderBy,
             handleRequestSort,
-            loading
+            loading,
+            filters,
+            handleFilterChange
           )}
           <Typography variant="h6" gutterBottom>
             {key.charAt(0).toUpperCase() + key.slice(1)} - Recibido
@@ -402,7 +646,9 @@ export const RangePercentageTable = () => {
             order,
             orderBy,
             handleRequestSort,
-            loading
+            loading,
+            filters,
+            handleFilterChange
           )}
           <Typography variant="h6" gutterBottom>
             {key.charAt(0).toUpperCase() + key.slice(1)} - Totales
@@ -414,7 +660,9 @@ export const RangePercentageTable = () => {
             order,
             orderBy,
             handleRequestSort,
-            loading
+            loading,
+            filters,
+            handleFilterChange
           )}
         </TabPanel>
       ))}
