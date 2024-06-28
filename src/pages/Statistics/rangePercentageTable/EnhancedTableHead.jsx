@@ -32,7 +32,7 @@ export const EnhancedTableHead = (props) => {
   return (
     <TableHead>
       <TableRow>
-        <TableCell>
+        <TableCell >
           <TableSortLabel
             active={orderBy === 'team.country'}
             direction={orderBy === 'team.country' ? order : 'asc'}
@@ -46,7 +46,7 @@ export const EnhancedTableHead = (props) => {
             ) : null}
           </TableSortLabel>
         </TableCell>
-        <TableCell>
+        <TableCell style={{ zIndex: 2,}}>
           <TableSortLabel
             active={orderBy === 'team.name'}
             direction={orderBy === 'team.name' ? order : 'asc'}

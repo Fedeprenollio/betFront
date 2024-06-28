@@ -39,14 +39,11 @@ const fetchTeamStats = async (
   matchesCount,
   includeAllSeasonMatches
 ) => {
-
-    const response = await axios.get(
-      `${BACKEND_URL_BASE}/match/stats?season=${seasonId}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}`
-    );
-    return response.data;
-  
+  const response = await axios.get(
+    `${BACKEND_URL_BASE}/match/stats?season=${seasonId}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}`
+  );
+  return response.data;
 };
-
 
 const descendingComparator = (a, b, orderBy) => {
   let valueA, valueB;
@@ -176,8 +173,6 @@ const stableSort = (array, comparator) => {
 //     return rows.some((row) => row[`under-${key}`] !== null);
 //   });
 
-
-
 // //--------------
 //   // Filtrar las claves de underRangesKeys que tienen valores no null en las filas de datos
 
@@ -188,18 +183,18 @@ const stableSort = (array, comparator) => {
 //       if (filters.hasOwnProperty(filterKey)) {
 //         const [type, key] = filterKey.split("-");
 //         const filterValue = parseFloat(filters[filterKey]);
-  
+
 //         if (isNaN(filterValue)) {
 //           return true; // No aplicar filtro si el valor del filtro no es numérico
 //         }
-  
+
 //         // Asegúrate de que row[type + "-" + key] no sea null o undefined antes de parsear a float
 //         const rowValue = row[type + "-" + key] !== null ? parseFloat(row[type + "-" + key]) : null;
-  
+
 //         if (isNaN(rowValue)) {
 //           return true; // No aplicar filtro si el valor de la fila no es numérico
 //         }
-  
+
 //         if (type === "over" && rowValue < filterValue) {
 //           return false;
 //         }
@@ -210,10 +205,9 @@ const stableSort = (array, comparator) => {
 //     }
 //     return true; // Mantener la fila si pasa todos los filtros
 //   });
-  
+
 //   // Ordenar las filas según el orden y el criterio de orden
 //   filteredRows = stableSort(filteredRows, getComparator(order, orderBy));
-
 
 //   return (
 //     <TableContainer component={Paper} sx={{ maxHeight: 440 }}>
@@ -357,56 +351,58 @@ const renderTable = (
 
   console.log("filters", filters);
 
- // Función para filtrar las filas basado en los filtros aplicados
- const filterRows = (rows, filters) => {
-  return rows.filter(row => {
-    for (let filterKey in filters) {
-      if (filters.hasOwnProperty(filterKey)) {
-        const [type, range, limit] = filterKey.split("-");
-        const filterValue = parseFloat(filters[filterKey]);
+  // Función para filtrar las filas basado en los filtros aplicados
+  const filterRows = (rows, filters) => {
+    return rows.filter((row) => {
+      for (let filterKey in filters) {
+        if (filters.hasOwnProperty(filterKey)) {
+          const [type, range, limit] = filterKey.split("-");
+          const filterValue = parseFloat(filters[filterKey]);
 
-        if (isNaN(filterValue)) {
-          continue;
-        }
+          if (isNaN(filterValue)) {
+            continue;
+          }
 
-        const rowKey = `${type}-${range}`;
-        const rowValue = row[rowKey]?.percentage;
+          const rowKey = `${type}-${range}`;
+          const rowValue = row[rowKey]?.percentage;
 
-        if (rowValue === undefined || rowValue === null || isNaN(rowValue)) {
-          return false;
-        }
+          if (rowValue === undefined || rowValue === null || isNaN(rowValue)) {
+            return false;
+          }
 
-        if (limit === "from" && type === "over" && rowValue < filterValue) {
-          return false;
-        }
+          if (limit === "from" && type === "over" && rowValue < filterValue) {
+            return false;
+          }
 
-        if (limit === "to" && type === "over" && rowValue > filterValue) {
-          return false;
-        }
+          if (limit === "to" && type === "over" && rowValue > filterValue) {
+            return false;
+          }
 
-        if (limit === "from" && type === "under" && rowValue < filterValue) {
-          return false;
-        }
+          if (limit === "from" && type === "under" && rowValue < filterValue) {
+            return false;
+          }
 
-        if (limit === "to" && type === "under" && rowValue > filterValue) {
-          return false;
+          if (limit === "to" && type === "under" && rowValue > filterValue) {
+            return false;
+          }
         }
       }
-    }
-    return true;
-  });
-};
+      return true;
+    });
+  };
 
-// Aplicar filtrado a las filas basado en los filtros actuales
-let filteredRows = filterRows(rows, filters);
-
+  // Aplicar filtrado a las filas basado en los filtros actuales
+  let filteredRows = filterRows(rows, filters);
 
   // Ordenar las filas según el orden y el criterio de orden
   filteredRows = stableSort(filteredRows, getComparator(order, orderBy));
 
-
   return (
-    <TableContainer component={Paper} sx={{ maxHeight: 440 }}>
+    <TableContainer
+      component={Paper}
+      sx={{ maxHeight: 440 }}
+      style={{ overflowX: "auto" }}
+    >
       <Table stickyHeader size="small">
         <EnhancedTableHead
           order={order}
@@ -417,7 +413,6 @@ let filteredRows = filterRows(rows, filters);
           underRangesKeys={underRangesKeys}
           rows={rows}
           onFilterChange={handleFilterChange}
-
         />
 
         {!loading ? (
@@ -432,7 +427,7 @@ let filteredRows = filterRows(rows, filters);
                     top: 0,
                     left: 0,
                     backgroundColor: "#fff",
-                    zIndex: 2,
+                    zIndex: 1,
                   }}
                 >
                   {row.team.name}
@@ -487,8 +482,6 @@ let filteredRows = filterRows(rows, filters);
   );
 };
 
-
-
 const TabPanel = ({ children, value, index }) => (
   <div role="tabpanel" hidden={value !== index}>
     {value === index && <Box p={3}>{children}</Box>}
@@ -507,8 +500,9 @@ export const RangePercentageTable = () => {
   const [orderBy, setOrderBy] = useState("team.country");
   const [matchesCount, setMatchesCount] = useState(0);
   const [inputMatchesCount, setInputMatchesCount] = useState(0);
-  const [includeAllSeasonMatches, setIncludeAllSeasonMatches] = useState(false)
-  const [inputChekBoxIncludeAllSeason, setInputChekBoxIncludeAllSeason] = useState(false)
+  const [includeAllSeasonMatches, setIncludeAllSeasonMatches] = useState(false);
+  const [inputChekBoxIncludeAllSeason, setInputChekBoxIncludeAllSeason] =
+    useState(false);
   const [filters, setFilters] = useState({});
   useEffect(() => {
     const loadStats = async () => {
@@ -530,7 +524,7 @@ export const RangePercentageTable = () => {
     };
 
     loadStats();
-  }, [seasonId, homeOnly, awayOnly, matchesCount,includeAllSeasonMatches]);
+  }, [seasonId, homeOnly, awayOnly, matchesCount, includeAllSeasonMatches]);
   console.log("stats", stats);
 
   //   if (loading) return <Typography>Loading...</Typography>;
@@ -561,39 +555,35 @@ export const RangePercentageTable = () => {
     "corners",
     "shots",
     "shotsOnTarget",
-    "possession"
+    "possession",
   ];
   const handleInputMatchesCountChange = (event) => {
     setInputMatchesCount(event.target?.value);
   };
 
   const updateMatchesCount = () => {
-      setMatchesCount(inputMatchesCount);
+    setMatchesCount(inputMatchesCount);
   };
 
- 
   const handleIncludeAllSeasonMatches = (event) => {
-    console.log("event",event)
+    console.log("event", event);
     setInputChekBoxIncludeAllSeason(event);
   };
-  
+
   const updateIncludeOtherSeasons = () => {
     setIncludeAllSeasonMatches(inputChekBoxIncludeAllSeason);
-    };
+  };
 
+  const handleFilterChange = (newFilter) => {
+    console.log("Nuevo filtro recibido", newFilter); // Añadir esta línea para depurar
 
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      ...newFilter,
+    }));
+    // Aquí puedes agregar lógica para filtrar las filas según los nuevos filtros
+  };
 
-
-    const handleFilterChange = (newFilter) => {
-      console.log("Nuevo filtro recibido", newFilter); // Añadir esta línea para depurar
-
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        ...newFilter,
-      }));
-      // Aquí puedes agregar lógica para filtrar las filas según los nuevos filtros
-    };
-  
   return (
     <div>
       <Typography variant="h4" gutterBottom>
