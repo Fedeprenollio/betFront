@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { Tabs, Tab, Box } from "@mui/material";
-import { useNavigate, useLocation, Outlet } from "react-router-dom";
+import { Tabs, Tab, Box, Typography } from "@mui/material";
+import { useNavigate, useLocation, Outlet, useParams } from "react-router-dom";
+import { useBoundStore } from "../../stores";
 
 const StatisticsPageTab = () => {
   const navigate = useNavigate();
+  const {seasonId} = useParams()
   const location = useLocation();
+  const { matchesByRound, setMatchesByRound, getSeasonById, seasonById } = useBoundStore((state) => state)
   const [activeTab, setActiveTab] = useState(0);
+  
+  useEffect(() => {
+    getSeasonById(seasonId.toString())
+    
+    
+    }, [seasonId,getSeasonById])
+    
+    console.log("seasonId",seasonById)
 
   // Map paths to tab indexes
   const pathToTabIndex = {
@@ -35,6 +46,8 @@ const StatisticsPageTab = () => {
 
   return (
     <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      <Typography variant="h4"> {`Central de estadísticas: ${seasonById?.season?.league?.name}, ${seasonById?.season?.year} `} </Typography>
+
       <Tabs
         value={activeTab}
         onChange={handleTabChange}

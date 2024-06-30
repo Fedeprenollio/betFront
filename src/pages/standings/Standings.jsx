@@ -14,6 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
+import { StyledTableRow } from "../Statistics/rangePercentageTable/RangePercentageTable";
 
 export const Standings = () => {
   const { seasonId } = useParams();
@@ -120,7 +121,7 @@ export const Standings = () => {
                   .map((t, index) => {
                     const stats = getFilteredStats(t);
                     return (
-                      <TableRow key={t.team._id}>
+                      <StyledTableRow key={t.team._id}>
                         <TableCell>{index + 1}</TableCell>
                         <TableCell>
                           <Link
@@ -138,7 +139,7 @@ export const Standings = () => {
                         <TableCell>{stats.goalsFor}</TableCell>
                         <TableCell>{stats.goalsAgainst}</TableCell>
                         <TableCell>{stats.goalDifference}</TableCell>
-                      </TableRow>
+                      </StyledTableRow>
                     );
                   })}
               </TableBody>
@@ -168,7 +169,7 @@ export const Standings = () => {
             {sortedTable?.map((t, index) => {
               const stats = getFilteredStats(t);
               return (
-                <TableRow key={t.team._id}>
+                <StyledTableRow key={t.team._id}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>
                     <Link
@@ -186,7 +187,7 @@ export const Standings = () => {
                   <TableCell>{stats.goalsFor}</TableCell>
                   <TableCell>{stats.goalsAgainst}</TableCell>
                   <TableCell>{stats.goalDifference}</TableCell>
-                </TableRow>
+                </StyledTableRow>
               );
             })}
           </TableBody>
