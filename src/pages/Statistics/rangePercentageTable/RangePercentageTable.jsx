@@ -31,7 +31,8 @@ export const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
-
+// 664acc7b81ee69cfdd0b068d
+// 664acd3b81ee69cfdd0b06ca
 const fetchTeamStats = async (
   seasonId,
   homeOnly,
@@ -244,7 +245,7 @@ const renderTable = (
           <TableBody>
             {filteredRows.map((row, index) => (
               <StyledTableRow key={index}>
-                <TableCell>{row.team.country}</TableCell>
+                <TableCell>{row.team.league}</TableCell>
                 <TableCell
                   style={{
                     width: "100px",
@@ -313,7 +314,7 @@ const TabPanel = ({ children, value, index }) => (
   </div>
 );
 
-export const RangePercentageTable = () => {
+export const RangePercentageTable = ({listCurrentSeason}) => {
   const { seasonId } = useParams();
   const [stats, setStats] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -326,30 +327,53 @@ export const RangePercentageTable = () => {
   const [matchesCount, setMatchesCount] = useState(0);
   const [inputMatchesCount, setInputMatchesCount] = useState(0);
   const [includeAllSeasonMatches, setIncludeAllSeasonMatches] = useState(false);
-  const [inputChekBoxIncludeAllSeason, setInputChekBoxIncludeAllSeason] =
-    useState(false);
+  const [inputChekBoxIncludeAllSeason, setInputChekBoxIncludeAllSeason] = useState(false);
   const [filters, setFilters] = useState({});
+  console.log("listCurrentSeason-----", listCurrentSeason)
   useEffect(() => {
-    const loadStats = async () => {
-      try {
-        setLoading(true);
-        const data = await fetchTeamStats(
-          seasonId,
-          homeOnly,
-          awayOnly,
-          matchesCount,
-          includeAllSeasonMatches
-        );
-        setStats(data);
-        setLoading(false);
-      } catch (err) {
-        setError(err);
-        setLoading(false);
-      }
-    };
-
-    loadStats();
-  }, [seasonId, homeOnly, awayOnly, matchesCount, includeAllSeasonMatches]);
+    if (seasonId && !listCurrentSeason) {
+      const loadStats = async () => {
+        try {
+          setLoading(true);
+          const data = await fetchTeamStats(
+            seasonId,
+            homeOnly,
+            awayOnly,
+            matchesCount,
+            includeAllSeasonMatches
+          );
+          setStats(data);
+          setLoading(false);
+        } catch (err) {
+          setError(err);
+          setLoading(false);
+        }
+      };
+    loadStats()
+    }
+  
+    if (!seasonId && listCurrentSeason) {
+      const loadStats = async () => {
+        try {
+          setLoading(true);
+          const data = await fetchTeamStats(
+             listCurrentSeason,
+            homeOnly,
+            awayOnly,
+            matchesCount,
+            includeAllSeasonMatches
+          );
+          setStats(data);
+          setLoading(false);
+        } catch (err) {
+          setError(err);
+          setLoading(false);
+        }
+      };
+    loadStats()
+    }
+  }, [seasonId, homeOnly, awayOnly, matchesCount, includeAllSeasonMatches, listCurrentSeason]);
+  
   console.log("stats", stats);
 
   //   if (loading) return <Typography>Loading...</Typography>;
@@ -412,7 +436,7 @@ export const RangePercentageTable = () => {
   return (
     <div>
       <Typography variant="h4" gutterBottom>
-        Estadísticas de la Temporada
+      {listCurrentSeason ? "Estadisticas generales de todos los equipos en temporadas actuales activas" : "Estadísticas de la Temporada"}  
       </Typography>
       <CheckboxLocalVisitor
         homeOnly={homeOnly}

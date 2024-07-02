@@ -21,11 +21,12 @@ import { Standings } from "../pages/standings/Standings";
 import StatisticsPageTab from "../pages/standings/StatisticsPage";
 import { LeaguePage } from "../pages/League/LeaguePage";
 import { RangePercentageTable } from "../pages/Statistics/rangePercentageTable/RangePercentageTable";
+import { HomePage } from "../pages/home/HomePage";
 
 const RoutesComponent = () => {
   return (
     <Routes>
-      <Route path="/" element={<App />} />
+      <Route path="/" element={<HomePage />} />
 
       <Route path="/teams">
         <Route index element={<Teams />} />

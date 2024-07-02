@@ -1,3 +1,4 @@
+import axios from "axios";
 import { BACKEND_URL_BASE } from "./url_base";
 
 // const URL_API = "http://localhost:1234/season"
@@ -10,6 +11,8 @@ const createSeasonStore = (set) => ({
   loading: false,
   error: null,
   matchesByRound:[],
+  allCurrentSeasons:[],
+
   // Función para cargar las temporadas desde el servidor
   fetchSeasons: async () => {
     set({ loading: true, error: null });
@@ -137,6 +140,19 @@ const createSeasonStore = (set) => ({
       return error
     }
   },
+  getAllCurrentSeasons: async ()=>{
+    try {
+      const response = await axios.get(`${URL_API}/currentSeasons`);
+      // if (!response.ok) {
+        //   throw new Error("Failed to fetch seasons");
+        // }
+        const allCurrentSeasons = await response.data;
+        set({ allCurrentSeasons, loading: false });
+        } catch (error) {
+      console.log("HOLITA",error)
+      set({ error: error.message, loading: false });
+    }
+  }
 });
 
 export default createSeasonStore;
