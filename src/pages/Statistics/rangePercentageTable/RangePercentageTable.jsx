@@ -22,6 +22,7 @@ import { EnhancedTableHead } from "./EnhancedTableHead";
 import { CheckboxLocalVisitor } from "./CheckboxLocalVisitor";
 import { MatchesCountInput } from "./MatchesCountInput";
 import LoadingSpinner from "../../../componts/loading/LoadingSpinner";
+import { SelectListCurrentSeasons } from "./SelectListCurrentSeasons";
 
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
@@ -354,59 +355,108 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
   const [filters, setFilters] = useState({});
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  console.log("listCurrentSeason-----", listCurrentSeason);
+
+  const [selectedSeasons, setSelectedSeasons] = useState([listCurrentSeason]);
+
   useEffect(() => {
-    if (seasonId && !listCurrentSeason) {
-      const loadStats = async () => {
-        try {
-          setLoading(true);
-          const data = await fetchTeamStats(
+    // Parse listCurrentSeason to an array of seasons if it's not empty
+    if (listCurrentSeason) {
+      const seasonsArray = listCurrentSeason.split(',').map(season => season.trim());
+      setSelectedSeasons(seasonsArray);
+    }
+  }, [listCurrentSeason]);
+
+  console.log("listCurrentSeason-----", listCurrentSeason);
+  // useEffect(() => {
+  //   if (seasonId && !selectedSeasons) {
+  //     const loadStats = async () => {
+  //       try {
+  //         setLoading(true);
+  //         const data = await fetchTeamStats(
+  //           seasonId,
+  //           homeOnly,
+  //           awayOnly,
+  //           matchesCount,
+  //           includeAllSeasonMatches
+  //         );
+  //         setStats(data);
+  //         setLoading(false);
+  //       } catch (err) {
+  //         setError(err);
+  //         setLoading(false);
+  //       }
+  //     };
+  //     loadStats();
+  //   }
+
+  //   if (!seasonId && selectedSeasons) {
+  //     const loadStats = async () => {
+  //       try {
+  //         setLoading(true);
+  //         const data = await fetchTeamStats(
+  //           selectedSeasons,
+  //           homeOnly,
+  //           awayOnly,
+  //           matchesCount,
+  //           includeAllSeasonMatches
+  //         );
+  //         setStats(data);
+  //         setLoading(false);
+  //       } catch (err) {
+  //         setError(err);
+  //         setLoading(false);
+  //       }
+  //     };
+  //     loadStats();
+  //   }
+  // }, [
+  //   seasonId,
+  //   homeOnly,
+  //   awayOnly,
+  //   matchesCount,
+  //   includeAllSeasonMatches,
+  //   selectedSeasons,
+  // ]);
+  useEffect(() => {
+    const loadStats = async () => {
+      try {
+        setLoading(true);
+        let data;
+        if (seasonId) {
+          data = await fetchTeamStats(
             seasonId,
             homeOnly,
             awayOnly,
             matchesCount,
             includeAllSeasonMatches
           );
-          setStats(data);
-          setLoading(false);
-        } catch (err) {
-          setError(err);
-          setLoading(false);
-        }
-      };
-      loadStats();
-    }
-
-    if (!seasonId && listCurrentSeason) {
-      const loadStats = async () => {
-        try {
-          setLoading(true);
-          const data = await fetchTeamStats(
-            listCurrentSeason,
+        } else {
+          const selectedSeasonsString = selectedSeasons.join(',')
+          data = await fetchTeamStats(
+            selectedSeasonsString,
             homeOnly,
             awayOnly,
             matchesCount,
             includeAllSeasonMatches
           );
-          setStats(data);
-          setLoading(false);
-        } catch (err) {
-          setError(err);
-          setLoading(false);
         }
-      };
-      loadStats();
-    }
+        setStats(data);
+        setLoading(false);
+      } catch (err) {
+        setError(err);
+        setLoading(false);
+      }
+    };
+    loadStats();
   }, [
     seasonId,
     homeOnly,
     awayOnly,
     matchesCount,
     includeAllSeasonMatches,
-    listCurrentSeason,
+    selectedSeasons,
   ]);
 
-  console.log("stats", stats);
 
   //   if (loading) return <Typography>Loading...</Typography>;
   if (error) return <Typography>Error: {error.message}</Typography>;
@@ -475,6 +525,11 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
     setPage(0);
   };
 
+  const handleSeasonChange = (seasonId, checked) => {
+    setSelectedSeasons((prevSelectedSeasons) =>
+        checked ? [...prevSelectedSeasons, seasonId] : prevSelectedSeasons.filter((id) => id !== seasonId)
+    );
+};
 
   return (
     <>
@@ -533,6 +588,10 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
         ))}
       </Tabs>
 
+        { listCurrentSeason &&   <SelectListCurrentSeasons
+                    selectedSeasons={selectedSeasons}
+                    onSeasonChange={handleSeasonChange}
+                /> } 
       {statisticKeys.map((key, index) => (
         <TabPanel value={tabIndex} index={index} key={key}  >
           <Box

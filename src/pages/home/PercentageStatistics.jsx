@@ -10,7 +10,6 @@ export const PercentageStatistics = () => {
   useEffect(() => {
     getAllCurrentSeasons();
   }, [getAllCurrentSeasons]);
-  console.log("allCurrentSeasons", allCurrentSeasons);
   useEffect(() => {
     const list = allCurrentSeasons.map((season) => season._id);
     setListCurrentSeason(list.toString());
