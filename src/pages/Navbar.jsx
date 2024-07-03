@@ -20,17 +20,12 @@ import TemporaryDrawer from "./drawer/TemporaryDrawer";
 // const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const Navbar = () => {
-const  navigate = useNavigate()
+  const navigate = useNavigate();
   const [anchorElPartidos, setAnchorElPartidos] = useState(null);
   const [anchorElEquipos, setAnchorElEquipos] = useState(null);
   const [anchorLeagues, setAnchorLeagues] = useState(null);
-  const {  user, isAuthenticated,logout } = useBoundStore(
-    (state) => state
-  );
-console.log("USUARIO LOGEADO?", user)
-
-
-
+  const { user, isAuthenticated, logout } = useBoundStore((state) => state);
+  console.log("USUARIO LOGEADO?", user);
 
   const handleMenuPartidos = (event) => {
     setAnchorElPartidos(event.currentTarget);
@@ -60,9 +55,9 @@ console.log("USUARIO LOGEADO?", user)
     setAnchorElUser(null);
   };
 
-  const handleLogout =async () => {
+  const handleLogout = async () => {
     // deleteCookie("jwt")
-    await logout()
+    await logout();
     navigate("/user/login");
   };
 
@@ -72,18 +67,16 @@ console.log("USUARIO LOGEADO?", user)
     navigate("/user/login");
   };
 
-  
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
-     
         <Toolbar disableGutters>
-          { isAuthenticated &&  <h4>Hola {user?.user}</h4>}  
+          {isAuthenticated && <h4>Hola {user?.user}</h4>}
           <IconButton
             component={Link}
             to="/"
             aria-label="home"
-            sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
+            sx={{ display: {  md: "flex" }, mr: 1 }}
           >
             <HomeIcon />
           </IconButton>
@@ -104,9 +97,8 @@ console.log("USUARIO LOGEADO?", user)
           >
             LOGO
           </Typography>
-          <TemporaryDrawer/>
+          <TemporaryDrawer />
           <Box sx={{ flexGrow: 1 }}>
-           
             <Button
               id="partidos-button"
               aria-controls="partidos-menu"
@@ -135,7 +127,7 @@ console.log("USUARIO LOGEADO?", user)
                   Administrar Partidos
                 </MenuItem>
               )}
-               {/* {isAuthenticated && (
+              {/* {isAuthenticated && (
                 <MenuItem
                   onClick={handleClose}
                   component={Link}
@@ -210,7 +202,11 @@ console.log("USUARIO LOGEADO?", user)
                 Ver ligas
               </MenuItem>
               {isAuthenticated && (
-                <MenuItem onClick={handleClose} component={Link} to="/league/admin">
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
+                  to="/league/admin"
+                >
                   Administrar ligas
                 </MenuItem>
               )}
@@ -248,10 +244,9 @@ console.log("USUARIO LOGEADO?", user)
                 </MenuItem>
               )}
 
-              {isAuthenticated && 
-               <MenuItem onClick={handleLogout}>Logout</MenuItem>
-              
-              }
+              {isAuthenticated && (
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              )}
 
               {/* <MenuItem
                 onClick={handleClose}
