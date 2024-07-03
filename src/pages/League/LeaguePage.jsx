@@ -29,9 +29,7 @@ export const LeaguePage = () => {
   };
   return (
     <>
-      <div>LeaguePage</div>
-
-      <div>
+        
         <Tabs
           value={activeTab}
           onChange={handleTabChange}
@@ -50,7 +48,7 @@ export const LeaguePage = () => {
         {activeTab === 1 && <FormSeason />}
         {activeTab === 2 && <FormAdminSeasonWithTeams />}
         {activeTab === 3 && <CreateZone />}
-      </div>
+      
     </>
   );
 };

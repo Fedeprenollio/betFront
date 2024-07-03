@@ -28,7 +28,7 @@ export const StatisticsPage = () => {
 
   return (
     <>
-      <div>LeaguePage</div>
+     
       <FilterStatistics
         idMatch={idMatch}
         idHomeTeam={idHomeTeam}
@@ -37,7 +37,7 @@ export const StatisticsPage = () => {
         statsLessThan={statsLessThan}
         singleTeam={singleTeam}
       />
-      <div>
+     
         <Tabs
           value={activeTab}
           onChange={handleTabChange}
@@ -74,7 +74,7 @@ export const StatisticsPage = () => {
           />
         )}
         {activeTab === 2 && <h2>OTRA COSA POR MOSTRAR?</h2>}
-      </div>
+      
     </>
   );
 };

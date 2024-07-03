@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Select, MenuItem, InputLabel } from '@mui/material';
 import { useBoundStore } from '../stores';
 
@@ -39,10 +39,9 @@ export const FilterStatsSeasonAndPosition = ({ setPosition, position, idHomeTeam
     setCurrentSeason(event.target.value)
   };
 
-  console.log("selectedSeason", selectedSeason);
 
   return (
-    <div>
+    <>
       <FormControl component="fieldset">
         <FormLabel component="legend">Filta por puesto del rival</FormLabel>
         <RadioGroup
@@ -96,6 +95,6 @@ export const FilterStatsSeasonAndPosition = ({ setPosition, position, idHomeTeam
           </Select>
         </FormControl>
       )}
-    </div>
+    </>
   );
 };

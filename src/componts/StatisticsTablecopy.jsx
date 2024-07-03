@@ -543,7 +543,7 @@ export default function StatisticsTablecopy({
               <TableCell />
               {idAwayTeam && (
                 <>
-                  <TableCell align="center">Total(Rec) VIS</TableCell>
+                  <TableCell align="center">Total(Rec)</TableCell>
                   <TableCell align="center">Prom(Rec)</TableCell>
                   {isAdvanced && (
                     <>

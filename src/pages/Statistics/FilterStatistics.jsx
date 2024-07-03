@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
-import { Container } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import { useBoundStore } from "../../stores";
 import { RadioButtonStatsLessThan } from "../../componts/RadioButtonStatsLessThan";
 import { RadioButtonHomeAway } from "../../componts/RadioButtonHomeAway";
@@ -13,14 +13,15 @@ export const FilterStatistics = ({
   idAwayTeam,
   setStatsLessThan,
   statsLessThan,
-  singleTeam
+  singleTeam,
 }) => {
   const { getMatchDetail } = useBoundStore((state) => state);
   const [currentSeason, setCurrentSeason] = useState("");
   const [position, setPosition] = useState(false);
   const [homeMateshAwayTeam, setHomeMathesAwayTeam] = useState(true);
   const [visitingMatchesAwayTeam, setVisitingMatchesAwayTeam] = useState(true);
-  const [visitingmathgesLocalTeam, setVisitingmathgesLocalTeam] = useState(true);
+  const [visitingmathgesLocalTeam, setVisitingmathgesLocalTeam] =
+    useState(true);
   const [homeMatchesLocalTeam, setHomeMatchesLocalTeam] = useState(true);
   const [numberOfMatches, setNumberOfMatches] = useState(10); // default value
 
@@ -40,7 +41,7 @@ export const FilterStatistics = ({
     setAwayStatShotsOnTarget,
     setAwayStatPossession,
     setAwayStatFouls,
-    setAwayStatOffsides
+    setAwayStatOffsides,
   } = useBoundStore((state) => state);
 
   useEffect(() => {
@@ -75,7 +76,7 @@ export const FilterStatistics = ({
         homeMatchesLocalTeam,
         numberOfMatches,
         currentSeason,
-        position
+        position,
       });
     }
   }, [
@@ -86,7 +87,7 @@ export const FilterStatistics = ({
     setHomeStatOffsides,
     numberOfMatches,
     currentSeason,
-    position
+    position,
   ]);
 
   useEffect(() => {
@@ -98,7 +99,7 @@ export const FilterStatistics = ({
         visitingMatchesAwayTeam,
         numberOfMatches,
         currentSeason,
-        position
+        position,
       });
     }
   }, [
@@ -109,7 +110,7 @@ export const FilterStatistics = ({
     setAwayStatOffsides,
     numberOfMatches,
     currentSeason,
-    position
+    position,
   ]);
 
   useEffect(() => {
@@ -121,7 +122,7 @@ export const FilterStatistics = ({
         homeMatchesLocalTeam,
         numberOfMatches,
         currentSeason,
-        position
+        position,
       });
     }
   }, [
@@ -132,7 +133,7 @@ export const FilterStatistics = ({
     setHomeStatShotsOnTarget,
     numberOfMatches,
     currentSeason,
-    position
+    position,
   ]);
 
   useEffect(() => {
@@ -144,7 +145,7 @@ export const FilterStatistics = ({
         visitingMatchesAwayTeam,
         numberOfMatches,
         currentSeason,
-        position
+        position,
       });
     }
   }, [
@@ -155,7 +156,7 @@ export const FilterStatistics = ({
     setAwayStatShotsOnTarget,
     numberOfMatches,
     currentSeason,
-    position
+    position,
   ]);
 
   useEffect(() => {
@@ -167,7 +168,7 @@ export const FilterStatistics = ({
         homeMatchesLocalTeam,
         numberOfMatches,
         currentSeason,
-        position
+        position,
       });
     }
   }, [
@@ -178,7 +179,7 @@ export const FilterStatistics = ({
     setHomeStatPossession,
     numberOfMatches,
     currentSeason,
-    position
+    position,
   ]);
 
   useEffect(() => {
@@ -190,7 +191,7 @@ export const FilterStatistics = ({
         visitingMatchesAwayTeam,
         numberOfMatches,
         currentSeason,
-        position
+        position,
       });
     }
   }, [
@@ -201,7 +202,7 @@ export const FilterStatistics = ({
     setAwayStatPossession,
     numberOfMatches,
     currentSeason,
-    position
+    position,
   ]);
 
   useEffect(() => {
@@ -213,7 +214,7 @@ export const FilterStatistics = ({
         homeMatchesLocalTeam,
         numberOfMatches,
         currentSeason,
-        position
+        position,
       });
     }
   }, [
@@ -224,7 +225,7 @@ export const FilterStatistics = ({
     setHomeStatFouls,
     numberOfMatches,
     currentSeason,
-    position
+    position,
   ]);
 
   useEffect(() => {
@@ -236,7 +237,7 @@ export const FilterStatistics = ({
         visitingMatchesAwayTeam,
         numberOfMatches,
         currentSeason,
-        position
+        position,
       });
     }
   }, [
@@ -247,7 +248,7 @@ export const FilterStatistics = ({
     setAwayStatFouls,
     numberOfMatches,
     currentSeason,
-    position
+    position,
   ]);
 
   useEffect(() => {
@@ -259,7 +260,7 @@ export const FilterStatistics = ({
         homeMatchesLocalTeam,
         numberOfMatches,
         currentSeason,
-        position
+        position,
       });
     }
   }, [
@@ -270,7 +271,7 @@ export const FilterStatistics = ({
     setHomeStatYellowCard,
     numberOfMatches,
     currentSeason,
-    position
+    position,
   ]);
 
   useEffect(() => {
@@ -282,7 +283,7 @@ export const FilterStatistics = ({
         visitingMatchesAwayTeam,
         numberOfMatches,
         currentSeason,
-        position
+        position,
       });
     }
   }, [
@@ -293,7 +294,7 @@ export const FilterStatistics = ({
     setAwayStatYellowCard,
     numberOfMatches,
     currentSeason,
-    position
+    position,
   ]);
 
   useEffect(() => {
@@ -305,7 +306,7 @@ export const FilterStatistics = ({
         homeMatchesLocalTeam,
         numberOfMatches,
         currentSeason,
-        position
+        position,
       });
     }
   }, [
@@ -316,7 +317,7 @@ export const FilterStatistics = ({
     setHomeStatCorners,
     numberOfMatches,
     currentSeason,
-    position
+    position,
   ]);
 
   useEffect(() => {
@@ -328,7 +329,7 @@ export const FilterStatistics = ({
         visitingMatchesAwayTeam,
         numberOfMatches,
         currentSeason,
-        position
+        position,
       });
     }
   }, [
@@ -339,7 +340,7 @@ export const FilterStatistics = ({
     setAwayStatCorners,
     numberOfMatches,
     currentSeason,
-    position
+    position,
   ]);
 
   useEffect(() => {
@@ -351,7 +352,7 @@ export const FilterStatistics = ({
         homeMatchesLocalTeam,
         numberOfMatches,
         currentSeason,
-        position
+        position,
       });
     }
   }, [
@@ -362,7 +363,7 @@ export const FilterStatistics = ({
     setHomeStatGoals,
     numberOfMatches,
     currentSeason,
-    position
+    position,
   ]);
 
   useEffect(() => {
@@ -374,7 +375,7 @@ export const FilterStatistics = ({
         visitingMatchesAwayTeam,
         numberOfMatches,
         currentSeason,
-        position
+        position,
       });
     }
   }, [
@@ -385,7 +386,7 @@ export const FilterStatistics = ({
     setAwayStatGoals,
     numberOfMatches,
     currentSeason,
-    position
+    position,
   ]);
 
   useEffect(() => {
@@ -397,7 +398,7 @@ export const FilterStatistics = ({
         homeMatchesLocalTeam,
         numberOfMatches,
         currentSeason,
-        position
+        position,
       });
     }
   }, [
@@ -408,7 +409,7 @@ export const FilterStatistics = ({
     setHomeStatShots,
     numberOfMatches,
     currentSeason,
-    position
+    position,
   ]);
 
   useEffect(() => {
@@ -420,7 +421,7 @@ export const FilterStatistics = ({
         visitingMatchesAwayTeam,
         numberOfMatches,
         currentSeason,
-        position
+        position,
       });
     }
   }, [
@@ -431,30 +432,86 @@ export const FilterStatistics = ({
     setAwayStatShots,
     numberOfMatches,
     currentSeason,
-    position
+    position,
   ]);
 
   return (
     <Container>
-      <RadioButtonStatsLessThan
-        handleChangeRadioButton={handleChangeRadioButton}
-        statsLessThan={statsLessThan}
-      />
-      <NumberOfMatchesInput onNumberOfMatchesChange={setNumberOfMatches} />
-      <RadioButtonHomeAway
-        handleChangeCheckbox={handleChangeCheckbox}
-        homeMateshAwayTeam={homeMateshAwayTeam}
-        visitingMatchesAwayTeam={visitingMatchesAwayTeam}
-        visitingmathgesLocalTeam={visitingmathgesLocalTeam}
-        homeMatchesLocalTeam={homeMatchesLocalTeam}
-        singleTeam={singleTeam}
-      />
-      <FilterStatsSeasonAndPosition
-        setPosition={setPosition}
-        position={position}
-        setCurrentSeason={setCurrentSeason}
-        idHomeTeam={idHomeTeam}
-      />
+      <Box
+        sx={{
+          border: "1px solid #ddd",
+          padding: 2,
+          marginBottom: 2,
+          borderRadius: 2,
+          boxShadow: 1,
+          backgroundColor: "#f9f9f9",
+        }}
+      >
+        <Typography variant="h6" gutterBottom>
+          NO SE QUE PONER DE TITULO JAJAJAJ
+        </Typography>
+        <RadioButtonStatsLessThan
+          handleChangeRadioButton={handleChangeRadioButton}
+          statsLessThan={statsLessThan}
+        />
+      </Box>
+      <Box
+        sx={{
+          border: "1px solid #ddd",
+          padding: 2,
+          marginBottom: 2,
+          borderRadius: 2,
+          boxShadow: 1,
+          backgroundColor: "#f9f9f9",
+        }}
+      >
+        <Typography variant="h6" gutterBottom>
+          Temporadas y posisiones de los rivales
+        </Typography>
+        <FilterStatsSeasonAndPosition
+          setPosition={setPosition}
+          position={position}
+          setCurrentSeason={setCurrentSeason}
+          idHomeTeam={idHomeTeam}
+        />
+      </Box>
+      <Box
+        sx={{
+          border: "1px solid #ddd",
+          padding: 2,
+          marginBottom: 2,
+          borderRadius: 2,
+          boxShadow: 1,
+          backgroundColor: "#f9f9f9",
+        }}
+      >
+        <Typography variant="h6" gutterBottom>
+          Cantidad de partidos a evaluar
+        </Typography>
+        <NumberOfMatchesInput onNumberOfMatchesChange={setNumberOfMatches} />
+      </Box>
+      <Box
+        sx={{
+          border: "1px solid #ddd",
+          padding: 2,
+          marginBottom: 2,
+          borderRadius: 2,
+          boxShadow: 1,
+          backgroundColor: "#f9f9f9",
+        }}
+      >
+        <Typography variant="h6" gutterBottom>
+         Considerar partidos local/visitante
+        </Typography>
+        <RadioButtonHomeAway
+          handleChangeCheckbox={handleChangeCheckbox}
+          homeMateshAwayTeam={homeMateshAwayTeam}
+          visitingMatchesAwayTeam={visitingMatchesAwayTeam}
+          visitingmathgesLocalTeam={visitingmathgesLocalTeam}
+          homeMatchesLocalTeam={homeMatchesLocalTeam}
+          singleTeam={singleTeam}
+        />
+      </Box>
     </Container>
   );
 };
