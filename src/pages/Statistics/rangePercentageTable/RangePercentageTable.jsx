@@ -115,13 +115,13 @@ const getComparator = (order, orderBy) =>
     : (a, b) => -descendingComparator(a, b, orderBy);
 
 const stableSort = (array, comparator) => {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
+  const stabilizedThis = array?.map((el, index) => [el, index]);
+  stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
-  return stabilizedThis.map((el) => el[0]);
+  return stabilizedThis?.map((el) => el[0]);
 };
 
 const renderTable = (
@@ -139,7 +139,7 @@ const renderTable = (
   handleChangePage,
   handleChangeRowsPerPage
 ) => {
-  const exampleTeamStats = stats[0]?.stats[statisticKey][matchesType];
+  const exampleTeamStats = stats ? stats[0]?.stats[statisticKey][matchesType] : null;
   const overRangesKeys = exampleTeamStats
     ? Object.keys(exampleTeamStats.overRanges)
     : [];
@@ -147,7 +147,7 @@ const renderTable = (
     ? Object.keys(exampleTeamStats.underRanges)
     : [];
 
-  const rows = stats.map(({ team, stats }) => {
+  const rows = stats?.map(({ team, stats }) => {
     const matchesTotalFinished =
       stats[statisticKey][matchesType]?.values?.length || 0;
     const totalScored = stats[statisticKey][matchesType]?.total || 0;
@@ -185,7 +185,7 @@ const renderTable = (
 
   // Función para filtrar las filas basado en los filtros aplicados
   const filterRows = (rows, filters) => {
-    return rows.filter((row) => {
+    return rows?.filter((row) => {
       for (let filterKey in filters) {
         if (filters.hasOwnProperty(filterKey)) {
           const [type, range, limit] = filterKey.split("-");
@@ -230,7 +230,7 @@ const renderTable = (
   filteredRows = stableSort(filteredRows, getComparator(order, orderBy));
 
   // Aplicar paginación a las filas filtradas y ordenadas
-  const paginatedRows = filteredRows.slice(
+  const paginatedRows = filteredRows?.slice(
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
   );
@@ -255,7 +255,7 @@ const renderTable = (
 
         {!loading ? (
           <TableBody>
-            {paginatedRows.map((row, index) => (
+            {paginatedRows?.map((row, index) => (
               <StyledTableRow key={index}>
                 <TableCell>{row.team.league}</TableCell>
                 <TableCell
@@ -319,7 +319,7 @@ const renderTable = (
       <TablePagination
         rowsPerPageOptions={[10, 20, 30]}
         component="div"
-        count={filteredRows.length}
+        count={filteredRows?.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
@@ -355,8 +355,8 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
   const [filters, setFilters] = useState({});
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-
-  const [selectedSeasons, setSelectedSeasons] = useState([listCurrentSeason]);
+ 
+  const [selectedSeasons, setSelectedSeasons] = useState([]);
 
   useEffect(() => {
     // Parse listCurrentSeason to an array of seasons if it's not empty
@@ -367,6 +367,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
   }, [listCurrentSeason]);
 
   console.log("listCurrentSeason-----", listCurrentSeason);
+  console.log("selectedSeasons******",selectedSeasons)
   // useEffect(() => {
   //   if (seasonId && !selectedSeasons) {
   //     const loadStats = async () => {
@@ -422,7 +423,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
       try {
         setLoading(true);
         let data;
-        if (seasonId) {
+        if (seasonId && !listCurrentSeason) {
           data = await fetchTeamStats(
             seasonId,
             homeOnly,
@@ -430,8 +431,9 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
             matchesCount,
             includeAllSeasonMatches
           );
-        } else {
+        } else if(listCurrentSeason && selectedSeasons.length > 0 ) {
           const selectedSeasonsString = selectedSeasons.join(',')
+          console.log("selectedSeasonsString",selectedSeasonsString)
           data = await fetchTeamStats(
             selectedSeasonsString,
             homeOnly,
@@ -454,13 +456,13 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
     awayOnly,
     matchesCount,
     includeAllSeasonMatches,
-    selectedSeasons,
+    selectedSeasons, listCurrentSeason
   ]);
 
 
   //   if (loading) return <Typography>Loading...</Typography>;
   if (error) return <Typography>Error: {error.message}</Typography>;
-  if (stats.length === 0) return <Typography>No data available</Typography>;
+  if (stats?.length === 0) return <Typography>No data available</Typography>;
   const handleTabChange = (event, newValue) => {
     setTabIndex(newValue);
   };
