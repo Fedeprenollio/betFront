@@ -314,7 +314,7 @@ const TabPanel = ({ children, value, index }) => (
   </div>
 );
 
-export const RangePercentageTable = ({listCurrentSeason}) => {
+export const RangePercentageTable = ({ listCurrentSeason }) => {
   const { seasonId } = useParams();
   const [stats, setStats] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -327,9 +327,10 @@ export const RangePercentageTable = ({listCurrentSeason}) => {
   const [matchesCount, setMatchesCount] = useState(0);
   const [inputMatchesCount, setInputMatchesCount] = useState(0);
   const [includeAllSeasonMatches, setIncludeAllSeasonMatches] = useState(false);
-  const [inputChekBoxIncludeAllSeason, setInputChekBoxIncludeAllSeason] = useState(false);
+  const [inputChekBoxIncludeAllSeason, setInputChekBoxIncludeAllSeason] =
+    useState(false);
   const [filters, setFilters] = useState({});
-  console.log("listCurrentSeason-----", listCurrentSeason)
+  console.log("listCurrentSeason-----", listCurrentSeason);
   useEffect(() => {
     if (seasonId && !listCurrentSeason) {
       const loadStats = async () => {
@@ -349,15 +350,15 @@ export const RangePercentageTable = ({listCurrentSeason}) => {
           setLoading(false);
         }
       };
-    loadStats()
+      loadStats();
     }
-  
+
     if (!seasonId && listCurrentSeason) {
       const loadStats = async () => {
         try {
           setLoading(true);
           const data = await fetchTeamStats(
-             listCurrentSeason,
+            listCurrentSeason,
             homeOnly,
             awayOnly,
             matchesCount,
@@ -370,10 +371,17 @@ export const RangePercentageTable = ({listCurrentSeason}) => {
           setLoading(false);
         }
       };
-    loadStats()
+      loadStats();
     }
-  }, [seasonId, homeOnly, awayOnly, matchesCount, includeAllSeasonMatches, listCurrentSeason]);
-  
+  }, [
+    seasonId,
+    homeOnly,
+    awayOnly,
+    matchesCount,
+    includeAllSeasonMatches,
+    listCurrentSeason,
+  ]);
+
   console.log("stats", stats);
 
   //   if (loading) return <Typography>Loading...</Typography>;
@@ -436,7 +444,9 @@ export const RangePercentageTable = ({listCurrentSeason}) => {
   return (
     <div>
       <Typography variant="h4" gutterBottom>
-      {listCurrentSeason ? "Estadisticas generales de todos los equipos en temporadas actuales activas" : "Estadísticas de la Temporada"}  
+        {listCurrentSeason
+          ? "Estadisticas generales de todos los equipos en temporadas actuales activas"
+          : "Estadísticas de la Temporada"}
       </Typography>
       <CheckboxLocalVisitor
         homeOnly={homeOnly}
@@ -453,7 +463,14 @@ export const RangePercentageTable = ({listCurrentSeason}) => {
         inputChekBoxIncludeAllSeason={inputChekBoxIncludeAllSeason}
         onFilterChange={handleFilterChange}
       />
-      <Tabs value={tabIndex} onChange={handleTabChange} aria-label="stat-tabs">
+      <Tabs
+        value={tabIndex}
+        onChange={handleTabChange}
+        aria-label="stat-tabs"
+        variant="scrollable"
+        scrollButtons
+        allowScrollButtonsMobile
+      >
         {statisticKeys.map((key, index) => (
           <Tab label={key.charAt(0).toUpperCase() + key.slice(1)} key={key} />
         ))}
