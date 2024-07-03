@@ -16,16 +16,16 @@ export const MatchesCountInput = ({
   updateMatchesCount,
   updateIncludeOtherSeasons,
   handleIncludeAllSeasonMatches,
-  inputChekBoxIncludeAllSeason
+  inputChekBoxIncludeAllSeason,
 }) => {
   const [enablEditing, setEnablEditing] = useState(false);
   const [includeOtherSeasons, setIncludeOtherSeasons] = useState(false);
 
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
-    if (name === 'enablEditing') {
+    if (name === "enablEditing") {
       setEnablEditing(checked);
-    } else if (name === 'includeOtherSeasons') {
+    } else if (name === "includeOtherSeasons") {
       handleIncludeAllSeasonMatches(checked);
     }
   };
@@ -37,16 +37,28 @@ export const MatchesCountInput = ({
 
   return (
     <Container
-      sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+      sx={{ display: "flex", flexDirection: "column", alignItems: "start" }}
     >
       <FormControl>
         <FormLabel component="legend">Limitar número de partidos</FormLabel>
         <FormControlLabel
-          control={<Checkbox name="enablEditing" checked={enablEditing} onChange={handleCheckboxChange} />}
+          control={
+            <Checkbox
+              name="enablEditing"
+              checked={enablEditing}
+              onChange={handleCheckboxChange}
+            />
+          }
           label="Habilitar edición"
         />
         <FormControlLabel
-          control={<Checkbox name="includeOtherSeasons" checked={inputChekBoxIncludeAllSeason} onChange={handleCheckboxChange} />}
+          control={
+            <Checkbox
+              name="includeOtherSeasons"
+              checked={inputChekBoxIncludeAllSeason}
+              onChange={handleCheckboxChange}
+            />
+          }
           label="Incluir todas los torneos y/o temporadas"
         />
       </FormControl>

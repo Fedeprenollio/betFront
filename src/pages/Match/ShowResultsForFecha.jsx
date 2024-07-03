@@ -267,7 +267,7 @@ export const ShowResultsForFecha = () => {
   };
 
   return (
-    <Container>
+    <>
       <Box
         sx={{
           border: "1px solid #ddd",
@@ -411,7 +411,7 @@ export const ShowResultsForFecha = () => {
           </List>
         </Box>
       )}
-    </Container>
+    </>
   );
 };
 

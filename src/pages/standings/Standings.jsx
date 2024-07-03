@@ -197,7 +197,6 @@
 //   );
 // };
 
-
 import React, { useEffect, useState } from "react";
 import { useBoundStore } from "../../stores";
 import {
@@ -271,8 +270,7 @@ export const Standings = () => {
           backgroundColor: "#f9f9f9",
         }}
       >
-       
-       <Typography variant="h5" gutterBottom>
+        <Typography variant="h5" gutterBottom>
           Considerar local/visitante
         </Typography>
         <FormGroup row>
@@ -284,7 +282,10 @@ export const Standings = () => {
           />
           <FormControlLabel
             control={
-              <Checkbox checked={showVisitor} onChange={handleShowVisitorChange} />
+              <Checkbox
+                checked={showVisitor}
+                onChange={handleShowVisitorChange}
+              />
             }
             label="Visitante"
           />
@@ -424,4 +425,3 @@ export const Standings = () => {
     </Box>
   );
 };
-

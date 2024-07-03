@@ -442,27 +442,49 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
   };
 
   return (
-    <div>
+    <>
       <Typography variant="h4" gutterBottom>
         {listCurrentSeason
           ? "Estadisticas generales de todos los equipos en temporadas actuales activas"
           : "Estadísticas de la Temporada"}
       </Typography>
-      <CheckboxLocalVisitor
-        homeOnly={homeOnly}
-        awayOnly={awayOnly}
-        handleHomeOnlyChange={handleHomeOnlyChange}
-        handleAwayOnlyChange={handleAwayOnlyChange}
-      />
-      <MatchesCountInput
-        inputMatchesCount={inputMatchesCount}
-        handleInputMatchesCountChange={handleInputMatchesCountChange}
-        handleIncludeAllSeasonMatches={handleIncludeAllSeasonMatches}
-        updateMatchesCount={updateMatchesCount}
-        updateIncludeOtherSeasons={updateIncludeOtherSeasons}
-        inputChekBoxIncludeAllSeason={inputChekBoxIncludeAllSeason}
-        onFilterChange={handleFilterChange}
-      />
+      <Box
+        sx={{
+          border: "1px solid #ddd",
+          padding: 2,
+          marginBottom: 2,
+          borderRadius: 2,
+          boxShadow: 1,
+          backgroundColor: "#f9f9f9",
+        }}
+      >
+        <CheckboxLocalVisitor
+          homeOnly={homeOnly}
+          awayOnly={awayOnly}
+          handleHomeOnlyChange={handleHomeOnlyChange}
+          handleAwayOnlyChange={handleAwayOnlyChange}
+        />
+      </Box>
+      <Box
+        sx={{
+          border: "1px solid #ddd",
+          padding: 2,
+          marginBottom: 2,
+          borderRadius: 2,
+          boxShadow: 1,
+          backgroundColor: "#f9f9f9",
+        }}
+      >
+        <MatchesCountInput
+          inputMatchesCount={inputMatchesCount}
+          handleInputMatchesCountChange={handleInputMatchesCountChange}
+          handleIncludeAllSeasonMatches={handleIncludeAllSeasonMatches}
+          updateMatchesCount={updateMatchesCount}
+          updateIncludeOtherSeasons={updateIncludeOtherSeasons}
+          inputChekBoxIncludeAllSeason={inputChekBoxIncludeAllSeason}
+          onFilterChange={handleFilterChange}
+        />
+      </Box>
       <Tabs
         value={tabIndex}
         onChange={handleTabChange}
@@ -471,27 +493,49 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
         scrollButtons
         allowScrollButtonsMobile
       >
-        {statisticKeys.map((key, index) => (
+        {statisticKeys.map((key) => (
           <Tab label={key.charAt(0).toUpperCase() + key.slice(1)} key={key} />
         ))}
       </Tabs>
 
       {statisticKeys.map((key, index) => (
-        <TabPanel value={tabIndex} index={index} key={key}>
-          <Typography variant="h6" gutterBottom>
-            {key.charAt(0).toUpperCase() + key.slice(1)} - Marcado
-          </Typography>
-          {renderTable(
-            stats,
-            key,
-            "scored",
-            order,
-            orderBy,
-            handleRequestSort,
-            loading,
-            filters,
-            handleFilterChange
-          )}
+        <TabPanel value={tabIndex} index={index} key={key}  >
+          <Box
+            sx={{
+              border: "1px solid #ddd",
+              padding: 2,
+              marginBottom: 2,
+              borderRadius: 2,
+              boxShadow: 1,
+              backgroundColor: "#f9f9f9",
+            }}
+          >
+            <Typography variant="h6" gutterBottom>
+              {key.charAt(0).toUpperCase() + key.slice(1)} - Marcado
+            </Typography>
+            {renderTable(
+              stats,
+              key,
+              "scored",
+              order,
+              orderBy,
+              handleRequestSort,
+              loading,
+              filters,
+              handleFilterChange
+            )}
+          </Box>
+          <Box
+            sx={{
+              border: "1px solid #ddd",
+              padding: 2,
+              marginBottom: 2,
+              borderRadius: 2,
+              boxShadow: 1,
+              backgroundColor: "#f9f9f9",
+            }}
+          >
+
           <Typography variant="h6" gutterBottom>
             {key.charAt(0).toUpperCase() + key.slice(1)} - Recibido
           </Typography>
@@ -506,6 +550,19 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
             filters,
             handleFilterChange
           )}
+
+          </Box>
+
+          <Box
+            sx={{
+              border: "1px solid #ddd",
+              padding: 2,
+              marginBottom: 2,
+              borderRadius: 2,
+              boxShadow: 1,
+              backgroundColor: "#f9f9f9",
+            }}
+          >
           <Typography variant="h6" gutterBottom>
             {key.charAt(0).toUpperCase() + key.slice(1)} - Totales
           </Typography>
@@ -520,8 +577,10 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
             filters,
             handleFilterChange
           )}
+
+          </Box>
         </TabPanel>
       ))}
-    </div>
+    </>
   );
 };

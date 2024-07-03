@@ -1,10 +1,25 @@
 /* eslint-disable react/prop-types */
-import { Checkbox, FormControlLabel, FormGroup } from '@mui/material'
-import React from 'react'
+import {
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  Typography,
+} from "@mui/material";
+import React from "react";
 
-export const CheckboxLocalVisitor = ({homeOnly,awayOnly,handleHomeOnlyChange, handleAwayOnlyChange }) => {
+export const CheckboxLocalVisitor = ({
+  homeOnly,
+  awayOnly,
+  handleHomeOnlyChange,
+  handleAwayOnlyChange,
+}) => {
   return (
-    <FormGroup row>
+    <>
+      <Typography variant="h5" gutterBottom>
+        Considerar local/visitante
+      </Typography>
+
+      <FormGroup row>
         <FormControlLabel
           control={
             <Checkbox
@@ -14,7 +29,7 @@ export const CheckboxLocalVisitor = ({homeOnly,awayOnly,handleHomeOnlyChange, ha
               color="primary"
             />
           }
-          label="Home Only"
+          label="Local"
         />
         <FormControlLabel
           control={
@@ -25,8 +40,9 @@ export const CheckboxLocalVisitor = ({homeOnly,awayOnly,handleHomeOnlyChange, ha
               color="primary"
             />
           }
-          label="Away Only"
+          label="Visitante"
         />
       </FormGroup>
-  )
-}
+    </>
+  );
+};
