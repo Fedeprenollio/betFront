@@ -14,6 +14,7 @@ import {
   Tab,
   Box,
   styled,
+  TablePagination,
 } from "@mui/material";
 import { median } from "simple-statistics";
 import { BACKEND_URL_BASE } from "../../../stores/url_base";
@@ -131,7 +132,11 @@ const renderTable = (
   onRequestSort,
   loading,
   filters,
-  handleFilterChange
+  handleFilterChange,
+  page,
+  rowsPerPage,
+  handleChangePage,
+  handleChangeRowsPerPage
 ) => {
   const exampleTeamStats = stats[0]?.stats[statisticKey][matchesType];
   const overRangesKeys = exampleTeamStats
@@ -223,6 +228,12 @@ const renderTable = (
   // Ordenar las filas según el orden y el criterio de orden
   filteredRows = stableSort(filteredRows, getComparator(order, orderBy));
 
+  // Aplicar paginación a las filas filtradas y ordenadas
+  const paginatedRows = filteredRows.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
   return (
     <TableContainer
       component={Paper}
@@ -243,7 +254,7 @@ const renderTable = (
 
         {!loading ? (
           <TableBody>
-            {filteredRows.map((row, index) => (
+            {paginatedRows.map((row, index) => (
               <StyledTableRow key={index}>
                 <TableCell>{row.team.league}</TableCell>
                 <TableCell
@@ -304,7 +315,18 @@ const renderTable = (
           <LoadingSpinner />
         )}
       </Table>
+      <TablePagination
+        rowsPerPageOptions={[10, 20, 30]}
+        component="div"
+        count={filteredRows.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
     </TableContainer>
+    
+    
   );
 };
 
@@ -330,6 +352,8 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
   const [inputChekBoxIncludeAllSeason, setInputChekBoxIncludeAllSeason] =
     useState(false);
   const [filters, setFilters] = useState({});
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   console.log("listCurrentSeason-----", listCurrentSeason);
   useEffect(() => {
     if (seasonId && !listCurrentSeason) {
@@ -441,6 +465,17 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
     // Aquí puedes agregar lógica para filtrar las filas según los nuevos filtros
   };
 
+  const handleChangePage = (event, newPage) => {
+    console.log("newPage",newPage)
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+
   return (
     <>
       <Typography variant="h4" gutterBottom>
@@ -522,7 +557,11 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
               handleRequestSort,
               loading,
               filters,
-              handleFilterChange
+              handleFilterChange,
+              page,
+              rowsPerPage,
+              handleChangePage,
+              handleChangeRowsPerPage
             )}
           </Box>
           <Box
@@ -548,7 +587,11 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
             handleRequestSort,
             loading,
             filters,
-            handleFilterChange
+            handleFilterChange,
+            page,
+            rowsPerPage,
+            handleChangePage,
+            handleChangeRowsPerPage
           )}
 
           </Box>
@@ -575,7 +618,11 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
             handleRequestSort,
             loading,
             filters,
-            handleFilterChange
+            handleFilterChange,
+            page,
+            rowsPerPage,
+            handleChangePage,
+            handleChangeRowsPerPage
           )}
 
           </Box>
