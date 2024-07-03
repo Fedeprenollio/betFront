@@ -1,13 +1,10 @@
-import { Container } from "@mui/material"
-import FormUser from "./FormUser"
+import { Container } from "@mui/material";
+import FormUser from "./FormUser";
 
 export const Login = () => {
   return (
-    <Container>
-        <h1>Login</h1>
-
-        <FormUser action={"login"}/>
-
+    <Container>     
+      <FormUser action={"login"} />
     </Container>
-)
-}
+  );
+};
