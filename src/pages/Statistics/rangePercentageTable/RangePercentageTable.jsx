@@ -238,7 +238,7 @@ const renderTable = (
   return (
     <TableContainer
       component={Paper}
-      sx={{ maxHeight: 440 }}
+      sx={{ maxHeight: 840 }}
       style={{ overflowX: "auto" }}
     >
       <Table stickyHeader size="small">
