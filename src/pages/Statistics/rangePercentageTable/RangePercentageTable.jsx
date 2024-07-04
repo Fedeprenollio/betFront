@@ -286,22 +286,22 @@ const renderTable = (
                 {matchesType === "scored" && (
                   <TableCell>
                     {row.matchesTotalFinished !== 0
-                      ? row.totalScored / row.matchesTotalFinished
+                      ? (row.totalScored / row.matchesTotalFinished).toFixed(1)
                       : 0}
                   </TableCell>
                 )}
                 {matchesType === "received" && (
                   <TableCell>
                     {row.matchesTotalFinished !== 0
-                      ? row.totalReceived / row.matchesTotalFinished
+                      ? (row.totalReceived / row.matchesTotalFinished).toFixed(2)
                       : 0}
                   </TableCell>
                 )}
                 {matchesType === "total" && (
                   <TableCell>
                     {row.matchesTotalFinished !== 0
-                      ? (row.totalScored + row.totalReceived) /
-                        row.matchesTotalFinished
+                      ? ((row.totalScored + row.totalReceived) /
+                        row.matchesTotalFinished).toFixed(2)
                       : 0}
                   </TableCell>
                 )}
