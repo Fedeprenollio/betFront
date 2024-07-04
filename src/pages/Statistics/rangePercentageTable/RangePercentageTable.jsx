@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import {
@@ -15,6 +15,9 @@ import {
   Box,
   styled,
   TablePagination,
+  Modal,
+  Button,
+  IconButton,
 } from "@mui/material";
 import { median } from "simple-statistics";
 import { BACKEND_URL_BASE } from "../../../stores/url_base";
@@ -23,6 +26,7 @@ import { CheckboxLocalVisitor } from "./CheckboxLocalVisitor";
 import { MatchesCountInput } from "./MatchesCountInput";
 import LoadingSpinner from "../../../componts/loading/LoadingSpinner";
 import { SelectListCurrentSeasons } from "./SelectListCurrentSeasons";
+import CloseIcon from "@mui/icons-material/Close";
 
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
@@ -139,7 +143,9 @@ const renderTable = (
   handleChangePage,
   handleChangeRowsPerPage
 ) => {
-  const exampleTeamStats = stats ? stats[0]?.stats[statisticKey][matchesType] : null;
+  const exampleTeamStats = stats
+    ? stats[0]?.stats[statisticKey][matchesType]
+    : null;
   const overRangesKeys = exampleTeamStats
     ? Object.keys(exampleTeamStats.overRanges)
     : [];
@@ -187,6 +193,7 @@ const renderTable = (
   const filterRows = (rows, filters) => {
     return rows?.filter((row) => {
       for (let filterKey in filters) {
+        // eslint-disable-next-line no-prototype-builtins
         if (filters.hasOwnProperty(filterKey)) {
           const [type, range, limit] = filterKey.split("-");
           const filterValue = parseFloat(filters[filterKey]);
@@ -326,8 +333,6 @@ const renderTable = (
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
     </TableContainer>
-    
-    
   );
 };
 
@@ -355,19 +360,19 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
   const [filters, setFilters] = useState({});
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
- 
-  const [selectedSeasons, setSelectedSeasons] = useState([]);
 
+  const [selectedSeasons, setSelectedSeasons] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
   useEffect(() => {
     // Parse listCurrentSeason to an array of seasons if it's not empty
     if (listCurrentSeason) {
-      const seasonsArray = listCurrentSeason.split(',').map(season => season.trim());
+      const seasonsArray = listCurrentSeason
+        .split(",")
+        .map((season) => season.trim());
       setSelectedSeasons(seasonsArray);
     }
   }, [listCurrentSeason]);
 
-  console.log("listCurrentSeason-----", listCurrentSeason);
-  console.log("selectedSeasons******",selectedSeasons)
   // useEffect(() => {
   //   if (seasonId && !selectedSeasons) {
   //     const loadStats = async () => {
@@ -431,9 +436,9 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
             matchesCount,
             includeAllSeasonMatches
           );
-        } else if(listCurrentSeason && selectedSeasons.length > 0 ) {
-          const selectedSeasonsString = selectedSeasons.join(',')
-          console.log("selectedSeasonsString",selectedSeasonsString)
+        } else if (listCurrentSeason && selectedSeasons.length > 0) {
+          const selectedSeasonsString = selectedSeasons.join(",");
+          console.log("selectedSeasonsString", selectedSeasonsString);
           data = await fetchTeamStats(
             selectedSeasonsString,
             homeOnly,
@@ -456,9 +461,9 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
     awayOnly,
     matchesCount,
     includeAllSeasonMatches,
-    selectedSeasons, listCurrentSeason
+    selectedSeasons,
+    listCurrentSeason,
   ]);
-
 
   //   if (loading) return <Typography>Loading...</Typography>;
   if (error) return <Typography>Error: {error.message}</Typography>;
@@ -518,7 +523,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
   };
 
   const handleChangePage = (event, newPage) => {
-    console.log("newPage",newPage)
+    console.log("newPage", newPage);
     setPage(newPage);
   };
 
@@ -529,9 +534,19 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
 
   const handleSeasonChange = (seasonId, checked) => {
     setSelectedSeasons((prevSelectedSeasons) =>
-        checked ? [...prevSelectedSeasons, seasonId] : prevSelectedSeasons.filter((id) => id !== seasonId)
+      checked
+        ? [...prevSelectedSeasons, seasonId]
+        : prevSelectedSeasons.filter((id) => id !== seasonId)
     );
-};
+  };
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
 
   return (
     <>
@@ -590,12 +605,52 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
         ))}
       </Tabs>
 
-        { listCurrentSeason &&   <SelectListCurrentSeasons
+      {/* { listCurrentSeason &&   <SelectListCurrentSeasons
                     selectedSeasons={selectedSeasons}
                     onSeasonChange={handleSeasonChange}
-                /> } 
+                /> }  */}
+
+      {listCurrentSeason && (
+        <>
+          <Button variant="contained" color="primary" onClick={handleOpenModal}>
+            Seleccionar temporadas
+          </Button>
+          <Modal open={openModal} onClose={handleCloseModal}>
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 400,
+                bgcolor: "background.paper",
+                border: "2px solid #000",
+                boxShadow: 24,
+                p: 4,
+              }}
+            >
+              <SelectListCurrentSeasons
+                selectedSeasons={selectedSeasons}
+                onSeasonChange={handleSeasonChange}
+              />
+              <IconButton
+                aria-label="close"
+                onClick={handleCloseModal}
+                sx={{
+                  position: "absolute",
+                  right: 8,
+                  top: 8,
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </Box>
+          </Modal>
+        </>
+      )}
+
       {statisticKeys.map((key, index) => (
-        <TabPanel value={tabIndex} index={index} key={key}  >
+        <TabPanel value={tabIndex} index={index} key={key}>
           <Box
             sx={{
               border: "1px solid #ddd",
@@ -635,26 +690,24 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
               backgroundColor: "#f9f9f9",
             }}
           >
-
-          <Typography variant="h6" gutterBottom>
-            {key.charAt(0).toUpperCase() + key.slice(1)} - Recibido
-          </Typography>
-          {renderTable(
-            stats,
-            key,
-            "received",
-            order,
-            orderBy,
-            handleRequestSort,
-            loading,
-            filters,
-            handleFilterChange,
-            page,
-            rowsPerPage,
-            handleChangePage,
-            handleChangeRowsPerPage
-          )}
-
+            <Typography variant="h6" gutterBottom>
+              {key.charAt(0).toUpperCase() + key.slice(1)} - Recibido
+            </Typography>
+            {renderTable(
+              stats,
+              key,
+              "received",
+              order,
+              orderBy,
+              handleRequestSort,
+              loading,
+              filters,
+              handleFilterChange,
+              page,
+              rowsPerPage,
+              handleChangePage,
+              handleChangeRowsPerPage
+            )}
           </Box>
 
           <Box
@@ -667,25 +720,24 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
               backgroundColor: "#f9f9f9",
             }}
           >
-          <Typography variant="h6" gutterBottom>
-            {key.charAt(0).toUpperCase() + key.slice(1)} - Totales
-          </Typography>
-          {renderTable(
-            stats,
-            key,
-            "total",
-            order,
-            orderBy,
-            handleRequestSort,
-            loading,
-            filters,
-            handleFilterChange,
-            page,
-            rowsPerPage,
-            handleChangePage,
-            handleChangeRowsPerPage
-          )}
-
+            <Typography variant="h6" gutterBottom>
+              {key.charAt(0).toUpperCase() + key.slice(1)} - Totales
+            </Typography>
+            {renderTable(
+              stats,
+              key,
+              "total",
+              order,
+              orderBy,
+              handleRequestSort,
+              loading,
+              filters,
+              handleFilterChange,
+              page,
+              rowsPerPage,
+              handleChangePage,
+              handleChangeRowsPerPage
+            )}
           </Box>
         </TabPanel>
       ))}
