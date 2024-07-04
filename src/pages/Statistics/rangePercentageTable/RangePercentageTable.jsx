@@ -337,8 +337,8 @@ const renderTable = (
 };
 
 const TabPanel = ({ children, value, index }) => (
-  <div role="tabpanel" hidden={value !== index}>
-    {value === index && <Box p={3}>{children}</Box>}
+  <div className="prueba" role="tabpanel" hidden={value !== index}>
+    {value === index && <Box p={0.2}>{children}</Box>}
   </div>
 );
 
@@ -605,11 +605,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
         ))}
       </Tabs>
 
-      {/* { listCurrentSeason &&   <SelectListCurrentSeasons
-                    selectedSeasons={selectedSeasons}
-                    onSeasonChange={handleSeasonChange}
-                /> }  */}
-
+     
       {listCurrentSeason && (
         <>
           <Button variant="contained" color="primary" onClick={handleOpenModal}>
@@ -622,7 +618,8 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
-                width: 400,
+                width: "80%",
+                maxWidth: 400,
                 bgcolor: "background.paper",
                 border: "2px solid #000",
                 boxShadow: 24,
@@ -650,15 +647,15 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
       )}
 
       {statisticKeys.map((key, index) => (
-        <TabPanel value={tabIndex} index={index} key={key}>
+        <TabPanel  value={tabIndex} index={index} key={key}>
           <Box
             sx={{
               border: "1px solid #ddd",
-              padding: 2,
+              padding: 0.3,
               marginBottom: 2,
               borderRadius: 2,
               boxShadow: 1,
-              backgroundColor: "#f9f9f9",
+              backgroundColor: "#f9f9f9"
             }}
           >
             <Typography variant="h6" gutterBottom>
