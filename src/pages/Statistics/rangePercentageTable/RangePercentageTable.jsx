@@ -363,6 +363,8 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
 
   const [selectedSeasons, setSelectedSeasons] = useState([]);
   const [openModal, setOpenModal] = useState(false);
+  const [shouldFetch, setShouldFetch] = useState(true);
+
   useEffect(() => {
     // Parse listCurrentSeason to an array of seasons if it's not empty
     if (listCurrentSeason) {
@@ -424,37 +426,41 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
   //   selectedSeasons,
   // ]);
   useEffect(() => {
-    const loadStats = async () => {
-      try {
-        setLoading(true);
-        let data;
-        if (seasonId && !listCurrentSeason) {
-          data = await fetchTeamStats(
-            seasonId,
-            homeOnly,
-            awayOnly,
-            matchesCount,
-            includeAllSeasonMatches
-          );
-        } else if (listCurrentSeason && selectedSeasons.length > 0) {
-          const selectedSeasonsString = selectedSeasons.join(",");
-          console.log("selectedSeasonsString", selectedSeasonsString);
-          data = await fetchTeamStats(
-            selectedSeasonsString,
-            homeOnly,
-            awayOnly,
-            matchesCount,
-            includeAllSeasonMatches
-          );
+    if (shouldFetch) {
+
+      const loadStats = async () => {
+        try {
+          setLoading(true);
+          let data;
+          if (seasonId && !listCurrentSeason) {
+            data = await fetchTeamStats(
+              seasonId,
+              homeOnly,
+              awayOnly,
+              matchesCount,
+              includeAllSeasonMatches
+            );
+          } else if (listCurrentSeason && selectedSeasons.length > 0) {
+            const selectedSeasonsString = selectedSeasons.join(",");
+            console.log("selectedSeasonsString", selectedSeasonsString);
+            data = await fetchTeamStats(
+              selectedSeasonsString,
+              homeOnly,
+              awayOnly,
+              matchesCount,
+              includeAllSeasonMatches
+            );
+          }
+          setStats(data);
+          setLoading(false);
+        } catch (err) {
+          setError(err);
+          setLoading(false);
         }
-        setStats(data);
-        setLoading(false);
-      } catch (err) {
-        setError(err);
-        setLoading(false);
-      }
-    };
-    loadStats();
+      };
+      loadStats();
+
+    }
   }, [
     seasonId,
     homeOnly,
@@ -463,6 +469,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
     includeAllSeasonMatches,
     selectedSeasons,
     listCurrentSeason,
+    shouldFetch
   ]);
 
   //   if (loading) return <Typography>Loading...</Typography>;
@@ -542,10 +549,12 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
 
   const handleOpenModal = () => {
     setOpenModal(true);
+    setShouldFetch(false); 
   };
 
   const handleCloseModal = () => {
     setOpenModal(false);
+    setShouldFetch(true); 
   };
 
   return (
