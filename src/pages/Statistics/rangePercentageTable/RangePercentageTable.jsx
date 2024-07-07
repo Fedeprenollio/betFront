@@ -27,6 +27,8 @@ import { MatchesCountInput } from "./MatchesCountInput";
 import LoadingSpinner from "../../../componts/loading/LoadingSpinner";
 import { SelectListCurrentSeasons } from "./SelectListCurrentSeasons";
 import CloseIcon from "@mui/icons-material/Close";
+import { GroupByName } from "./GroupByName";
+// import GroupByName from "./GroupByName";
 
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
@@ -141,7 +143,8 @@ const renderTable = (
   page,
   rowsPerPage,
   handleChangePage,
-  handleChangeRowsPerPage
+  handleChangeRowsPerPage,
+  nameFilters 
 ) => {
   const exampleTeamStats = stats
     ? stats[0]?.stats[statisticKey][matchesType]
@@ -187,11 +190,15 @@ const renderTable = (
     return rows.some((row) => row[`under-${key}`] !== null);
   });
 
-  console.log("filters", filters);
 
   // Función para filtrar las filas basado en los filtros aplicados
-  const filterRows = (rows, filters) => {
+  const filterRows = (rows, filters,nameFilters ) => {
     return rows?.filter((row) => {
+  // Apply name filters
+      if (nameFilters.length > 0 && !nameFilters.includes(row.team.name)) {
+        return false;
+      }
+
       for (let filterKey in filters) {
         // eslint-disable-next-line no-prototype-builtins
         if (filters.hasOwnProperty(filterKey)) {
@@ -231,7 +238,7 @@ const renderTable = (
   };
 
   // Aplicar filtrado a las filas basado en los filtros actuales
-  let filteredRows = filterRows(rows, filters);
+  let filteredRows = filterRows(rows, filters,nameFilters);
 
   // Ordenar las filas según el orden y el criterio de orden
   filteredRows = stableSort(filteredRows, getComparator(order, orderBy));
@@ -364,6 +371,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
   const [selectedSeasons, setSelectedSeasons] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [shouldFetch, setShouldFetch] = useState(true);
+  const [nameFilters, setNameFilters] = useState([]);
 
   useEffect(() => {
     // Parse listCurrentSeason to an array of seasons if it's not empty
@@ -556,7 +564,10 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
     setOpenModal(false);
     setShouldFetch(true); 
   };
-
+  const handleNamesChange = (names) => {
+    console.log("NAMES", names)
+    setNameFilters(names);
+  };
   return (
     <>
       <Typography variant="h4" gutterBottom>
@@ -601,6 +612,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
           onFilterChange={handleFilterChange}
         />
       </Box>
+      <GroupByName onNamesChange={handleNamesChange}/>
       <Tabs
         value={tabIndex}
         onChange={handleTabChange}
@@ -683,7 +695,9 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
               page,
               rowsPerPage,
               handleChangePage,
-              handleChangeRowsPerPage
+              handleChangeRowsPerPage,
+              nameFilters 
+
             )}
           </Box>
           <Box
@@ -712,7 +726,8 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
               page,
               rowsPerPage,
               handleChangePage,
-              handleChangeRowsPerPage
+              handleChangeRowsPerPage,
+              nameFilters 
             )}
           </Box>
 
@@ -742,7 +757,8 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
               page,
               rowsPerPage,
               handleChangePage,
-              handleChangeRowsPerPage
+              handleChangeRowsPerPage,
+              nameFilters 
             )}
           </Box>
         </TabPanel>
