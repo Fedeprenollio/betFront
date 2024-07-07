@@ -131,3 +131,14 @@
     transform: rotate(1turn);
   }
 }
+
+
+.team-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stats-column {
+  font-size: 0.875rem; /* Tamaño de letra más pequeño para la columna de estadísticas */
+}

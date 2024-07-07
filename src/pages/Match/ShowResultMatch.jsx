@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Paper } from '@mui/material';
 import { useBoundStore } from '../../stores';
 
 const ShowResultMatch = ({ matchId, visitorName, localName }) => {
@@ -12,109 +11,62 @@ const ShowResultMatch = ({ matchId, visitorName, localName }) => {
     };
     fetchMatchDetail();
   }, [getMatchDetail, matchId]);
-
+console.log("matchDetail.teamStatistics?.visitor?",matchDetail.teamStatistics?.visitor)
   return (
     matchDetail && (
-      <Grid container spacing={2} alignItems="center">
-        <Grid item xs={4}>
-        <Typography variant="h6" gutterBottom align="center">
-            {localName}
-          </Typography>
-          <Typography variant="body1" gutterBottom align="center">
-            {matchDetail.teamStatistics?.local?.goals}
-          </Typography>
-          <Typography variant="body1" gutterBottom align="center">
-             {matchDetail.teamStatistics?.local?.shots}
-          </Typography>
-          <Typography variant="body1" gutterBottom align="center">
-            {matchDetail.teamStatistics?.local?.shotsOnTarget}
-          </Typography>
-          <Typography variant="body1" gutterBottom align="center">
-        {matchDetail.teamStatistics?.local?.possession}
-          </Typography>
-          <Typography variant="body1" gutterBottom align="center">
-           {matchDetail.teamStatistics?.local?.foults}
-          </Typography>
-          <Typography variant="body1" gutterBottom align="center">
-            {matchDetail.teamStatistics?.local?.yellowCards}
-          </Typography>
-          {/* <Typography variant="body1" gutterBottom align="center">
-            {matchDetail.teamStatistics?.local?.redCards}
-          </Typography> */}
-          <Typography variant="body1" gutterBottom align="center">
-            {matchDetail.teamStatistics?.local?.corners}
-          </Typography>
-          <Typography variant="body1" gutterBottom align="center">
-             {matchDetail.teamStatistics?.local?.offsides}
-          </Typography>
-          
-        </Grid>
-        <Grid item xs={4}>
-          <Typography variant="h6" gutterBottom align="center">
-            Estadísticas
-          </Typography>
-          {/* Puedes dejar esta columna en blanco o agregar un título */}
-          <Typography variant="body1" gutterBottom align="center">
-            Goles
-          </Typography>
-          <Typography variant="body1" gutterBottom align="center">
-            Tiros Totales
-          </Typography>
-          <Typography variant="body1" gutterBottom align="center">
-            Tiros al arco
-          </Typography>
-          <Typography variant="body1" gutterBottom align="center">
-            Posesión (%)
-          </Typography>
-          <Typography variant="body1" gutterBottom align="center">
-            Faltas
-          </Typography>
-          <Typography variant="body1" gutterBottom align="center">
-            Tarjetas Amarillas
-          </Typography>
-          {/* <Typography variant="body1" gutterBottom align="center">
-            Tarjetas Rojas
-          </Typography> */}
-          <Typography variant="body1" gutterBottom align="center">
-            Córners
-          </Typography>
-          <Typography variant="body1" gutterBottom align="center">
-            Offsides
-          </Typography>
-        </Grid>
-        <Grid item xs={4}>
-        <Typography variant="h6" gutterBottom align="center">
-            {visitorName}
-          </Typography>
-          <Typography variant="body1" gutterBottom align="center">
-            {matchDetail.teamStatistics?.visitor?.goals}
-          </Typography>
-          <Typography variant="body1" gutterBottom align="center">
-             {matchDetail.teamStatistics?.visitor?.shots}
-          </Typography>
-          <Typography variant="body1" gutterBottom align="center">
-            {matchDetail.teamStatistics?.visitor?.shotsOnTarget}
-          </Typography>
-          <Typography variant="body1" gutterBottom align="center">
-            {matchDetail.teamStatistics?.visitor?.possession}
-          </Typography>
-          <Typography variant="body1" gutterBottom align="center">
-          {matchDetail.teamStatistics?.visitor?.foults}
-          </Typography>
-          <Typography variant="body1" gutterBottom align="center">
-            {matchDetail.teamStatistics?.visitor?.yellowCards}
-          </Typography>
-          {/* <Typography variant="body1" gutterBottom align="center">
-             {matchDetail.teamStatistics?.visitor?.redCards}
-          </Typography> */}
-          <Typography variant="body1" gutterBottom align="center">
-           {matchDetail.teamStatistics?.visitor?.corners}
-          </Typography>
-          <Typography variant="body1" gutterBottom align="center">
-             {matchDetail.teamStatistics?.visitor?.offsides}
-          </Typography>
-        </Grid>
-      </Grid>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{maxWidth:"75px"}} align="center" className="team-name">{localName}</TableCell>
+              <TableCell align="center" className="stats-column"></TableCell>
+              <TableCell sx={{maxWidth:"75px"}} align="center" className="team-name">{visitorName}</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableRow>
+              <TableCell align="center">{matchDetail.teamStatistics?.local?.goals}</TableCell>
+              <TableCell align="center">Goles</TableCell>
+              <TableCell align="center">{matchDetail.teamStatistics?.visitor?.goals}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell align="center">{matchDetail.teamStatistics?.local?.shots}</TableCell>
+              <TableCell align="center">Tiros Totales</TableCell>
+              <TableCell align="center">{matchDetail.teamStatistics?.visitor?.shots}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell align="center">{matchDetail.teamStatistics?.local?.shotsOnTarget}</TableCell>
+              <TableCell align="center">Tiros al arco</TableCell>
+              <TableCell align="center">{matchDetail.teamStatistics?.visitor?.shotsOnTarget}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell align="center">{matchDetail.teamStatistics?.local?.possession}</TableCell>
+              <TableCell align="center">Posesión (%)</TableCell>
+              <TableCell align="center">{matchDetail.teamStatistics?.visitor?.possession}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell align="center">{matchDetail.teamStatistics?.local?.foults}</TableCell>
+              <TableCell align="center">Faltas</TableCell>
+              <TableCell align="center">{matchDetail.teamStatistics?.visitor?.foults}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell align="center">{matchDetail.teamStatistics?.local?.yellowCards}</TableCell>
+              <TableCell align="center">Tarjetas Amarillas</TableCell>
+              <TableCell align="center">{matchDetail.teamStatistics?.visitor?.yellowCards}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell align="center">{matchDetail.teamStatistics?.local?.corners}</TableCell>
+              <TableCell align="center">Córners</TableCell>
+              <TableCell align="center">{matchDetail.teamStatistics?.visitor?.corners}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell align="center">{matchDetail.teamStatistics?.local?.offsides}</TableCell>
+              <TableCell align="center">Offsides</TableCell>
+              <TableCell align="center">{matchDetail.teamStatistics?.visitor?.offsides}</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
     )
   );
 };
