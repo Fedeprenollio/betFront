@@ -600,6 +600,8 @@ import {
   Typography,
 } from "@mui/material";
 import { GroupByName } from "../rangePercentageTable/GroupByName";
+import { AdvancedOptions } from "./AdvancedOptions";
+import { SelectStatistics } from "./SelectStatistics";
 
 export const TableAllTeamSeason = () => {
   const { seasonId } = useParams();
@@ -699,103 +701,9 @@ export const TableAllTeamSeason = () => {
   return (
     <Box>
        <Divider style={{ marginTop: "10px" }} />
-      <Box
-        sx={{
-          border: "1px solid #ddd",
-          padding: 2,
-          marginBottom: 2,
-          borderRadius: 2,
-          boxShadow: 1,
-          backgroundColor: "#f9f9f9",
-        }}
-      >
-        <Typography variant="h6" gutterBottom>
-          Selecciona estadísticas:
-        </Typography>
-        <Grid
-          container
-          justifyContent="space-around"
-          alignItems="center"
-          spacing={1} // Espacio entre los Grid items
-          mb={2}
-        >
-          {stats.map((stat) => (
-            <Grid
-              key={stat.key}
-              item
-              xs={6}
-              sm={6}
-              md={4}
-              style={{ textAlign: "initial" }}
-            >
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={visibleStats[stat.key]}
-                    onChange={() => handleStatCheckboxChange(stat.key)}
-                  />
-                }
-                label={stat.label}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
+      <SelectStatistics stats={stats} visibleStats={visibleStats} handleStatCheckboxChange={handleStatCheckboxChange}/>
       <Divider />
-      <Box
-        sx={{
-          border: "1px solid #ddd",
-          padding: 2,
-          marginBottom: 2,
-          borderRadius: 2,
-          boxShadow: 1,
-          backgroundColor: "#f9f9f9",
-        }}
-      >
-        <Typography variant="h6" gutterBottom>
-          Opciones avanzadas:
-        </Typography>
-        <Grid
-          container
-          justifyContent="space-around"
-          alignItems="center"
-          mb={2}
-        >
-          <Grid item xs={12}  style={{ textAlign: "initial" }}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={showAdvancedStats.promedio}
-                  onChange={() => handleCheckboxChange("promedio")}
-                />
-              }
-              label="Promedio"
-            />
-          </Grid>
-          <Grid item xs={12}  style={{ textAlign: "initial" }}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={showAdvancedStats.mediana}
-                  onChange={() => handleCheckboxChange("mediana")}
-                />
-              }
-              label="Mediana"
-            />
-          </Grid>
-          <Grid item xs={12}  style={{ textAlign: "initial" }}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={showAdvancedStats.desviacion}
-                  onChange={() => handleCheckboxChange("desviacion")}
-                />
-              }
-              label="Desviación Estándar"
-            />
-          </Grid>
-        </Grid>
-      </Box>
+     <AdvancedOptions showAdvancedStats={showAdvancedStats} handleCheckboxChange={handleCheckboxChange}/>
       <Divider style={{ marginBottom: "5px" }} />
       <GroupByName onNamesChange={handleNamesChange} /> {/* Componente GroupByName */}
 

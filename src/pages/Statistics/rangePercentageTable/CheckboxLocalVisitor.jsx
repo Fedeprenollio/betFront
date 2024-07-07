@@ -1,11 +1,15 @@
 /* eslint-disable react/prop-types */
+import React from "react";
 import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   Checkbox,
   FormControlLabel,
   FormGroup,
   Typography,
 } from "@mui/material";
-import React from "react";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export const CheckboxLocalVisitor = ({
   homeOnly,
@@ -14,35 +18,42 @@ export const CheckboxLocalVisitor = ({
   handleAwayOnlyChange,
 }) => {
   return (
-    <>
-      <Typography variant="h5" gutterBottom>
-        Considerar local/visitante
-      </Typography>
-
-      <FormGroup row>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={homeOnly}
-              onChange={handleHomeOnlyChange}
-              name="homeOnly"
-              color="primary"
-            />
-          }
-          label="Local"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={awayOnly}
-              onChange={handleAwayOnlyChange}
-              name="awayOnly"
-              color="primary"
-            />
-          }
-          label="Visitante"
-        />
-      </FormGroup>
-    </>
+    <Accordion>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="panel1a-content"
+        id="panel1a-header"
+      >
+        <Typography variant="h6" gutterBottom>
+          Considerar local/visitante
+        </Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <FormGroup row>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={homeOnly}
+                onChange={handleHomeOnlyChange}
+                name="homeOnly"
+                color="primary"
+              />
+            }
+            label="Local"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={awayOnly}
+                onChange={handleAwayOnlyChange}
+                name="awayOnly"
+                color="primary"
+              />
+            }
+            label="Visitante"
+          />
+        </FormGroup>
+      </AccordionDetails>
+    </Accordion>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useBoundStore } from "../../stores";
 import { RangePercentageTable } from "../Statistics/rangePercentageTable/RangePercentageTable";
 
@@ -20,9 +20,9 @@ export const PercentageStatistics = () => {
 
 
 
-  return <div>PercentageStatistics
-
-<RangePercentageTable  listCurrentSeason={listCurrentSeason}/>
-
-  </div>;
+  return (
+  
+  <>
+    <RangePercentageTable listCurrentSeason={listCurrentSeason} />
+  </>);
 };

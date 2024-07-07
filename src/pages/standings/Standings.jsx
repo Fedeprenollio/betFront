@@ -215,6 +215,7 @@ import {
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import { StyledTableRow } from "../Statistics/rangePercentageTable/RangePercentageTable";
+import { CheckboxLocalVisitor } from "../Statistics/rangePercentageTable/CheckboxLocalVisitor";
 
 export const Standings = () => {
   const { seasonId } = useParams();
@@ -270,10 +271,10 @@ export const Standings = () => {
           backgroundColor: "#f9f9f9",
         }}
       >
-        <Typography variant="h5" gutterBottom>
-          Considerar local/visitante
-        </Typography>
-        <FormGroup row>
+        {/* <Typography variant="h5" gutterBottom>
+          Considerar local/visitante....
+        </Typography> */}
+        {/* <FormGroup row>
           <FormControlLabel
             control={
               <Checkbox checked={showHome} onChange={handleShowHomeChange} />
@@ -289,7 +290,11 @@ export const Standings = () => {
             }
             label="Visitante"
           />
-        </FormGroup>
+        </FormGroup> */}
+        <CheckboxLocalVisitor homeOnly={showHome}
+          awayOnly={showVisitor}
+          handleHomeOnlyChange={handleShowHomeChange}
+          handleAwayOnlyChange={handleShowVisitorChange} />
       </Box>
 
       {tableSeason?.zoneTables?.map((zone, zoneIndex) => (

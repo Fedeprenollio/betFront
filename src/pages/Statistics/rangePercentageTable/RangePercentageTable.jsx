@@ -570,7 +570,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
   };
   return (
     <>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="p" gutterBottom>
         {listCurrentSeason
           ? "Estadisticas generales de todos los equipos en temporadas actuales activas"
           : "Estadísticas de la Temporada"}
