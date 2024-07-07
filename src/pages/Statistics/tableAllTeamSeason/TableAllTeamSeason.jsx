@@ -599,6 +599,7 @@ import {
   Divider,
   Typography,
 } from "@mui/material";
+import { GroupByName } from "../rangePercentageTable/GroupByName";
 
 export const TableAllTeamSeason = () => {
   const { seasonId } = useParams();
@@ -606,6 +607,7 @@ export const TableAllTeamSeason = () => {
     (state) => state
   );
   const [listTeams, setListTeams] = useState([]);
+  const [selectedTeams, setSelectedTeams] = useState([]); // Estado para los equipos seleccionados
 
   useEffect(() => {
     getTeamStatsForSeason({ seasonId });
@@ -688,10 +690,15 @@ export const TableAllTeamSeason = () => {
       [key]: !prevState[key],
     }));
   };
-
+  const handleNamesChange = (names) => {
+    setSelectedTeams(names.flat()); // Actualiza los equipos seleccionados
+  };
+  const filteredTeams = selectedTeams.length > 0
+  ? listTeams.filter(team => selectedTeams.includes(team.teamName))
+  : listTeams;
   return (
     <Box>
-      <Divider style={{ marginTop: "10px" }} />
+       <Divider style={{ marginTop: "10px" }} />
       <Box
         sx={{
           border: "1px solid #ddd",
@@ -712,7 +719,7 @@ export const TableAllTeamSeason = () => {
           spacing={1} // Espacio entre los Grid items
           mb={2}
         >
-          {stats.map((stat, index) => (
+          {stats.map((stat) => (
             <Grid
               key={stat.key}
               item
@@ -790,6 +797,7 @@ export const TableAllTeamSeason = () => {
         </Grid>
       </Box>
       <Divider style={{ marginBottom: "5px" }} />
+      <GroupByName onNamesChange={handleNamesChange} /> {/* Componente GroupByName */}
 
       <Paper>
         <TableContainer
@@ -1092,7 +1100,7 @@ export const TableAllTeamSeason = () => {
             </TableHead>
 
             <TableBody>
-              {listTeams.map((team, rowIndex) => (
+              {filteredTeams.map((team, rowIndex) => (
                 <TableRow key={team.teamId}>
                   <TableCell
                     style={{
