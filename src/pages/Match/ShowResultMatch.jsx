@@ -1,8 +1,9 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Paper } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Paper, Avatar } from '@mui/material';
 import { useBoundStore } from '../../stores';
 
-const ShowResultMatch = ({ matchId, visitorName, localName }) => {
+const ShowResultMatch = ({ matchId, visitorName, localName, logoVisitor, logoLocal }) => {
   const { getMatchDetail, matchDetail } = useBoundStore((state) => state);
 
   useEffect(() => {
@@ -18,9 +19,17 @@ console.log("matchDetail.teamStatistics?.visitor?",matchDetail.teamStatistics?.v
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell sx={{maxWidth:"75px"}} align="center" className="team-name">{localName}</TableCell>
+            
+              <TableCell sx={{maxWidth:"75px"}} align="center" className="team-name"> <Avatar
+                              src={logoLocal}
+                              alt={`Escudo de ${localName}`}
+                            />{localName}</TableCell>
               <TableCell align="center" className="stats-column"></TableCell>
-              <TableCell sx={{maxWidth:"75px"}} align="center" className="team-name">{visitorName}</TableCell>
+              
+              <TableCell sx={{maxWidth:"75px"}} align="center" className="team-name"> <Avatar
+                              src={logoVisitor}
+                              alt={`Escudo de ${visitorName }`}
+                            />{visitorName}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

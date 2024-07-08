@@ -19,12 +19,14 @@ const createTeamStore = (set, get) => ({
     // Aquí realizarías la llamada a la API para obtener los detalles del equipo
     const response = await fetch(`${URL_API}/${teamId}`);
     const teamDetails = await response.json();
+    console.log("teamDetails en estore", teamDetails)
     set((state) => ({
       teamDetails: {
         ...state.teamDetails,
         [teamId]: teamDetails,
       },
     }));
+    return teamDetails
   },
   // Nuevo selector para obtener los detalles de un equipo específico
   teamDetailsSelector: (teamId) => (state) => state.teamDetails[teamId],
@@ -102,6 +104,18 @@ const createTeamStore = (set, get) => ({
     const response = await fetch(`${URL_API}/${teamId}/leagues-seasons`);
     const infoLeague = await response.json();
     set({teamSeason: infoLeague});
+  },
+  updateTeam: async (id, teamData) => {
+    try {
+      const response = await axios.put(`${URL_API}/${id}`, teamData);
+      set((state) => ({
+        teams: state.teams.map((team) =>
+          team._id === id ? response.data : team
+        ),
+      }));
+    } catch (error) {
+      console.error('Error updating team:', error);
+    }
   },
 });
 

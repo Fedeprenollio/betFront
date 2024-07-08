@@ -16,7 +16,8 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  TableSortLabel
+  TableSortLabel,
+  Avatar
 } from "@mui/material";
 import AlertDialogCopy from "../../componts/feedback/AlertDialogCopy";
 import { AlertMessageCopy } from "../../componts/feedback/AlertMessageCopy";
@@ -81,6 +82,7 @@ export const Teams = () => {
     setSelectedTeamId(id);
     setSelectedTeamName(name);
     setOpenDialog(true);
+    console.log("HOLA")
   };
 
   const handleCloseDialog = () => {
@@ -121,6 +123,11 @@ export const Teams = () => {
     setOrderBy(property);
   };
 
+
+  const handleEditClick = (teamId) => {
+    console.log("EDITAR; ", teamId)
+    navigate(`/teams/adm/${teamId}`); // Redirigir a la página de edición
+  };
   return (
     <>
       <Typography variant="h6" gutterBottom>
@@ -155,6 +162,7 @@ export const Teams = () => {
         <Table>
           <TableHead>
             <TableRow>
+            <TableCell></TableCell>
               <TableCell sortDirection={orderBy === "name" ? order : false}>
                 <TableSortLabel
                   active={orderBy === "name"}
@@ -164,6 +172,7 @@ export const Teams = () => {
                   Nombre del Equipo
                 </TableSortLabel>
               </TableCell>
+              
               <TableCell sortDirection={orderBy === "country" ? order : false}>
                 <TableSortLabel
                   active={orderBy === "country"}
@@ -183,13 +192,15 @@ export const Teams = () => {
               filteredTeams.map((team) => (
                 <React.Fragment key={team._id}>
                   <TableRow>
-                    <TableCell>{team.name}</TableCell>
+                  <Avatar src={team.logo} alt={team.name} variant="square" sx={{ width: 56, height: 56 }} />
+                  <TableCell>{team.name}</TableCell>
+
                     <TableCell>{team.country}</TableCell>
                     <TableCell>
                       <Button onClick={() => handleStatisticsClick(team._id)}>Estadística</Button>
                     </TableCell>
                     <TableCell>
-                      <Button>Editar</Button>
+                    <Button onClick={() => handleEditClick(team._id)}>Editar</Button>
                     </TableCell>
                     <TableCell>
                       <Button

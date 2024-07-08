@@ -490,7 +490,7 @@ export default function StatisticsTablecopy({
                   }}
                 >
                   <Avatar
-                    src={teamDetails1?.logoUrl}
+                    src={teamDetails1?.logo}
                     alt={teamDetails1?.name}
                   />
                   <Typography
@@ -512,7 +512,7 @@ export default function StatisticsTablecopy({
                     }}
                   >
                     <Avatar
-                      src={teamDetails2?.logoUrl}
+                      src={teamDetails2?.logo}
                       alt={teamDetails2?.name}
                     />
                     <Typography

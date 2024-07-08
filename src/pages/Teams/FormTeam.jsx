@@ -1,9 +1,9 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { TextField, Button, MenuItem } from "@mui/material";
+import { TextField, Button, MenuItem, Container, Typography } from "@mui/material";
 import * as Yup from "yup";
-import createTeamStore from "../../stores/teamStore";
 import { useEffect, useState } from "react";
 import { useBoundStore } from "../../stores";
+import {  useNavigate, useParams } from "react-router-dom";
 
 // Definimos las opciones para países y ligas
 const countries = [
@@ -106,53 +106,72 @@ const countries = [
 ];
 
 const FormTeam = () => {
+  const { idTeam } = useParams();
+  const navigate = useNavigate();
+
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Required"),
-    // city: Yup.string().required("Required"),
+    logo: Yup.string(),
     country: Yup.string().required("Required"),
     // league: Yup.string().required("Required"),
   });
-  const [selectedLeague, setSelectedLeague] = useState("");
   const [leaguesByCountry, setLeaguesByCountry] = useState({});
 
-  const { newTeam, leagues, fetchLeagues } = useBoundStore((state) => state);
+  const { newTeam, leagues, fetchLeagues,updateTeam,getTeamDetails,teamDetails } = useBoundStore((state) => state);
+  const [initialValues, setInitialValues] = useState({
+    name: "",
+    country: "",
+    logo: "",
+  });
 
+  console.log("teamDetails",teamDetails)
+  console.log("teamDetails 2",teamDetails[idTeam]?.name)
   useEffect(() => {
     fetchLeagues();
   }, [fetchLeagues]);
 
-  // useEffect(() => {
-  //   const leaguesData = {};
-  //   countries.forEach((country) => {
-  //     leaguesData[country] = leagues
-  //       .filter((league) => league.country === country)
-  //       .map((league) => ({ id: league._id, name: league.name }));
-  //   });
-  //   console.log("SOY LEAGUEDATA", leaguesData)
-  //   setLeaguesByCountry(leaguesData);
-  // }, [leagues]);
- 
+  useEffect(() => {
+    if (idTeam) {
+       getTeamDetails(idTeam);
+      if (teamDetails) {
+        setInitialValues(teamDetails[idTeam]);
+      }
+    }
+    fetchLeagues();
+  }, [idTeam, getTeamDetails, fetchLeagues,teamDetails]);
 
-  const handleSubmit =  (values) => {
-     newTeam({ values });
+  const handleSubmit = (values) => {
+    if (idTeam) {
+      updateTeam(idTeam, values);
+    } else {
+      newTeam(values);
+    }
+    navigate('/teams');
   };
 
-const handleCountryChange=(e)=>{
- const countrySelect = e.target.value
-  console.log(e.target.value)
-  const leaguesData = {};
+
+  const handleCountryChange = (e) => {
+    const countrySelect = e.target.value
+    console.log(e.target.value)
+    const leaguesData = {};
 
     leaguesData[countrySelect] = leagues
       .filter((league) => league.country === countrySelect)
       .map((league) => ({ id: league._id, name: league.name }));
- 
-  setLeaguesByCountry(leaguesData);
-}
+
+    setLeaguesByCountry(leaguesData);
+  }
 
   return (
+    <Container >
+        <Typography variant="h6" gutterBottom>
+        {idTeam ? 'Editar Equipo' : 'Crear Equipo'}
+      </Typography>
+
     <Formik
-      initialValues={{ name: "", city: "", country: "", league: "" }}
-      onSubmit={handleSubmit}
+        initialValues={initialValues}
+        enableReinitialize 
+        onSubmit={handleSubmit}
       validationSchema={validationSchema}
     >
       {({ values, handleChange }) => (
@@ -167,15 +186,15 @@ const handleCountryChange=(e)=>{
           />
           <ErrorMessage name="name" component="div" />
 
-          {/* <Field
-            as={TextField}
-            name="city"
-            label="Ciudad"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-          />
-          <ErrorMessage name="city" component="div" /> */}
+          <Field
+              as={TextField}
+              name="logo"
+              label="URL del Escudo"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+            />
+            <ErrorMessage name="logo" component="div" />
 
           <Field
             as={TextField}
@@ -199,35 +218,18 @@ const handleCountryChange=(e)=>{
           </Field>
           <ErrorMessage name="country" component="div" />
 
-          {/* <Field
-            as={TextField}
-            select
-            name="league"
-            label="Liga"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            disabled={values.country === ""}
-          >
-            {values.country === "" ? (
-              <MenuItem value="">Seleccione un país primero</MenuItem>
-            ) : (
-              leaguesByCountry[values.country]?.map((option) => (
-                <MenuItem key={option.id} value={option.id}>
-                  {option.name}
-                </MenuItem>
-              ))
-            )}
-          </Field> */}
+
 
           <ErrorMessage name="league" component="div" />
 
           <Button type="submit" variant="contained" color="primary">
-            Submit
+          {idTeam ? 'Actualizar' : 'Crear'}
           </Button>
         </Form>
       )}
     </Formik>
+
+    </Container>
   );
 };
 

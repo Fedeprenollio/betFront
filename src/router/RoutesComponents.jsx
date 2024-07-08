@@ -1,16 +1,13 @@
 import { Route, Routes } from "react-router-dom";
-import App from "../App";
 import FormTeam from "../pages/Teams/FormTeam";
 import MatchesPage from "../pages/Match/MatchPages";
 import { Teams } from "../pages/Teams/Teams";
-import FormResult from "../pages/FormResults";
 import { AdminMatch } from "../pages/Match/AdminMatch";
 import { DetailLeague } from "../pages/League/DetailLeague";
 import { ListLeagues } from "../pages/League/ListLeagues";
 import { Login } from "../pages/user/Login";
 import { Register } from "../pages/user/Register";
 import PrivateRoute from "./PrivateRoute";
-import { TeamStatistics } from "../pages/Statistics/TeamStatistics";
 import { StatisticsPage } from "../pages/Statistics/StatisticsPage";
 import { ResultsSeason } from "../pages/Match/ResultsSeason";
 import { TableAllTeamSeason } from "../pages/Statistics/tableAllTeamSeason/TableAllTeamSeason";
@@ -32,9 +29,9 @@ const RoutesComponent = () => {
         <Route index element={<Teams />} />
         <Route path=":idHomeTeam/statistics" element={<StatisticsPage />} />
 
-        <Route element={<PrivateRoute />}>
-          <Route path="adm" element={<FormTeam />} />
-          <Route path=":idTeam" />
+        <Route path="adm" element={<PrivateRoute />}>
+          <Route path="" element={<FormTeam />} />
+          <Route path=":idTeam" element={<FormTeam />} />
         </Route>
       </Route>
       <Route path="/match">

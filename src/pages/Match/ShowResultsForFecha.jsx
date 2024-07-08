@@ -211,7 +211,8 @@ import {
   AccordionDetails,
   IconButton,
   Tooltip,
-  Box
+  Box,
+  Avatar
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ShowResultMatch from "./ShowResultMatch";
@@ -353,8 +354,16 @@ export const ShowResultsForFecha = () => {
                     <CardContent>
                       <Grid container alignItems="center">
                         <Grid item xs={8}>
+
+
                           <Typography variant="h6" component="div">
-                            {`${match.homeTeam.name} - ${match.awayTeam.name}`}
+                            <Avatar
+                              src={match.homeTeam?.logo}
+                              alt={match.homeTeam?.name}
+                            />  {`${match.homeTeam.name} - ${match.awayTeam.name}`}  <Avatar
+                              src={match.awayTeam?.logo}
+                              alt={match.awayTeam?.name}
+                            />
                           </Typography>
                         </Grid>
                         <Grid item xs={4} container justifyContent="flex-end">
@@ -380,8 +389,8 @@ export const ShowResultsForFecha = () => {
                         </Grid>
                       </Grid>
                       <Typography variant="body2" color="textSecondary">
-                        {match.date ? 
-                          new Date(match.date).toLocaleDateString("es-ES", {day: "numeric", month: "short"}) :
+                        {match.date ?
+                          new Date(match.date).toLocaleDateString("es-ES", { day: "numeric", month: "short" }) :
                           "Fecha sin definir"
                         }
                       </Typography>
@@ -399,7 +408,10 @@ export const ShowResultsForFecha = () => {
                             <ShowResultMatch
                               matchId={match._id}
                               visitorName={match.awayTeam.name}
+                              logoVisitor={match.awayTeam.logo}
                               localName={match.homeTeam.name}
+                              logoLocal={match.homeTeam.logo}
+
                             />
                           </AccordionDetails>
                         </Accordion>
