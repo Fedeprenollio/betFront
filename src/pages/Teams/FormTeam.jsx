@@ -133,12 +133,12 @@ const FormTeam = () => {
   useEffect(() => {
     if (idTeam) {
        getTeamDetails(idTeam);
-      if (teamDetails) {
+      
         setInitialValues(teamDetails[idTeam]);
-      }
+      
     }
     fetchLeagues();
-  }, [idTeam, getTeamDetails, fetchLeagues,teamDetails]);
+  }, [idTeam, getTeamDetails, fetchLeagues]);
 
   const handleSubmit = (values) => {
     if (idTeam) {
