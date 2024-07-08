@@ -192,7 +192,10 @@ export const Teams = () => {
               filteredTeams.map((team) => (
                 <React.Fragment key={team._id}>
                   <TableRow>
+                    <TableCell>
                   <Avatar src={team.logo} alt={team.name} variant="square" sx={{ width: 56, height: 56 }} />
+
+                    </TableCell>
                   <TableCell>{team.name}</TableCell>
 
                     <TableCell>{team.country}</TableCell>

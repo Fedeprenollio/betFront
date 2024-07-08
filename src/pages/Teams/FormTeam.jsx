@@ -130,15 +130,27 @@ const FormTeam = () => {
     fetchLeagues();
   }, [fetchLeagues]);
 
+  // useEffect(() => {
+  //   if (idTeam) {
+  //      getTeamDetails(idTeam);
+      
+  //       setInitialValues(teamDetails[idTeam]);
+      
+  //   }
+  //   fetchLeagues();
+  // }, [idTeam, getTeamDetails, fetchLeagues,teamDetails]);
   useEffect(() => {
     if (idTeam) {
-       getTeamDetails(idTeam);
-      
-        setInitialValues(teamDetails[idTeam]);
-      
+      getTeamDetails(idTeam);
     }
     fetchLeagues();
   }, [idTeam, getTeamDetails, fetchLeagues]);
+
+  useEffect(() => {
+    if (idTeam && teamDetails[idTeam]) {
+      setInitialValues(teamDetails[idTeam]);
+    }
+  }, [idTeam, teamDetails]);
 
   const handleSubmit = (values) => {
     if (idTeam) {
