@@ -16,6 +16,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useBoundStore } from "../stores";
 import TemporaryDrawer from "./drawer/TemporaryDrawer";
+import { CaroulselCurrentSeason } from "../componts/caroulselCurrentSeason/CaroulselCurrentSeason";
 
 // const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
@@ -68,66 +69,67 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar position="static">
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          {isAuthenticated && <h4>Hola {user?.user}</h4>}
-          <IconButton
-            component={Link}
-            to="/"
-            aria-label="home"
-            sx={{ display: {  md: "flex" }, mr: 1 }}
-          >
-            <HomeIcon />
-          </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            LOGO
-          </Typography>
-          <TemporaryDrawer />
-          <Box sx={{ flexGrow: 1 }}>
-            <Button
-              id="partidos-button"
-              aria-controls="partidos-menu"
-              aria-haspopup="true"
-              onClick={handleMenuPartidos}
-              sx={{ color: "inherit" }}
+    <>
+      <AppBar position="static">
+        <Container maxWidth="xl">
+          <Toolbar disableGutters>
+            {isAuthenticated && <h4>Hola {user?.user}</h4>}
+            <IconButton
+              component={Link}
+              to="/"
+              aria-label="home"
+              sx={{ display: { md: "flex" }, mr: 1 }}
             >
-              Partidos
-            </Button>
-            <Menu
-              id="partidos-menu"
-              anchorEl={anchorElPartidos}
-              open={Boolean(anchorElPartidos)}
-              onClose={handleClose}
+              <HomeIcon />
+            </IconButton>
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              href="#app-bar-with-responsive-menu"
+              sx={{
+                mr: 2,
+                display: { xs: "none", md: "flex" },
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
+              }}
             >
-              <MenuItem onClick={handleClose} component={Link} to="/match">
-                Ver partidos
-              </MenuItem>
-
-              {isAuthenticated && (
-                <MenuItem
-                  onClick={handleClose}
-                  component={Link}
-                  to="/match/new"
-                >
-                  Administrar Partidos
+              LOGO
+            </Typography>
+            <TemporaryDrawer />
+            <Box sx={{ flexGrow: 1 }}>
+              <Button
+                id="partidos-button"
+                aria-controls="partidos-menu"
+                aria-haspopup="true"
+                onClick={handleMenuPartidos}
+                sx={{ color: "inherit" }}
+              >
+                Partidos
+              </Button>
+              <Menu
+                id="partidos-menu"
+                anchorEl={anchorElPartidos}
+                open={Boolean(anchorElPartidos)}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose} component={Link} to="/match">
+                  Ver partidos
                 </MenuItem>
-              )}
-              {/* {isAuthenticated && (
+
+                {isAuthenticated && (
+                  <MenuItem
+                    onClick={handleClose}
+                    component={Link}
+                    to="/match/new"
+                  >
+                    Administrar Partidos
+                  </MenuItem>
+                )}
+                {/* {isAuthenticated && (
                 <MenuItem
                   onClick={handleClose}
                   component={Link}
@@ -136,135 +138,137 @@ const Navbar = () => {
                   Cargar Resultados
                 </MenuItem>
               )} */}
-              {/* <MenuItem
+                {/* <MenuItem
                 onClick={handleClose}
                 component={Link}
                 to="/match/addResults"
               >
                 Agregar resultados
               </MenuItem> */}
-            </Menu>
-          </Box>
+              </Menu>
+            </Box>
 
-          <Box sx={{ flexGrow: 1 }}>
-            <Button
-              id="equipos-button"
-              aria-controls="equipos-menu"
-              aria-haspopup="true"
-              onClick={handleMenuEquipos}
-              sx={{ color: "inherit" }}
-            >
-              Equipos
-            </Button>
-            <Menu
-              id="equipos-menu"
-              anchorEl={anchorElEquipos}
-              open={Boolean(anchorElEquipos)}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleClose} component={Link} to="/teams">
-                Ver equipos
-              </MenuItem>
-
-              {isAuthenticated && (
-                <MenuItem
-                  onClick={handleClose}
-                  component={Link}
-                  to="/teams/adm"
-                >
-                  Administrar equipos
-                </MenuItem>
-              )}
-            </Menu>
-          </Box>
-
-          <Box sx={{ flexGrow: 1 }}>
-            <Button
-              id="ligas-button"
-              aria-controls="ligas-menu"
-              aria-haspopup="true"
-              onClick={handleMenuLeagues}
-              sx={{ color: "inherit" }}
-            >
-              Ligas
-            </Button>
-            <Menu
-              id="ligas-menu"
-              anchorEl={anchorLeagues}
-              open={Boolean(anchorLeagues)}
-              onClose={handleClose}
-            >
-              <MenuItem
-                onClick={handleClose}
-                component={Link}
-                to="/league/view"
+            <Box sx={{ flexGrow: 1 }}>
+              <Button
+                id="equipos-button"
+                aria-controls="equipos-menu"
+                aria-haspopup="true"
+                onClick={handleMenuEquipos}
+                sx={{ color: "inherit" }}
               >
-                Ver ligas
-              </MenuItem>
-              {isAuthenticated && (
+                Equipos
+              </Button>
+              <Menu
+                id="equipos-menu"
+                anchorEl={anchorElEquipos}
+                open={Boolean(anchorElEquipos)}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose} component={Link} to="/teams">
+                  Ver equipos
+                </MenuItem>
+
+                {isAuthenticated && (
+                  <MenuItem
+                    onClick={handleClose}
+                    component={Link}
+                    to="/teams/adm"
+                  >
+                    Administrar equipos
+                  </MenuItem>
+                )}
+              </Menu>
+            </Box>
+
+            <Box sx={{ flexGrow: 1 }}>
+              <Button
+                id="ligas-button"
+                aria-controls="ligas-menu"
+                aria-haspopup="true"
+                onClick={handleMenuLeagues}
+                sx={{ color: "inherit" }}
+              >
+                Ligas
+              </Button>
+              <Menu
+                id="ligas-menu"
+                anchorEl={anchorLeagues}
+                open={Boolean(anchorLeagues)}
+                onClose={handleClose}
+              >
                 <MenuItem
                   onClick={handleClose}
                   component={Link}
-                  to="/league/admin"
+                  to="/league/view"
                 >
-                  Administrar ligas
+                  Ver ligas
                 </MenuItem>
-              )}
-            </Menu>
-          </Box>
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {!isAuthenticated && (
-                <MenuItem
-                  onClick={handleClose}
-                  component={Link}
-                  to="/user/login"
-                >
-                  Login
-                </MenuItem>
-              )}
+                {isAuthenticated && (
+                  <MenuItem
+                    onClick={handleClose}
+                    component={Link}
+                    to="/league/admin"
+                  >
+                    Administrar ligas
+                  </MenuItem>
+                )}
+              </Menu>
+            </Box>
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {!isAuthenticated && (
+                  <MenuItem
+                    onClick={handleClose}
+                    component={Link}
+                    to="/user/login"
+                  >
+                    Login
+                  </MenuItem>
+                )}
 
-              {isAuthenticated && (
-                <MenuItem onClick={handleLogout}>Logout</MenuItem>
-              )}
+                {isAuthenticated && (
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                )}
 
-              {/* <MenuItem
+                {/* <MenuItem
                 onClick={handleClose}
                 component={Link}
                 to="/user/register"
               >
                 Registrate
               </MenuItem> */}
-              {/* {settings.map((setting) => (
+                {/* {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))} */}
-            </Menu>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+              </Menu>
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar>
+      <CaroulselCurrentSeason />
+    </>
   );
 };
 

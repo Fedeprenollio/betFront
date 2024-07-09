@@ -45,8 +45,7 @@ const createSeasonStore = (set) => ({
     if(seasonId=== null && round=== null){
       return set({ matchesByRound: {} });
     }
-    console.log("ID SEASON", seasonId)
-    console.log("RONDA",round)
+  
     try {
       // Obtener los partidos filtrados por ronda desde la API
       const response = await fetch(`${URL_API}/${seasonId}/matches?round=${round}`);

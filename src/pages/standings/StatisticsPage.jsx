@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Tabs, Tab, Box, Typography } from "@mui/material";
 import { useNavigate, useLocation, Outlet, useParams } from "react-router-dom";
 import { useBoundStore } from "../../stores";
+import CarouselLogos from "../../componts/caroulselLogos/CaroulselLogos";
 
 const StatisticsPageTab = () => {
   const navigate = useNavigate();
@@ -46,6 +47,7 @@ const StatisticsPageTab = () => {
 
   return (
     <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      <CarouselLogos seasonId={seasonId}/>
       <Typography variant="h4"> {`Central de estadísticas: ${seasonById?.season?.league?.name}, ${seasonById?.season?.year} `} </Typography>
 
       <Tabs
