@@ -52,7 +52,7 @@ export const CaroulselCurrentSeason = () => {
                 <List sx={{ display: 'flex', flexDirection: 'row', padding: 0 }}>
                     {allCurrentSeasons?.map(season => (
                         <ListItem
-                            key={season.id}
+                            key={season._id}
                             component={Link}
                             to={`/league/${season._id}/positions`}
                             sx={{

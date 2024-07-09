@@ -17,6 +17,7 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { useBoundStore } from "../stores";
 import TemporaryDrawer from "./drawer/TemporaryDrawer";
 import { CaroulselCurrentSeason } from "../componts/caroulselCurrentSeason/CaroulselCurrentSeason";
+import CarouselLogos from "../componts/caroulselLogos/CaroulselLogos";
 
 // const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
@@ -268,6 +269,7 @@ const Navbar = () => {
         </Container>
       </AppBar>
       <CaroulselCurrentSeason />
+      <CarouselLogos/>
     </>
   );
 };

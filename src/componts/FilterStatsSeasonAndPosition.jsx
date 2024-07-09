@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from 'react';
-import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Select, MenuItem, InputLabel } from '@mui/material';
+import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Select, MenuItem, InputLabel, Accordion, AccordionSummary, Typography } from '@mui/material';
 import { useBoundStore } from '../stores';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export const FilterStatsSeasonAndPosition = ({ setPosition, position, idHomeTeam,setCurrentSeason }) => {
   const { getTeamSeasons, teamSeason } = useBoundStore((state) => state);
@@ -42,8 +43,18 @@ export const FilterStatsSeasonAndPosition = ({ setPosition, position, idHomeTeam
 
   return (
     <>
+     <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="position-filter-content"
+          id="position-filter-header"
+        >
+        {/* <FormLabel component="legend">Filta por puesto del rival</FormLabel> */}
+        <Typography variant="h6" gutterBottom>
+        Filta por puesto del rival
+        </Typography>
+        </AccordionSummary>
       <FormControl component="fieldset">
-        <FormLabel component="legend">Filta por puesto del rival</FormLabel>
         <RadioGroup
           aria-label="position-range"
           name="position-range"
@@ -95,6 +106,7 @@ export const FilterStatsSeasonAndPosition = ({ setPosition, position, idHomeTeam
           </Select>
         </FormControl>
       )}
+      </Accordion>
     </>
   );
 };

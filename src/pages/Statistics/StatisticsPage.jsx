@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Tabs, Tab } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { FilterStatistics } from "./FilterStatistics";
-import { TeamStatistics } from "./TeamStatistics";
 import { ShowStatisticsMatches } from "./ShowStatisticsMatches";
 import StatisticsTablecopy from "../../componts/StatisticsTablecopy";
-import SingleTeamStatisticsPage from "./SingleTeamStatisticsPage ";
-import StatisticsTable from "./SingleTeamStatisticsPage ";
 
 export const StatisticsPage = () => {
   const { idHomeTeam, idAwayTeam, idMatch } = useParams();

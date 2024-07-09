@@ -447,10 +447,7 @@ export const FilterStatistics = ({
           backgroundColor: "#f9f9f9",
         }}
       >
-        <Typography variant="h6" gutterBottom>
-          NO SE QUE PONER DE TITULO JAJAJAJ
-        </Typography>
-        <RadioButtonStatsLessThan
+          <RadioButtonStatsLessThan
           handleChangeRadioButton={handleChangeRadioButton}
           statsLessThan={statsLessThan}
         />
@@ -465,9 +462,6 @@ export const FilterStatistics = ({
           backgroundColor: "#f9f9f9",
         }}
       >
-        <Typography variant="h6" gutterBottom>
-          Temporadas y posisiones de los rivales
-        </Typography>
         <FilterStatsSeasonAndPosition
           setPosition={setPosition}
           position={position}
@@ -485,10 +479,7 @@ export const FilterStatistics = ({
           backgroundColor: "#f9f9f9",
         }}
       >
-        <Typography variant="h6" gutterBottom>
-          Cantidad de partidos a evaluar
-        </Typography>
-        <NumberOfMatchesInput onNumberOfMatchesChange={setNumberOfMatches} />
+      <NumberOfMatchesInput onNumberOfMatchesChange={setNumberOfMatches} />
       </Box>
       <Box
         sx={{
@@ -500,10 +491,7 @@ export const FilterStatistics = ({
           backgroundColor: "#f9f9f9",
         }}
       >
-        <Typography variant="h6" gutterBottom>
-         Considerar partidos local/visitante
-        </Typography>
-        <RadioButtonHomeAway
+         <RadioButtonHomeAway
           handleChangeCheckbox={handleChangeCheckbox}
           homeMateshAwayTeam={homeMateshAwayTeam}
           visitingMatchesAwayTeam={visitingMatchesAwayTeam}

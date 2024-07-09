@@ -37,7 +37,9 @@ const CarouselLogos = ({ seasonId }) => {
     };
 
     return (
-        <Box position="relative" sx={{ display: 'flex', alignItems: 'center' }}>
+      <>
+      {teams &&
+             (<Box position="relative" sx={{ display: 'flex', alignItems: 'center' }}>
             <IconButton
                 onClick={() => handleScroll('left')}
                 sx={{
@@ -97,6 +99,8 @@ const CarouselLogos = ({ seasonId }) => {
                 <ArrowForwardIosIcon />
             </IconButton>
         </Box>
+      ) }
+        </>
     );
 };
 
