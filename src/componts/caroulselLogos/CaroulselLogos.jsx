@@ -38,7 +38,7 @@ const CarouselLogos = ({ seasonId }) => {
 
     return (
       <>
-      {teams &&
+      {teams.length >0 &&
              (<Box position="relative" sx={{ display: 'flex', alignItems: 'center' }}>
             <IconButton
                 onClick={() => handleScroll('left')}
