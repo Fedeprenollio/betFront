@@ -4,6 +4,7 @@ const GoogleAd = () => {
    useEffect(() => {
     if (window.adsbygoogle) {
       window.adsbygoogle.push({});
+      console.log("window.adsbygoogle",window.adsbygoogle)
     }
   }, []);
 

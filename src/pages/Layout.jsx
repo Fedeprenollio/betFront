@@ -7,7 +7,7 @@ const Layout = () => {
   return (
     <>
       <Navbar />
-     <GoogleAd/>
+     {/* <G oogleAd/> */}
       <RoutesComponent />
      
     </>
