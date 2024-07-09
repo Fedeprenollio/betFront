@@ -54,7 +54,7 @@ export const GroupByName = ({ onNamesChange }) => {
   );
 
   return (
-    <div>
+    <>
       <Autocomplete
         options={filteredOptions}
         getOptionLabel={(option) => option.name}
@@ -77,7 +77,7 @@ export const GroupByName = ({ onNamesChange }) => {
           />
         )}
       />
-      <div>
+      <>
         {selectedTeams.map(team => (
           <Chip
             key={team._id}
@@ -86,7 +86,7 @@ export const GroupByName = ({ onNamesChange }) => {
             style={{ margin: '5px' }}
           />
         ))}
-      </div>
-    </div>
+      </>
+    </>
   );
 };
