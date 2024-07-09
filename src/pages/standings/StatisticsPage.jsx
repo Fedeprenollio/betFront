@@ -47,8 +47,7 @@ const StatisticsPageTab = () => {
 
   return (
     <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-      {/* <CarouselLogos seasonId={seasonId}/> */}
-      <Typography variant="h4"> {`Central de estadísticas: ${seasonById?.season?.league?.name}, ${seasonById?.season?.year} `} </Typography>
+      {/* <Typography variant="h6"> {`Central de estadísticas: ${seasonById?.season?.league?.name}, ${seasonById?.season?.year} `} </Typography> */}
 
       <Tabs
         value={activeTab}
