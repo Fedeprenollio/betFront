@@ -1,6 +1,8 @@
 import Navbar from "./Navbar";
 import RoutesComponent from "../router/RoutesComponents";
 import GoogleAd from "../componts/googleAd/GoogleAd";
+import { ButtonCafecito } from "../componts/socialNetworks/ButtonCafecito";
+import Footer from "./footer/Footer";
 
 
 const Layout = () => {
@@ -9,7 +11,7 @@ const Layout = () => {
       <Navbar />
      {/* <G oogleAd/> */}
       <RoutesComponent />
-     
+      <Footer/>
     </>
   );
 };
