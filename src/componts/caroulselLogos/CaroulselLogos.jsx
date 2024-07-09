@@ -37,7 +37,7 @@ const CarouselLogos = ({ seasonId }) => {
     };
 
     return (
-        <Box display="flex" alignItems="center" position="relative">
+        <Box position="relative" sx={{ display: 'flex', alignItems: 'center' }}>
             <IconButton
                 onClick={() => handleScroll('left')}
                 sx={{
@@ -58,7 +58,7 @@ const CarouselLogos = ({ seasonId }) => {
                 flexDirection="row"
                 flexWrap="nowrap"
                 overflow="hidden"
-                sx={{ width: '100%', scrollBehavior: 'smooth' }}
+                sx={{ width: '100%', scrollBehavior: 'smooth', padding: '0 40px' }}
             >
                 {teams?.map((team) => (
                     <Box
