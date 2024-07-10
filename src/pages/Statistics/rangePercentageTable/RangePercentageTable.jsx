@@ -28,6 +28,7 @@ import LoadingSpinner from "../../../componts/loading/LoadingSpinner";
 import { SelectListCurrentSeasons } from "./SelectListCurrentSeasons";
 import CloseIcon from "@mui/icons-material/Close";
 import { GroupByName } from "./GroupByName";
+import { FilterComponent } from "../../../componts/tableFilters/FilterComponent";
 // import GroupByName from "./GroupByName";
 
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -575,7 +576,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
           ? "Estadisticas generales de todos los equipos en temporadas actuales activas"
           : "Estadísticas de la Temporada"}
       </Typography>}
-      <Box
+      {/* <Box
         sx={{
           border: "1px solid #ddd",
           padding: 2,
@@ -611,8 +612,27 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
           inputChekBoxIncludeAllSeason={inputChekBoxIncludeAllSeason}
           onFilterChange={handleFilterChange}
         />
-      </Box>
+      </Box> */}
+    <FilterComponent
+     homeOnly={homeOnly}
+     awayOnly={awayOnly}
+     handleHomeOnlyChange={handleHomeOnlyChange}
+     handleAwayOnlyChange={handleAwayOnlyChange}
+     inputMatchesCount={inputMatchesCount}
+     handleInputMatchesCountChange={handleInputMatchesCountChange}
+     handleIncludeAllSeasonMatches={handleIncludeAllSeasonMatches}
+     updateMatchesCount={updateMatchesCount}
+     updateIncludeOtherSeasons={updateIncludeOtherSeasons}
+     inputChekBoxIncludeAllSeason={inputChekBoxIncludeAllSeason}
+     handleFilterChange={handleFilterChange}
+     listCurrentSeason={listCurrentSeason}
+     selectedSeasons={selectedSeasons}
+     handleSeasonChange={handleSeasonChange}
+    />
+
       <GroupByName onNamesChange={handleNamesChange}/>
+
+
       <Tabs
         value={tabIndex}
         onChange={handleTabChange}
@@ -627,7 +647,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
       </Tabs>
 
      
-      {listCurrentSeason && (
+      {/* {listCurrentSeason && (
         <>
           <Button variant="contained" color="primary" onClick={handleOpenModal}>
             Seleccionar temporadas
@@ -665,7 +685,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
             </Box>
           </Modal>
         </>
-      )}
+      )} */}
 
       {statisticKeys.map((key, index) => (
         <TabPanel  value={tabIndex} index={index} key={key}>

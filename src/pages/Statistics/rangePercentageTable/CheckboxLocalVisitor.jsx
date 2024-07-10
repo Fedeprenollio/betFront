@@ -24,7 +24,9 @@ export const CheckboxLocalVisitor = ({
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
-        <Typography variant="h6" gutterBottom>
+        <Typography variant="span" gutterBottom  sx={{ 
+    fontFamily: 'Roboto, Helvetica, Arial, sans-serif' 
+  }}>
           Considerar local/visitante
         </Typography>
       </AccordionSummary>
