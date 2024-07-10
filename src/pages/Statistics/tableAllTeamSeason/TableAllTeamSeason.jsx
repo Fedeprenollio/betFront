@@ -132,7 +132,6 @@ export const TableAllTeamSeason = () => {
       yellowCards_promedio: team.statistics.yellowCards.promedio,
       yellowCards_mediana: team.statistics.yellowCards.mediana,
       yellowCards_desviacion: team.statistics.yellowCards.desviacion,
-      
       corners_total: team.statistics.corners.total,
       corners_promedio: team.statistics.corners.promedio,
       corners_mediana: team.statistics.corners.mediana,
@@ -165,7 +164,6 @@ export const TableAllTeamSeason = () => {
       received_yellowCards_promedio: team.received.yellowCards.promedio,
       received_yellowCards_mediana: team.received.yellowCards.mediana,
       received_yellowCards_desviacion: team.received.yellowCards.desviacion,
-   
       received_corners_total: team.received.corners.total,
       received_corners_promedio: team.received.corners.promedio,
       received_corners_mediana: team.received.corners.mediana,
@@ -191,6 +189,10 @@ export const TableAllTeamSeason = () => {
     // Crear libro de trabajo y hoja de cálculo
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+  
+    // Agregar el filtro a las columnas
+    const range = XLSX.utils.decode_range(worksheet['!ref']);
+    worksheet['!autofilter'] = { ref: XLSX.utils.encode_range(range) };
   
     // Agregar hoja de cálculo al libro de trabajo
     XLSX.utils.book_append_sheet(workbook, worksheet, "Equipos");
