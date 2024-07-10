@@ -14,7 +14,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
   const { addMatchResult, getMatchDetail, matchDetail } = useBoundStore((state) => state);
 
   const [initialValues, setInitialValues] = useState({
-    goalsHome: 0,
+    goalsHome: "",
     goalsAway: 0,
     offsidesHome: 0,
     offsidesAway: 0,
@@ -50,24 +50,24 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
   useEffect(() => {
     if (matchDetail && matchDetail._id === matchId) {
       setInitialValues({
-        goalsHome: matchDetail?.teamStatistics?.local?.goals || 0,
-        goalsAway: matchDetail?.teamStatistics?.visitor?.goals || 0,
-        offsidesHome: matchDetail?.teamStatistics?.local?.offsides || 0,
-        offsidesAway: matchDetail?.teamStatistics?.visitor?.offsides || 0,
-        yellowCardsHome: matchDetail?.teamStatistics?.local?.yellowCards || 0,
-        yellowCardsAway: matchDetail?.teamStatistics?.visitor?.yellowCards || 0,
-        redCardsHome: matchDetail?.teamStatistics?.local?.redCards || 0,
-        redCardsAway: matchDetail?.teamStatistics?.visitor?.redCards || 0,
-        cornersHome: matchDetail?.teamStatistics?.local?.corners || 0,
-        cornersAway: matchDetail?.teamStatistics?.visitor?.corners || 0,
-        possessionHome: matchDetail?.teamStatistics?.local?.possession || 0,
-        possessionAway: matchDetail?.teamStatistics?.visitor?.possession || 0,
-        shotsOnTargetHome: matchDetail?.teamStatistics?.local?.shotsOnTarget || 0,
-        shotsOnTargetAway: matchDetail?.teamStatistics?.visitor?.shotsOnTarget || 0,
-        foultsHome: matchDetail?.teamStatistics?.local?.foults || 0,
-        foultsAway: matchDetail?.teamStatistics?.visitor?.foults || 0,
-        totalShotsHome: matchDetail?.teamStatistics?.local?.shots || 0,
-        totalShotsAway: matchDetail?.teamStatistics?.visitor?.shots || 0,
+        goalsHome: matchDetail?.teamStatistics?.local?.goals || "",
+        goalsAway: matchDetail?.teamStatistics?.visitor?.goals || "",
+        offsidesHome: matchDetail?.teamStatistics?.local?.offsides || "",
+        offsidesAway: matchDetail?.teamStatistics?.visitor?.offsides || "",
+        yellowCardsHome: matchDetail?.teamStatistics?.local?.yellowCards || "",
+        yellowCardsAway: matchDetail?.teamStatistics?.visitor?.yellowCards || "",
+        redCardsHome: matchDetail?.teamStatistics?.local?.redCards || "",
+        redCardsAway: matchDetail?.teamStatistics?.visitor?.redCards || "",
+        cornersHome: matchDetail?.teamStatistics?.local?.corners || "",
+        cornersAway: matchDetail?.teamStatistics?.visitor?.corners || "",
+        possessionHome: matchDetail?.teamStatistics?.local?.possession || "",
+        possessionAway: matchDetail?.teamStatistics?.visitor?.possession || "",
+        shotsOnTargetHome: matchDetail?.teamStatistics?.local?.shotsOnTarget || "",
+        shotsOnTargetAway: matchDetail?.teamStatistics?.visitor?.shotsOnTarget || "",
+        foultsHome: matchDetail?.teamStatistics?.local?.foults || "",
+        foultsAway: matchDetail?.teamStatistics?.visitor?.foults || "",
+        totalShotsHome: matchDetail?.teamStatistics?.local?.shots || "",
+        totalShotsAway: matchDetail?.teamStatistics?.visitor?.shots || "",
       });
     }
   }, [matchDetail, matchId]);
