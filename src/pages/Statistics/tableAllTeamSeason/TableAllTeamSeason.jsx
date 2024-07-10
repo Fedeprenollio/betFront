@@ -117,7 +117,7 @@ export const TableAllTeamSeason = () => {
 
   const exportToExcel = () => {
     // Preparar datos para exportar
-    const dataToExport = listTeams.map(team => ({
+    const dataToExport = filteredTeams.map(team => ({
       teamId: team.teamId,
       teamName: team.teamName,
       goals_total: team.statistics.goals.total,
@@ -132,10 +132,7 @@ export const TableAllTeamSeason = () => {
       yellowCards_promedio: team.statistics.yellowCards.promedio,
       yellowCards_mediana: team.statistics.yellowCards.mediana,
       yellowCards_desviacion: team.statistics.yellowCards.desviacion,
-      redCards_total: team.statistics.redCards.total,
-      redCards_promedio: team.statistics.redCards.promedio,
-      redCards_mediana: team.statistics.redCards.mediana,
-      redCards_desviacion: team.statistics.redCards.desviacion,
+      
       corners_total: team.statistics.corners.total,
       corners_promedio: team.statistics.corners.promedio,
       corners_mediana: team.statistics.corners.mediana,
@@ -168,10 +165,7 @@ export const TableAllTeamSeason = () => {
       received_yellowCards_promedio: team.received.yellowCards.promedio,
       received_yellowCards_mediana: team.received.yellowCards.mediana,
       received_yellowCards_desviacion: team.received.yellowCards.desviacion,
-      received_redCards_total: team.received.redCards.total,
-      received_redCards_promedio: team.received.redCards.promedio,
-      received_redCards_mediana: team.received.redCards.mediana,
-      received_redCards_desviacion: team.received.redCards.desviacion,
+   
       received_corners_total: team.received.corners.total,
       received_corners_promedio: team.received.corners.promedio,
       received_corners_mediana: team.received.corners.mediana,
