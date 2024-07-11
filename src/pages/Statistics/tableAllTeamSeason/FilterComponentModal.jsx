@@ -4,13 +4,18 @@ import { Box, Button, Drawer, IconButton, Divider, Typography, useMediaQuery, us
 import { SelectStatistics } from './SelectStatistics';
 import { AdvancedOptions } from './AdvancedOptions';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { CheckboxLocalVisitor } from '../rangePercentageTable/CheckboxLocalVisitor';
 
 export const FilterComponentModal = ({
     stats,
     visibleStats,
     handleStatCheckboxChange,
     showAdvancedStats,
-    handleCheckboxChange
+    handleCheckboxChange,
+    homeOnly,
+    awayOnly,
+    handleHomeOnlyChange,
+    handleAwayOnlyChange
 }) => {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const theme = useTheme();
@@ -36,6 +41,12 @@ export const FilterComponentModal = ({
                 handleCheckboxChange={handleCheckboxChange}
             />
             <Divider style={{ marginBottom: "5px" }} />
+            <CheckboxLocalVisitor 
+             homeOnly={homeOnly}
+             awayOnly={awayOnly}
+             handleHomeOnlyChange={handleHomeOnlyChange}
+             handleAwayOnlyChange={handleAwayOnlyChange}
+            />
         </Box>
     );
 

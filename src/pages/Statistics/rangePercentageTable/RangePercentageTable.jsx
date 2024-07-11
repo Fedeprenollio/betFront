@@ -22,11 +22,7 @@ import {
 import { median } from "simple-statistics";
 import { BACKEND_URL_BASE } from "../../../stores/url_base";
 import { EnhancedTableHead } from "./EnhancedTableHead";
-import { CheckboxLocalVisitor } from "./CheckboxLocalVisitor";
-import { MatchesCountInput } from "./MatchesCountInput";
 import LoadingSpinner from "../../../componts/loading/LoadingSpinner";
-import { SelectListCurrentSeasons } from "./SelectListCurrentSeasons";
-import CloseIcon from "@mui/icons-material/Close";
 import { GroupByName } from "./GroupByName";
 import { FilterComponent } from "../../../componts/tableFilters/FilterComponent";
 // import GroupByName from "./GroupByName";

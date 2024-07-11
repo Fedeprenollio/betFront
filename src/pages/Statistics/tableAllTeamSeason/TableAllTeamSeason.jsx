@@ -11,11 +11,8 @@ import {
   TableSortLabel,
   Paper,
   Box,
-  Divider,
-} from "@mui/material";
+  } from "@mui/material";
 import { GroupByName } from "../rangePercentageTable/GroupByName";
-import { AdvancedOptions } from "./AdvancedOptions";
-import { SelectStatistics } from "./SelectStatistics";
 import * as XLSX from "xlsx"; // Importa xlsx
 import ExportExcelButton from "../../../componts/exportToExcel/ExportExcelButton";
 import { FilterComponentModal } from "./FilterComponentModal";
@@ -27,10 +24,21 @@ export const TableAllTeamSeason = () => {
   );
   const [listTeams, setListTeams] = useState([]);
   const [selectedTeams, setSelectedTeams] = useState([]); // Estado para los equipos seleccionados
-
+  const [homeOnly, setHomeOnly] = useState(true);
+  const [awayOnly, setAwayOnly] = useState(true);
+  const [matchType, setMatchType] = useState("both")
   useEffect(() => {
-    getTeamStatsForSeason({ seasonId });
-  }, [seasonId, getTeamStatsForSeason]);
+    if(homeOnly && awayOnly){
+      setMatchType("both")
+    }else if(!homeOnly && awayOnly){
+      setMatchType("away")
+    } else if(homeOnly && !awayOnly){
+      setMatchType("home")
+    }else{
+      setMatchType("both")
+    }
+    getTeamStatsForSeason({ seasonId, matchType });
+  }, [seasonId, getTeamStatsForSeason,matchType,homeOnly,awayOnly]);
 
   useEffect(() => {
     setListTeams(teamStatsForSeason);
@@ -54,6 +62,7 @@ export const TableAllTeamSeason = () => {
     possession: true,
     fouls: true,
   });
+  
 
   const handleSortRequest = (property) => {
     const isAscending = orderBy === property && order === "asc";
@@ -201,7 +210,14 @@ export const TableAllTeamSeason = () => {
     // Descargar archivo Excel
     XLSX.writeFile(workbook, "equipos.xlsx");
   };
-  
+  const handleHomeOnlyChange = (event) => {
+    setHomeOnly(event.target.checked);
+  };
+
+  const handleAwayOnlyChange = (event) => {
+    setAwayOnly(event.target.checked);
+  };
+
   return (
     <Box>
        {/* <Divider style={{ marginTop: "10px" }} />
@@ -215,7 +231,14 @@ export const TableAllTeamSeason = () => {
         visibleStats={visibleStats}
         handleStatCheckboxChange={handleStatCheckboxChange}
         showAdvancedStats={showAdvancedStats}
-        handleCheckboxChange={handleCheckboxChange} />
+        handleCheckboxChange={handleCheckboxChange}
+        homeOnly={homeOnly}
+        awayOnly={awayOnly}
+        handleHomeOnlyChange={handleHomeOnlyChange}
+        handleAwayOnlyChange={handleAwayOnlyChange}
+         />
+
+
       <GroupByName onNamesChange={handleNamesChange} /> {/* Componente GroupByName */}
 
       <Paper>
