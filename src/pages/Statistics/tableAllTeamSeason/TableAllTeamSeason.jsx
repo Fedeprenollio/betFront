@@ -18,6 +18,7 @@ import { AdvancedOptions } from "./AdvancedOptions";
 import { SelectStatistics } from "./SelectStatistics";
 import * as XLSX from "xlsx"; // Importa xlsx
 import ExportExcelButton from "../../../componts/exportToExcel/ExportExcelButton";
+import { FilterComponentModal } from "./FilterComponentModal";
 
 export const TableAllTeamSeason = () => {
   const { seasonId } = useParams();
@@ -203,11 +204,18 @@ export const TableAllTeamSeason = () => {
   
   return (
     <Box>
-       <Divider style={{ marginTop: "10px" }} />
+       {/* <Divider style={{ marginTop: "10px" }} />
       <SelectStatistics stats={stats} visibleStats={visibleStats} handleStatCheckboxChange={handleStatCheckboxChange}/>
       <Divider />
      <AdvancedOptions showAdvancedStats={showAdvancedStats} handleCheckboxChange={handleCheckboxChange}/>
       <Divider style={{ marginBottom: "5px" }} />
+       */}
+       <FilterComponentModal
+        stats={stats}
+        visibleStats={visibleStats}
+        handleStatCheckboxChange={handleStatCheckboxChange}
+        showAdvancedStats={showAdvancedStats}
+        handleCheckboxChange={handleCheckboxChange} />
       <GroupByName onNamesChange={handleNamesChange} /> {/* Componente GroupByName */}
 
       <Paper>

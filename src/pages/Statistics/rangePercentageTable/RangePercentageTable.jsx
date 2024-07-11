@@ -483,7 +483,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
 
   //   if (loading) return <Typography>Loading...</Typography>;
   if (error) return <Typography>Error: {error.message}</Typography>;
-  if (stats?.length === 0) return <Typography>No data available</Typography>;
+  // if (stats?.length === 0) return <Typography>No data available</Typography>;
   const handleTabChange = (event, newValue) => {
     setTabIndex(newValue);
   };
@@ -539,7 +539,6 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
   };
 
   const handleChangePage = (event, newPage) => {
-    console.log("newPage", newPage);
     setPage(newPage);
   };
 
@@ -614,6 +613,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
         />
       </Box> */}
     <FilterComponent
+    filterName={["local/visitor", "MatchesCountInput"]}
      homeOnly={homeOnly}
      awayOnly={awayOnly}
      handleHomeOnlyChange={handleHomeOnlyChange}

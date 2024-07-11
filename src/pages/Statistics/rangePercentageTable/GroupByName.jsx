@@ -40,6 +40,7 @@ export const GroupByName = ({ onNamesChange }) => {
       const updatedTeams = [...selectedTeams, newValue];
       setSelectedTeams(updatedTeams);
       onNamesChange(updatedTeams.map(team => team.name)); // Llamar a onNamesChange con los nombres de los equipos seleccionados
+      setQuery('');
     }
   };
 
@@ -61,6 +62,7 @@ export const GroupByName = ({ onNamesChange }) => {
         onChange={handleTeamSelect}
         renderInput={(params) => (
           <TextField
+          sx={{ maxWidth: '300px' }}
             {...params}
             label="Buscar equipo"
             variant="outlined"

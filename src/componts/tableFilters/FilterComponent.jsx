@@ -24,6 +24,7 @@ export const FilterComponent = ({
     listCurrentSeason,
     selectedSeasons,
     handleSeasonChange,
+    filterName
 }) => {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const theme = useTheme();
@@ -41,17 +42,18 @@ export const FilterComponent = ({
     const filterContent = (
         <div>
             <Box sx={{ width: '100%' }}>
+                {
+                    filterName.includes("local/visitor") && <CheckboxLocalVisitor
+                        homeOnly={homeOnly}
+                        awayOnly={awayOnly}
+                        handleHomeOnlyChange={handleHomeOnlyChange}
+                        handleAwayOnlyChange={handleAwayOnlyChange}
+                    />
+                }
 
-                <CheckboxLocalVisitor
-                    homeOnly={homeOnly}
-                    awayOnly={awayOnly}
-                    handleHomeOnlyChange={handleHomeOnlyChange}
-                    handleAwayOnlyChange={handleAwayOnlyChange}
-                />
 
                 <Divider />
-
-                <MatchesCountInput
+                {filterName.includes("MatchesCountInput")  && <MatchesCountInput
                     inputMatchesCount={inputMatchesCount}
                     handleInputMatchesCountChange={handleInputMatchesCountChange}
                     handleIncludeAllSeasonMatches={handleIncludeAllSeasonMatches}
@@ -60,6 +62,9 @@ export const FilterComponent = ({
                     inputChekBoxIncludeAllSeason={inputChekBoxIncludeAllSeason}
                     onFilterChange={handleFilterChange}
                 />
+
+                }
+
 
                 <Divider />
                 {listCurrentSeason && (
@@ -86,8 +91,8 @@ export const FilterComponent = ({
     return (
         <div>
             {true ? (
-                <> 
-                  <Container>
+                <>
+                    <Container>
                         <IconButton
                             edge="end"
                             color="inherit"
@@ -98,7 +103,7 @@ export const FilterComponent = ({
                                 <Typography variant="span" sx={{
                                     fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
                                     color: "#0069c2",
-                                    fontSize:"0.85rem"
+                                    fontSize: "0.85rem"
                                 }}>
                                     Filtrar
                                 </Typography>

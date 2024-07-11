@@ -216,6 +216,7 @@ import {
 import { Link, useParams } from "react-router-dom";
 import { StyledTableRow } from "../Statistics/rangePercentageTable/RangePercentageTable";
 import { CheckboxLocalVisitor } from "../Statistics/rangePercentageTable/CheckboxLocalVisitor";
+import { FilterComponent } from "../../componts/tableFilters/FilterComponent";
 
 export const Standings = () => {
   const { seasonId } = useParams();
@@ -291,12 +292,20 @@ export const Standings = () => {
             label="Visitante"
           />
         </FormGroup> */}
-        <CheckboxLocalVisitor homeOnly={showHome}
+        {/* <CheckboxLocalVisitor 
+          homeOnly={showHome}
           awayOnly={showVisitor}
           handleHomeOnlyChange={handleShowHomeChange}
           handleAwayOnlyChange={handleShowVisitorChange} />
-      </Box>
-
+      </Box> */}
+      <FilterComponent
+        filterName="local/visitor"
+        homeOnly={showHome}
+        awayOnly={showVisitor}
+        handleHomeOnlyChange={handleShowHomeChange}
+        handleAwayOnlyChange={handleShowVisitorChange}
+       />
+        </Box>
       {tableSeason?.zoneTables?.map((zone, zoneIndex) => (
         <Box
           key={zoneIndex}
