@@ -48,19 +48,19 @@ export const TableAllTeamSeason = () => {
   const [order, setOrder] = useState("asc");
   const [showAdvancedStats, setShowAdvancedStats] = useState({
     promedio: true,
-    mediana: true,
-    desviacion: true,
+    mediana: false,
+    desviacion: false,
   });
 
   const [visibleStats, setVisibleStats] = useState({
     goals: true,
-    offsides: true,
-    yellowCards: true,
-    corners: true,
+    offsides: false,
+    yellowCards: false,
+    corners: false,
     shots: true,
     shotsOnTarget: true,
-    possession: true,
-    fouls: true,
+    possession: false,
+    fouls: false,
   });
   
 
