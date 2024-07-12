@@ -1,13 +1,15 @@
 // theme.js
-import { createTheme } from '@mui/material/styles';
+// import { createTheme } from '@mui/material/styles';
+import { createTheme } from '@mui/material';
 
 const baseTheme = createTheme({
   typography: {
     fontSize: 14, // Ajusta el tamaño base de la fuente
+    fontFamily: 'Roboto, Arial, sans-serif'
   },
 });
 
-const scaleFactor = 0.95;
+const scaleFactor = 0.9;
 
 const theme = createTheme({
   typography: {
@@ -15,6 +17,7 @@ const theme = createTheme({
     h1: {
       ...baseTheme.typography.h1,
       fontSize: `calc(${baseTheme.typography.h1.fontSize} * ${scaleFactor})`,
+      fontWeight: 700,
     },
     h2: {
       ...baseTheme.typography.h2,
@@ -47,6 +50,7 @@ const theme = createTheme({
     body1: {
       ...baseTheme.typography.body1,
       fontSize: `calc(${baseTheme.typography.body1.fontSize} * ${scaleFactor})`,
+      fontWeight: 400,
     },
     body2: {
       ...baseTheme.typography.body2,
@@ -55,6 +59,7 @@ const theme = createTheme({
     button: {
       ...baseTheme.typography.button,
       fontSize: `calc(${baseTheme.typography.button.fontSize} * ${scaleFactor})`,
+      fontWeight: 500,
     },
     caption: {
       ...baseTheme.typography.caption,
@@ -64,6 +69,11 @@ const theme = createTheme({
       ...baseTheme.typography.overline,
       fontSize: `calc(${baseTheme.typography.overline.fontSize} * ${scaleFactor})`,
     },
+  },
+  palette: {
+    primary: {
+      main: '#1E3A8A', // Establecer el color principal a azul marino
+    }
   },
 });
 

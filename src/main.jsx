@@ -3,9 +3,10 @@ import { createRoot } from 'react-dom/client';
 import "./index.css";
 import Layout from "./pages/Layout";
 import { BrowserRouter } from "react-router-dom";
-import { ThemeProvider } from "@emotion/react";
+// import { ThemeProvider } from "@emotion/react";
 import { unstable_createMuiStrictModeTheme } from '@mui/material/styles';
 import theme from '../theme/theme';
+import { CssBaseline,ThemeProvider } from '@mui/material';
 
 // const theme = unstable_createMuiStrictModeTheme();
 
@@ -14,6 +15,7 @@ const root = createRoot(domNode);
 root.render(
   <BrowserRouter>
     <ThemeProvider theme={theme}>
+    <CssBaseline />
       <Layout />
     </ThemeProvider>
   </BrowserRouter>
