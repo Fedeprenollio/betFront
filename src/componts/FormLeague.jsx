@@ -1,29 +1,45 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
 import { Button, MenuItem, TextField, Typography } from "@mui/material";
 
 import { useBoundStore } from "../stores";
-import AlertDialog from "./feedback/AlertDialog";
 import AlertDialogCopy from "./feedback/AlertDialogCopy";
 import { AlertMessageCopy } from "./feedback/AlertMessageCopy";
+import InputFileUpload from "../pages/Teams/InputFileUpload";
+import LogoUploader from "./uploaderImage/LogoUploader";
+import useLogoUpload from "../customHooks/useLogoUpload ";
 
 const validationSchema = yup.object({
   name: yup.string().required("El nombre es obligatorio"),
   country: yup.string().required("El país es obligatorio"),
 });
 
-const FormLeague = () => {
-  const { teams, setTeams, createLeague, fetchLeagues, user, token } = useBoundStore(
+const FormLeague = ({ idLeague }) => {
+  const {
+    logoUrl,
+    setLogoUrl,
+    uploadingLogoUrl,
+    isUploading,
+    handleFileChange,
+    handleRemoveFile,
+  } = useLogoUpload("dz3nlbqvo");
+  const { teams, setTeams, createLeague, fetchLeagues, updateLeague, getLeagueDetail, token, leagueDetail } = useBoundStore(
     (state) => state
   );
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [severity, setSeverity] = useState("");
   const [msgAlert, setMsgAlert] = useState("");
-
+  const [initialValues, setInitialValues] = useState({
+    name: "",
+    country: "",
+  });
   const [countries, setCountries] = useState([]);
-console.log("TOKEN", token)
+  console.log("TOKEN", token);
+
   useEffect(() => {
     setTeams();
   }, [setTeams]);
@@ -36,58 +52,68 @@ console.log("TOKEN", token)
     setCountries(uniqueCountries);
   }, [teams]);
 
+  useEffect(() => {
+    const loadLeagueData = async () => {
+      if (idLeague) {
+        await getLeagueDetail({ idLeague: idLeague });
+      }
+    };
+
+    loadLeagueData();
+  }, [idLeague, getLeagueDetail, setLogoUrl]);
+
+  useEffect(() => {
+    if (leagueDetail) {
+      setInitialValues({
+        name: leagueDetail.name || "",
+        country: leagueDetail.country || "",
+      });
+      setLogoUrl(leagueDetail.logo || "");
+    }
+  }, [leagueDetail, setLogoUrl])
+
   const handleSubmit = async (values) => {
     try {
       await validationSchema.validate(values, { abortEarly: false }); // Validar los valores con Yup
-      // const token = user.token
-      const response = await createLeague(values);
+      let response;
+      if (idLeague) {
+        response = await updateLeague({ idLeague, newValues: values });
+      } else {
+        response = await createLeague(values);
+      }
       await fetchLeagues();
       setOpenCreateDialog(false);
-      console.log("RESPONSE----", response);
-         setSeverity("success");
-        setMsgAlert("Liga creada exitosamente");
-        setIsAlertOpen(true);
-      // if (response?.status === 200) {
-      //   setSeverity("success");
-      //   setMsgAlert("Liga creada exitosamente");
-      //   setIsAlertOpen(true);
-      // } else {
-      //   setSeverity("error");
-      //   setMsgAlert("Error al crear la liga");
-      //   setIsAlertOpen(true);
-      // }
+      setSeverity("success");
+      setMsgAlert(idLeague ? "Liga actualizada exitosamente" : "Liga creada exitosamente");
+      setIsAlertOpen(true);
     } catch (error) {
       if (error.name === "ValidationError") {
         // Capturar errores de validación de Yup
         const errorMessage = error.errors.join(", ");
-        console.log("Error de yup,", errorMessage)
+        console.log("Error de yup,", errorMessage);
         setSeverity("error");
         setMsgAlert(errorMessage);
         setIsAlertOpen(true);
       } else {
         console.log("Error al validar el formulario:", error);
-        // const errorMessage = error.join(", ");
         setSeverity("error");
-        setMsgAlert(error);
+        setMsgAlert("Error al enviar el formulario");
         setIsAlertOpen(true);
       }
     }
-    
   };
 
   return (
     <Formik
-      initialValues={{
-        name: "",
-        country: "",
-      }}
+      initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
+      enableReinitialize
     >
-      {({ values, errors, touched }) => (
+      {({ values, errors, touched, setFieldValue }) => (
         <Form>
           <Typography variant="h6" gutterBottom>
-            Crear liga
+            {idLeague ? "Editar liga" : "Crear liga"}
           </Typography>
           <Field
             as={TextField}
@@ -101,7 +127,15 @@ console.log("TOKEN", token)
             variant="outlined"
             margin="dense"
           />
-
+          <LogoUploader
+            logoUrl={logoUrl}
+            uploadingLogoUrl={uploadingLogoUrl}
+            handleFileChange={handleFileChange}
+            handleRemoveFile={handleRemoveFile}
+            setFieldValue={setFieldValue} // Pasa el setFieldValue si es necesario
+            cloudName="your_cloud_name" // Tu nombre de Cloudinary
+            isUploading={isUploading}
+          />
           <Field
             as={TextField}
             select
@@ -128,16 +162,8 @@ console.log("TOKEN", token)
             variant="contained"
             color="primary"
           >
-            Crear Liga
+            {idLeague ? "Guardar cambios" : "Crear Liga"}
           </Button>
-          {/* <AlertDialog
-            textDialog={"¿Estás seguro en crear la liga?"}
-            textButton={"Crear liga"}
-            handleSubmit={handleSubmit}
-            formValues={values}
-            textSuccess={`Liga ${values.name} creada exitosamente`}
-            textError={"Error al crear la liga"}
-          ></AlertDialog> */}
 
           <AlertDialogCopy
             open={openCreateDialog}
@@ -146,10 +172,9 @@ console.log("TOKEN", token)
             handleSubmit
             formValues
             textDialog
-            title="Confirmar creación"
-            message={`¿Estás seguro  que deseas crear la liga "${values.name}?"`}
-            // contentText="La eliminación es irreversible y borra toda información relacionada a la liga como temporadas, partidos, resultados..."
-            confirmText="Si, crear"
+            title={idLeague ? "Confirmar edición" : "Confirmar creación"}
+            message={`¿Estás seguro que deseas ${idLeague ? "guardar los cambios en" : "crear"} la liga "${values.name}"?`}
+            confirmText={idLeague ? "Guardar cambios" : "Crear"}
             cancelText="Cancelar"
           />
 

@@ -38,7 +38,7 @@ export const LeaguePage = () => {
           scrollButtons
           allowScrollButtonsMobile
         >
-          <Tab label="Crar ligas" />
+          <Tab label="Crear ligas" />
           <Tab label="Crear temporadas" />
           <Tab label="Agregar equipos a las temporadas" />
           <Tab label="Crear zonas" />

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, Box, IconButton } from '@mui/material';
+import { Avatar, Box, IconButton, Tooltip } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { useBoundStore } from '../../stores';
@@ -75,12 +75,15 @@ const CarouselLogos = ({ seasonId }) => {
                             },
                         }}
                     >
+                      <Tooltip title={`${team.name}`}>
+
                         <Avatar
                             alt={team.name}
                             src={team.logo}
-                            title={team.name}
+                            // title={team.name}
                             sx={{ width: 36, height: 36 }}
                         />
+                        </Tooltip>
                     </Box>
                 ))}
             </Box>

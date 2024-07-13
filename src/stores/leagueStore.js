@@ -41,7 +41,7 @@ const crateLeagueStore = (set, get) => ({
     }
   },
 
-  updateLeague: async (updatedLeague) => {
+  updateLeague: async ({idLeague, newValues}) => {
     const token = get().token; 
     const config = {
       headers:{
@@ -49,11 +49,11 @@ const crateLeagueStore = (set, get) => ({
       }
     }
     try {
-      const response = await axios.put(`${URL_API}/${updatedLeague.id}`, updatedLeague, config);
+      const response = await axios.put(`${URL_API}/${idLeague}`, newValues, config);
       const data = response.data;
       set((state) => ({
         leagues: state.leagues.map((league) =>
-          league.id === updatedLeague.id ? data : league
+          league.id === newValues.id ? data : league
         ),
       }));
     } catch (error) {

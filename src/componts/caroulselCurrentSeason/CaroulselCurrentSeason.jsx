@@ -2,17 +2,17 @@
 import { Link } from 'react-router-dom';
 import { useBoundStore } from '../../stores';
 import { useEffect, useRef } from 'react';
-import { Box, Typography, List, ListItem, ListItemText, ListItemIcon, IconButton } from '@mui/material';
+import { Box, Typography, List, ListItem, ListItemText, ListItemIcon, IconButton, Avatar, Tooltip } from '@mui/material';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 export const CaroulselCurrentSeason = () => {
     const { allCurrentSeasons, getAllCurrentSeasons } = useBoundStore((state) => state);
-
+console.log("allCurrentSeasons",allCurrentSeasons)
     useEffect(() => {
         getAllCurrentSeasons();
-    }, []);
+    }, [getAllCurrentSeasons]);
 
     const carouselRef = useRef(null);
 
@@ -27,7 +27,9 @@ export const CaroulselCurrentSeason = () => {
 
     return (
         <Box position="relative" sx={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton
+         {allCurrentSeasons.length > 0 &&  
+         <>
+          <IconButton
                 onClick={() => handleScroll('left')}
                 sx={{
                     position: 'absolute',
@@ -68,7 +70,21 @@ export const CaroulselCurrentSeason = () => {
                             }}
                         >
                          
+                            {season.league.logo ? 
+                            <Tooltip title={`${season.league.name}`}>
+
+                           
+                                <Avatar
+                                alt={season.league.name}
+                                src={season.league.logo}
+                                // title={season.league.name}
+                                sx={{ width: 36, height: 36 }}
+                            /> 
+                             </Tooltip>:
                             <ListItemText primary={`${season.league.name}`} />
+                                
+                        }
+
                         </ListItem>
                     ))}
                 </List>
@@ -87,6 +103,8 @@ export const CaroulselCurrentSeason = () => {
             >
                 <ArrowForwardIosIcon />
             </IconButton>
+         </>
+            }
         </Box>
     );
 };

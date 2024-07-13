@@ -18,6 +18,11 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  DialogActions,
 } from "@mui/material";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
@@ -32,6 +37,7 @@ import { Link } from "react-router-dom";
 import { SelectedCurrentSeason } from "./SelectedCurrentSeason";
 import axios from "axios";
 import { BACKEND_URL_BASE } from "../../stores/url_base";
+import FormLeague from "../../componts/FormLeague";
 
 export const ListLeagues = () => {
   const { fetchLeagues, leagues, deleteLeague,isAuthenticated } = useBoundStore(
@@ -46,6 +52,8 @@ export const ListLeagues = () => {
   const [severity, setSeverity] = useState("");
   const [msgAlert, setMsgAlert] = useState("");
   const [currentSeasonId, setCurrentSeasonId] = useState("");
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [editLeagueData, setEditLeagueData] = useState({ name: "", country: "" });
   const URL_API = `${BACKEND_URL_BASE}/season/league`;
 
   useEffect(() => {
@@ -56,7 +64,10 @@ export const ListLeagues = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${URL_API}/${idLeague}`);
-        setCurrentSeasonId(response.data.currentSeason._id);
+        if(response.data.currentSeason){
+
+          setCurrentSeasonId(response.data.currentSeason?._id);
+        }
       } catch (error) {
         console.error("Error al obtener las temporadas:", error);
       }
@@ -105,10 +116,21 @@ export const ListLeagues = () => {
     setOpenDeleteDialog(true);
   };
 
-  const handleEdit = (leagueId) => {
-    // Lógica para editar la liga
+  const handleEdit = (league) => {
+    setIdLeague(league)
+    setEditLeagueData({ name: league.name, country: league.country });
+    setOpenEditDialog(true);
   };
 
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditLeagueData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleEditSubmit = () => {
+    // Lógica para actualizar la liga en el backend
+    setOpenEditDialog(false);
+  };
   return (
     <>
       <FilterLeague
@@ -139,6 +161,39 @@ export const ListLeagues = () => {
         />
       )}
 
+      <Dialog open={openEditDialog} onClose={() => setOpenEditDialog(false)}>
+        <DialogTitle>Editar Liga</DialogTitle>
+        <DialogContent>
+          {console.log("ID DE LA LIGA EN PADRE", idLeague)}
+          <FormLeague idLeague={idLeague}/>
+          {/* <TextField
+            margin="dense"
+            name="name"
+            label="Nombre de la Liga"
+            type="text"
+            fullWidth
+            value={editLeagueData.name}
+            onChange={handleEditChange}
+          />
+          <TextField
+            margin="dense"
+            name="country"
+            label="País"
+            type="text"
+            fullWidth
+            value={editLeagueData.country}
+            onChange={handleEditChange}
+          /> */}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenEditDialog(false)} color="primary">
+            Cerrar
+          </Button>
+          
+        </DialogActions>
+      </Dialog>
+
+
       <List>
         {filteredLeagues.map((league, index) => (
           <Container key={league._id} style={{padding:0}}> 
@@ -168,13 +223,13 @@ export const ListLeagues = () => {
                       <EditIcon />
                     </IconButton>
                   </Tooltip>
-                  <Tooltip title="Ver detalle de la liga">
+                  {/* <Tooltip title="Ver detalle de la liga">
                     <IconButton>
                       <Link to={`/league/detail/${league._id}`}>
                         <InfoIcon />
                       </Link>
                     </IconButton>
-                  </Tooltip>
+                  </Tooltip> */}
                 </ListItemIcon>
               </Grid>
             </Grid>
