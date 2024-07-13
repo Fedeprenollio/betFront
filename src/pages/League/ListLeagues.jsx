@@ -23,6 +23,8 @@ import {
   DialogContent,
   TextField,
   DialogActions,
+  Avatar,
+  Typography,
 } from "@mui/material";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
@@ -40,7 +42,7 @@ import { BACKEND_URL_BASE } from "../../stores/url_base";
 import FormLeague from "../../componts/FormLeague";
 
 export const ListLeagues = () => {
-  const { fetchLeagues, leagues, deleteLeague,isAuthenticated } = useBoundStore(
+  const { fetchLeagues, leagues, deleteLeague, isAuthenticated } = useBoundStore(
     (state) => state
   );
   const [idLeague, setIdLeague] = useState("");
@@ -64,7 +66,7 @@ export const ListLeagues = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${URL_API}/${idLeague}`);
-        if(response.data.currentSeason){
+        if (response.data.currentSeason) {
 
           setCurrentSeasonId(response.data.currentSeason?._id);
         }
@@ -165,7 +167,7 @@ export const ListLeagues = () => {
         <DialogTitle>Editar Liga</DialogTitle>
         <DialogContent>
           {console.log("ID DE LA LIGA EN PADRE", idLeague)}
-          <FormLeague idLeague={idLeague}/>
+          <FormLeague idLeague={idLeague} />
           {/* <TextField
             margin="dense"
             name="name"
@@ -189,29 +191,37 @@ export const ListLeagues = () => {
           <Button onClick={() => setOpenEditDialog(false)} color="primary">
             Cerrar
           </Button>
-          
+
         </DialogActions>
       </Dialog>
 
 
       <List>
         {filteredLeagues.map((league, index) => (
-          <Container key={league._id} style={{padding:0}}> 
+          <Container key={league._id} style={{ padding: 0 }}>
             <Grid container alignItems="center" justifyContent="space-between">
               <Grid item xs={11}>
-                <ListItemButton onClick={() => handleClick(index, league._id)}>
-                  <ListItemText
-                    primary={`${league.country} - ${league.name}`}
-                  />
-                  {openCollapseIndex === index ? (
-                    <ExpandLess />
-                  ) : (
-                    <ExpandMore />
-                  )}
+              <ListItemButton onClick={() => handleClick(index, league._id)}>
+                  <Grid container alignItems="center" spacing={2}>
+                    <Grid item>
+                      <Avatar
+                        alt={league.name}
+                        src={league.logo}
+                        sx={{ width: 36, height: 36 }}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="subtitle1" fontWeight="bold">
+                        {league.country} - {league.name}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                  {openCollapseIndex === index ? <ExpandLess /> : <ExpandMore />}
                 </ListItemButton>
               </Grid>
 
-              <Grid item xs={1}>
+              { isAuthenticated &&
+               <Grid item xs={1}>
                 <ListItemIcon>
                   <Tooltip title="Eliminar liga">
                     <IconButton onClick={() => handleDeleteClick(league)}>
@@ -231,7 +241,7 @@ export const ListLeagues = () => {
                     </IconButton>
                   </Tooltip> */}
                 </ListItemIcon>
-              </Grid>
+              </Grid>}
             </Grid>
 
             <Collapse
@@ -260,9 +270,9 @@ export const ListLeagues = () => {
                           />
                         </TableCell>
                         <TableCell>{season.year}</TableCell>
-                        <TableCell style={{padding:"0"}}>
+                        <TableCell style={{ padding: "0" }}>
                           <Grid container >
-                          <Grid item>
+                            <Grid item>
                               <Link
                                 className="link-no-underline"
                                 to={`/league/${season._id}/positions`}
@@ -294,16 +304,16 @@ export const ListLeagues = () => {
                                 <Button>Posisiones</Button>
                               </Link>
                             </Grid> */}
-                              { isAuthenticated && 
-                              
-                            <Grid item>
-                              <Tooltip title="Agregar resultados a la temporada">
-                                <Link to={`/match/results/${season._id}`}>
-                                  <Button>+ resultados</Button>
-                                </Link>
-                              </Tooltip>
-                            </Grid>
-                              }
+                            {isAuthenticated &&
+
+                              <Grid item>
+                                <Tooltip title="Agregar resultados a la temporada">
+                                  <Link to={`/match/results/${season._id}`}>
+                                    <Button>+ resultados</Button>
+                                  </Link>
+                                </Tooltip>
+                              </Grid>
+                            }
 
                           </Grid>
                         </TableCell>
