@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import * as XLSX from "xlsx"; // Importa xlsx
+
 import {
   Table,
   TableBody,
@@ -14,10 +16,7 @@ import {
   Tab,
   Box,
   styled,
-  TablePagination,
-  Modal,
-  Button,
-  IconButton,
+  TablePagination
 } from "@mui/material";
 import { median } from "simple-statistics";
 import { BACKEND_URL_BASE } from "../../../stores/url_base";
@@ -25,6 +24,8 @@ import { EnhancedTableHead } from "./EnhancedTableHead";
 import LoadingSpinner from "../../../componts/loading/LoadingSpinner";
 import { GroupByName } from "./GroupByName";
 import { FilterComponent } from "../../../componts/tableFilters/FilterComponent";
+import ExportExcelButton from "../../../componts/exportToExcel/ExportExcelButton";
+import exportToExcel from "./exportToExel";
 // import GroupByName from "./GroupByName";
 
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -181,6 +182,7 @@ const renderTable = (
       ...underPercentages,
     };
   });
+ 
 
   // Filtrar las claves de underRangesKeys que tienen valores no null en las filas de datos
   const filteredUnderRangesKeys = underRangesKeys.filter((key) => {
@@ -336,6 +338,7 @@ const renderTable = (
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+      <ExportExcelButton onClick={()=>exportToExcel(stats,statisticKey)} />
     </TableContainer>
   );
 };
@@ -366,7 +369,6 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const [selectedSeasons, setSelectedSeasons] = useState([]);
-  const [openModal, setOpenModal] = useState(false);
   const [shouldFetch, setShouldFetch] = useState(true);
   const [nameFilters, setNameFilters] = useState([]);
 
@@ -550,16 +552,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
         : prevSelectedSeasons.filter((id) => id !== seasonId)
     );
   };
-
-  const handleOpenModal = () => {
-    setOpenModal(true);
-    setShouldFetch(false); 
-  };
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
-    setShouldFetch(true); 
-  };
+ 
   const handleNamesChange = (names) => {
     console.log("NAMES", names)
     setNameFilters(names);
@@ -571,63 +564,26 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
           ? "Estadisticas generales de todos los equipos en temporadas actuales activas"
           : "Estadísticas de la Temporada"}
       </Typography>}
-      {/* <Box
-        sx={{
-          border: "1px solid #ddd",
-          padding: 2,
-          marginBottom: 2,
-          borderRadius: 2,
-          boxShadow: 1,
-          backgroundColor: "#f9f9f9",
-        }}
-      >
-        <CheckboxLocalVisitor
-          homeOnly={homeOnly}
-          awayOnly={awayOnly}
-          handleHomeOnlyChange={handleHomeOnlyChange}
-          handleAwayOnlyChange={handleAwayOnlyChange}
-        />
-      </Box>
-      <Box
-        sx={{
-          border: "1px solid #ddd",
-          padding: 2,
-          marginBottom: 2,
-          borderRadius: 2,
-          boxShadow: 1,
-          backgroundColor: "#f9f9f9",
-        }}
-      >
-        <MatchesCountInput
-          inputMatchesCount={inputMatchesCount}
-          handleInputMatchesCountChange={handleInputMatchesCountChange}
-          handleIncludeAllSeasonMatches={handleIncludeAllSeasonMatches}
-          updateMatchesCount={updateMatchesCount}
-          updateIncludeOtherSeasons={updateIncludeOtherSeasons}
-          inputChekBoxIncludeAllSeason={inputChekBoxIncludeAllSeason}
-          onFilterChange={handleFilterChange}
-        />
-      </Box> */}
+   
+
     <FilterComponent
-    filterName={["local/visitor", "MatchesCountInput"]}
-     homeOnly={homeOnly}
-     awayOnly={awayOnly}
-     handleHomeOnlyChange={handleHomeOnlyChange}
-     handleAwayOnlyChange={handleAwayOnlyChange}
-     inputMatchesCount={inputMatchesCount}
-     handleInputMatchesCountChange={handleInputMatchesCountChange}
-     handleIncludeAllSeasonMatches={handleIncludeAllSeasonMatches}
-     updateMatchesCount={updateMatchesCount}
-     updateIncludeOtherSeasons={updateIncludeOtherSeasons}
-     inputChekBoxIncludeAllSeason={inputChekBoxIncludeAllSeason}
-     handleFilterChange={handleFilterChange}
-     listCurrentSeason={listCurrentSeason}
-     selectedSeasons={selectedSeasons}
-     handleSeasonChange={handleSeasonChange}
+      filterName={["local/visitor", "MatchesCountInput"]}
+      homeOnly={homeOnly}
+      awayOnly={awayOnly}
+      handleHomeOnlyChange={handleHomeOnlyChange}
+      handleAwayOnlyChange={handleAwayOnlyChange}
+      inputMatchesCount={inputMatchesCount}
+      handleInputMatchesCountChange={handleInputMatchesCountChange}
+      handleIncludeAllSeasonMatches={handleIncludeAllSeasonMatches}
+      updateMatchesCount={updateMatchesCount}
+      updateIncludeOtherSeasons={updateIncludeOtherSeasons}
+      inputChekBoxIncludeAllSeason={inputChekBoxIncludeAllSeason}
+      handleFilterChange={handleFilterChange}
+      listCurrentSeason={listCurrentSeason}
+      selectedSeasons={selectedSeasons}
+      handleSeasonChange={handleSeasonChange}
     />
-
-      <GroupByName onNamesChange={handleNamesChange}/>
-
+          <GroupByName onNamesChange={handleNamesChange}/>
 
       <Tabs
         value={tabIndex}
@@ -642,46 +598,6 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
         ))}
       </Tabs>
 
-     
-      {/* {listCurrentSeason && (
-        <>
-          <Button variant="contained" color="primary" onClick={handleOpenModal}>
-            Seleccionar temporadas
-          </Button>
-          <Modal open={openModal} onClose={handleCloseModal}>
-            <Box
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                width: "80%",
-                maxWidth: 400,
-                bgcolor: "background.paper",
-                border: "2px solid #000",
-                boxShadow: 24,
-                p: 4,
-              }}
-            >
-              <SelectListCurrentSeasons
-                selectedSeasons={selectedSeasons}
-                onSeasonChange={handleSeasonChange}
-              />
-              <IconButton
-                aria-label="close"
-                onClick={handleCloseModal}
-                sx={{
-                  position: "absolute",
-                  right: 8,
-                  top: 8,
-                }}
-              >
-                <CloseIcon />
-              </IconButton>
-            </Box>
-          </Modal>
-        </>
-      )} */}
 
       {statisticKeys.map((key, index) => (
         <TabPanel  value={tabIndex} index={index} key={key}>

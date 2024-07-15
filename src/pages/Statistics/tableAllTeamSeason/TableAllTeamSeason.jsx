@@ -128,7 +128,7 @@ export const TableAllTeamSeason = () => {
   const exportToExcel = () => {
     // Preparar datos para exportar
     const dataToExport = filteredTeams.map(team => ({
-      teamId: team.teamId,
+      // teamId: team.teamId,
       teamName: team.teamName,
       goals_total: team.statistics.goals.total,
       goals_promedio: team.statistics.goals.promedio,

@@ -21,6 +21,7 @@
     "axios": "1.6.8",
     "cloudinary-react": "^1.8.1",
     "dayjs": "1.11.10",
+    "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "formik": "2.4.5",
     "formik-mui": "5.0.0-alpha.0",
