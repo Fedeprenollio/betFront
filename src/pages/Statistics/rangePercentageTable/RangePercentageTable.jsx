@@ -385,57 +385,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
     }
   }, [listCurrentSeason]);
 
-  // useEffect(() => {
-  //   if (seasonId && !selectedSeasons) {
-  //     const loadStats = async () => {
-  //       try {
-  //         setLoading(true);
-  //         const data = await fetchTeamStats(
-  //           seasonId,
-  //           homeOnly,
-  //           awayOnly,
-  //           matchesCount,
-  //           includeAllSeasonMatches
-  //         );
-  //         setStats(data);
-  //         setLoading(false);
-  //       } catch (err) {
-  //         setError(err);
-  //         setLoading(false);
-  //       }
-  //     };
-  //     loadStats();
-  //   }
-
-  //   if (!seasonId && selectedSeasons) {
-  //     const loadStats = async () => {
-  //       try {
-  //         setLoading(true);
-  //         const data = await fetchTeamStats(
-  //           selectedSeasons,
-  //           homeOnly,
-  //           awayOnly,
-  //           matchesCount,
-  //           includeAllSeasonMatches
-  //         );
-  //         setStats(data);
-  //         setLoading(false);
-  //       } catch (err) {
-  //         setError(err);
-  //         setLoading(false);
-  //       }
-  //     };
-  //     loadStats();
-  //   }
-  // }, [
-  //   seasonId,
-  //   homeOnly,
-  //   awayOnly,
-  //   matchesCount,
-  //   includeAllSeasonMatches,
-  //   selectedSeasons,
-  // ]);
-  useEffect(() => {
+   useEffect(() => {
     if (shouldFetch) {
       const loadStats = async () => {
         try {
