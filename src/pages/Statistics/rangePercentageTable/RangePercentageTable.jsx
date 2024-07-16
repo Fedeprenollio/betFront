@@ -577,7 +577,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
       Utilidad en Apuestas Deportivas:
     </Typography>
     <Typography variant="body1" gutterBottom>
-      Estas estadísticas son útiles en apuestas deportivas, ya que permiten identificar patrones y tendencias en el rendimiento de los equipos. Por ejemplo, si un equipo tiene un alto porcentaje en O8.5, significa que es más probable que los partidos de ese equipo tengan muchos corners, lo cual puede ser información valiosa al realizar apuestas.
+      Estas estadísticas son útiles , ya que permiten identificar patrones y tendencias en el rendimiento de los equipos. Por ejemplo, si un equipo tiene un alto porcentaje en O8.5, significa que es más probable que los partidos de ese equipo tengan muchos corners, lo cual puede ser información valiosa al realizar apuestas.
     </Typography>
     <Typography variant="body1" gutterBottom>
       Puedes combinar estas estadísticas con filtros para considerar solo partidos de local, visitante o ambos. Además, limitar el número de partidos para ver la tendencia reciente o, si estamos al inicio de la temporada, incluir también la temporada anterior.
