@@ -215,7 +215,7 @@ const Navbar = () => {
                 onClick={handleMenuAyudanos}
                 sx={{ color: "inherit" }}
               >
-                Ayúdanos
+                Sé parte
               </Button>
               <Menu
                 id="ayudanos-menu"
