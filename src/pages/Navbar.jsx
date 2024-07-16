@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -13,21 +13,20 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import HomeIcon from "@mui/icons-material/Home";
 import { Link, useNavigate } from "react-router-dom";
-import AdbIcon from "@mui/icons-material/Adb";
 import { useBoundStore } from "../stores";
 import TemporaryDrawer from "./drawer/TemporaryDrawer";
 import { CaroulselCurrentSeason } from "../componts/caroulselCurrentSeason/CaroulselCurrentSeason";
 import CarouselLogos from "../componts/caroulselLogos/CaroulselLogos";
 
-// const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [anchorElPartidos, setAnchorElPartidos] = useState(null);
   const [anchorElEquipos, setAnchorElEquipos] = useState(null);
-  const [anchorLeagues, setAnchorLeagues] = useState(null);
+  const [anchorElLeagues, setAnchorElLeagues] = useState(null);
+  const [anchorElAyudanos, setAnchorElAyudanos] = useState(null);
+  const [anchorElAyudanosMobile, setAnchorElAyudanosMobile] = useState(null);
   const { user, isAuthenticated, logout } = useBoundStore((state) => state);
-  console.log("USUARIO LOGEADO?", user);
 
   const handleMenuPartidos = (event) => {
     setAnchorElPartidos(event.currentTarget);
@@ -38,16 +37,26 @@ const Navbar = () => {
   };
 
   const handleMenuLeagues = (event) => {
-    setAnchorLeagues(event.currentTarget);
+    setAnchorElLeagues(event.currentTarget);
+  };
+
+  const handleMenuAyudanos = (event) => {
+    setAnchorElAyudanos(event.currentTarget);
+  };
+
+  const handleMenuAyudanosMobile = (event) => {
+    setAnchorElAyudanosMobile(event.currentTarget);
   };
 
   const handleClose = () => {
     setAnchorElPartidos(null);
     setAnchorElEquipos(null);
-    setAnchorLeagues(null);
+    setAnchorElLeagues(null);
+    setAnchorElAyudanos(null);
+    setAnchorElAyudanosMobile(null);
   };
 
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -58,14 +67,12 @@ const Navbar = () => {
   };
 
   const handleLogout = async () => {
-    // deleteCookie("jwt")
     await logout();
     navigate("/user/login");
   };
 
   const deleteCookie = (name) => {
     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-    // Redirigir al usuario después de eliminar la cookie
     navigate("/user/login");
   };
 
@@ -130,22 +137,6 @@ const Navbar = () => {
                     Administrar Partidos
                   </MenuItem>
                 )}
-                {/* {isAuthenticated && (
-                <MenuItem
-                  onClick={handleClose}
-                  component={Link}
-                  to="/match/newResults"
-                >
-                  Cargar Resultados
-                </MenuItem>
-              )} */}
-                {/* <MenuItem
-                onClick={handleClose}
-                component={Link}
-                to="/match/addResults"
-              >
-                Agregar resultados
-              </MenuItem> */}
               </Menu>
             </Box>
 
@@ -193,8 +184,8 @@ const Navbar = () => {
               </Button>
               <Menu
                 id="ligas-menu"
-                anchorEl={anchorLeagues}
-                open={Boolean(anchorLeagues)}
+                anchorEl={anchorElLeagues}
+                open={Boolean(anchorElLeagues)}
                 onClose={handleClose}
               >
                 <MenuItem
@@ -215,6 +206,61 @@ const Navbar = () => {
                 )}
               </Menu>
             </Box>
+
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+              <Button
+                id="ayudanos-button"
+                aria-controls="ayudanos-menu"
+                aria-haspopup="true"
+                onClick={handleMenuAyudanos}
+                sx={{ color: "inherit" }}
+              >
+                Ayúdanos
+              </Button>
+              <Menu
+                id="ayudanos-menu"
+                anchorEl={anchorElAyudanos}
+                open={Boolean(anchorElAyudanos)}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose} component={Link} to="/cafecito">
+                  Cafecito
+                </MenuItem>
+              </Menu>
+            </Box>
+
+            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' }, justifyContent: 'flex-end' }}>
+              <IconButton
+                size="large"
+                aria-label="menu"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenuAyudanosMobile}
+                color="inherit"
+              >
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorElAyudanosMobile}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElAyudanosMobile)}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose} component={Link} to="/cafecito">
+                  Cafecito
+                </MenuItem>
+              </Menu>
+            </Box>
+
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -250,26 +296,13 @@ const Navbar = () => {
                 {isAuthenticated && (
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 )}
-
-                {/* <MenuItem
-                onClick={handleClose}
-                component={Link}
-                to="/user/register"
-              >
-                Registrate
-              </MenuItem> */}
-                {/* {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))} */}
               </Menu>
             </Box>
           </Toolbar>
         </Container>
       </AppBar>
       <CaroulselCurrentSeason />
-      <CarouselLogos/>
+      <CarouselLogos />
     </>
   );
 };

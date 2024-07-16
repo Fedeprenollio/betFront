@@ -19,6 +19,7 @@ import StatisticsPageTab from "../pages/standings/StatisticsPage";
 import { LeaguePage } from "../pages/League/LeaguePage";
 import { RangePercentageTable } from "../pages/Statistics/rangePercentageTable/RangePercentageTable";
 import { HomePage } from "../pages/home/HomePage";
+import Cafecito from "../pages/cafecito/Cafecito";
 
 const RoutesComponent = () => {
   return (
@@ -51,14 +52,11 @@ const RoutesComponent = () => {
         <Route path="positions/:seasonId" element={<Standings />} />
         <Route path="teams/tableSeason/:seasonId"  element={<TableAllTeamSeason />}/> */}
         <Route path=":seasonId" element={<StatisticsPageTab />}>
-            <Route path="positions" element={<Standings />} />
-            <Route path="showResults" element={<ShowResultsForFecha />} />
-            <Route path="tableSeason" element={<TableAllTeamSeason />} />
-            <Route path="tableRange" element={<RangePercentageTable />} />
-
-
-            
-          </Route>
+          <Route path="positions" element={<Standings />} />
+          <Route path="showResults" element={<ShowResultsForFecha />} />
+          <Route path="tableSeason" element={<TableAllTeamSeason />} />
+          <Route path="tableRange" element={<RangePercentageTable />} />
+        </Route>
         <Route element={<PrivateRoute />}>
           <Route path="admin" element={<LeaguePage />} />
           <Route path="detail/:idLeague" element={<DetailLeague />} />
@@ -82,6 +80,10 @@ const RoutesComponent = () => {
       <Route path="/user">
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
+      </Route>
+      <Route path="/cafecito">
+        <Route index element={<Cafecito />} />
+        
       </Route>
     </Routes>
   );
