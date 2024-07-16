@@ -17,6 +17,7 @@ import {
 import { Link, useParams } from "react-router-dom";
 import { StyledTableRow } from "../Statistics/rangePercentageTable/RangePercentageTable";
 import { FilterComponent } from "../../componts/tableFilters/FilterComponent";
+import HelpIconWithModal from "../../componts/helpIconWithModal/HelpIconWithModal";
 
 export const Standings = () => {
   const { seasonId } = useParams();
@@ -56,6 +57,7 @@ export const Standings = () => {
       statsB.goalsFor - statsA.goalsFor
     );
   });
+ 
 
   return (
     <Box sx={{ padding: 2 }}>
@@ -66,7 +68,6 @@ export const Standings = () => {
         handleHomeOnlyChange={handleShowHomeChange}
         handleAwayOnlyChange={handleShowVisitorChange}
       />
-
       {tableSeason?.zoneTables?.map((zone, zoneIndex) => (
         <Box
           key={zoneIndex}
@@ -162,7 +163,8 @@ export const Standings = () => {
       >
         <Typography variant="h6">Tabla General</Typography>
         <TableContainer
-          sx={{ maxHeight: 240 }}
+          sx={{ maxHeight: 640 }}
+          md={{ maxHeight: 840 }}
           component={Paper}
           style={{ overflowX: "auto" }}
         >
