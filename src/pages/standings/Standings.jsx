@@ -59,44 +59,14 @@ export const Standings = () => {
 
   return (
     <Box sx={{ padding: 2 }}>
-      {/* <Typography variant="h5" gutterBottom>
-          Tabla de posiciones   {tableSeason?.season?.league?.name} ({tableSeason?.season?.year})
-        </Typography> */}
-    
-        {/* <Typography variant="h5" gutterBottom>
-          Considerar local/visitante....
-        </Typography> */}
-        {/* <FormGroup row>
-          <FormControlLabel
-            control={
-              <Checkbox checked={showHome} onChange={handleShowHomeChange} />
-            }
-            label="Local"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={showVisitor}
-                onChange={handleShowVisitorChange}
-              />
-            }
-            label="Visitante"
-          />
-        </FormGroup> */}
-        {/* <CheckboxLocalVisitor 
-          homeOnly={showHome}
-          awayOnly={showVisitor}
-          handleHomeOnlyChange={handleShowHomeChange}
-          handleAwayOnlyChange={handleShowVisitorChange} />
-      </Box> */}
-      <FilterComponent
+        <FilterComponent
         filterName="local/visitor"
         homeOnly={showHome}
         awayOnly={showVisitor}
         handleHomeOnlyChange={handleShowHomeChange}
         handleAwayOnlyChange={handleShowVisitorChange}
-       />
-       
+      />
+
       {tableSeason?.zoneTables?.map((zone, zoneIndex) => (
         <Box
           key={zoneIndex}
@@ -111,9 +81,9 @@ export const Standings = () => {
         >
           <Typography variant="h6">{zone.zoneName}</Typography>
           <TableContainer
-            sx={{ maxHeight: 640 }}
+            sx={{ maxHeight: 640, overflowX: "auto" }}
             component={Paper}
-            style={{ overflowX: "auto" }}
+            // style={{ overflowX: "auto" }}
           >
             <Table size="small" stickyHeader>
               <TableHead>
@@ -147,7 +117,16 @@ export const Standings = () => {
                     return (
                       <StyledTableRow key={t.team._id}>
                         <TableCell>{index + 1}</TableCell>
-                        <TableCell>
+                        <TableCell
+                          style={{
+                            width: "100px",
+                            position: "sticky",
+                            top: 0,
+                            left: 0,
+                            backgroundColor: "#fff",
+                            zIndex: 1,
+                          }}
+                        >
                           <Link
                             to={`/teams/${t.team._id}/statistics`}
                             style={{ textDecoration: "none", color: "inherit" }}
@@ -182,8 +161,12 @@ export const Standings = () => {
         }}
       >
         <Typography variant="h6">Tabla General</Typography>
-        <TableContainer component={Paper}>
-          <Table>
+        <TableContainer
+          sx={{ maxHeight: 240 }}
+          component={Paper}
+          style={{ overflowX: "auto" }}
+        >
+          <Table size="small" stickyHeader>
             <TableHead>
               <TableRow>
                 <TableCell>#</TableCell>
@@ -204,7 +187,16 @@ export const Standings = () => {
                 return (
                   <StyledTableRow key={t.team._id}>
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>
+                    <TableCell
+                      style={{
+                        width: "100px",
+                        position: "sticky",
+                        top: 0,
+                        left: 0,
+                        backgroundColor: "#fff",
+                        zIndex: 1,
+                      }}
+                    >
                       <Link
                         to={`/teams/${t.team._id}/statistics`}
                         style={{ textDecoration: "none", color: "inherit" }}
