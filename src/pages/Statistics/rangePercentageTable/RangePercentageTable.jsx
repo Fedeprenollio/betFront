@@ -16,7 +16,7 @@ import {
   Tab,
   Box,
   styled,
-  TablePagination
+  TablePagination,
 } from "@mui/material";
 import { median } from "simple-statistics";
 import { BACKEND_URL_BASE } from "../../../stores/url_base";
@@ -26,6 +26,7 @@ import { GroupByName } from "./GroupByName";
 import { FilterComponent } from "../../../componts/tableFilters/FilterComponent";
 import ExportExcelButton from "../../../componts/exportToExcel/ExportExcelButton";
 import exportToExcel from "./exportToExel";
+import HelpIconWithModal from "../../../componts/helpIconWithModal/HelpIconWithModal";
 // import GroupByName from "./GroupByName";
 
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -142,7 +143,7 @@ const renderTable = (
   rowsPerPage,
   handleChangePage,
   handleChangeRowsPerPage,
-  nameFilters 
+  nameFilters
 ) => {
   const exampleTeamStats = stats
     ? stats[0]?.stats[statisticKey][matchesType]
@@ -182,18 +183,16 @@ const renderTable = (
       ...underPercentages,
     };
   });
- 
 
   // Filtrar las claves de underRangesKeys que tienen valores no null en las filas de datos
   const filteredUnderRangesKeys = underRangesKeys.filter((key) => {
     return rows.some((row) => row[`under-${key}`] !== null);
   });
 
-
   // Función para filtrar las filas basado en los filtros aplicados
-  const filterRows = (rows, filters,nameFilters ) => {
+  const filterRows = (rows, filters, nameFilters) => {
     return rows?.filter((row) => {
-  // Apply name filters
+      // Apply name filters
       if (nameFilters.length > 0 && !nameFilters.includes(row.team.name)) {
         return false;
       }
@@ -237,7 +236,7 @@ const renderTable = (
   };
 
   // Aplicar filtrado a las filas basado en los filtros actuales
-  let filteredRows = filterRows(rows, filters,nameFilters);
+  let filteredRows = filterRows(rows, filters, nameFilters);
 
   // Ordenar las filas según el orden y el criterio de orden
   filteredRows = stableSort(filteredRows, getComparator(order, orderBy));
@@ -299,15 +298,19 @@ const renderTable = (
                 {matchesType === "received" && (
                   <TableCell>
                     {row.matchesTotalFinished !== 0
-                      ? (row.totalReceived / row.matchesTotalFinished).toFixed(2)
+                      ? (row.totalReceived / row.matchesTotalFinished).toFixed(
+                          2
+                        )
                       : 0}
                   </TableCell>
                 )}
                 {matchesType === "total" && (
                   <TableCell>
                     {row.matchesTotalFinished !== 0
-                      ? ((row.totalScored + row.totalReceived) /
-                        row.matchesTotalFinished).toFixed(2)
+                      ? (
+                          (row.totalScored + row.totalReceived) /
+                          row.matchesTotalFinished
+                        ).toFixed(2)
                       : 0}
                   </TableCell>
                 )}
@@ -338,7 +341,7 @@ const renderTable = (
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-      <ExportExcelButton onClick={()=>exportToExcel(stats,statisticKey)} />
+      <ExportExcelButton onClick={() => exportToExcel(stats, statisticKey)} />
     </TableContainer>
   );
 };
@@ -434,7 +437,6 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
   // ]);
   useEffect(() => {
     if (shouldFetch) {
-
       const loadStats = async () => {
         try {
           setLoading(true);
@@ -466,7 +468,6 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
         }
       };
       loadStats();
-
     }
   }, [
     seasonId,
@@ -476,7 +477,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
     includeAllSeasonMatches,
     selectedSeasons,
     listCurrentSeason,
-    shouldFetch
+    shouldFetch,
   ]);
 
   //   if (loading) return <Typography>Loading...</Typography>;
@@ -552,38 +553,67 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
         : prevSelectedSeasons.filter((id) => id !== seasonId)
     );
   };
- 
+
   const handleNamesChange = (names) => {
-    console.log("NAMES", names)
+    console.log("NAMES", names);
     setNameFilters(names);
   };
+  const tableHelpContent =(
+    <Box>
+    <Typography variant="subtitle1" gutterBottom>
+      En estas tablas, se muestran los porcentajes de partidos por encima o debajo del valor indicado en cada columna:
+    </Typography>
+    <Typography variant="body1" component="ul" gutterBottom>
+      <li><strong>O8.5/9.5/10.5:</strong> Porcentaje de partidos por encima de la línea (8.5, 9.5, 10.5).</li>
+      <Typography variant="body2" gutterBottom>
+        Un valor del 80% en la columna de O1.5 significa que en el 80% de los partidos evaluados, el equipo superó la marca de 1.5 goles, corners, tiros al arco, etc.
+      </Typography>
+      <li><strong>U8.5/9.5/10.5:</strong> Porcentaje de partidos por debajo de la línea (8.5, 9.5, 10.5).</li>
+      <Typography variant="body2" gutterBottom>
+        Un valor del 60% en la columna de U3.5 significa que en el 60% de los partidos evaluados, el equipo estuvo por debajo de la marca de 3.5 goles, corners, tiros al arco, etc.
+      </Typography>
+    </Typography>
+    <Typography variant="subtitle1" gutterBottom>
+      Utilidad en Apuestas Deportivas:
+    </Typography>
+    <Typography variant="body1" gutterBottom>
+      Estas estadísticas son útiles en apuestas deportivas, ya que permiten identificar patrones y tendencias en el rendimiento de los equipos. Por ejemplo, si un equipo tiene un alto porcentaje en O8.5, significa que es más probable que los partidos de ese equipo tengan muchos corners, lo cual puede ser información valiosa al realizar apuestas.
+    </Typography>
+    <Typography variant="body1" gutterBottom>
+      Puedes combinar estas estadísticas con filtros para considerar solo partidos de local, visitante o ambos. Además, limitar el número de partidos para ver la tendencia reciente o, si estamos al inicio de la temporada, incluir también la temporada anterior.
+    </Typography>
+  </Box>
+  )
+
   return (
     <>
-     { listCurrentSeason && <Typography variant="p" gutterBottom>
-        {listCurrentSeason
-          ? "Estadisticas generales de todos los equipos en temporadas actuales activas"
-          : "Estadísticas de la Temporada"}
-      </Typography>}
-   
+      {listCurrentSeason && (
+        <Typography variant="p" gutterBottom>
+          {listCurrentSeason
+            ? "Estadisticas generales de todos los equipos en temporadas actuales activas"
+            : "Estadísticas de la Temporada"}
+        </Typography>
+      )}
 
-    <FilterComponent
-      filterName={["local/visitor", "MatchesCountInput"]}
-      homeOnly={homeOnly}
-      awayOnly={awayOnly}
-      handleHomeOnlyChange={handleHomeOnlyChange}
-      handleAwayOnlyChange={handleAwayOnlyChange}
-      inputMatchesCount={inputMatchesCount}
-      handleInputMatchesCountChange={handleInputMatchesCountChange}
-      handleIncludeAllSeasonMatches={handleIncludeAllSeasonMatches}
-      updateMatchesCount={updateMatchesCount}
-      updateIncludeOtherSeasons={updateIncludeOtherSeasons}
-      inputChekBoxIncludeAllSeason={inputChekBoxIncludeAllSeason}
-      handleFilterChange={handleFilterChange}
-      listCurrentSeason={listCurrentSeason}
-      selectedSeasons={selectedSeasons}
-      handleSeasonChange={handleSeasonChange}
-    />
-          <GroupByName onNamesChange={handleNamesChange}/>
+      <FilterComponent
+        filterName={["local/visitor", "MatchesCountInput"]}
+        homeOnly={homeOnly}
+        awayOnly={awayOnly}
+        handleHomeOnlyChange={handleHomeOnlyChange}
+        handleAwayOnlyChange={handleAwayOnlyChange}
+        inputMatchesCount={inputMatchesCount}
+        handleInputMatchesCountChange={handleInputMatchesCountChange}
+        handleIncludeAllSeasonMatches={handleIncludeAllSeasonMatches}
+        updateMatchesCount={updateMatchesCount}
+        updateIncludeOtherSeasons={updateIncludeOtherSeasons}
+        inputChekBoxIncludeAllSeason={inputChekBoxIncludeAllSeason}
+        handleFilterChange={handleFilterChange}
+        listCurrentSeason={listCurrentSeason}
+        selectedSeasons={selectedSeasons}
+        handleSeasonChange={handleSeasonChange}
+      />
+      <GroupByName onNamesChange={handleNamesChange} />
+      <HelpIconWithModal title="Ayuda sobre la tabla" content={tableHelpContent} />
 
       <Tabs
         value={tabIndex}
@@ -598,9 +628,8 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
         ))}
       </Tabs>
 
-
       {statisticKeys.map((key, index) => (
-        <TabPanel  value={tabIndex} index={index} key={key}>
+        <TabPanel value={tabIndex} index={index} key={key}>
           <Box
             sx={{
               border: "1px solid #ddd",
@@ -608,7 +637,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
               marginBottom: 2,
               borderRadius: 2,
               boxShadow: 1,
-              backgroundColor: "#f9f9f9"
+              backgroundColor: "#f9f9f9",
             }}
           >
             <Typography variant="h6" gutterBottom>
@@ -628,8 +657,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
               rowsPerPage,
               handleChangePage,
               handleChangeRowsPerPage,
-              nameFilters 
-
+              nameFilters
             )}
           </Box>
           <Box
@@ -659,7 +687,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
               rowsPerPage,
               handleChangePage,
               handleChangeRowsPerPage,
-              nameFilters 
+              nameFilters
             )}
           </Box>
 
@@ -690,7 +718,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
               rowsPerPage,
               handleChangePage,
               handleChangeRowsPerPage,
-              nameFilters 
+              nameFilters
             )}
           </Box>
         </TabPanel>

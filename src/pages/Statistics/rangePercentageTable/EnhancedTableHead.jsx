@@ -158,7 +158,7 @@ export const EnhancedTableHead = (props) => {
               direction={orderBy === `over-${rangeKey}` ? order : 'asc'}
               onClick={createSortHandler(`over-${rangeKey}`)}
             >
-              O{rangeKey.replace('_', '.')}FT (%)
+              O{rangeKey.replace('_', '.')} (%)
               {orderBy === `over-${rangeKey}` ? (
                 <Box component="span" sx={visuallyHidden}>
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
@@ -188,7 +188,7 @@ export const EnhancedTableHead = (props) => {
               direction={orderBy === `under-${rangeKey}` ? order : 'asc'}
               onClick={createSortHandler(`under-${rangeKey}`)}
             >
-              U{rangeKey.replace('_', '.')}HFT (%)
+              U{rangeKey.replace('_', '.')} (%)
               {orderBy === `under-${rangeKey}` ? (
                 <Box component="span" sx={visuallyHidden}>
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
