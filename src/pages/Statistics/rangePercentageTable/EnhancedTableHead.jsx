@@ -23,6 +23,7 @@ export const EnhancedTableHead = (props) => {
   const mediaTotalHeader = matchesType === 'total' ? `Media ${matchesType} cometidos + recibidos` : null;
 
   const handleRangeFilterChange = (key, type, value, range) => {
+    console.log("HOLITASSSS",value)
     const filterKey = `${type}-${key}-${range}`;
     if (onFilterChange) {
       onFilterChange({ [filterKey]: value });
