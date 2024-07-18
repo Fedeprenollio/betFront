@@ -133,7 +133,8 @@ export const renderTable = (
 
     const handleExport = () => {
       const filteredRowsForExport = filterRows(rows, filters, nameFilters);
-      exportToExcel(filteredRowsForExport, statisticKey);
+      console.log("filteredRowsForExport",filteredRowsForExport)
+      exportToExcel(filteredRowsForExport, statisticKey,matchesType);
     };
     return (
       <TableContainer
