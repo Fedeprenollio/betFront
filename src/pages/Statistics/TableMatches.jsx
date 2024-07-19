@@ -103,6 +103,9 @@ export const TableMatches = ({ teamMatches, statistic, teamDetail }) => {
       </Item>
       {teamMatches?.map((match) => {
         const homeStat = match.teamStatistics.local[statistic];
+        const penaltyLocal = statistic === "goals" ? ((match?.penaltyResult?.homePenalties!== match.penaltyResult.awayPenalties) ? match?.penaltyResult?.homePenalties : null) : null
+        const penaltyVisitor = statistic === "goals" ?( (match?.penaltyResult?.homePenalties!== match.penaltyResult.awayPenalties) ? match?.penaltyResult?.awayPenalties : null) : null
+
         const awayStat = match.teamStatistics.visitor[statistic];
         const homeTeamWins = homeStat > awayStat;
         const awayTeamWins = awayStat > homeStat;
@@ -139,7 +142,10 @@ export const TableMatches = ({ teamMatches, statistic, teamDetail }) => {
                     <Typography
                       textAlign={"center"}
                       style={{ fontWeight: "bold" }}
-                    >{`${homeStat} - ${awayStat}`}</Typography>
+                    >
+                      {`${homeStat}`}  { penaltyLocal && ( `(${penaltyLocal}) `) } -  { penaltyLocal && ( ` (${penaltyVisitor})`) } {`${awayStat}`}
+                     
+                    </Typography>
                   </Grid>
                   <Grid item xs={5}>
                     <Typography

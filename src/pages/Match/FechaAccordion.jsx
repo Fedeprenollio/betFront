@@ -142,7 +142,7 @@ export const FechaAccordion = ({ fecha, idSeason, currentFechaId, setCurrentFech
                 </Typography>
                 {match.isFinished ? (
                   <Typography sx={{ marginLeft: "1rem" }}>
-                    {match.teamStatistics.local.goals} -{" "}
+                    {match.teamStatistics.local.goals}{(match?.penaltyResult?.homePenalties!== match.penaltyResult.awayPenalties) && `(${match?.penaltyResult?.homePenalties})` } - {match?.penaltyResult?.homePenalties!== match.penaltyResult.awayPenalties && `(${match.penaltyResult.awayPenalties})` }
                     {match.teamStatistics.visitor.goals}
                   </Typography>
                 ) : null}

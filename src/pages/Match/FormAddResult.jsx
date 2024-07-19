@@ -32,6 +32,8 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
     shotsOnTargetAway: 0,
     totalShotsHome: 0,
     totalShotsAway: 0,
+    penaltiesHome: 0,
+    penaltiesAway: 0, // Añadimos campos de penales
   });
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -68,6 +70,8 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
         foultsAway: matchDetail?.teamStatistics?.visitor?.foults || "",
         totalShotsHome: matchDetail?.teamStatistics?.local?.shots || "",
         totalShotsAway: matchDetail?.teamStatistics?.visitor?.shots || "",
+        penaltiesHome: matchDetail?.penaltyResult?.homePenalties || "",
+        penaltiesAway: matchDetail?.penaltyResult?.awayPenalties || "",
       });
     }
   }, [matchDetail, matchId]);
@@ -91,6 +95,8 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
     totalShotsAway: Yup.number().min(0),
     foultsHome: Yup.number().min(0),
     foultsAway: Yup.number().min(0),
+    penaltiesHome:Yup.number(),
+    penaltiesAway: Yup.number(),
   }), []);
 
   const handleSubmit = useCallback(async (values) => {
@@ -128,6 +134,12 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
           },
         },
         isFinished: true,
+        penaltyResult:{
+          homePenalties: parseInt(values.penaltiesHome),
+          awayPenalties: parseInt(values.penaltiesAway)
+
+        }
+
       });
 
       setAlertSeverity("success");
@@ -359,6 +371,38 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
                 />
                 <ErrorMessage name="cornersAway" component="div" />
               </Grid>
+
+
+            {
+              // Penales
+            }
+               <Grid item xs={6}>
+                <FastField
+                  as={TextField}
+                  name="penaltiesHome"
+                  label="Penales Equipo Local"
+                  type="number"
+                  variant="outlined"
+                  fullWidth
+                  onWheel={(e) => e.target.blur()}
+                />
+                <ErrorMessage name="penaltiesHome" component="div" />
+              </Grid>
+              <Grid item xs={6}>
+                <FastField
+                  as={TextField}
+                  name="penaltiesAway"
+                  label="Penales Equipo Visitante"
+                  type="number"
+                  variant="outlined"
+                  fullWidth
+                  onWheel={(e) => e.target.blur()}
+                />
+                <ErrorMessage name="penaltiesAway" component="div" />
+              </Grid>
+
+
+
               <Grid item xs={12}>
                 <Button type="submit" variant="contained" color="primary">
                   Actualizar Resultado

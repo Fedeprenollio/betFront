@@ -197,11 +197,16 @@ export const ShowResultsForFecha = () => {
                             {match.homeTeam.name}
                           </Typography>
                         </Grid>
-                        <Grid item xs={2} container justifyContent="center">
-                          <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+                        <Grid item xs={2} container alignItems={"center"} justifyContent="center" display={"flex"}  flexDirection={"column"}>
+                          <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
                             {match.isFinished
-                              ? `${match.teamStatistics.local.goals}  ${match.teamStatistics.visitor.goals}`
+                              ? `${match.teamStatistics.local.goals}    ${match.teamStatistics.visitor.goals}`
                               : "-"}
+                          </Typography>
+                          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                            {(match?.penaltyResult?.homePenalties!== match.penaltyResult.awayPenalties)
+                              ? `(${match?.penaltyResult?.homePenalties})   ( ${match.penaltyResult.awayPenalties})`
+                              : null}
                           </Typography>
                         </Grid>
                         <Grid
