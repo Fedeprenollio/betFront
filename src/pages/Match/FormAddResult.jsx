@@ -11,7 +11,9 @@ import AlertDialogCopy from "../../componts/feedback/AlertDialogCopy";
 import { AlertMessageCopy } from "../../componts/feedback/AlertMessageCopy";
 
 const FormAddResult = ({ matchId, visitorName, localName }) => {
-  const { addMatchResult, getMatchDetail, matchDetail } = useBoundStore((state) => state);
+  const { addMatchResult, getMatchDetail, matchDetail } = useBoundStore(
+    (state) => state
+  );
 
   const [initialValues, setInitialValues] = useState({
     goalsHome: "",
@@ -19,7 +21,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
     offsidesHome: 0,
     offsidesAway: 0,
     yellowCardsHome: 0,
-    yellowCardsAway:0,
+    yellowCardsAway: 0,
     redCardsHome: 0,
     redCardsAway: 0,
     cornersHome: 0,
@@ -40,7 +42,12 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState("success");
   const [alertText, setAlertText] = useState("");
-  console.log("matchDetail?.teamStatistics?.local?.foults", matchDetail?.teamStatistics)
+  const [penaltiesEnabled, setPenaltiesEnabled] = useState(false); // Estado para habilitar/deshabilitar penales
+
+  console.log(
+    "matchDetail?.teamStatistics?.local?.foults",
+    matchDetail?.teamStatistics
+  );
 
   useEffect(() => {
     const fetchMatchDetail = async () => {
@@ -57,15 +64,18 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
         offsidesHome: matchDetail?.teamStatistics?.local?.offsides || "",
         offsidesAway: matchDetail?.teamStatistics?.visitor?.offsides || "",
         yellowCardsHome: matchDetail?.teamStatistics?.local?.yellowCards || "",
-        yellowCardsAway: matchDetail?.teamStatistics?.visitor?.yellowCards || "",
+        yellowCardsAway:
+          matchDetail?.teamStatistics?.visitor?.yellowCards || "",
         redCardsHome: matchDetail?.teamStatistics?.local?.redCards || "",
         redCardsAway: matchDetail?.teamStatistics?.visitor?.redCards || "",
         cornersHome: matchDetail?.teamStatistics?.local?.corners || "",
         cornersAway: matchDetail?.teamStatistics?.visitor?.corners || "",
         possessionHome: matchDetail?.teamStatistics?.local?.possession || "",
         possessionAway: matchDetail?.teamStatistics?.visitor?.possession || "",
-        shotsOnTargetHome: matchDetail?.teamStatistics?.local?.shotsOnTarget || "",
-        shotsOnTargetAway: matchDetail?.teamStatistics?.visitor?.shotsOnTarget || "",
+        shotsOnTargetHome:
+          matchDetail?.teamStatistics?.local?.shotsOnTarget || "",
+        shotsOnTargetAway:
+          matchDetail?.teamStatistics?.visitor?.shotsOnTarget || "",
         foultsHome: matchDetail?.teamStatistics?.local?.foults || "",
         foultsAway: matchDetail?.teamStatistics?.visitor?.foults || "",
         totalShotsHome: matchDetail?.teamStatistics?.local?.shots || "",
@@ -76,87 +86,93 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
     }
   }, [matchDetail, matchId]);
 
-  const validationSchema = useMemo(() => Yup.object().shape({
-    goalsHome: Yup.number().required("Campo requerido").min(0),
-    goalsAway: Yup.number().required("Campo requerido").min(0),
-    offsidesHome: Yup.number().min(0),
-    offsidesAway: Yup.number().min(0),
-    yellowCardsHome: Yup.number().min(0),
-    yellowCardsAway: Yup.number().min(0),
-    redCardsHome: Yup.number().min(0),
-    redCardsAway: Yup.number().min(0),
-    cornersHome: Yup.number().min(0),
-    cornersAway: Yup.number().min(0),
-    possessionHome: Yup.number().min(0).max(100),
-    possessionAway: Yup.number().min(0).max(100),
-    shotsOnTargetHome: Yup.number().min(0),
-    shotsOnTargetAway: Yup.number().min(0),
-    totalShotsHome: Yup.number().min(0),
-    totalShotsAway: Yup.number().min(0),
-    foultsHome: Yup.number().min(0),
-    foultsAway: Yup.number().min(0),
-    penaltiesHome:Yup.number(),
-    penaltiesAway: Yup.number(),
-  }), []);
+  const validationSchema = useMemo(
+    () =>
+      Yup.object().shape({
+        goalsHome: Yup.number().required("Campo requerido").min(0),
+        goalsAway: Yup.number().required("Campo requerido").min(0),
+        offsidesHome: Yup.number().min(0),
+        offsidesAway: Yup.number().min(0),
+        yellowCardsHome: Yup.number().min(0),
+        yellowCardsAway: Yup.number().min(0),
+        redCardsHome: Yup.number().min(0),
+        redCardsAway: Yup.number().min(0),
+        cornersHome: Yup.number().min(0),
+        cornersAway: Yup.number().min(0),
+        possessionHome: Yup.number().min(0).max(100),
+        possessionAway: Yup.number().min(0).max(100),
+        shotsOnTargetHome: Yup.number().min(0),
+        shotsOnTargetAway: Yup.number().min(0),
+        totalShotsHome: Yup.number().min(0),
+        totalShotsAway: Yup.number().min(0),
+        foultsHome: Yup.number().min(0),
+        foultsAway: Yup.number().min(0),
+        penaltiesHome: Yup.number(),
+        penaltiesAway: Yup.number(),
+      }),
+    []
+  );
 
   const handleSubmit = useCallback(async (values) => {
     setIsDialogOpen(true);
   }, []);
 
-  const handleConfirm = useCallback(async (values) => {
-    setIsDialogOpen(false);
-    try {
-      await addMatchResult(matchId, {
-        goalsHome: parseInt(values.goalsHome),
-        goalsAway: parseInt(values.goalsAway),
-        teamStatistics: {
-          local: {
-            goals: parseInt(values.goalsHome),
-            offsides: parseInt(values.offsidesHome),
-            yellowCards: parseInt(values.yellowCardsHome),
-            redCards: parseInt(values.redCardsHome),
-            corners: parseInt(values.cornersHome),
-            possession: parseInt(values.possessionHome),
-            totalShots: parseInt(values.totalShotsHome),
-            shotsOnTarget: parseInt(values.shotsOnTargetHome),
-            foults: parseInt(values.foultsHome),
+  const handleConfirm = useCallback(
+    async (values) => {
+      setIsDialogOpen(false);
+      try {
+        await addMatchResult(matchId, {
+          goalsHome: parseInt(values.goalsHome),
+          goalsAway: parseInt(values.goalsAway),
+          teamStatistics: {
+            local: {
+              goals: parseInt(values.goalsHome),
+              offsides: parseInt(values.offsidesHome),
+              yellowCards: parseInt(values.yellowCardsHome),
+              redCards: parseInt(values.redCardsHome),
+              corners: parseInt(values.cornersHome),
+              possession: parseInt(values.possessionHome),
+              totalShots: parseInt(values.totalShotsHome),
+              shotsOnTarget: parseInt(values.shotsOnTargetHome),
+              foults: parseInt(values.foultsHome),
+            },
+            visitor: {
+              goals: parseInt(values.goalsAway),
+              totalShots: parseInt(values.totalShotsAway),
+              shotsOnTarget: parseInt(values.shotsOnTargetAway),
+              possession: parseInt(values.possessionAway),
+              yellowCards: parseInt(values.yellowCardsAway),
+              corners: parseInt(values.cornersAway),
+              offsides: parseInt(values.offsidesAway),
+              foults: parseInt(values.foultsAway),
+              redCards: parseInt(values.redCardsAway),
+            },
           },
-          visitor: {
-            goals: parseInt(values.goalsAway),
-            totalShots: parseInt(values.totalShotsAway),
-            shotsOnTarget: parseInt(values.shotsOnTargetAway),
-            possession: parseInt(values.possessionAway),
-            yellowCards: parseInt(values.yellowCardsAway),
-            corners: parseInt(values.cornersAway),
-            offsides: parseInt(values.offsidesAway),
-            foults: parseInt(values.foultsAway),
-            redCards: parseInt(values.redCardsAway),
+          isFinished: true,
+          penaltyResult: {
+            homePenalties: parseInt(values.penaltiesHome),
+            awayPenalties: parseInt(values.penaltiesAway),
           },
-        },
-        isFinished: true,
-        penaltyResult:{
-          homePenalties: parseInt(values.penaltiesHome),
-          awayPenalties: parseInt(values.penaltiesAway)
+        });
 
-        }
+        setAlertSeverity("success");
+        setAlertText("Resultado actualizado con éxito");
+      } catch (error) {
+        setAlertSeverity("error");
+        setAlertText("Error al actualizar el resultado");
+      } finally {
+        setIsAlertOpen(true);
+      }
+    },
+    [addMatchResult, matchId]
+  );
 
-      });
-
-      setAlertSeverity("success");
-      setAlertText("Resultado actualizado con éxito");
-    } catch (error) {
-      setAlertSeverity("error");
-      setAlertText("Error al actualizar el resultado");
-    } finally {
-      setIsAlertOpen(true);
-    }
-  }, [addMatchResult, matchId]);
-
-  
   const handleWheel = (event) => {
     event.preventDefault(); // Prevenir scroll en los campos numéricos mientras están enfocados
   };
-
+  const togglePenalties = () => {
+    setPenaltiesEnabled((prev) => !prev);
+  };
   return (
     <>
       <Formik
@@ -165,7 +181,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ values,setFieldValue }) => (
+        {({ values, setFieldValue }) => (
           <Form>
             <Grid container spacing={2} alignItems="center">
               <Grid item xs={6} sx={{ maxWidth: "200px" }}>
@@ -186,7 +202,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
                   type="number"
                   variant="outlined"
                   fullWidth
-                 onWheel={(e) => e.target.blur()} // Manejar evento de rueda para prevenir scroll
+                  onWheel={(e) => e.target.blur()} // Manejar evento de rueda para prevenir scroll
                 />
                 <ErrorMessage name="goalsHome" component="div" />
               </Grid>
@@ -322,7 +338,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
                 />
                 <ErrorMessage name="yellowCardsAway" component="div" />
               </Grid>
-            
+
               <Grid item xs={6}>
                 <FastField
                   as={TextField}
@@ -372,36 +388,49 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
                 <ErrorMessage name="cornersAway" component="div" />
               </Grid>
 
+              {
+                // Penales
+              }
 
-            {
-              // Penales
-            }
-               <Grid item xs={6}>
-                <FastField
-                  as={TextField}
-                  name="penaltiesHome"
-                  label="Penales Equipo Local"
-                  type="number"
-                  variant="outlined"
-                  fullWidth
-                  onWheel={(e) => e.target.blur()}
-                />
-                <ErrorMessage name="penaltiesHome" component="div" />
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={togglePenalties}
+                >
+                  {penaltiesEnabled
+                    ? "Deshabilitar Penales"
+                    : "Habilitar Penales"}
+                </Button>
               </Grid>
-              <Grid item xs={6}>
-                <FastField
-                  as={TextField}
-                  name="penaltiesAway"
-                  label="Penales Equipo Visitante"
-                  type="number"
-                  variant="outlined"
-                  fullWidth
-                  onWheel={(e) => e.target.blur()}
-                />
-                <ErrorMessage name="penaltiesAway" component="div" />
-              </Grid>
-
-
+              {penaltiesEnabled && (
+                <>
+                  <Grid item xs={6}>
+                    <FastField
+                      as={TextField}
+                      name="penaltiesHome"
+                      label="Penales Equipo Local"
+                      type="number"
+                      variant="outlined"
+                      fullWidth
+                      onWheel={(e) => e.target.blur()}
+                    />
+                    <ErrorMessage name="penaltiesHome" component="div" />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FastField
+                      as={TextField}
+                      name="penaltiesAway"
+                      label="Penales Equipo Visitante"
+                      type="number"
+                      variant="outlined"
+                      fullWidth
+                      onWheel={(e) => e.target.blur()}
+                    />
+                    <ErrorMessage name="penaltiesAway" component="div" />
+                  </Grid>
+                </>
+              )}
 
               <Grid item xs={12}>
                 <Button type="submit" variant="contained" color="primary">
@@ -434,9 +463,12 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
 };
 const AutoFillPossession = ({ values, setFieldValue }) => {
   useEffect(() => {
-    if (values.possessionHome !== 0 ) {
+    if (values.possessionHome !== 0) {
       const updatedPossessionAway = 100 - parseInt(values.possessionHome);
-      setFieldValue("possessionAway", updatedPossessionAway > 0 ? updatedPossessionAway : 0);
+      setFieldValue(
+        "possessionAway",
+        updatedPossessionAway > 0 ? updatedPossessionAway : 0
+      );
     }
   }, [values.possessionHome, setFieldValue]);
 
