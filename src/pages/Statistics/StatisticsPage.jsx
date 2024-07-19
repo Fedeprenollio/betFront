@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { FilterStatistics } from "./FilterStatistics";
 import { ShowStatisticsMatches } from "./ShowStatisticsMatches";
 import StatisticsTablecopy from "../../componts/StatisticsTablecopy";
+import { FilterComponent } from "../../componts/tableFilters/FilterComponent";
 
 export const StatisticsPage = () => {
   const { idHomeTeam, idAwayTeam, idMatch } = useParams();
@@ -34,7 +35,7 @@ export const StatisticsPage = () => {
         statsLessThan={statsLessThan}
         singleTeam={singleTeam}
       />
-     
+    
         <Tabs
           value={activeTab}
           onChange={handleTabChange}

@@ -177,6 +177,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
   };
 
   const handleRequestSort = (event, property) => {
+    console.log("property",property)
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
@@ -252,7 +253,6 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
   };
 
   const handleNamesChange = (names) => {
-    console.log("NAMES", names);
     setNameFilters(names);
   };
   const tableHelpContent = (
