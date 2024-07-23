@@ -83,7 +83,7 @@ const createSeasonStore = (set) => ({
   // Función para eliminar una temporada
   deleteSeason: async (seasonId) => {
     try {
-      await fetch(`${URL_API}/${seasonId}`, {
+      await fetch(`${URL_API}/${seasonId}/full`, {
         method: "DELETE",
       });
       // if (!response.ok) {

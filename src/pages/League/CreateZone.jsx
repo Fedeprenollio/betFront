@@ -75,6 +75,7 @@ const CreateZone = () => {
       const response = await axios.get(
         `${BACKEND_URL_BASE}/season/${seasonId}/zones`
       );
+      console.log("response.data", response.data)
       return response.data;
     } catch (error) {
       console.error("Error fetching zones and teams:", error);
@@ -94,7 +95,7 @@ const CreateZone = () => {
         });
     }
   }, [selectedSeason]);
-
+console.log("openAddTeamsDialog",openAddTeamsDialog)
   const handleAddTeam = (zoneId, teamId) => {
     setSelectedTeamsToAdd((prev) => ({
       ...prev,
@@ -141,6 +142,8 @@ const CreateZone = () => {
     setOpenAddTeamsDialog(false);
     try {
       await axios.post(`${BACKEND_URL_BASE}/season/add-teams`, values);
+      const updatedZones = await fetchZonesAndTeams(values.season);
+      setZones(updatedZones);
       setSeverity("success");
       setMsgAlert("Zonas agregadas correctamente.");
       setIsAlertOpen(true);

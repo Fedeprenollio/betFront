@@ -56,6 +56,10 @@ export const ListLeagues = () => {
   const [currentSeasonId, setCurrentSeasonId] = useState("");
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [editLeagueData, setEditLeagueData] = useState({ name: "", country: "" });
+
+  const [openDeleteSeasonDialog, setOpenDeleteSeasonDialog] = useState(false);
+  const [seasonToDelete, setSeasonToDelete] = useState(null);
+  const [seasonNameToConfirm, setSeasonNameToConfirm] = useState("");
   const URL_API = `${BACKEND_URL_BASE}/season/league`;
 
   useEffect(() => {
@@ -133,6 +137,39 @@ export const ListLeagues = () => {
     // Lógica para actualizar la liga en el backend
     setOpenEditDialog(false);
   };
+
+  const handleDeleteSeasonClick = (season) => {
+    setSeasonToDelete(season);
+    setOpenDeleteSeasonDialog(true);
+  };
+
+  const handleConfirmDeleteSeason = async () => {
+    console.log("seasonToDelete",seasonToDelete)
+    console.log("seasonNameToConfirm",seasonNameToConfirm)
+    if (seasonToDelete.year === seasonNameToConfirm) {
+      try {
+      const res =   await axios.delete(`${BACKEND_URL_BASE}/season/${seasonToDelete._id}/full`);
+      const data = res.data
+      console.log(data)
+        setSeverity("success");
+        setMsgAlert("Temporada eliminada exitosamente");
+        setIsAlertOpen(true);
+        fetchLeagues(); // Refrescar la lista de ligas
+      } catch (error) {
+        console.error("Error al eliminar la temporada:", error);
+        setSeverity("error");
+        setMsgAlert("Error al eliminar la temporada");
+        setIsAlertOpen(true);
+      }
+    } else {
+      setSeverity("error");
+      setMsgAlert("El nombre de la temporada no coincide");
+      setIsAlertOpen(true);
+    }
+    setOpenDeleteSeasonDialog(false);
+    setSeasonNameToConfirm("");
+  };
+
   return (
     <>
       <FilterLeague
@@ -168,30 +205,38 @@ export const ListLeagues = () => {
         <DialogContent>
           {console.log("ID DE LA LIGA EN PADRE", idLeague)}
           <FormLeague idLeague={idLeague} />
-          {/* <TextField
-            margin="dense"
-            name="name"
-            label="Nombre de la Liga"
-            type="text"
-            fullWidth
-            value={editLeagueData.name}
-            onChange={handleEditChange}
-          />
-          <TextField
-            margin="dense"
-            name="country"
-            label="País"
-            type="text"
-            fullWidth
-            value={editLeagueData.country}
-            onChange={handleEditChange}
-          /> */}
+         
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenEditDialog(false)} color="primary">
             Cerrar
           </Button>
 
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={openDeleteSeasonDialog} onClose={() => setOpenDeleteSeasonDialog(false)}>
+        <DialogTitle>Confirmar eliminación de temporada</DialogTitle>
+        <DialogContent>
+          <Typography>
+           {` Para confirmar la eliminación de la temporada "${seasonToDelete?.year}", por favor escribe el nombre de la temporada a continuación:`}
+          </Typography>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Nombre de la temporada"
+            fullWidth
+            value={seasonNameToConfirm}
+            onChange={(e) => setSeasonNameToConfirm(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDeleteSeasonDialog(false)} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={handleConfirmDeleteSeason} color="secondary">
+            Eliminar
+          </Button>
         </DialogActions>
       </Dialog>
 
@@ -233,13 +278,7 @@ export const ListLeagues = () => {
                       <EditIcon />
                     </IconButton>
                   </Tooltip>
-                  {/* <Tooltip title="Ver detalle de la liga">
-                    <IconButton>
-                      <Link to={`/league/detail/${league._id}`}>
-                        <InfoIcon />
-                      </Link>
-                    </IconButton>
-                  </Tooltip> */}
+                  
                 </ListItemIcon>
               </Grid>}
             </Grid>
@@ -280,32 +319,9 @@ export const ListLeagues = () => {
                                 <Button>Detalle</Button>
                               </Link>
                             </Grid>
-                            {/* <Grid item>
-                              <Link
-                                className="link-no-underline"
-                                to={`/league/showResults/${season._id}`}
-                              >
-                                <Button>Resultados</Button>
-                              </Link>
-                            </Grid>
-                            <Grid item>
-                              <Link
-                                className="link-no-underline"
-                                to={`/stats/teams/tableSeason/${season._id}`}
-                              >
-                                <Button>Estadísticas</Button>
-                              </Link>
-                            </Grid>
-                            <Grid item>
-                              <Link
-                                className="link-no-underline"
-                                to={`/league/positions/${season._id}`}
-                              >
-                                <Button>Posisiones</Button>
-                              </Link>
-                            </Grid> */}
+                           
                             {isAuthenticated &&
-
+                              <>
                               <Grid item>
                                 <Tooltip title="Agregar resultados a la temporada">
                                   <Link to={`/match/results/${season._id}`}>
@@ -313,6 +329,16 @@ export const ListLeagues = () => {
                                   </Link>
                                 </Tooltip>
                               </Grid>
+                              <Grid item>
+                              <Tooltip title="Eliminar Temporada">
+                                <IconButton
+                                  onClick={() => handleDeleteSeasonClick(season)}
+                                >
+                                  <DeleteIcon color="secondary" />
+                                </IconButton>
+                              </Tooltip>
+                              </Grid>
+                              </>
                             }
 
                           </Grid>
