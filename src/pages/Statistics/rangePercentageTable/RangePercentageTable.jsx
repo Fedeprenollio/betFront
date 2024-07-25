@@ -38,12 +38,12 @@ const fetchOneTeamStats = async (
   seasonId,
   homeOnly,
   awayOnly,
-  matchesCount= 10,
+  matchesCount,
   includeAllSeasonMatches,
   idTeam
 ) => {
   const response = await axios.get(
-    `${BACKEND_URL_BASE}/team/stats/${idTeam}?season=${seasonId}statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}`
+    `${BACKEND_URL_BASE}/team/stats/${idTeam}?statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}`
   );
   return response.data;
 };
