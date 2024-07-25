@@ -313,11 +313,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
       </Typography>
     </Box>
   );
-  const formattedStats = stats?.map((teamData) => ({
-    team: teamData.team,
-    stats: teamData.stats?.["goals"],
-  }));
-  console.log("formattedStats", formattedStats);
+
   return (
     <>
     <h1> {idTeam && `Estadisticas de un solo equipo en fase de prueba, falta agregar la posibilidad de agregar mas equpos para compararlos` } </h1>
