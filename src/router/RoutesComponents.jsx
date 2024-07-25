@@ -29,12 +29,15 @@ const RoutesComponent = () => {
       <Route path="/teams">
         <Route index element={<Teams />} />
         <Route path=":idHomeTeam/statistics" element={<StatisticsPage />} />
+        <Route path=":idTeam/stats" element={<RangePercentageTable />} />
+
 
         <Route path="adm" element={<PrivateRoute />}>
           <Route path="" element={<FormTeam />} />
           <Route path=":idTeam" element={<FormTeam />} />
         </Route>
       </Route>
+
       <Route path="/match">
         <Route index element={<MatchesPage />} />
 

@@ -33,6 +33,21 @@ const fetchTeamStats = async (
   return response.data;
 };
 
+
+const fetchOneTeamStats = async (
+  seasonId,
+  homeOnly,
+  awayOnly,
+  matchesCount,
+  includeAllSeasonMatches,
+  idTeam
+) => {
+  const response = await axios.get(
+    `${BACKEND_URL_BASE}/team/stats/${idTeam}?statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}`
+  );
+  return response.data;
+};
+
 const TabPanel = ({ children, value, index }) => (
   <div className="prueba" role="tabpanel" hidden={value !== index}>
     {value === index && <Box p={0.2}>{children}</Box>}
@@ -40,7 +55,7 @@ const TabPanel = ({ children, value, index }) => (
 );
 
 export const RangePercentageTable = ({ listCurrentSeason }) => {
-  const { seasonId } = useParams();
+  const { seasonId, idTeam } = useParams();
   const [stats, setStats] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -54,16 +69,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
   const [includeAllSeasonMatches, setIncludeAllSeasonMatches] = useState(false);
   const [inputChekBoxIncludeAllSeason, setInputChekBoxIncludeAllSeason] =
     useState(false);
-  // const [filters, setFilters] = useState({});
-  // const [filters, setFilters] = useState({
-  //   goals: {},
-  //   corners: {},
-  //   shots: {},
-  //   shotsOnTarget:{},
-  //   offsides:{},
-  //   possession:{},
-  //   yellowCards:{}
-  // });
+ console.log("Proabdno idTeam",idTeam)
   const [filters, setFilters] = useState({
     goals: {
       scored: {},
@@ -102,7 +108,6 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
   const [shouldFetch, setShouldFetch] = useState(true);
   const [nameFilters, setNameFilters] = useState([]);
 
-  const [specificFilters, setSpecificFilters] = useState({});
 
   useEffect(() => {
     // Parse listCurrentSeason to an array of seasons if it's not empty
@@ -128,10 +133,9 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
               matchesCount,
               includeAllSeasonMatches
             );
-            console.log("DATA1", data);
+            console.log("DATA NORMAL", data);
           } else if (listCurrentSeason && selectedSeasons.length > 0) {
             const selectedSeasonsString = selectedSeasons.join(",");
-            console.log("selectedSeasonsString", selectedSeasonsString);
             data = await fetchTeamStats(
               selectedSeasonsString,
               homeOnly,
@@ -139,7 +143,16 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
               matchesCount,
               includeAllSeasonMatches
             );
-            console.log("DATA", data);
+            console.log("DATA NUMRO2", data);
+          }else if( idTeam){
+            data = await fetchOneTeamStats( seasonId,
+              homeOnly,
+              awayOnly,
+              matchesCount,
+              includeAllSeasonMatches,
+            idTeam)
+            console.log("DATA1 UN EQUIPO", data);
+
           }
           setStats(data);
           setLoading(false);
@@ -159,6 +172,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
     selectedSeasons,
     listCurrentSeason,
     shouldFetch,
+    idTeam
   ]);
 
   //   if (loading) return <Typography>Loading...</Typography>;
@@ -306,6 +320,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
   console.log("formattedStats", formattedStats);
   return (
     <>
+    <h1> {idTeam && `Estadisticas de un solo equipo en fase de prueba, falta agregar la posibilidad de agregar mas equpos para compararlos` } </h1>
       {listCurrentSeason && (
         <Typography variant="p" gutterBottom>
           {listCurrentSeason

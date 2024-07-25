@@ -373,7 +373,7 @@ export default function StatisticsTablecopy({
 
   const [teamDetails1, setTeamDetails1] = useState({});
   const [teamDetails2, setTeamDetails2] = useState({});
-
+console.log("teamDetails1",teamDetails1)
   useEffect(() => {
     if (teamDetails) {
       idHomeTeam && setTeamDetails1(teamDetails[idHomeTeam]);

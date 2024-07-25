@@ -116,6 +116,12 @@ export const Teams = () => {
   const handleStatisticsClick = (teamId) => {
     navigate(`/teams/${teamId}/statistics`);
   };
+  const handleStatisticsPercentageClick = (teamId) => {
+    navigate(`/teams/${teamId}/stats`);
+  };
+
+
+  
 
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -201,6 +207,9 @@ export const Teams = () => {
                     <TableCell>{team.country}</TableCell>
                     <TableCell>
                       <Button onClick={() => handleStatisticsClick(team._id)}>Estadística</Button>
+                    </TableCell>
+                    <TableCell>
+                      <Button onClick={() => handleStatisticsPercentageClick(team._id)}>Probando Estadística %</Button>
                     </TableCell>
                     <TableCell>
                     <Button onClick={() => handleEditClick(team._id)}>Editar</Button>
