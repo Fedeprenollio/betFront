@@ -447,10 +447,10 @@ export const FilterStatistics = ({
           backgroundColor: "#f9f9f9",
         }}
       >
-          <RadioButtonStatsLessThan
+          {/* <RadioButtonStatsLessThan
           handleChangeRadioButton={handleChangeRadioButton}
           statsLessThan={statsLessThan}
-        />
+        /> */}
       </Box>
       <Box
         sx={{

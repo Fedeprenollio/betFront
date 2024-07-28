@@ -81,6 +81,16 @@ export const TableMatches = ({ teamMatches, statistic, teamDetail }) => {
         return "Corners";
       case "yellowCards":
         return "Tarjetas amarillas";
+        case "foults":
+        return "Faltas";
+        case "shots":
+        return "Disparos";
+        case "shotsOnTarget":
+        return "Disparos al arco";
+        case "Possession":
+        return "Posesión";
+        case "offsides":
+        return "Offsides";
       default:
         return "Sin nombre";
     }
@@ -93,7 +103,6 @@ export const TableMatches = ({ teamMatches, statistic, teamDetail }) => {
       setSelectedMatch(match);
     }
   };
-
   return (
     <Grid item xs={12}>
       <Item style={{ marginBottom: "0.5rem" }}>
@@ -105,6 +114,7 @@ export const TableMatches = ({ teamMatches, statistic, teamDetail }) => {
         const homeStat = match.teamStatistics.local[statistic];
         const penaltyLocal = statistic === "goals" ? ((match?.penaltyResult?.homePenalties!== match.penaltyResult.awayPenalties) ? match?.penaltyResult?.homePenalties : null) : null
         const penaltyVisitor = statistic === "goals" ?( (match?.penaltyResult?.homePenalties!== match.penaltyResult.awayPenalties) ? match?.penaltyResult?.awayPenalties : null) : null
+        console.log("homeStat",homeStat)
 
         const awayStat = match.teamStatistics.visitor[statistic];
         const homeTeamWins = homeStat > awayStat;

@@ -27,8 +27,6 @@ export const FilterComponent = ({
     filterName
 }) => {
     const [drawerOpen, setDrawerOpen] = useState(false);
-    const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const [expanded, setExpanded] = useState(false);
 
     const handleDrawerToggle = () => {

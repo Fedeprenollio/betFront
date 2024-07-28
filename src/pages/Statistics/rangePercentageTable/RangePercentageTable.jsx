@@ -2,12 +2,24 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { TableRow, Typography, Tabs, Tab, Box, styled } from "@mui/material";
+import {
+  TableRow,
+  Typography,
+  Tabs,
+  Tab,
+  Box,
+  styled,
+  Avatar,
+} from "@mui/material";
 import { BACKEND_URL_BASE } from "../../../stores/url_base";
 import { GroupByName } from "./GroupByName";
 import { FilterComponent } from "../../../componts/tableFilters/FilterComponent";
 import HelpIconWithModal from "../../../componts/helpIconWithModal/HelpIconWithModal";
 import { renderTable } from "./renderTable";
+import { AddMoreTeamComparative } from "./addMoreTeamComparative/AddMoreTeamComparative";
+import { tableHelpContent } from "./TableHelpContent";
+import { useBoundStore } from "../../../stores";
+import { ShowStatisticsMatches } from "../ShowStatisticsMatches";
 // import GroupByName from "./GroupByName";
 
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -33,20 +45,19 @@ const fetchTeamStats = async (
   return response.data;
 };
 
+// const fetchOneTeamStats = async (
 
-const fetchOneTeamStats = async (
-  seasonId,
-  homeOnly,
-  awayOnly,
-  matchesCount,
-  includeAllSeasonMatches,
-  idTeam
-) => {
-  const response = await axios.get(
-    `${BACKEND_URL_BASE}/team/stats/${idTeam}?statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}`
-  );
-  return response.data;
-};
+//   homeOnly,
+//   awayOnly,
+//   matchesCount,
+//   includeAllSeasonMatches,
+//   idTeam
+// ) => {
+//   const response = await axios.get(
+//     `${BACKEND_URL_BASE}/team/stats/${idTeam}?statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}`
+//   );
+//   return response.data;
+// };
 
 const TabPanel = ({ children, value, index }) => (
   <div className="prueba" role="tabpanel" hidden={value !== index}>
@@ -54,14 +65,34 @@ const TabPanel = ({ children, value, index }) => (
   </div>
 );
 
-export const RangePercentageTable = ({ listCurrentSeason }) => {
-  const { seasonId, idTeam } = useParams();
+export const RangePercentageTable = ({
+  listCurrentSeason,
+  idTeam,
+  idSecondTeam,
+}) => {
+  const { seasonId } = useParams();
+  const { getLocalTeamStats, getVisitorTeamStats, crearVisitorTeamStats } =
+    useBoundStore((state) => state);
   const [stats, setStats] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [tabIndex, setTabIndex] = useState(0);
   const [homeOnly, setHomeOnly] = useState(true);
   const [awayOnly, setAwayOnly] = useState(true);
+
+  const [homeOnlySecondTeamComparative, setHomeOnlySecondTeamComparative] =
+    useState(true);
+  const [awayOnlySecondTeamComparative, setAwayOnlySecondTeamComparative] =
+    useState(true);
+  const [
+    matchesCountSecondTeamComparative,
+    setMatchesCountSecondTeamComparative,
+  ] = useState(0);
+  const [
+    includeAllSeasonMatchesSecondTeamComparative,
+    setIncludeAllSeasonMatchesSecondTeamComparative,
+  ] = useState(false);
+  const [idTeamSecondTeam, setIdTeamSecondTeam] = useState(idSecondTeam);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("team.country");
   const [matchesCount, setMatchesCount] = useState(0);
@@ -69,46 +100,46 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
   const [includeAllSeasonMatches, setIncludeAllSeasonMatches] = useState(false);
   const [inputChekBoxIncludeAllSeason, setInputChekBoxIncludeAllSeason] =
     useState(false);
- console.log("Proabdno idTeam",idTeam)
   const [filters, setFilters] = useState({
     goals: {
       scored: {},
-      received: {}
+      received: {},
     },
     corners: {
       scored: {},
-      received: {}
+      received: {},
     },
     shots: {
       scored: {},
-      received: {}
+      received: {},
     },
     shotsOnTarget: {
       scored: {},
-      received: {}
+      received: {},
     },
     possession: {
       scored: {},
-      received: {}
+      received: {},
     },
     offsides: {
       scored: {},
-      received: {}
+      received: {},
     },
     yellowCards: {
       scored: {},
-      received: {}
-    }
+      received: {},
+    },
   });
-  
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const [selectedSeasons, setSelectedSeasons] = useState([]);
   const [shouldFetch, setShouldFetch] = useState(true);
   const [nameFilters, setNameFilters] = useState([]);
+  const [activeTab2, setActiveTab2] = useState(0);
 
-
+  const [secondTeamComparative, setSecondTeamComparative] = useState([]);
   useEffect(() => {
     // Parse listCurrentSeason to an array of seasons if it's not empty
     if (listCurrentSeason) {
@@ -119,41 +150,90 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
     }
   }, [listCurrentSeason]);
 
+  // useEffect(() => {
+  //   if (shouldFetch) {
+  //     const loadStats = async () => {
+  //       try {
+  //         // setLoading(true);
+  //         let data;
+  //         if (seasonId && !listCurrentSeason) {
+  //           data = await fetchTeamStats(
+  //             seasonId,
+  //             homeOnly,
+  //             awayOnly,
+  //             matchesCount,
+  //             includeAllSeasonMatches
+  //           );
+  //           setStats(data);
+  //         } else if (listCurrentSeason && selectedSeasons.length > 0) {
+  //           const selectedSeasonsString = selectedSeasons.join(",");
+  //           data = await fetchTeamStats(
+  //             selectedSeasonsString,
+  //             homeOnly,
+  //             awayOnly,
+  //             matchesCount,
+  //             includeAllSeasonMatches
+  //           );
+  //           setStats(data);
+  //         } else if (idTeam !== undefined) {
+  //           getLocalTeamStats({
+  //             idTeam,
+
+  //             homeOnly,
+  //             awayOnly,
+  //             matchesCount,
+  //             includeAllSeasonMatches,
+  //           });
+  //           // data = await fetchOneTeamStats(
+
+  //           //   homeOnly,
+  //           //   awayOnly,
+  //           //   matchesCount,
+  //           //   includeAllSeasonMatches,
+  //           //   idTeam
+  //           // );
+  //           if (secondTeamComparative?.team?.name) {
+
+  //             setStats([...data, secondTeamComparative]);
+  //             } else {
+  //             console.log("localTeamPercentageStatistics",localTeamPercentageStatistics)
+  //             setStats(localTeamPercentageStatistics);
+  //           }
+  //         }
+
+  //         setLoading(false);
+  //       } catch (err) {
+  //         setError(err);
+  //         setLoading(false);
+  //       }
+  //     };
+  //     loadStats();
+  //   }
+  // }, [
+  //   seasonId,
+  //   homeOnly,
+  //   awayOnly,
+  //   matchesCount,
+  //   includeAllSeasonMatches,
+  //   selectedSeasons,
+  //   listCurrentSeason,
+  //   shouldFetch,
+  //   idTeam,
+  //   secondTeamComparative,
+  //   // localTeamPercentageStatistics
+  // ]);
+
   useEffect(() => {
-    if (shouldFetch) {
+    if (seasonId && !listCurrentSeason && shouldFetch) {
       const loadStats = async () => {
         try {
-          setLoading(true);
-          let data;
-          if (seasonId && !listCurrentSeason) {
-            data = await fetchTeamStats(
-              seasonId,
-              homeOnly,
-              awayOnly,
-              matchesCount,
-              includeAllSeasonMatches
-            );
-            console.log("DATA NORMAL", data);
-          } else if (listCurrentSeason && selectedSeasons.length > 0) {
-            const selectedSeasonsString = selectedSeasons.join(",");
-            data = await fetchTeamStats(
-              selectedSeasonsString,
-              homeOnly,
-              awayOnly,
-              matchesCount,
-              includeAllSeasonMatches
-            );
-            console.log("DATA NUMRO2", data);
-          }else if( idTeam){
-            data = await fetchOneTeamStats( seasonId,
-              homeOnly,
-              awayOnly,
-              matchesCount,
-              includeAllSeasonMatches,
-            idTeam)
-            console.log("DATA1 UN EQUIPO", data);
-
-          }
+          const data = await fetchTeamStats(
+            seasonId,
+            homeOnly,
+            awayOnly,
+            matchesCount,
+            includeAllSeasonMatches
+          );
           setStats(data);
           setLoading(false);
         } catch (err) {
@@ -169,12 +249,142 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
     awayOnly,
     matchesCount,
     includeAllSeasonMatches,
-    selectedSeasons,
-    listCurrentSeason,
     shouldFetch,
-    idTeam
+    listCurrentSeason,
+  ]);
+  useEffect(() => {
+    if (listCurrentSeason && selectedSeasons.length > 0 && shouldFetch) {
+      const loadStats = async () => {
+        try {
+          const selectedSeasonsString = selectedSeasons.join(",");
+          const data = await fetchTeamStats(
+            selectedSeasonsString,
+            homeOnly,
+            awayOnly,
+            matchesCount,
+            includeAllSeasonMatches
+          );
+          setStats(data);
+          setLoading(false);
+        } catch (err) {
+          setError(err);
+          setLoading(false);
+        }
+      };
+      loadStats();
+    }
+  }, [
+    listCurrentSeason,
+    selectedSeasons,
+    homeOnly,
+    awayOnly,
+    matchesCount,
+    includeAllSeasonMatches,
+    shouldFetch,
   ]);
 
+  useEffect(() => {
+    if (idTeam !== undefined && shouldFetch) {
+      const loadStats = async () => {
+        try {
+          const a = await getLocalTeamStats({
+            idTeam,
+            homeOnly,
+            awayOnly,
+            matchesCount,
+            includeAllSeasonMatches,
+          });
+          if (idTeamSecondTeam) {
+            const b = await getVisitorTeamStats({
+              idTeam: idTeamSecondTeam,
+              homeOnly: homeOnlySecondTeamComparative,
+              awayOnly: awayOnlySecondTeamComparative,
+              matchesCount: matchesCountSecondTeamComparative,
+              includeAllSeasonMatches:
+                includeAllSeasonMatchesSecondTeamComparative,
+            });
+            setStats([...a, b[0]]);
+          } else {
+            setStats([...a]);
+          }
+
+          // const data = await fetchOneTeamStats(
+          //   homeOnly,
+          //   awayOnly,
+          //   matchesCount,
+          //   includeAllSeasonMatches,
+          //   idTeam
+          // );
+          // if (secondTeamComparative?.team?.name) {
+          //   setStats((prevStats) => [...prevStats, secondTeamComparative]);
+          // } else {
+          //   setStats(a);
+          // }
+          setLoading(false);
+        } catch (err) {
+          setError(err);
+          setLoading(false);
+        }
+      };
+      loadStats();
+    }
+
+    // return ()=>{
+    //   crearVisitorTeamStats()
+    //   // setIdTeamSecondTeam("")
+    // }
+  }, [
+    idTeam,
+    homeOnly,
+    awayOnly,
+    matchesCount,
+    includeAllSeasonMatches,
+    shouldFetch,
+    secondTeamComparative,
+    getLocalTeamStats,
+    idTeamSecondTeam,
+    homeOnlySecondTeamComparative,
+    awayOnlySecondTeamComparative,
+    includeAllSeasonMatchesSecondTeamComparative,
+    getVisitorTeamStats,
+    matchesCountSecondTeamComparative,
+    crearVisitorTeamStats,
+    // localTeamPercentageStatistics
+  ]);
+  console.log("idTeamSecondTeam", idTeamSecondTeam);
+  // useEffect(() => {
+  //   const newFetch = async (idTeamSecondTeam) => {
+  //    const b = await getVisitorTeamStats({
+  //       idTeam: idTeamSecondTeam,
+  //       homeOnly:homeOnlySecondTeamComparative,
+  //       awayOnly: awayOnlySecondTeamComparative,
+  //       matchesCount: matchesCountSecondTeamComparative,
+  //       includeAllSeasonMatches:includeAllSeasonMatchesSecondTeamComparative,
+
+  //     });
+  //     // const newTeamData = await fetchOneTeamStats(
+  //     //   homeOnlySecondTeamComparative,
+  //     //   awayOnlySecondTeamComparative,
+  //     //   matchesCountSecondTeamComparative,
+  //     //   includeAllSeasonMatchesSecondTeamComparative,
+  //     //   idTeamSecondTeam
+  //     // );
+  //     setSecondTeamComparative(b[0]);
+  //     setStats((prevState) => [...prevState.slice(0, 1), b[0]]);
+  //   };
+  //   if (idTeamSecondTeam) {
+  //     newFetch(idTeamSecondTeam);
+  //   }
+  // }, [
+  //   idTeamSecondTeam,
+  //   homeOnlySecondTeamComparative,
+  //   awayOnlySecondTeamComparative,
+  //   includeAllSeasonMatchesSecondTeamComparative,
+  //   matchesCountSecondTeamComparative,
+  //   seasonId,
+  //   getVisitorTeamStats
+  // ]);
+  console.log("STATT,", stats);
   //   if (loading) return <Typography>Loading...</Typography>;
   if (error) return <Typography>Error: {error.message}</Typography>;
   // if (stats?.length === 0) return <Typography>No data available</Typography>;
@@ -191,7 +401,6 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
   };
 
   const handleRequestSort = (event, property) => {
-    console.log("property",property)
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
@@ -215,7 +424,6 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
   };
 
   const handleIncludeAllSeasonMatches = (event) => {
-    console.log("event", event);
     setInputChekBoxIncludeAllSeason(event);
   };
 
@@ -236,19 +444,17 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
   //     [statisticKey]: newFilter
   //   }));
   // };
-  
-  const handleFilterChange = (statisticKey, matchType, newFilter) => {
-    console.log("handleFilterChange",statisticKey, matchType, newFilter)
 
+  const handleFilterChange = (statisticKey, matchType, newFilter) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [statisticKey]: {
         ...prevFilters[statisticKey],
-        [matchType]: newFilter
-      }
+        [matchType]: newFilter,
+      },
     }));
   };
-  
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -269,60 +475,32 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
   const handleNamesChange = (names) => {
     setNameFilters(names);
   };
-  const tableHelpContent = (
-    <Box>
-      <Typography variant="subtitle1" gutterBottom>
-        En estas tablas, se muestran los porcentajes de partidos por encima o
-        debajo del valor indicado en cada columna:
-      </Typography>
-      <Typography variant="body1" component="ul" gutterBottom>
-        <li>
-          <strong>O8.5/9.5/10.5:</strong> Porcentaje de partidos por encima de
-          la línea (8.5, 9.5, 10.5).
-        </li>
-        <Typography variant="body2" gutterBottom>
-          Un valor del 80% en la columna de O1.5 significa que en el 80% de los
-          partidos evaluados, el equipo superó la marca de 1.5 goles, corners,
-          tiros al arco, etc.
-        </Typography>
-        <li>
-          <strong>U8.5/9.5/10.5:</strong> Porcentaje de partidos por debajo de
-          la línea (8.5, 9.5, 10.5).
-        </li>
-        <Typography variant="body2" gutterBottom>
-          Un valor del 60% en la columna de U3.5 significa que en el 60% de los
-          partidos evaluados, el equipo estuvo por debajo de la marca de 3.5
-          goles, corners, tiros al arco, etc.
-        </Typography>
-      </Typography>
-      <Typography variant="subtitle1" gutterBottom>
-        Utilidad en Apuestas Deportivas:
-      </Typography>
-      <Typography variant="body1" gutterBottom>
-        Estas estadísticas son útiles , ya que permiten identificar patrones y
-        tendencias en el rendimiento de los equipos. Por ejemplo, si un equipo
-        tiene un alto porcentaje en O8.5, significa que es más probable que los
-        partidos de ese equipo tengan muchos corners, lo cual puede ser
-        información valiosa al realizar apuestas.
-      </Typography>
-      <Typography variant="body1" gutterBottom>
-        Puedes combinar estas estadísticas con filtros para considerar solo
-        partidos de local, visitante o ambos. Además, limitar el número de
-        partidos para ver la tendencia reciente o, si estamos al inicio de la
-        temporada, incluir también la temporada anterior.
-      </Typography>
-    </Box>
-  );
+
+  const handleAddTeamClick = () => {
+    const teamId = prompt("Introduce el ID del equipo para agregar:");
+    setIdTeamSecondTeam(teamId);
+    // if (teamId) {
+    //   addTeam(teamId);
+    // }
+  };
 
   return (
     <>
-    <h1> {idTeam && `Estadisticas de un solo equipo en fase de prueba, falta agregar la posibilidad de agregar mas equpos para compararlos` } </h1>
+      <h1>
+        {" "}
+        {idTeam &&
+          `Estadisticas de un solo equipo en fase de prueba, falta agregar la posibilidad de agregar mas equpos para compararlos`}{" "}
+      </h1>
       {listCurrentSeason && (
         <Typography variant="p" gutterBottom>
           {listCurrentSeason
             ? "Estadisticas generales de todos los equipos en temporadas actuales activas"
             : "Estadísticas de la Temporada"}
         </Typography>
+      )}
+
+      {idTeam && (
+        <Avatar alt={stats[0]?.team?.name} src={stats[0]?.team?.logo} />
       )}
 
       <FilterComponent
@@ -342,6 +520,51 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
         selectedSeasons={selectedSeasons}
         handleSeasonChange={handleSeasonChange}
       />
+      {idTeamSecondTeam && (
+        <Avatar alt={stats[1]?.team?.name} src={stats[1]?.team?.logo} />
+      )}
+      {idTeamSecondTeam && (
+        <FilterComponent
+          filterName={["local/visitor", "MatchesCountInput"]}
+          homeOnly={homeOnlySecondTeamComparative}
+          awayOnly={awayOnlySecondTeamComparative}
+          handleHomeOnlyChange={(event) =>
+            setHomeOnlySecondTeamComparative(event.target.checked)
+          }
+          handleAwayOnlyChange={(event) =>
+            setAwayOnlySecondTeamComparative(event.target.checked)
+          }
+          inputMatchesCount={matchesCountSecondTeamComparative}
+          handleInputMatchesCountChange={(event) =>
+            setMatchesCountSecondTeamComparative(event.target?.value)
+          }
+          handleIncludeAllSeasonMatches={(event) =>
+            setIncludeAllSeasonMatchesSecondTeamComparative(
+              event.target.checked
+            )
+          }
+          updateMatchesCount={() =>
+            setMatchesCountSecondTeamComparative(
+              matchesCountSecondTeamComparative
+            )
+          }
+          updateIncludeOtherSeasons={() =>
+            setIncludeAllSeasonMatchesSecondTeamComparative(
+              includeAllSeasonMatchesSecondTeamComparative
+            )
+          }
+          inputChekBoxIncludeAllSeason={
+            includeAllSeasonMatchesSecondTeamComparative
+          }
+          handleFilterChange={(statisticKey, matchType, newFilter) =>
+            handleFilterChange(statisticKey, matchType, newFilter)
+          }
+          listCurrentSeason={listCurrentSeason}
+          selectedSeasons={selectedSeasons}
+          handleSeasonChange={handleSeasonChange}
+        />
+      )}
+
       <GroupByName onNamesChange={handleNamesChange} />
       <HelpIconWithModal
         title="Ayuda sobre la tabla"
@@ -361,6 +584,23 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
         ))}
       </Tabs>
 
+      {/* <AddMoreTeamComparative
+
+  idTeam={idTeam}
+  handleAddTeamClick={handleAddTeamClick}
+
+/> */}
+      {idTeam && (
+        <AddMoreTeamComparative
+          handleAddTeamClick={handleAddTeamClick}
+          secondTeamComparative={stats[1]?.team}
+          firstTeam={stats[0]?.team}
+          homeOnlySecondTeamComparative={homeOnlySecondTeamComparative}
+          awayOnlySecondTeamComparative={awayOnlySecondTeamComparative}
+          homeOnly={homeOnly}
+          awayOnly={awayOnly}
+        />
+      )}
       {statisticKeys.map((key, index) => (
         <TabPanel value={tabIndex} index={index} key={key}>
           <Box
@@ -380,7 +620,7 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
               stats?.map((teamData) => ({
                 team: teamData.team,
                 stats: {
-                  [key]: teamData.stats?.[key], 
+                  [key]: teamData.stats?.[key],
                 },
               })),
               key,
@@ -412,10 +652,10 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
               {key.charAt(0).toUpperCase() + key.slice(1)} - Recibido
             </Typography>
             {renderTable(
-               stats?.map((teamData) => ({
+              stats?.map((teamData) => ({
                 team: teamData.team,
                 stats: {
-                  [key]: teamData.stats?.[key], 
+                  [key]: teamData.stats?.[key],
                 },
               })),
               key,
@@ -471,6 +711,11 @@ export const RangePercentageTable = ({ listCurrentSeason }) => {
           </Box> */}
         </TabPanel>
       ))}
+      <ShowStatisticsMatches
+        // singleTeam={singleTeam}
+        idHomeTeam={idTeam}
+        idAwayTeam={idSecondTeam}
+      />
     </>
   );
 };

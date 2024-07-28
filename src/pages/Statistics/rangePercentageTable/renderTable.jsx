@@ -27,7 +27,7 @@ export const renderTable = (
     if (!stats) {
       return  <h1>Cargando</h1>; // O manejar de otra manera según tu lógica de aplicación
     }
-
+console.log("QUE LLEGA AL RENDER TABLE", stats)
 
     const exampleTeamStats = stats
       ? stats[0]?.stats[statisticKey][matchesType]
@@ -158,7 +158,7 @@ export const renderTable = (
             <TableBody>
               {paginatedRows?.map((row, index) => (
                 <StyledTableRow key={index}>
-                  <TableCell>{row.team.league}</TableCell>
+                  <TableCell>{row?.team?.league}</TableCell>
                   <TableCell
                     style={{
                       width: "100px",
@@ -169,9 +169,9 @@ export const renderTable = (
                       zIndex: 1,
                     }}
                   >
-                    {row.team.name}
+                    {row?.team?.name}
                   </TableCell>
-                  <TableCell>{row.matchesTotalFinished}</TableCell>
+                  <TableCell>{row?.matchesTotalFinished}</TableCell>
                   <TableCell>
                     {matchesType === "scored"
                       ? row.totalScored

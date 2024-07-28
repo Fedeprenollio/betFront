@@ -28,6 +28,9 @@ const createTeamStatsStore = (set) => ({
   awayTeam: "",
   localMatches: [],
   visitorMatches: [],
+  localTeamPercentageStatistics:[],
+  visitorTeamPercentageStatistics:[],
+
   teamStatsForSeason: [],
   statsLessThan: false, // Valor inicial para statsLessThan
   setStatsLessThan: (newValue) => set({ statsLessThan: newValue }), // Función para actualizar statsLessThan
@@ -52,7 +55,7 @@ const createTeamStatsStore = (set) => ({
 
     const homeYc = await data.json();
     set({ homeStatYellowCard: homeYc });
-    set({ localMatches: homeYc?.matches });
+    // set({ localMatches: homeYc?.matches });
   },
   setAwayStatYellowCard: async ({
     idAwayTeam,
@@ -114,7 +117,7 @@ const createTeamStatsStore = (set) => ({
     const awayCorners = await data.json();
 
     set({ awayStatCorners: awayCorners.corners });
-    set({ visitorMatches: awayCorners?.matches });
+    // set({ visitorMatches: awayCorners?.matches });
   },
   setAwayStatGoals: async ({
     idAwayTeam,
@@ -310,12 +313,34 @@ console.log("STATS HOMETeam", homeShots)
   
   getTeamStatsForSeason: async ({ seasonId, matchType="both"  }) => {
     const response = await axios(`${URL_API_STATS_SEASON}/${seasonId}?matchType=${matchType }`);
-    console.log("RESPONSE", response)
     const teamStats = response.data
 
     set({ teamStatsForSeason: teamStats });
   },
+
+  getLocalTeamStats : async ({ idTeam, homeOnly, awayOnly, matchesCount, includeAllSeasonMatches} ) => {
+    const response = await axios.get(
+      `${BACKEND_URL_BASE}/team/stats/${idTeam}?statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}`
+    );
+    set({ localMatches: response?.data[0]?.matches });
+    set({localTeamPercentageStatistics: response?.data})
+    return  response?.data
+
+  },
+  getVisitorTeamStats : async ({ idTeam, homeOnly, awayOnly, matchesCount, includeAllSeasonMatches} ) => {
+    const response = await axios.get(
+      `${BACKEND_URL_BASE}/team/stats/${idTeam}?statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}`
+    );
+    set({ visitorMatches: response?.data[0]?.matches });
+    set({visitorTeamPercentageStatistics: response?.data})
+    return  response?.data
+  },
+  crearVisitorTeamStats:()=>{
+    set({ visitorMatches:[] });
+    set({visitorTeamPercentageStatistics: []})
+  }
 });
+
 
 export default createTeamStatsStore;
 // setHomeStatCorners

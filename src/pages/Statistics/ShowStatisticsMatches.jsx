@@ -24,6 +24,8 @@ export const ShowStatisticsMatches = ({
 
   const [teamDetails1, setTeamDetails1] = useState({});
   const [teamDetails2, setTeamDetails2] = useState({});
+  console.log("QUE CARAJO teamDetails1",   teamDetails1,)
+  console.log("localMatches",localMatches)
 
   useEffect(() => {
     if (teamDetails) {
@@ -43,7 +45,7 @@ export const ShowStatisticsMatches = ({
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
   };
-
+console.log("teamDetails",teamDetails1)
   return (
     <Box>
       <Tabs
@@ -65,130 +67,130 @@ export const ShowStatisticsMatches = ({
       </Tabs>
       {activeTab === 0 && (
         <Grid container spacing={2}>
-          {!singleTeam && (
+          <TableMatches
+            teamMatches={localMatches}
+            statistic="goals"
+            teamDetail={teamDetails1}
+          />
+          {idAwayTeam && (
             <TableMatches
               teamMatches={visitorMatches}
               statistic="goals"
               teamDetail={teamDetails2}
             />
           )}
-          <TableMatches
-            teamMatches={localMatches}
-            statistic="goals"
-            teamDetail={teamDetails1}
-          />
         </Grid>
       )}
       {activeTab === 1 && (
         <Grid container spacing={2}>
-          {!singleTeam && (
+          <TableMatches
+            teamMatches={localMatches}
+            statistic="corners"
+            teamDetail={teamDetails1}
+          />
+          {idAwayTeam && (
             <TableMatches
               teamMatches={visitorMatches}
               statistic="corners"
               teamDetail={teamDetails2}
             />
           )}
-          <TableMatches
-            teamMatches={localMatches}
-            statistic="corners"
-            teamDetail={teamDetails1}
-          />
         </Grid>
       )}
       {activeTab === 2 && (
         <Grid container spacing={2}>
-          {!singleTeam && (
+          <TableMatches
+            teamMatches={localMatches}
+            statistic="yellowCards"
+            teamDetail={teamDetails1}
+          />
+          {idAwayTeam && (
             <TableMatches
               teamMatches={visitorMatches}
               statistic="yellowCards"
               teamDetail={teamDetails2}
             />
           )}
-          <TableMatches
-            teamMatches={localMatches}
-            statistic="yellowCards"
-            teamDetail={teamDetails1}
-          />
         </Grid>
       )}
       {activeTab === 3 && (
         <Grid container spacing={2}>
-          {!singleTeam && (
+          <TableMatches
+            teamMatches={localMatches}
+            statistic="shots"
+            teamDetail={teamDetails1}
+          />
+          {idAwayTeam && (
             <TableMatches
               teamMatches={visitorMatches}
               statistic="shots"
               teamDetail={teamDetails2}
             />
           )}
-          <TableMatches
-            teamMatches={localMatches}
-            statistic="shots"
-            teamDetail={teamDetails1}
-          />
         </Grid>
       )}
       {activeTab === 4 && (
         <Grid container spacing={2}>
-          {!singleTeam && (
+          <TableMatches
+            teamMatches={localMatches}
+            statistic="shotsOnTarget"
+            teamDetail={teamDetails1}
+          />
+          {idAwayTeam && (
             <TableMatches
               teamMatches={visitorMatches}
               statistic="shotsOnTarget"
               teamDetail={teamDetails2}
             />
           )}
-          <TableMatches
-            teamMatches={localMatches}
-            statistic="shotsOnTarget"
-            teamDetail={teamDetails1}
-          />
         </Grid>
       )}
       {activeTab === 5 && (
         <Grid container spacing={2}>
-          {!singleTeam && (
+          <TableMatches
+            teamMatches={localMatches}
+            statistic="possession"
+            teamDetail={teamDetails1}
+          />
+          {idAwayTeam && (
             <TableMatches
               teamMatches={visitorMatches}
               statistic="possession"
               teamDetail={teamDetails2}
             />
           )}
-          <TableMatches
-            teamMatches={localMatches}
-            statistic="possession"
-            teamDetail={teamDetails1}
-          />
         </Grid>
       )}
       {activeTab === 6 && (
         <Grid container spacing={2}>
-          {!singleTeam && (
+          <TableMatches
+            teamMatches={localMatches}
+            statistic="foults"
+            teamDetail={teamDetails1}
+          />
+          {idAwayTeam && (
             <TableMatches
               teamMatches={visitorMatches}
-              statistic="fouls"
+              statistic="foults"
               teamDetail={teamDetails2}
             />
           )}
-          <TableMatches
-            teamMatches={localMatches}
-            statistic="fouls"
-            teamDetail={teamDetails1}
-          />
         </Grid>
       )}
       {activeTab === 7 && (
         <Grid container spacing={2}>
-          {!singleTeam && (
+          <TableMatches
+            teamMatches={localMatches}
+            statistic="offsides"
+            teamDetail={teamDetails1}
+          />
+          {idAwayTeam && (
             <TableMatches
               teamMatches={visitorMatches}
               statistic="offsides"
               teamDetail={teamDetails2}
             />
           )}
-          <TableMatches
-            teamMatches={localMatches}
-            statistic="offsides"
-            teamDetail={teamDetails1}
-          />
         </Grid>
       )}
     </Box>

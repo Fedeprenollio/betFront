@@ -5,6 +5,7 @@ import { FilterStatistics } from "./FilterStatistics";
 import { ShowStatisticsMatches } from "./ShowStatisticsMatches";
 import StatisticsTablecopy from "../../componts/StatisticsTablecopy";
 import { FilterComponent } from "../../componts/tableFilters/FilterComponent";
+import { RangePercentageTable } from "./rangePercentageTable/RangePercentageTable";
 
 export const StatisticsPage = () => {
   const { idHomeTeam, idAwayTeam, idMatch } = useParams();
@@ -27,16 +28,16 @@ export const StatisticsPage = () => {
   return (
     <>
      
-      <FilterStatistics
+      {/* <FilterStatistics
         idMatch={idMatch}
         idHomeTeam={idHomeTeam}
         idAwayTeam={idAwayTeam}
         setStatsLessThan={setStatsLessThan}
         statsLessThan={statsLessThan}
         singleTeam={singleTeam}
-      />
+      /> */}
     
-        <Tabs
+        {/* <Tabs
           value={activeTab}
           onChange={handleTabChange}
           aria-label="Tabs"
@@ -46,23 +47,23 @@ export const StatisticsPage = () => {
         >
           <Tab label="Estadística" />
           <Tab label="Últimos partidos" />
-          <Tab label="Algo mas?" />
-        </Tabs>
+        </Tabs> */}
+
         {/* Contenido de las pestañas */}
         {activeTab === 0 &&
           (singleTeam ? (
-            <StatisticsTablecopy
-              idHomeTeam={singleTeam}
+            <RangePercentageTable
+              idTeam={singleTeam}
               statsLessThan={statsLessThan}
               isSingle={true}
             />
           ) : (
-            <StatisticsTablecopy
+            <RangePercentageTable
               isSingle={false}
               statsLessThan={statsLessThan}
-              idHomeTeam={idHomeTeam}
-              idAwayTeam={idAwayTeam}
-            ></StatisticsTablecopy>
+              idTeam={idHomeTeam}
+              idSecondTeam={idAwayTeam}
+            ></RangePercentageTable>
           ))}
         {activeTab === 1 && (
           <ShowStatisticsMatches
@@ -71,7 +72,7 @@ export const StatisticsPage = () => {
             idAwayTeam={idAwayTeam}
           />
         )}
-        {activeTab === 2 && <h2>OTRA COSA POR MOSTRAR?</h2>}
+        {/* {activeTab === 2 && <h2>OTRA COSA POR MOSTRAR?</h2>} */}
       
     </>
   );
