@@ -1,14 +1,13 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
-import { TextField, CircularProgress, Autocomplete, Chip } from '@mui/material';
+import { TextField, CircularProgress, Autocomplete } from '@mui/material';
 import axios from 'axios';
 import { BACKEND_URL_BASE } from '../../../stores/url_base';
 
-export const GroupByName = ({ onNamesChange }) => {
+export const SelectTeamById = ({ onTeamSelect }) => {
   const [query, setQuery] = useState('');
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [selectedTeams, setSelectedTeams] = useState([]);
 
   useEffect(() => {
     if (query.length < 3) {
@@ -20,7 +19,6 @@ export const GroupByName = ({ onNamesChange }) => {
       setLoading(true);
       try {
         const response = await axios.get(`${BACKEND_URL_BASE}/team/search/${query}`);
-        console.log("DATA GRUP,", response.data)
         setOptions(response.data);
       } catch (error) {
         console.error('Error fetching teams:', error);
@@ -37,28 +35,16 @@ export const GroupByName = ({ onNamesChange }) => {
   }, [query]);
 
   const handleTeamSelect = (event, newValue) => {
-    if (newValue && !selectedTeams.some(team => team._id === newValue._id)) {
-      const updatedTeams = [...selectedTeams, newValue];
-      setSelectedTeams(updatedTeams);
-      onNamesChange(updatedTeams.map(team => team.name)); // Llamar a onNamesChange con los nombres de los equipos seleccionados
+    if (newValue) {
+      onTeamSelect(newValue._id); // Llamar a onTeamSelect con el ID del equipo seleccionado
       setQuery('');
     }
   };
 
-  const handleTeamRemove = (teamToRemove) => {
-    const updatedTeams = selectedTeams.filter(team => team._id !== teamToRemove._id);
-    setSelectedTeams(updatedTeams);
-    onNamesChange(updatedTeams.map(team => team.name)); // Llamar a onNamesChange con los nombres de los equipos seleccionados
-  };
-
-  const filteredOptions = options.filter(option => 
-    !selectedTeams.some(team => team._id === option._id)
-  );
-
   return (
     <>
       <Autocomplete
-        options={filteredOptions}
+        options={options}
         getOptionLabel={(option) => option.name}
         onChange={handleTeamSelect}
         renderInput={(params) => (
@@ -80,16 +66,6 @@ export const GroupByName = ({ onNamesChange }) => {
           />
         )}
       />
-      <>
-        {selectedTeams.map(team => (
-          <Chip
-            key={team._id}
-            label={team.name}
-            onDelete={() => handleTeamRemove(team)}
-            style={{ margin: '5px' }}
-          />
-        ))}
-      </>
     </>
   );
 };

@@ -19,7 +19,6 @@ const createTeamStore = (set, get) => ({
     // Aquí realizarías la llamada a la API para obtener los detalles del equipo
     const response = await fetch(`${URL_API}/${teamId}`);
     const teamDetails = await response.json();
-    console.log("teamDetails en estore", teamDetails)
     set((state) => ({
       teamDetails: {
         ...state.teamDetails,
@@ -42,7 +41,6 @@ const createTeamStore = (set, get) => ({
     try {
       const response = await axios.post(URL_API,{ name, city, league, country }, config
      );
-      console.log(response);
       // if (response.ok) {
       //   console.log("Equipo creado exitosamente");
       //   // Podrías realizar alguna acción adicional aquí, como actualizar la lista de equipos

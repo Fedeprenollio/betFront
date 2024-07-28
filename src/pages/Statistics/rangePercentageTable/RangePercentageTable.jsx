@@ -137,7 +137,6 @@ export const RangePercentageTable = ({
   const [selectedSeasons, setSelectedSeasons] = useState([]);
   const [shouldFetch, setShouldFetch] = useState(true);
   const [nameFilters, setNameFilters] = useState([]);
-  const [activeTab2, setActiveTab2] = useState(0);
 
   const [secondTeamComparative, setSecondTeamComparative] = useState([]);
   useEffect(() => {
@@ -351,40 +350,7 @@ export const RangePercentageTable = ({
     crearVisitorTeamStats,
     // localTeamPercentageStatistics
   ]);
-  console.log("idTeamSecondTeam", idTeamSecondTeam);
-  // useEffect(() => {
-  //   const newFetch = async (idTeamSecondTeam) => {
-  //    const b = await getVisitorTeamStats({
-  //       idTeam: idTeamSecondTeam,
-  //       homeOnly:homeOnlySecondTeamComparative,
-  //       awayOnly: awayOnlySecondTeamComparative,
-  //       matchesCount: matchesCountSecondTeamComparative,
-  //       includeAllSeasonMatches:includeAllSeasonMatchesSecondTeamComparative,
 
-  //     });
-  //     // const newTeamData = await fetchOneTeamStats(
-  //     //   homeOnlySecondTeamComparative,
-  //     //   awayOnlySecondTeamComparative,
-  //     //   matchesCountSecondTeamComparative,
-  //     //   includeAllSeasonMatchesSecondTeamComparative,
-  //     //   idTeamSecondTeam
-  //     // );
-  //     setSecondTeamComparative(b[0]);
-  //     setStats((prevState) => [...prevState.slice(0, 1), b[0]]);
-  //   };
-  //   if (idTeamSecondTeam) {
-  //     newFetch(idTeamSecondTeam);
-  //   }
-  // }, [
-  //   idTeamSecondTeam,
-  //   homeOnlySecondTeamComparative,
-  //   awayOnlySecondTeamComparative,
-  //   includeAllSeasonMatchesSecondTeamComparative,
-  //   matchesCountSecondTeamComparative,
-  //   seasonId,
-  //   getVisitorTeamStats
-  // ]);
-  console.log("STATT,", stats);
   //   if (loading) return <Typography>Loading...</Typography>;
   if (error) return <Typography>Error: {error.message}</Typography>;
   // if (stats?.length === 0) return <Typography>No data available</Typography>;
@@ -476,13 +442,10 @@ export const RangePercentageTable = ({
     setNameFilters(names);
   };
 
-  const handleAddTeamClick = () => {
-    const teamId = prompt("Introduce el ID del equipo para agregar:");
-    setIdTeamSecondTeam(teamId);
-    // if (teamId) {
-    //   addTeam(teamId);
-    // }
-  };
+  // const handleAddTeamClick = () => {
+  //   const teamId = prompt("Introduce el ID del equipo para agregar:");
+  //   setIdTeamSecondTeam(teamId);
+  //  };
 
   return (
     <>
@@ -499,11 +462,57 @@ export const RangePercentageTable = ({
         </Typography>
       )}
 
-      {idTeam && (
+      {/* {idTeam && (
         <Avatar alt={stats[0]?.team?.name} src={stats[0]?.team?.logo} />
+      )} */}
+
+      {idTeam ? (
+        <Box display="flex" alignItems="center" mb={2}>
+          <Avatar
+            alt={stats[0]?.team?.name}
+            src={stats[0]?.team?.logo}
+            sx={{ mr: 2 }}
+          />
+          <Typography variant="h6">{stats[0]?.team?.name}</Typography>
+          <FilterComponent
+            filterName={["local/visitor", "MatchesCountInput"]}
+            homeOnly={homeOnly}
+            awayOnly={awayOnly}
+            handleHomeOnlyChange={handleHomeOnlyChange}
+            handleAwayOnlyChange={handleAwayOnlyChange}
+            inputMatchesCount={inputMatchesCount}
+            handleInputMatchesCountChange={handleInputMatchesCountChange}
+            handleIncludeAllSeasonMatches={handleIncludeAllSeasonMatches}
+            updateMatchesCount={updateMatchesCount}
+            updateIncludeOtherSeasons={updateIncludeOtherSeasons}
+            inputChekBoxIncludeAllSeason={inputChekBoxIncludeAllSeason}
+            handleFilterChange={handleFilterChange}
+            listCurrentSeason={listCurrentSeason}
+            selectedSeasons={selectedSeasons}
+            handleSeasonChange={handleSeasonChange}
+          />
+        </Box>
+      ) : (
+        <FilterComponent
+          filterName={["local/visitor", "MatchesCountInput"]}
+          homeOnly={homeOnly}
+          awayOnly={awayOnly}
+          handleHomeOnlyChange={handleHomeOnlyChange}
+          handleAwayOnlyChange={handleAwayOnlyChange}
+          inputMatchesCount={inputMatchesCount}
+          handleInputMatchesCountChange={handleInputMatchesCountChange}
+          handleIncludeAllSeasonMatches={handleIncludeAllSeasonMatches}
+          updateMatchesCount={updateMatchesCount}
+          updateIncludeOtherSeasons={updateIncludeOtherSeasons}
+          inputChekBoxIncludeAllSeason={inputChekBoxIncludeAllSeason}
+          handleFilterChange={handleFilterChange}
+          listCurrentSeason={listCurrentSeason}
+          selectedSeasons={selectedSeasons}
+          handleSeasonChange={handleSeasonChange}
+        />
       )}
 
-      <FilterComponent
+      {/* <FilterComponent
         filterName={["local/visitor", "MatchesCountInput"]}
         homeOnly={homeOnly}
         awayOnly={awayOnly}
@@ -519,53 +528,97 @@ export const RangePercentageTable = ({
         listCurrentSeason={listCurrentSeason}
         selectedSeasons={selectedSeasons}
         handleSeasonChange={handleSeasonChange}
-      />
-      {idTeamSecondTeam && (
-        <Avatar alt={stats[1]?.team?.name} src={stats[1]?.team?.logo} />
-      )}
-      {idTeamSecondTeam && (
-        <FilterComponent
-          filterName={["local/visitor", "MatchesCountInput"]}
-          homeOnly={homeOnlySecondTeamComparative}
-          awayOnly={awayOnlySecondTeamComparative}
-          handleHomeOnlyChange={(event) =>
-            setHomeOnlySecondTeamComparative(event.target.checked)
-          }
-          handleAwayOnlyChange={(event) =>
-            setAwayOnlySecondTeamComparative(event.target.checked)
-          }
-          inputMatchesCount={matchesCountSecondTeamComparative}
-          handleInputMatchesCountChange={(event) =>
-            setMatchesCountSecondTeamComparative(event.target?.value)
-          }
-          handleIncludeAllSeasonMatches={(event) =>
-            setIncludeAllSeasonMatchesSecondTeamComparative(
-              event.target.checked
-            )
-          }
-          updateMatchesCount={() =>
-            setMatchesCountSecondTeamComparative(
-              matchesCountSecondTeamComparative
-            )
-          }
-          updateIncludeOtherSeasons={() =>
-            setIncludeAllSeasonMatchesSecondTeamComparative(
+      /> */}
+      {idTeamSecondTeam ? (
+        <Box display="flex" alignItems="center" mb={2}>
+          <Avatar
+            alt={stats[1]?.team?.name}
+            src={stats[1]?.team?.logo}
+            sx={{ mr: 2 }}
+          />
+          <Typography variant="h6">{stats[1]?.team?.name}</Typography>
+          <FilterComponent
+            filterName={["local/visitor", "MatchesCountInput"]}
+            homeOnly={homeOnlySecondTeamComparative}
+            awayOnly={awayOnlySecondTeamComparative}
+            handleHomeOnlyChange={(event) =>
+              setHomeOnlySecondTeamComparative(event.target.checked)
+            }
+            handleAwayOnlyChange={(event) =>
+              setAwayOnlySecondTeamComparative(event.target.checked)
+            }
+            inputMatchesCount={matchesCountSecondTeamComparative}
+            handleInputMatchesCountChange={(event) =>
+              setMatchesCountSecondTeamComparative(event.target?.value)
+            }
+            handleIncludeAllSeasonMatches={(event) =>
+              setIncludeAllSeasonMatchesSecondTeamComparative(
+                event.target.checked
+              )
+            }
+            updateMatchesCount={() =>
+              setMatchesCountSecondTeamComparative(
+                matchesCountSecondTeamComparative
+              )
+            }
+            updateIncludeOtherSeasons={() =>
+              setIncludeAllSeasonMatchesSecondTeamComparative(
+                includeAllSeasonMatchesSecondTeamComparative
+              )
+            }
+            inputChekBoxIncludeAllSeason={
               includeAllSeasonMatchesSecondTeamComparative
-            )
-          }
-          inputChekBoxIncludeAllSeason={
-            includeAllSeasonMatchesSecondTeamComparative
-          }
-          handleFilterChange={(statisticKey, matchType, newFilter) =>
-            handleFilterChange(statisticKey, matchType, newFilter)
-          }
-          listCurrentSeason={listCurrentSeason}
-          selectedSeasons={selectedSeasons}
-          handleSeasonChange={handleSeasonChange}
-        />
-      )}
+            }
+            handleFilterChange={(statisticKey, matchType, newFilter) =>
+              handleFilterChange(statisticKey, matchType, newFilter)
+            }
+            listCurrentSeason={listCurrentSeason}
+            selectedSeasons={selectedSeasons}
+            handleSeasonChange={handleSeasonChange}
+          />
+        </Box>
+      ):<FilterComponent
+      filterName={["local/visitor", "MatchesCountInput"]}
+      homeOnly={homeOnlySecondTeamComparative}
+      awayOnly={awayOnlySecondTeamComparative}
+      handleHomeOnlyChange={(event) =>
+        setHomeOnlySecondTeamComparative(event.target.checked)
+      }
+      handleAwayOnlyChange={(event) =>
+        setAwayOnlySecondTeamComparative(event.target.checked)
+      }
+      inputMatchesCount={matchesCountSecondTeamComparative}
+      handleInputMatchesCountChange={(event) =>
+        setMatchesCountSecondTeamComparative(event.target?.value)
+      }
+      handleIncludeAllSeasonMatches={(event) =>
+        setIncludeAllSeasonMatchesSecondTeamComparative(
+          event.target.checked
+        )
+      }
+      updateMatchesCount={() =>
+        setMatchesCountSecondTeamComparative(
+          matchesCountSecondTeamComparative
+        )
+      }
+      updateIncludeOtherSeasons={() =>
+        setIncludeAllSeasonMatchesSecondTeamComparative(
+          includeAllSeasonMatchesSecondTeamComparative
+        )
+      }
+      inputChekBoxIncludeAllSeason={
+        includeAllSeasonMatchesSecondTeamComparative
+      }
+      handleFilterChange={(statisticKey, matchType, newFilter) =>
+        handleFilterChange(statisticKey, matchType, newFilter)
+      }
+      listCurrentSeason={listCurrentSeason}
+      selectedSeasons={selectedSeasons}
+      handleSeasonChange={handleSeasonChange}
+    />}
 
-      <GroupByName onNamesChange={handleNamesChange} />
+      {!idTeam && <GroupByName onNamesChange={handleNamesChange} />}
+
       <HelpIconWithModal
         title="Ayuda sobre la tabla"
         content={tableHelpContent}
@@ -584,15 +637,9 @@ export const RangePercentageTable = ({
         ))}
       </Tabs>
 
-      {/* <AddMoreTeamComparative
-
-  idTeam={idTeam}
-  handleAddTeamClick={handleAddTeamClick}
-
-/> */}
       {idTeam && (
         <AddMoreTeamComparative
-          handleAddTeamClick={handleAddTeamClick}
+          onSetIdTeamSecond={setIdTeamSecondTeam}
           secondTeamComparative={stats[1]?.team}
           firstTeam={stats[0]?.team}
           homeOnlySecondTeamComparative={homeOnlySecondTeamComparative}
@@ -713,8 +760,9 @@ export const RangePercentageTable = ({
       ))}
       <ShowStatisticsMatches
         // singleTeam={singleTeam}
+
         idHomeTeam={idTeam}
-        idAwayTeam={idSecondTeam}
+        idAwayTeam={idTeamSecondTeam}
       />
     </>
   );

@@ -1,52 +1,31 @@
 /* eslint-disable react/prop-types */
-// /* eslint-disable react/prop-types */
-// import { renderTable } from "../renderTable";
-// import { Box, Button, Typography } from "@mui/material";
-
-// export const AddMoreTeamComparative = ({
-  
-//   idTeam,
-//   handleAddTeamClick,
-
-// }) => {
-
- 
-//   return (
-//     <>
-//       <div>AddMoreTeamComparative</div>
-
-    
-//       {idTeam && (
-//         <Button
-//           variant="contained"
-//           color="primary"
-//           onClick={handleAddTeamClick}
-//         >
-//           Agregar Equipo
-//         </Button>
-//       )}
-//     </>
-//   );
-// };
-
 import { Box, Button, Typography } from '@mui/material';
+import { useBoundStore } from '../../../../stores';
+import { SelectTeamById } from '../SelectTeamById';
 
-export const AddMoreTeamComparative = ({ handleAddTeamClick, secondTeamComparative, homeOnly, awayOnly ,homeOnlySecondTeamComparative,awayOnlySecondTeamComparative,firstTeam}) => {
-  console.log("firstTeam",secondTeamComparative)
+export const AddMoreTeamComparative = ({ onSetIdTeamSecond, secondTeamComparative, homeOnly, awayOnly ,homeOnlySecondTeamComparative,awayOnlySecondTeamComparative,firstTeam}) => {
+
+  const {setTeams, teams } = useBoundStore((state) => state);
+  
+  const handleTeamSelect = (teamId) => {
+    onSetIdTeamSecond(teamId); // O la función que maneja el ID del segundo equipo
+  };
+
   return (
     <Box sx={{ my: 2 }}>
       <Typography variant="h6">Comparar con otro equipo</Typography>
-      <Button 
+      {/* <Button 
         variant="contained" 
         color="primary" 
         onClick={handleAddTeamClick}
         // disabled={secondTeamComparative !== null} // Deshabilita el botón si ya hay un segundo equipo
       >
-        Agregar equipo
-      </Button>
+       Seleccionar equipo para comparar
+      </Button> */}
+      <SelectTeamById onTeamSelect={handleTeamSelect} />
       <Box sx={{ mt: 2 }}>
           <Typography variant="subtitle1">Estadísticas del equipo :</Typography>
-          <Typography variant="body1">{firstTeam.name}</Typography>
+          <Typography variant="body1">{firstTeam?.name}</Typography>
           {/* Aquí puedes añadir más detalles sobre las estadísticas del segundo equipo */}
           <Typography variant="body2">Partidos en casa: {homeOnly ? 'Sí' : 'No'}</Typography>
           <Typography variant="body2">Partidos fuera: {awayOnly ? 'Sí' : 'No'}</Typography>
@@ -54,7 +33,7 @@ export const AddMoreTeamComparative = ({ handleAddTeamClick, secondTeamComparati
       {secondTeamComparative && (
         <Box sx={{ mt: 2 }}>
           <Typography variant="subtitle1">Estadísticas del equipo comparado:</Typography>
-          <Typography variant="body1">{secondTeamComparative.name}</Typography>
+          <Typography variant="body1">{secondTeamComparative?.name}</Typography>
           {/* Aquí puedes añadir más detalles sobre las estadísticas del segundo equipo */}
           <Typography variant="body2">Partidos en casa: {homeOnlySecondTeamComparative ? 'Sí' : 'No'}</Typography>
           <Typography variant="body2">Partidos fuera: {awayOnlySecondTeamComparative ? 'Sí' : 'No'}</Typography>

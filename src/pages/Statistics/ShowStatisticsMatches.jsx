@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { Grid, Tabs, Tab, Box } from "@mui/material";
 import { useBoundStore } from "../../stores";
 import { TableMatches } from "./TableMatches";
@@ -12,9 +12,9 @@ export const ShowStatisticsMatches = ({
   const { localMatches, visitorMatches, teamDetails, getTeamDetails } =
     useBoundStore((state) => state);
 
-  React.useEffect(() => {
+ useEffect(() => {
     getTeamDetails(idHomeTeam);
-    if (!singleTeam) {
+    if (idAwayTeam) {
       getTeamDetails(idAwayTeam);
     }
     return () => {
@@ -24,8 +24,7 @@ export const ShowStatisticsMatches = ({
 
   const [teamDetails1, setTeamDetails1] = useState({});
   const [teamDetails2, setTeamDetails2] = useState({});
-  console.log("QUE CARAJO teamDetails1",   teamDetails1,)
-  console.log("localMatches",localMatches)
+ 
 
   useEffect(() => {
     if (teamDetails) {
@@ -45,7 +44,6 @@ export const ShowStatisticsMatches = ({
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
   };
-console.log("teamDetails",teamDetails1)
   return (
     <Box>
       <Tabs
