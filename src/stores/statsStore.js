@@ -43,12 +43,7 @@ const createTeamStatsStore = (set) => ({
     currentSeason,
     position
   }) => {
-    console.log("QUE LLEGA?", idHomeTeam,
-    homeMatchesLocalTeam,
-    visitingmathgesLocalTeam,
-    statsLessThan,numberOfMatches,
-    currentSeason,
-    position)
+   
     const data = await fetch(
       `${URL_API}/${idHomeTeam}?statistic=yellowCards&lowerLimit=0.5&upperLimit=12.5&matchesCount=${numberOfMatches}&homeOnly=${homeMatchesLocalTeam}&awayOnly=${visitingmathgesLocalTeam}&lessThan=${statsLessThan}&currentSeason=${currentSeason}&position=${position}`
     );
@@ -318,18 +313,18 @@ console.log("STATS HOMETeam", homeShots)
     set({ teamStatsForSeason: teamStats });
   },
 
-  getLocalTeamStats : async ({ idTeam, homeOnly, awayOnly, matchesCount, includeAllSeasonMatches} ) => {
+  getLocalTeamStats : async ({season, idTeam, homeOnly, awayOnly, matchesCount, includeAllSeasonMatches,position="false"} ) => {
     const response = await axios.get(
-      `${BACKEND_URL_BASE}/team/stats/${idTeam}?statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}`
+      `${BACKEND_URL_BASE}/team/stats/${idTeam}?season=${season}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}&position=${position}`
     );
     set({ localMatches: response?.data[0]?.matches });
     set({localTeamPercentageStatistics: response?.data})
     return  response?.data
 
   },
-  getVisitorTeamStats : async ({ idTeam, homeOnly, awayOnly, matchesCount, includeAllSeasonMatches} ) => {
+  getVisitorTeamStats : async ({season=false, idTeam, homeOnly, awayOnly, matchesCount, includeAllSeasonMatches,position="false"} ) => {
     const response = await axios.get(
-      `${BACKEND_URL_BASE}/team/stats/${idTeam}?statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}`
+      `${BACKEND_URL_BASE}/team/stats/${idTeam}?season=${season}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}&position=${position}`
     );
     set({ visitorMatches: response?.data[0]?.matches });
     set({visitorTeamPercentageStatistics: response?.data})

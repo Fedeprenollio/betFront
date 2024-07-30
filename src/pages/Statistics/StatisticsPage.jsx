@@ -21,9 +21,7 @@ export const StatisticsPage = () => {
     }
   }, [idHomeTeam, idAwayTeam]);
 
-  const handleTabChange = (event, newValue) => {
-    setActiveTab(newValue);
-  };
+  
 
   return (
     <>

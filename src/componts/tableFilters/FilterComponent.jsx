@@ -1,10 +1,7 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
-import { Box, Button, Drawer, IconButton, useMediaQuery, Divider, Accordion, AccordionSummary, AccordionDetails, Typography, Container } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import MenuIcon from '@mui/icons-material/Menu';
+import  { useState } from 'react';
+import { Box, Drawer, IconButton, Divider, Accordion, AccordionSummary, AccordionDetails, Typography, Container } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import CloseIcon from '@mui/icons-material/Close';
 import { CheckboxLocalVisitor } from '../../pages/Statistics/rangePercentageTable/CheckboxLocalVisitor';
 import { MatchesCountInput } from '../../pages/Statistics/rangePercentageTable/MatchesCountInput';
 import { SelectListCurrentSeasons } from '../../pages/Statistics/rangePercentageTable/SelectListCurrentSeasons';
@@ -24,7 +21,10 @@ export const FilterComponent = ({
     listCurrentSeason,
     selectedSeasons,
     handleSeasonChange,
-    filterName
+    filterName,
+    idTeam,
+    positionFilter,
+    handlePositionFilterChange
 }) => {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [expanded, setExpanded] = useState(false);
@@ -36,7 +36,6 @@ export const FilterComponent = ({
     const handleAccordionToggle = () => {
         setExpanded(!expanded);
     };
-
     const filterContent = (
         <div>
             <Box sx={{ width: '100%' }}>
@@ -71,13 +70,17 @@ export const FilterComponent = ({
                             <Typography variant="span" gutterBottom sx={{
                                 fontFamily: 'Roboto, Helvetica, Arial, sans-serif'
                             }}>
-                                Seleccionar temporadas
+                                Seleccionar temporadas actuales (No seleccionar ninguna incluirá temporadas pasadas)
                             </Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <SelectListCurrentSeasons
                                 selectedSeasons={selectedSeasons}
                                 onSeasonChange={handleSeasonChange}
+                                idTeam={idTeam}
+                                listCurrentSeason={listCurrentSeason}
+                                handlePositionFilterChange={handlePositionFilterChange}
+                                positionFilter={positionFilter}
                             />
                         </AccordionDetails>
                     </Accordion>

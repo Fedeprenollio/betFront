@@ -27,7 +27,6 @@ export const renderTable = (
     if (!stats) {
       return  <h1>Cargando</h1>; // O manejar de otra manera según tu lógica de aplicación
     }
-console.log("QUE LLEGA AL RENDER TABLE", stats)
 
     const exampleTeamStats = stats
       ? stats[0]?.stats[statisticKey][matchesType]

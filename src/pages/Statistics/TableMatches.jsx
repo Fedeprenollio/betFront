@@ -40,7 +40,6 @@ export const TableMatches = ({ teamMatches, statistic, teamDetail }) => {
       return date.format("DD/MM");
     }
   };
-  console.log("DETALLE DE LOS PARTIDOS;", teamMatches);
   const getResultIcon = (team, match, statistic) => {
     const isHomeTeam = match?.homeTeam?._id === team?._id;
     const homeStat = match.teamStatistics.local[statistic];
@@ -114,7 +113,6 @@ export const TableMatches = ({ teamMatches, statistic, teamDetail }) => {
         const homeStat = match.teamStatistics.local[statistic];
         const penaltyLocal = statistic === "goals" ? ((match?.penaltyResult?.homePenalties!== match.penaltyResult.awayPenalties) ? match?.penaltyResult?.homePenalties : null) : null
         const penaltyVisitor = statistic === "goals" ?( (match?.penaltyResult?.homePenalties!== match.penaltyResult.awayPenalties) ? match?.penaltyResult?.awayPenalties : null) : null
-        console.log("homeStat",homeStat)
 
         const awayStat = match.teamStatistics.visitor[statistic];
         const homeTeamWins = homeStat > awayStat;

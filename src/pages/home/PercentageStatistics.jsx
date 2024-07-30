@@ -4,9 +4,7 @@ import { RangePercentageTable } from "../Statistics/rangePercentageTable/RangePe
 
 export const PercentageStatistics = () => {
   const [listCurrentSeason, setListCurrentSeason] = useState("");
-  const { getAllCurrentSeasons, allCurrentSeasons, error } = useBoundStore(
-    (state) => state
-  );
+  const { getAllCurrentSeasons, allCurrentSeasons, error } = useBoundStore( (state) => state );
   useEffect(() => {
     getAllCurrentSeasons();
   }, [getAllCurrentSeasons]);
@@ -14,6 +12,7 @@ export const PercentageStatistics = () => {
     const list = allCurrentSeasons.map((season) => season._id);
     setListCurrentSeason(list.toString());
   }, [allCurrentSeasons]);
+  
   console.log("listCurrentSeason", listCurrentSeason);
 
   console.log("ERROR", error);
