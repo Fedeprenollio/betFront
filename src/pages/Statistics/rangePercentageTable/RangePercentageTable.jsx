@@ -135,7 +135,7 @@ export const RangePercentageTable = ({
   const [nameFilters, setNameFilters] = useState([]);
   const [updatedListSeasonTeam1, setUpdatedListSeasonTeam1] = useState(false);
   const [updatedListSeasonTeam2, setUpdatedListSeasonTeam2] = useState(false);
-  const [positionFilterTeam1, setPositionFilterTeam1] = useState("");
+  const [positionFilterTeam1, setPositionFilterTeam1] = useState("1-50");
   const handlePositionFilterChangeTeam1 = (event) => {
     setPositionFilterTeam1(event.target.value);
   };
