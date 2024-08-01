@@ -21,6 +21,7 @@ import { tableHelpContent } from "./TableHelpContent";
 import { useBoundStore } from "../../../stores";
 import { ShowStatisticsMatches } from "../ShowStatisticsMatches";
 import { useCurrentSeasonTeam } from "../../../customHooks/useCurrentSeasonTeam";
+import { InfoFilterTeam } from "../../../componts/tableFilters/InfoFilterTeam";
 // import GroupByName from "./GroupByName";
 
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -137,13 +138,12 @@ export const RangePercentageTable = ({
   const [updatedListSeasonTeam2, setUpdatedListSeasonTeam2] = useState(false);
   const [positionFilterTeam1, setPositionFilterTeam1] = useState("1-50");
   const handlePositionFilterChangeTeam1 = (event) => {
-    setPositionFilterTeam1(event.target.value);
+    setPositionFilterTeam1(event);
   };
   const [positionFilterTeam2, setPositionFilterTeam2] = useState("1-50");
   const handlePositionFilterChangeTeam2 = (event) => {
-    setPositionFilterTeam2(event.target.value);
+    setPositionFilterTeam2(event);
   };
-
 
   useEffect(() => {
     // Parse listCurrentSeason to an array of seasons if it's not empty
@@ -321,12 +321,12 @@ export const RangePercentageTable = ({
             awayOnly,
             matchesCount,
             includeAllSeasonMatches,
-            position: positionFilterTeam1
+            position: positionFilterTeam1,
           });
           if (idTeamSecondTeam) {
             const b = await getVisitorTeamStats({
               season: selectedSeasonsSecondTeam.join(","),
-              position:positionFilterTeam2,
+              position: positionFilterTeam2,
 
               idTeam: idTeamSecondTeam,
               homeOnly: homeOnlySecondTeamComparative,
@@ -383,7 +383,7 @@ export const RangePercentageTable = ({
     selectedSeasons,
     selectedSeasonsSecondTeam,
     positionFilterTeam1,
-    positionFilterTeam2
+    positionFilterTeam2,
   ]);
 
   //   if (loading) return <Typography>Loading...</Typography>;
@@ -479,11 +479,6 @@ export const RangePercentageTable = ({
 
   return (
     <>
-      <h1>
-        {" "}
-        {idTeam &&
-          `Estadisticas de un solo equipo en fase de prueba, falta agregar la posibilidad de agregar mas equpos para compararlos`}{" "}
-      </h1>
       {listCurrentSeason && (
         <Typography variant="p" gutterBottom>
           {listCurrentSeason
@@ -492,12 +487,8 @@ export const RangePercentageTable = ({
         </Typography>
       )}
 
-      {/* {idTeam && (
-        <Avatar alt={stats[0]?.team?.name} src={stats[0]?.team?.logo} />
-      )} */}
-
       {idTeam ? (
-        <Box display="flex" alignItems="center" mb={2}>
+        <Box display="flex" flexDirection={"column"} alignItems="flex-start" mb={2}>
           <Avatar
             alt={stats[0]?.team?.name}
             src={stats[0]?.team?.logo}
@@ -524,6 +515,13 @@ export const RangePercentageTable = ({
             positionFilter={positionFilterTeam1}
             handlePositionFilterChange={handlePositionFilterChangeTeam1}
           />
+          <InfoFilterTeam
+            team={stats[0]?.team}
+            homeOnly={homeOnly}
+            awayOnly={awayOnly}
+            selectedSeasons={selectedSeasons}
+            positionFilter={positionFilterTeam1}
+          />
         </Box>
       ) : (
         <FilterComponent
@@ -546,7 +544,7 @@ export const RangePercentageTable = ({
       )}
 
       {idTeamSecondTeam && (
-        <Box display="flex" alignItems="center" mb={2}>
+        <Box display="flex" flexDirection={"column"}  alignItems="flex-start" mb={2}>
           <Avatar
             alt={stats[1]?.team?.name}
             src={stats[1]?.team?.logo}
@@ -595,16 +593,48 @@ export const RangePercentageTable = ({
             positionFilter={positionFilterTeam2}
             handlePositionFilterChange={handlePositionFilterChangeTeam2}
           />
+          <InfoFilterTeam
+            team={stats[1]?.team}
+            homeOnly={homeOnlySecondTeamComparative}
+            awayOnly={awayOnlySecondTeamComparative}
+            selectedSeasons={selectedSeasonsSecondTeam}
+            positionFilter={positionFilterTeam2}
+          />
         </Box>
       )}
 
+      {idTeam && (
+        <>
+          <AddMoreTeamComparative
+            onSetIdTeamSecond={setIdTeamSecondTeam}
+            firstTeam={stats[0]?.team}
+            homeOnlySecondTeamComparative={homeOnlySecondTeamComparative}
+            awayOnlySecondTeamComparative={awayOnlySecondTeamComparative}
+            homeOnly={homeOnly}
+            awayOnly={awayOnly}
+            idSecondTeam={idSecondTeam}
+          />
+
+          {/* <InfoFilterTeam
+            team={stats[0]?.team}
+            homeOnly={homeOnly}
+            awayOnly={awayOnly}
+            selectedSeasons={selectedSeasons}
+            positionFilter={positionFilterTeam1}
+          /> */}
+
+          {/* {idTeamSecondTeam && (
+            // <InfoFilterTeam
+            //   team={stats[1]?.team}
+            //   homeOnly={homeOnlySecondTeamComparative}
+            //   awayOnly={awayOnlySecondTeamComparative}
+            //   selectedSeasons={selectedSeasonsSecondTeam}
+            //   positionFilter={positionFilterTeam2}
+            // />
+          )} */}
+        </>
+      )}
       {!idTeam && <GroupByName onNamesChange={handleNamesChange} />}
-
-      <HelpIconWithModal
-        title="Ayuda sobre la tabla"
-        content={tableHelpContent}
-      />
-
       <Tabs
         value={tabIndex}
         onChange={handleTabChange}
@@ -617,17 +647,11 @@ export const RangePercentageTable = ({
           <Tab label={key.charAt(0).toUpperCase() + key.slice(1)} key={key} />
         ))}
       </Tabs>
+      <HelpIconWithModal
+        title="Ayuda sobre la tabla"
+        content={tableHelpContent}
+      />
 
-      {idTeam && (
-        <AddMoreTeamComparative
-          onSetIdTeamSecond={setIdTeamSecondTeam}
-          firstTeam={stats[0]?.team}
-          homeOnlySecondTeamComparative={homeOnlySecondTeamComparative}
-          awayOnlySecondTeamComparative={awayOnlySecondTeamComparative}
-          homeOnly={homeOnly}
-          awayOnly={awayOnly}
-        />
-      )}
       {statisticKeys.map((key, index) => (
         <TabPanel value={tabIndex} index={index} key={key}>
           <Box
