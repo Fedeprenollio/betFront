@@ -306,7 +306,7 @@ console.log("openAddTeamsDialog",openAddTeamsDialog)
             </FieldArray>
 
             <Button type="submit" variant="contained" color="primary">
-              Agregar Zonas
+              Confirmar las zonas creadas
             </Button>
 
             <AlertDialogCopy

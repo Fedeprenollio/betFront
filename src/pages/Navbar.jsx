@@ -204,6 +204,15 @@ const Navbar = () => {
                     Administrar ligas
                   </MenuItem>
                 )}
+                 {isAuthenticated && (
+                  <MenuItem
+                    onClick={handleClose}
+                    component={Link}
+                    to="/league/season/admin"
+                  >
+                    Administrar temporadas
+                  </MenuItem>
+                )}
               </Menu>
             </Box>
 

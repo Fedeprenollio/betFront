@@ -20,6 +20,7 @@ import { LeaguePage } from "../pages/League/LeaguePage";
 import { RangePercentageTable } from "../pages/Statistics/rangePercentageTable/RangePercentageTable";
 import { HomePage } from "../pages/home/HomePage";
 import Cafecito from "../pages/cafecito/Cafecito";
+import { SeasonPage } from "../pages/season/SeasonPage";
 
 const RoutesComponent = () => {
   return (
@@ -62,6 +63,7 @@ const RoutesComponent = () => {
         </Route>
         <Route element={<PrivateRoute />}>
           <Route path="admin" element={<LeaguePage />} />
+          <Route path="season/admin" element={<SeasonPage />} />
           <Route path="detail/:idLeague" element={<DetailLeague />} />
         </Route>
       </Route>

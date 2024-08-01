@@ -146,9 +146,9 @@ export const SelectListCurrentSeasons = ({
     return <Typography>Error: {error.message}</Typography>;
   }
 
+  console.log("seasons filter",seasons)
   const handleFormSubmit = (values) => {
     const positionRange = `${values.startPosition}-${values.endPosition}`;
-    console.log("positionRange",positionRange)
     handlePositionFilterChange(positionRange);
   };
 

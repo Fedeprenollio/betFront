@@ -9,7 +9,6 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 export const CaroulselCurrentSeason = () => {
     const { allCurrentSeasons, getAllCurrentSeasons } = useBoundStore((state) => state);
-console.log("allCurrentSeasons",allCurrentSeasons)
     useEffect(() => {
         getAllCurrentSeasons();
     }, [getAllCurrentSeasons]);
