@@ -319,6 +319,7 @@ console.log("STATS HOMETeam", homeShots)
     );
     set({ localMatches: response?.data[0]?.matches });
     set({localTeamPercentageStatistics: response?.data})
+    console.log("response",response.data)
     return  response?.data
 
   },

@@ -139,9 +139,9 @@ export const RangePercentageTable = ({
   const handlePositionFilterChangeTeam1 = (event) => {
     setPositionFilterTeam1(event.target.value);
   };
-  const [positionFilterTeam2, setPositionFilterTeam2] = useState("");
+  const [positionFilterTeam2, setPositionFilterTeam2] = useState("1-50");
   const handlePositionFilterChangeTeam2 = (event) => {
-    setPositionFilterTeam1(event.target.value);
+    setPositionFilterTeam2(event.target.value);
   };
 
 
@@ -326,6 +326,7 @@ export const RangePercentageTable = ({
           if (idTeamSecondTeam) {
             const b = await getVisitorTeamStats({
               season: selectedSeasonsSecondTeam.join(","),
+              position:positionFilterTeam2,
 
               idTeam: idTeamSecondTeam,
               homeOnly: homeOnlySecondTeamComparative,
@@ -381,7 +382,8 @@ export const RangePercentageTable = ({
     crearVisitorTeamStats,
     selectedSeasons,
     selectedSeasonsSecondTeam,
-    positionFilterTeam1
+    positionFilterTeam1,
+    positionFilterTeam2
   ]);
 
   //   if (loading) return <Typography>Loading...</Typography>;
@@ -590,6 +592,8 @@ export const RangePercentageTable = ({
             selectedSeasons={selectedSeasonsSecondTeam}
             handleSeasonChange={handleSeasonChangeTeam2}
             idTeam={idTeamSecondTeam}
+            positionFilter={positionFilterTeam2}
+            handlePositionFilterChange={handlePositionFilterChangeTeam2}
           />
         </Box>
       )}

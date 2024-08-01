@@ -19,15 +19,18 @@ export const SelectListCurrentSeasons = ({
   handlePositionFilterChange, positionFilter
   
 }) => {
-  const { getAllCurrentSeasons, allCurrentSeasons, error } = useBoundStore(
+  const { getAllCurrentSeasons, allCurrentSeasons, error,seasons,fetchSeasons } = useBoundStore(
     (state) => state
   );
   const {currentSeasonTeam,completeListCurrentSeason} = useCurrentSeasonTeam(idTeam)
-  console.log("ID SELECT", idTeam,"--", selectedSeasons)
+  console.log("seasons",seasons)
+  console.log("currentSeasonTeam",currentSeasonTeam)
+
 
   useEffect(() => {
     getAllCurrentSeasons();
-  }, [getAllCurrentSeasons]);
+    fetchSeasons()
+  }, [getAllCurrentSeasons,fetchSeasons]);
 
   const handleChange = (event) => {
     const { name, checked } = event.target;
@@ -53,7 +56,7 @@ export const SelectListCurrentSeasons = ({
             label={`${season.league.name} - ${season.year}`}
             key={season._id}
           />
-        )) : currentSeasonTeam.map((season) => (
+        )) : seasons.map((season) => (
           <FormControlLabel
             control={
               <Checkbox
@@ -71,7 +74,7 @@ export const SelectListCurrentSeasons = ({
 
 
 
-      {selectedSeasons.length === 1 && (
+      {(selectedSeasons.length === 1 && completeListCurrentSeason.length !== 0) && (
         <TextField
           label="Filtrar por puesto (e.g., 1-3)"
           value={positionFilter}

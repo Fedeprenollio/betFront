@@ -17,7 +17,7 @@ const createSeasonStore = (set) => ({
   fetchSeasons: async () => {
     set({ loading: true, error: null });
     try {
-      const response = await fetch(`${URL_API}/season`);
+      const response = await fetch(`${URL_API}`);
       // if (!response.ok) {
       //   throw new Error("Failed to fetch seasons");
       // }
