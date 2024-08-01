@@ -154,6 +154,11 @@ console.log("openAddTeamsDialog",openAddTeamsDialog)
     }
   };
 
+  const handleRemoveZone = (zoneId) => {
+    setZones((prevZones) => prevZones.filter((zone) => zone._id !== zoneId));
+  };
+
+
   return (
     <>
       <Formik
@@ -335,6 +340,7 @@ console.log("openAddTeamsDialog",openAddTeamsDialog)
           teamsStore={teamsStore}
           selectedCountry={selectedCountry}
           handleConfirmAddTeams={handleConfirmAddTeams}
+          handleRemoveZone={handleRemoveZone}
         />
         // <div key={index}>
         //   <Typography variant="h6">

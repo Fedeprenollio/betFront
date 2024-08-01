@@ -13,37 +13,57 @@ import {
   List,
   ListItem,
   ListItemSecondaryAction,
+  Box
 } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import axios from 'axios';
+import { BACKEND_URL_BASE } from '../../stores/url_base';
 
 export const ZonaList = ({
   zone,
   handleRemoveTeam,
+  handleRemoveZone,
   selectedTeamsToAdd,
   setSelectedTeamsToAdd,
   teamsStore,
   handleConfirmAddTeams,
   selectedCountry
 }) => {
+
+
+  const deleteZone = async (seasonId, zoneId) => {
+    try {
+      await axios.delete(`${BACKEND_URL_BASE}/zones/seasons/${seasonId}/zones/${zoneId}`);
+      handleRemoveZone(zoneId); // Llama la función para actualizar el estado en el frontend
+    } catch (error) {
+      console.error('Error al eliminar la zona:', error);
+    }
+  };
+
   return (
     <div>
-      <Typography variant="h5" gutterBottom>
-        Zona: {zone?.zoneName}
-      </Typography>
+      <Box display="flex" alignItems="center" mb={2}>
+        <Typography variant="h5" gutterBottom sx={{ mr: 1 }}>
+          Zona: {zone?.zoneName}
+        </Typography>
+        <IconButton
+          aria-label="delete"
+          onClick={() => deleteZone( "2313",zone._id)}
+        >
+          <DeleteIcon color="secondary" />
+        </IconButton>
+      </Box>
       <List>
         {zone.teams.map((team, teamIndex) => (
-          <ListItem key={teamIndex} divider>
-            <ListItemText primary={team.name} />
-            <ListItemSecondaryAction>
-              <IconButton
-                edge="end"
-                aria-label="delete"
-                onClick={() => handleRemoveTeam(zone._id, team._id)}
-              >
-                <DeleteIcon color="secondary" />
-              </IconButton>
-            </ListItemSecondaryAction>
+          <ListItem key={teamIndex} divider sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <ListItemText primary={team.name} sx={{ mr: 1 }} />
+            <IconButton
+              aria-label="delete"
+              onClick={() => handleRemoveTeam(zone._id, team._id)}
+            >
+              <DeleteIcon color="secondary" />
+            </IconButton>
           </ListItem>
         ))}
       </List>
