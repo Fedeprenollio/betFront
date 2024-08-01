@@ -35,7 +35,7 @@ export const SeasonPage = () => {
         <List>
           {seasons?.map((season) => (
             <ListItem key={season._id} divider>
-              <ListItemText primary={`${season.league.name} - ${season.year}`} />
+              <ListItemText primary={`${season?.league?.name} - ${season?.year}`} />
               <IconButton edge="end" aria-label="delete" onClick={() => handleClickOpen(season._id)}>
                 <DeleteIcon color="secondary" />
               </IconButton>
