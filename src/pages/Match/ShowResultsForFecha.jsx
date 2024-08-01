@@ -73,6 +73,10 @@ export const ShowResultsForFecha = () => {
     setExpandedMatchId(expandedMatchId === matchId ? null : matchId);
   };
 
+  const handleOpenInNewTab = (match) => {
+    const url = `/stats/${match.homeTeam._id}/${match.awayTeam._id}/${match._id}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
   return (
     <>
       <Box
@@ -246,7 +250,8 @@ export const ShowResultsForFecha = () => {
                         <Grid item xs={2} container justifyContent="flex-end">
                           <Tooltip title="Ver Estadísticas">
                             <IconButton
-                              component={Link}
+                              // component={Link}
+                              onClick={()=>handleOpenInNewTab(match)}
                               to={`/stats/${match.homeTeam._id}/${match.awayTeam._id}/${match._id}`}
                               color="primary"
                             >
