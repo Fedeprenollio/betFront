@@ -2,6 +2,8 @@ import { BACKEND_URL_BASE } from "./url_base";
 import axios from "axios";
 const URL_API = `${BACKEND_URL_BASE}/match/statsAc`;
 const URL_API_STATS_SEASON = `${BACKEND_URL_BASE}/match/team-stats`;
+const URL_API_STATS_TWO_TEAM = `${BACKEND_URL_BASE}/match/two-team-stats`;
+
 
 
 // Definir el store
@@ -32,6 +34,7 @@ const createTeamStatsStore = (set) => ({
   visitorTeamPercentageStatistics:[],
 
   teamStatsForSeason: [],
+  teamStatsForTwoTeam: [],
   statsLessThan: false, // Valor inicial para statsLessThan
   setStatsLessThan: (newValue) => set({ statsLessThan: newValue }), // Función para actualizar statsLessThan
  
@@ -312,6 +315,13 @@ console.log("STATS HOMETeam", homeShots)
 
     set({ teamStatsForSeason: teamStats });
   },
+  getTeamStatsForTwoTeam: async ({ seasonId,teamFilters  }) => {
+    const response = await axios.post(`${URL_API_STATS_TWO_TEAM}/${seasonId}`,teamFilters );
+    const teamStats = response.data
+    console.log("teamStats store",teamStats)
+    set({ teamStatsForTwoTeam: teamStats });
+  },
+
 
   getLocalTeamStats : async ({season, idTeam, homeOnly, awayOnly, matchesCount, includeAllSeasonMatches,position="false"} ) => {
     const response = await axios.get(

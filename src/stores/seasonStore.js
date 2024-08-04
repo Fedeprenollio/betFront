@@ -12,6 +12,7 @@ const createSeasonStore = (set) => ({
   error: null,
   matchesByRound:[],
   allCurrentSeasons:[],
+  listAllCurrentSeason:"",
 
   // Función para cargar las temporadas desde el servidor
   fetchSeasons: async () => {
@@ -147,8 +148,11 @@ const createSeasonStore = (set) => ({
         // }
         const allCurrentSeasons = await response.data;
         set({ allCurrentSeasons, loading: false });
+        set({ listAllCurrentSeason:allCurrentSeasons.map(el=> el._id), loading: false });
+
+        
+      console.log("HOLITA",allCurrentSeasons.map(el=> el._id))
         } catch (error) {
-      console.log("HOLITA",error)
       set({ error: error.message, loading: false });
     }
   }

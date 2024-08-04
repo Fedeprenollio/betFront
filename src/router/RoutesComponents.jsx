@@ -23,9 +23,11 @@ import Cafecito from "../pages/cafecito/Cafecito";
 import { SeasonPage } from "../pages/season/SeasonPage";
 
 const RoutesComponent = () => {
+  const additionalProps = { someProp: "allTeams" };
+
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
+      <Route path="/" element={<StatisticsPage  {...additionalProps}/>} />
 
       <Route path="/teams">
         <Route index element={<Teams />} />
@@ -51,14 +53,14 @@ const RoutesComponent = () => {
       </Route>
       <Route path="/league">
         <Route path="view" element={<ListLeagues />} />
-        {/* Esta: */}
-        {/* <Route path="showResults/:seasonId" element={<ShowResultsForFecha />} />
-        <Route path="positions/:seasonId" element={<Standings />} />
-        <Route path="teams/tableSeason/:seasonId"  element={<TableAllTeamSeason />}/> */}
+        {/* <Route path=":idHomeTeam/statistics" element={<StatisticsPage {...additionalProps} />} /> */}
+
         <Route path=":seasonId" element={<StatisticsPageTab />}>
           <Route path="positions" element={<Standings />} />
           <Route path="showResults" element={<ShowResultsForFecha />} />
           <Route path="tableSeason" element={<TableAllTeamSeason />} />
+          <Route path="statistics" element={<StatisticsPage  {...additionalProps} />} />
+
           <Route path="tableRange" element={<RangePercentageTable />} />
         </Route>
         <Route element={<PrivateRoute />}>
