@@ -137,7 +137,7 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
     }
     if (someProp === "allTeams") {
       setUpdatedListSeasonTeam1(true);
-      const seasonsArray = listAllCurrentSeason
+      const seasonsArray = listAllCurrentSeason.join(",")
         ?.split(",")
         .map((season) => season.trim());
       setSelectedSeasons(seasonsArray);
