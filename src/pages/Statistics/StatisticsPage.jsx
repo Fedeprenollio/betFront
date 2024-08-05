@@ -117,12 +117,7 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
   });
   const { completeListCurrentSeason: completeListCurrentSeason2 } =
     useCurrentSeasonTeam(idTeamSecondTeam);
-  console.log(
-    "listAllCurrentSeason",
-    listAllCurrentSeason,
-    "++++",
-    selectedSeasons
-  );
+ console.log("selectedSeasons",seasonId,selectedSeasons)
   useEffect(() => {
     if (!idAwayTeam) {
       setSingleTeam(idTeam);
@@ -130,14 +125,17 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
       setSingleTeam(null);
     }
   }, [idTeam, idAwayTeam]);
+
+
   useEffect(() => {
     // Parse listCurrentSeason to an array of seasons if it's not empty
     if (updatedListSeasonTeam1) {
       return;
     }
-    if (someProp === "allTeams") {
+    if (someProp === "allTeams" && listAllCurrentSeason.length >0) {
       setUpdatedListSeasonTeam1(true);
-      const seasonsArray = listAllCurrentSeason.join(",")
+      console.log("listAllCurrentSeason",listAllCurrentSeason)
+      const seasonsArray = listAllCurrentSeason?.join(",")
         ?.split(",")
         .map((season) => season.trim());
       setSelectedSeasons(seasonsArray);
@@ -198,7 +196,7 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
       console.log("CACA PADRE");
       const loadStats = async () => {
         try {
-          const selectedSeasonsString = selectedSeasons.join(",") ? listAllCurrentSeason.join(",") :listAllCurrentSeason.join(",") ;
+          const selectedSeasonsString = selectedSeasons.join(",") ? selectedSeasons.join(",") :listAllCurrentSeason.join(",") ;
           const data = await fetchTeamStats(
             selectedSeasonsString,
             homeOnly,
@@ -525,7 +523,7 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
           ></RangePercentageTable>
         ))}
       {activeTab === 1 && (
-        <TableAllTeamSeason idHomeTeam={idTeam} idAwayTeam={idAwayTeam} />
+        <TableAllTeamSeason idHomeTeam={idTeam} idAwayTeam={idAwayTeam}  seasonId={selectedSeasons}/>
       )}
       {idTeam && (
         <ShowStatisticsMatches

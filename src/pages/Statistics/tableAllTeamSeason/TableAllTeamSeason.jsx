@@ -23,7 +23,7 @@ import { exportToExcel } from "./exportToExcel";
 import { tableHelpContent } from "./TableHelpContent";
 import { useFilters } from "../../../customHooks/useFilters";
 
-export const TableAllTeamSeason = ({ idHomeTeam, idAwayTeam }) => {
+export const TableAllTeamSeason = ({ idHomeTeam, idAwayTeam,seasonId }) => {
   const{ homeOnly, awayOnly, awayOnlySecondTeamComparative, homeOnlySecondTeamComparative , setAwayOnly, setHomeOnly, setAwayOnlySecondTeamComparative, setHomeOnlySecondTeamComparative} = useFilters()
   const [teamFilters, setTeamFilters] = useState([
     {
@@ -40,14 +40,14 @@ export const TableAllTeamSeason = ({ idHomeTeam, idAwayTeam }) => {
     },
   ]);
 
-  const { seasonId } = useParams();
+  // const { seasonId } = useParams();
   const {
     getTeamStatsForSeason,
     teamStatsForSeason,
     getTeamStatsForTwoTeam,
     teamStatsForTwoTeam,
   } = useBoundStore((state) => state);
-  
+
   const [listTeams, setListTeams] = useState([]);
   const [selectedTeams, setSelectedTeams] = useState([]); // Estado para los equipos seleccionados
   // const [homeOnly, setHomeOnly] = useState(true);
@@ -65,7 +65,7 @@ export const TableAllTeamSeason = ({ idHomeTeam, idAwayTeam }) => {
     }
     if (idHomeTeam) {
       getTeamStatsForTwoTeam({
-        seasonId: "66a95143b0a4d6f6a38dc072",
+        seasonId,
         teamFilters,
       });
     } else {
@@ -100,8 +100,8 @@ export const TableAllTeamSeason = ({ idHomeTeam, idAwayTeam }) => {
         return filter;
       });
       setTeamFilters(updatedTeamFilters);
-    }, [homeOnly, awayOnly, homeOnlySecondTeamComparative, awayOnlySecondTeamComparative]);
-    console.log("teamFilters",teamFilters)
+    }, [homeOnly, awayOnly, homeOnlySecondTeamComparative, awayOnlySecondTeamComparative, idAwayTeam, idHomeTeam]);
+    console.log("teamStatsForTwoTeam",seasonId)
   useEffect(() => {
     if (idHomeTeam) {
       setListTeams(teamStatsForTwoTeam);
@@ -190,7 +190,7 @@ export const TableAllTeamSeason = ({ idHomeTeam, idAwayTeam }) => {
     selectedTeams.length > 0
       ? listTeams.filter((team) => selectedTeams.includes(team.teamName))
       : listTeams;
-
+console.log("filteredTeams",listTeams)
   const handleHomeOnlyChange = (event) => {
     setHomeOnly(event.target.checked);
   };
