@@ -120,7 +120,8 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
   const { completeListCurrentSeason: completeListCurrentSeason2 } =
     useCurrentSeasonTeam(idTeamSecondTeam);
   const [pathPage, setPathPage] = useState("");
-
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("team.country");
   useEffect(() => {
     // Extract the last part of the pathname to determine the active tab
     const currentPath = location.pathname;
@@ -552,6 +553,11 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
             setStats={setStats}
             setLoading={setLoading}
             setError={setError}
+            setOrder={setOrder} 
+            order={order}
+             setOrderBy={setOrderBy}
+             orderBy={orderBy}
+          
           />
         ) : (
           <RangePercentageTable
@@ -575,6 +581,10 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
             setStats={setStats}
             setLoading={setLoading}
             setError={setError}
+            setOrder={setOrder} 
+            order={order}
+             setOrderBy={setOrderBy}
+             orderBy={orderBy}
           ></RangePercentageTable>
         ))}
       {activeTab === 1 && pathPage === "teams" && (

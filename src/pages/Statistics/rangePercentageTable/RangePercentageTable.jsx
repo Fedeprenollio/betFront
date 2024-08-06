@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import {  useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import {
@@ -36,7 +36,6 @@ export const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-
 const TabPanel = ({ children, value, index }) => (
   <div className="prueba" role="tabpanel" hidden={value !== index}>
     {value === index && <Box p={0.2}>{children}</Box>}
@@ -48,20 +47,27 @@ export const RangePercentageTable = ({
   idTeam,
   idSecondTeam,
   setInputChekBoxIncludeAllSeason,
-  setIncludeAllSeasonMatches,inputChekBoxIncludeAllSeason,
-  stats,setFilters,loading,filters,
+  setIncludeAllSeasonMatches,
+  inputChekBoxIncludeAllSeason,
+  stats,
+  setFilters,
+  loading,
+  filters,
+  setOrder, 
+  order,
+   setOrderBy,
+   orderBy,
 
   selectedSeasons,
   shouldFetch,
-  
+
   homeOnly,
   awayOnly,
   matchesCount,
   includeAllSeasonMatches,
   setStats,
   setLoading,
-  setError
-
+  setError,
 }) => {
   // const { getLocalTeamStats, getVisitorTeamStats, crearVisitorTeamStats } =
   //   useBoundStore((state) => state);
@@ -69,7 +75,7 @@ export const RangePercentageTable = ({
 
   // const { completeListCurrentSeason } = useCurrentSeasonTeam(idTeam);
   // const { completeListCurrentSeason: completeListCurrentSeason2 } =  useCurrentSeasonTeam(idTeamSecondTeam);
-  
+
   // const {
   //   homeOnly,
   //   setHomeOnly,
@@ -89,7 +95,6 @@ export const RangePercentageTable = ({
   // const [loading, setLoading] = useState(true);
   // const [error, setError] = useState(null);
   const [tabIndex, setTabIndex] = useState(0);
-  
 
   // useEffect(() => {
   //   // listCurrentSeason && selectedSeasons.length > 0 && shouldFetch
@@ -129,8 +134,8 @@ export const RangePercentageTable = ({
   //   includeAllSeasonMatchesSecondTeamComparative,
   //   setIncludeAllSeasonMatchesSecondTeamComparative,
   // ] = useState(false);
-  const [order, setOrder] = useState("asc");
-  const [orderBy, setOrderBy] = useState("team.country");
+  // const [order, setOrder] = useState("asc");
+  // const [orderBy, setOrderBy] = useState("team.country");
   // const [inputMatchesCount, setInputMatchesCount] = useState(0);
   // const [includeAllSeasonMatches, setIncludeAllSeasonMatches] = useState(false);
   // const [inputChekBoxIncludeAllSeason, setInputChekBoxIncludeAllSeason] =
@@ -570,80 +575,81 @@ export const RangePercentageTable = ({
         content={tableHelpContent}
       />
 
-      { stats && statisticKeys.map((key, index) => (
-        <TabPanel value={tabIndex} index={index} key={key}>
-          <Box
-            sx={{
-              border: "1px solid #ddd",
-              padding: 0.3,
-              marginBottom: 2,
-              borderRadius: 2,
-              boxShadow: 1,
-              backgroundColor: "#f9f9f9",
-            }}
-          >
-            <Typography variant="h6" gutterBottom>
-              {key.charAt(0).toUpperCase() + key.slice(1)} - Marcado
-            </Typography>
-            {renderTable(
-              stats?.map((teamData) => ({
-                team: teamData.team,
-                stats: {
-                  [key]: teamData.stats?.[key],
-                },
-              })),
-              key,
-              "scored",
-              order,
-              orderBy,
-              handleRequestSort,
-              loading,
-              filters[key]?.scored || {},
-              (newFilter) => handleFilterChange(key, "scored", newFilter),
-              page,
-              rowsPerPage,
-              handleChangePage,
-              handleChangeRowsPerPage,
-              nameFilters
-            )}
-          </Box>
-          <Box
-            sx={{
-              border: "1px solid #ddd",
-              padding: 2,
-              marginBottom: 2,
-              borderRadius: 2,
-              boxShadow: 1,
-              backgroundColor: "#f9f9f9",
-            }}
-          >
-            <Typography variant="h6" gutterBottom>
-              {key.charAt(0).toUpperCase() + key.slice(1)} - Recibido
-            </Typography>
-            {renderTable(
-              stats?.map((teamData) => ({
-                team: teamData.team,
-                stats: {
-                  [key]: teamData.stats?.[key],
-                },
-              })),
-              key,
-              "received",
-              order,
-              orderBy,
-              handleRequestSort,
-              loading,
-              filters[key]?.received || {}, // Filtros específicos para "received"
-              (newFilter) => handleFilterChange(key, "received", newFilter),
-              page,
-              rowsPerPage,
-              handleChangePage,
-              handleChangeRowsPerPage,
-              nameFilters
-            )}
-          </Box>
+      {stats &&
+        statisticKeys.map((key, index) => (
+          <TabPanel value={tabIndex} index={index} key={key}>
+            <Box
+              sx={{
+                border: "1px solid #ddd",
+                padding: 0.3,
+                marginBottom: 2,
+                borderRadius: 2,
+                boxShadow: 1,
+                backgroundColor: "#f9f9f9",
+              }}
+            >
+              <Typography variant="h6" gutterBottom>
+                {key.charAt(0).toUpperCase() + key.slice(1)} - Marcado
+              </Typography>
+              {renderTable(
+                stats?.map((teamData) => ({
+                  team: teamData.team,
+                  stats: {
+                    [key]: teamData.stats?.[key],
+                  },
+                })),
+                key,
+                "scored",
+                order,
+                orderBy,
+                handleRequestSort,
+                loading,
+                filters[key]?.scored || {},
+                (newFilter) => handleFilterChange(key, "scored", newFilter),
+                page,
+                rowsPerPage,
+                handleChangePage,
+                handleChangeRowsPerPage,
+                nameFilters
+              )}
+            </Box>
+            <Box
+              sx={{
+                border: "1px solid #ddd",
+                padding: 2,
+                marginBottom: 2,
+                borderRadius: 2,
+                boxShadow: 1,
+                backgroundColor: "#f9f9f9",
+              }}
+            >
+              <Typography variant="h6" gutterBottom>
+                {key.charAt(0).toUpperCase() + key.slice(1)} - Recibido
+              </Typography>
+              {renderTable(
+                stats?.map((teamData) => ({
+                  team: teamData.team,
+                  stats: {
+                    [key]: teamData.stats?.[key],
+                  },
+                })),
+                key,
+                "received",
+                order,
+                orderBy,
+                handleRequestSort,
+                loading,
+                filters[key]?.received || {}, // Filtros específicos para "received"
+                (newFilter) => handleFilterChange(key, "received", newFilter),
+                page,
+                rowsPerPage,
+                handleChangePage,
+                handleChangeRowsPerPage,
+                nameFilters
+              )}
+            </Box>
 
-          {/* <Box
+            {/* <Box
             sx={{
               border: "1px solid #ddd",
               padding: 2,
@@ -678,8 +684,8 @@ export const RangePercentageTable = ({
               nameFilters
             )}
           </Box> */}
-        </TabPanel>
-      ))}
+          </TabPanel>
+        ))}
 
       {/* {idTeam && (
         <ShowStatisticsMatches
