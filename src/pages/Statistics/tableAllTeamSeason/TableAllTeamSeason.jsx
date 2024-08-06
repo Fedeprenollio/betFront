@@ -23,8 +23,21 @@ import { exportToExcel } from "./exportToExcel";
 import { tableHelpContent } from "./TableHelpContent";
 import { useFilters } from "../../../customHooks/useFilters";
 
-export const TableAllTeamSeason = ({ idHomeTeam, idAwayTeam,seasonId }) => {
-  const{ homeOnly, awayOnly, awayOnlySecondTeamComparative, homeOnlySecondTeamComparative , setAwayOnly, setHomeOnly, setAwayOnlySecondTeamComparative, setHomeOnlySecondTeamComparative} = useFilters()
+export const TableAllTeamSeason = ({
+  idHomeTeam,
+  idAwayTeam,
+  seasonId,
+  //Probando:
+  homeOnly,
+  awayOnly,
+  awayOnlySecondTeamComparative,
+  homeOnlySecondTeamComparative,
+  setAwayOnly,
+  setHomeOnly,
+  setAwayOnlySecondTeamComparative,
+  setHomeOnlySecondTeamComparative,
+}) => {
+  // const{ homeOnly, awayOnly, awayOnlySecondTeamComparative, homeOnlySecondTeamComparative , setAwayOnly, setHomeOnly, setAwayOnlySecondTeamComparative, setHomeOnlySecondTeamComparative} = useFilters()
   const [teamFilters, setTeamFilters] = useState([
     {
       teamId: idHomeTeam,
@@ -35,8 +48,8 @@ export const TableAllTeamSeason = ({ idHomeTeam, idAwayTeam,seasonId }) => {
     {
       teamId: idAwayTeam,
       matchType: "both",
-      matchesCount:10,
-      positions: "1-15",
+      matchesCount: 10,
+      positions: "1-50",
     },
   ]);
 
@@ -53,7 +66,7 @@ export const TableAllTeamSeason = ({ idHomeTeam, idAwayTeam,seasonId }) => {
   // const [homeOnly, setHomeOnly] = useState(true);
   // const [awayOnly, setAwayOnly] = useState(true);
   const [matchType, setMatchType] = useState("both");
-  console.log("idHomeTeam",idHomeTeam)
+  console.log("idHomeTeam", idHomeTeam);
   useEffect(() => {
     if (homeOnly && awayOnly) {
       setMatchType("both");
@@ -65,6 +78,7 @@ export const TableAllTeamSeason = ({ idHomeTeam, idAwayTeam,seasonId }) => {
       setMatchType("both");
     }
     if (idHomeTeam) {
+      console.log("seasonId,teamFilters",seasonId, teamFilters )
       getTeamStatsForTwoTeam({
         seasonId,
         teamFilters,
@@ -80,28 +94,48 @@ export const TableAllTeamSeason = ({ idHomeTeam, idAwayTeam,seasonId }) => {
     awayOnly,
     idHomeTeam,
     getTeamStatsForTwoTeam,
-    teamFilters
+    teamFilters,
   ]);
- 
-    // Update teamFilters when conditions change
-    useEffect(() => {
-      const updatedTeamFilters = teamFilters.map(filter => {
-        if (filter.teamId === idHomeTeam) {
-          return {
-            ...filter,
-            matchType: homeOnly ? (awayOnly ? "both" : "home") : (awayOnly ? "away" : "both")
-          };
-        }
-        if (filter.teamId === idAwayTeam) {
-          return {
-            ...filter,
-            matchType: homeOnlySecondTeamComparative ? (awayOnlySecondTeamComparative ? "both" : "home") : (awayOnlySecondTeamComparative ? "away" : "both")
-          };
-        }
-        return filter;
-      });
-      setTeamFilters(updatedTeamFilters);
-    }, [homeOnly, awayOnly, homeOnlySecondTeamComparative, awayOnlySecondTeamComparative, idAwayTeam, idHomeTeam]);
+
+  // Update teamFilters when conditions change
+  useEffect(() => {
+    const updatedTeamFilters = teamFilters.map((filter) => {
+      if (filter.teamId === idHomeTeam) {
+        return {
+          ...filter,
+          matchType: homeOnly
+            ? awayOnly
+              ? "both"
+              : "home"
+            : awayOnly
+            ? "away"
+            : "both",
+        };
+      }
+      if (filter.teamId === idAwayTeam) {
+        return {
+          ...filter,
+          matchType: homeOnlySecondTeamComparative
+            ? awayOnlySecondTeamComparative
+              ? "both"
+              : "home"
+            : awayOnlySecondTeamComparative
+            ? "away"
+            : "both",
+        };
+      }
+      return filter;
+    });
+    console.log("updatedTeamFilters",updatedTeamFilters,"+++",idAwayTeam)
+    setTeamFilters(updatedTeamFilters);
+  }, [
+    homeOnly,
+    awayOnly,
+    homeOnlySecondTeamComparative,
+    awayOnlySecondTeamComparative,
+    idAwayTeam,
+    idHomeTeam,
+  ]);
 
   useEffect(() => {
     if (idHomeTeam) {
@@ -191,9 +225,9 @@ export const TableAllTeamSeason = ({ idHomeTeam, idAwayTeam,seasonId }) => {
     selectedTeams.length > 0
       ? listTeams.filter((team) => selectedTeams.includes(team.teamName))
       : listTeams;
-  const handleHomeOnlyChange = (event) => {
-    setHomeOnly(event.target.checked);
-  };
+  // const handleHomeOnlyChange = (event) => {
+  //   setHomeOnly(event.target.checked);
+  // };
 
   const handleAwayOnlyChange = (event) => {
     setAwayOnly(event.target.checked);
@@ -206,8 +240,6 @@ export const TableAllTeamSeason = ({ idHomeTeam, idAwayTeam,seasonId }) => {
   const handleAwayOnlyChangeSecondTeam = (event) => {
     setAwayOnlySecondTeamComparative(event.target.checked);
   };
-
-
 
   return (
     <Box>
@@ -225,26 +257,22 @@ export const TableAllTeamSeason = ({ idHomeTeam, idAwayTeam,seasonId }) => {
         handleCheckboxChange={handleCheckboxChange}
         homeOnly={homeOnly}
         awayOnly={awayOnly}
-        handleHomeOnlyChange={handleHomeOnlyChange}
+        // handleHomeOnlyChange={handleHomeOnlyChange}
         handleAwayOnlyChange={handleAwayOnlyChange}
       />
-
-
-      {idAwayTeam && (
-         <FilterComponentModal
-         stats={stats}
-         visibleStats={visibleStats}
-         handleStatCheckboxChange={handleStatCheckboxChange}
-         showAdvancedStats={showAdvancedStats}
-         handleCheckboxChange={handleCheckboxChange}
-         homeOnly={homeOnlySecondTeamComparative}
-         awayOnly={awayOnlySecondTeamComparative}
-         handleHomeOnlyChange={handleHomeOnlyChangeSecondTeam}
-         handleAwayOnlyChange={handleAwayOnlyChangeSecondTeam}
-       />
-      )}
-
-
+      {/* {idAwayTeam && (
+        <FilterComponentModal
+          stats={stats}
+          visibleStats={visibleStats}
+          handleStatCheckboxChange={handleStatCheckboxChange}
+          showAdvancedStats={showAdvancedStats}
+          handleCheckboxChange={handleCheckboxChange}
+          homeOnly={homeOnlySecondTeamComparative}
+          awayOnly={awayOnlySecondTeamComparative}
+          handleHomeOnlyChange={handleHomeOnlyChangeSecondTeam}
+          handleAwayOnlyChange={handleAwayOnlyChangeSecondTeam}
+        />
+      )} */}
       <GroupByName onNamesChange={handleNamesChange} />{" "}
       {/* Componente GroupByName */}
       <HelpIconWithModal

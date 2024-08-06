@@ -24,6 +24,7 @@ const createSeasonStore = (set) => ({
       // }
       const seasons = await response.json();
       set({ seasons, loading: false });
+      return seasons
     } catch (error) {
       set({ error: error.message, loading: false });
     }

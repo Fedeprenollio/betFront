@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { Box, Typography, Paper, Divider, Chip } from "@mui/material";
+import { Box, Typography, Paper, Divider, Chip, Avatar } from "@mui/material";
 import { useBoundStore } from "../../stores";
 import { useEffect, useState } from "react";
 
@@ -22,11 +22,17 @@ export const InfoFilterTeam = ({
 
 
   return (
-    <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
+  
       <Box sx={{ mt: 2 }}>
         <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>Filtros del equipo:</Typography>
         <Typography variant="h5" sx={{ mb: 1, color: 'primary.main' }}>{team?.name}</Typography>
         <Divider sx={{ mb: 2 }} />
+        <Avatar
+            alt={team?.name}
+            src={team?.logo}
+            sx={{ mr: 2 }}
+          />
+
         <Typography variant="body1" sx={{ mb: 1 }}>
           <strong>Partidos en casa:</strong> {homeOnly ? "Sí" : "No"}
         </Typography>
@@ -52,7 +58,7 @@ export const InfoFilterTeam = ({
           )}
         </Typography>
       </Box>
-    </Paper>
+ 
   );
 };
 

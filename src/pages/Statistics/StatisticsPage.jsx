@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
-import { Tabs, Tab, Box, Avatar, Typography } from "@mui/material";
+import { Tabs, Tab, Box, Avatar, Typography, Paper } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { FilterStatistics } from "./FilterStatistics";
 import { ShowStatisticsMatches } from "./ShowStatisticsMatches";
@@ -125,18 +125,18 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
     // Extract the last part of the pathname to determine the active tab
     const currentPath = location.pathname;
     if (currentPath.includes("league")) {
-      console.log("Viendo una Liga")
+      console.log("Viendo una Liga");
       setPathPage("league");
       setSelectedSeasons(seasonId);
     } else if (currentPath.includes("teams")) {
-      console.log("Viendo hasta un par de equipos")
+      console.log("Viendo hasta un par de equipos", completeListCurrentSeason);
 
       setPathPage("teams");
       setSelectedSeasons(completeListCurrentSeason);
     } else {
       setPathPage("home");
       if (someProp === "allTeams" && listAllCurrentSeason.length > 0) {
-        console.log("Viendo todas las ligas")
+        console.log("Viendo todas las ligas");
         setUpdatedListSeasonTeam1(true);
         const seasonsArray = listAllCurrentSeason
           ?.join(",")
@@ -145,13 +145,7 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
         setSelectedSeasons(seasonsArray);
       }
     }
-
-    }, [
-      seasonId,
-      completeListCurrentSeason,
-      listAllCurrentSeason,
-      someProp,
-      ]);
+  }, [seasonId, completeListCurrentSeason, listAllCurrentSeason, someProp]);
   useEffect(() => {
     if (!idAwayTeam) {
       setSingleTeam(idTeam);
@@ -227,7 +221,7 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
   ]);
   useEffect(() => {
     //Obtencion de estadisticas para todas las temporadas actuales (Home en este momento)
-    console.log("Stats Home", pathPage)
+    console.log("Stats Home", pathPage);
     if (pathPage === "home") {
       const loadStats = async () => {
         try {
@@ -263,10 +257,10 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
     idAwayTeam,
     someProp,
   ]);
-
+  console.log("selectedSeasons", selectedSeasons);
   useEffect(() => {
     if (idTeam !== undefined && shouldFetch) {
-      console.log("Stats idTeam", idTeam)
+      console.log("Stats idTeam", idTeam);
 
       const loadStats = async () => {
         try {
@@ -378,114 +372,136 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
 
   return (
     <>
+      {someProp !== "allTeams" ? (
+        <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
+          <Box
+            display="flex"
+            flexDirection={"row"}
+            alignItems="flex-start"
+            mb={2}
+          >
+            <InfoFilterTeam
+              team={stats[0]?.team}
+              homeOnly={homeOnly}
+              awayOnly={awayOnly}
+              selectedSeasons={selectedSeasons}
+              positionFilter={positionFilterTeam1}
+            />
+            <FilterComponent
+              filterName={["local/visitor", "MatchesCountInput"]}
+              homeOnly={homeOnly}
+              awayOnly={awayOnly}
+              handleHomeOnlyChange={handleHomeOnlyChange}
+              handleAwayOnlyChange={handleAwayOnlyChange}
+              inputMatchesCount={inputMatchesCount}
+              handleInputMatchesCountChange={handleInputMatchesCountChange}
+              handleIncludeAllSeasonMatches={handleIncludeAllSeasonMatches}
+              updateMatchesCount={updateMatchesCount}
+              updateIncludeOtherSeasons={updateIncludeOtherSeasons}
+              inputChekBoxIncludeAllSeason={inputChekBoxIncludeAllSeason}
+              handleFilterChange={handleFilterChange}
+              listCurrentSeason={completeListCurrentSeason}
+              selectedSeasons={selectedSeasons}
+              handleSeasonChange={handleSeasonChange}
+              idTeam={idTeam}
+              positionFilter={positionFilterTeam1}
+              handlePositionFilterChange={handlePositionFilterChangeTeam1}
+              pathPage={pathPage}
+              //Para la tabla de estadisticas no porcentuales
+            />
+          </Box>
+        </Paper>
+      ):
       <FilterComponent
-        filterName={["local/visitor", "MatchesCountInput"]}
-        homeOnly={homeOnly}
-        awayOnly={awayOnly}
-        handleHomeOnlyChange={handleHomeOnlyChange}
-        handleAwayOnlyChange={handleAwayOnlyChange}
-        inputMatchesCount={inputMatchesCount}
-        handleInputMatchesCountChange={handleInputMatchesCountChange}
-        handleIncludeAllSeasonMatches={handleIncludeAllSeasonMatches}
-        updateMatchesCount={updateMatchesCount}
-        updateIncludeOtherSeasons={updateIncludeOtherSeasons}
-        inputChekBoxIncludeAllSeason={inputChekBoxIncludeAllSeason}
-        handleFilterChange={handleFilterChange}
-        listCurrentSeason={completeListCurrentSeason}
-        selectedSeasons={selectedSeasons}
-        handleSeasonChange={handleSeasonChange}
-        idTeam={idTeam}
-        positionFilter={positionFilterTeam1}
-        handlePositionFilterChange={handlePositionFilterChangeTeam1}
-        pathPage={pathPage}
-      />
-      {someProp !== "allTeams" && (
-        <Box
-          display="flex"
-          flexDirection={"column"}
-          alignItems="flex-start"
-          mb={2}
-        >
-          <Avatar
-            alt={stats[0]?.team?.name}
-            src={stats[0]?.team?.logo}
-            sx={{ mr: 2 }}
-          />
-          <Typography variant="h6">{stats[0]?.team?.name}</Typography>
-
-          <InfoFilterTeam
-            team={stats[0]?.team}
-            homeOnly={homeOnly}
-            awayOnly={awayOnly}
-            selectedSeasons={selectedSeasons}
-            positionFilter={positionFilterTeam1}
-          />
-        </Box>
-      )}
+      filterName={["local/visitor", "MatchesCountInput"]}
+      homeOnly={homeOnly}
+      awayOnly={awayOnly}
+      handleHomeOnlyChange={handleHomeOnlyChange}
+      handleAwayOnlyChange={handleAwayOnlyChange}
+      inputMatchesCount={inputMatchesCount}
+      handleInputMatchesCountChange={handleInputMatchesCountChange}
+      handleIncludeAllSeasonMatches={handleIncludeAllSeasonMatches}
+      updateMatchesCount={updateMatchesCount}
+      updateIncludeOtherSeasons={updateIncludeOtherSeasons}
+      inputChekBoxIncludeAllSeason={inputChekBoxIncludeAllSeason}
+      handleFilterChange={handleFilterChange}
+      listCurrentSeason={completeListCurrentSeason}
+      selectedSeasons={selectedSeasons}
+      handleSeasonChange={handleSeasonChange}
+      idTeam={idTeam}
+      positionFilter={positionFilterTeam1}
+      handlePositionFilterChange={handlePositionFilterChangeTeam1}
+      pathPage={pathPage}
+      //Para la tabla de estadisticas no porcentuales
+    />
+      }
 
       {idTeamSecondTeam && (
-        <Box
-          display="flex"
-          flexDirection={"column"}
-          alignItems="flex-start"
-          mb={2}
-        >
-          <Avatar
+        <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
+          <Box
+            display="flex"
+            flexDirection={"row"}
+            alignItems="flex-start"
+            mb={2}
+          >
+            {/* <Avatar
             alt={stats[1]?.team?.name}
             src={stats[1]?.team?.logo}
             sx={{ mr: 2 }}
-          />
-          <Typography variant="h6">{stats[1]?.team?.name}</Typography>
-          <FilterComponent
-            filterName={["local/visitor", "MatchesCountInput"]}
-            homeOnly={homeOnlySecondTeamComparative}
-            awayOnly={awayOnlySecondTeamComparative}
-            handleHomeOnlyChange={(event) =>
-              setHomeOnlySecondTeamComparative(event.target.checked)
-            }
-            handleAwayOnlyChange={(event) =>
-              setAwayOnlySecondTeamComparative(event.target.checked)
-            }
-            inputMatchesCount={matchesCountSecondTeamComparative}
-            handleInputMatchesCountChange={(event) =>
-              setMatchesCountSecondTeamComparative(event.target?.value)
-            }
-            handleIncludeAllSeasonMatches={(event) =>
-              setIncludeAllSeasonMatchesSecondTeamComparative(
-                event.target.checked
-              )
-            }
-            updateMatchesCount={() =>
-              setMatchesCountSecondTeamComparative(
-                matchesCountSecondTeamComparative
-              )
-            }
-            updateIncludeOtherSeasons={() =>
-              setIncludeAllSeasonMatchesSecondTeamComparative(
+          /> */}
+            {/* <Typography variant="h6">{stats[1]?.team?.name}</Typography> */}
+
+            <InfoFilterTeam
+              team={stats[1]?.team}
+              homeOnly={homeOnlySecondTeamComparative}
+              awayOnly={awayOnlySecondTeamComparative}
+              selectedSeasons={selectedSeasonsSecondTeam}
+              positionFilter={positionFilterTeam2}
+            />
+            <FilterComponent
+              filterName={["local/visitor", "MatchesCountInput"]}
+              homeOnly={homeOnlySecondTeamComparative}
+              awayOnly={awayOnlySecondTeamComparative}
+              handleHomeOnlyChange={(event) =>
+                setHomeOnlySecondTeamComparative(event.target.checked)
+              }
+              handleAwayOnlyChange={(event) =>
+                setAwayOnlySecondTeamComparative(event.target.checked)
+              }
+              inputMatchesCount={matchesCountSecondTeamComparative}
+              handleInputMatchesCountChange={(event) =>
+                setMatchesCountSecondTeamComparative(event.target?.value)
+              }
+              handleIncludeAllSeasonMatches={(event) =>
+                setIncludeAllSeasonMatchesSecondTeamComparative(
+                  event.target.checked
+                )
+              }
+              updateMatchesCount={() =>
+                setMatchesCountSecondTeamComparative(
+                  matchesCountSecondTeamComparative
+                )
+              }
+              updateIncludeOtherSeasons={() =>
+                setIncludeAllSeasonMatchesSecondTeamComparative(
+                  includeAllSeasonMatchesSecondTeamComparative
+                )
+              }
+              inputChekBoxIncludeAllSeason={
                 includeAllSeasonMatchesSecondTeamComparative
-              )
-            }
-            inputChekBoxIncludeAllSeason={
-              includeAllSeasonMatchesSecondTeamComparative
-            }
-            handleFilterChange={(statisticKey, matchType, newFilter) =>
-              handleFilterChange(statisticKey, matchType, newFilter)
-            }
-            listCurrentSeason={completeListCurrentSeason2}
-            selectedSeasons={selectedSeasonsSecondTeam}
-            handleSeasonChange={handleSeasonChangeTeam2}
-            idTeam={idTeamSecondTeam}
-            positionFilter={positionFilterTeam2}
-            handlePositionFilterChange={handlePositionFilterChangeTeam2}
-          />
-          <InfoFilterTeam
-            team={stats[1]?.team}
-            homeOnly={homeOnlySecondTeamComparative}
-            awayOnly={awayOnlySecondTeamComparative}
-            selectedSeasons={selectedSeasonsSecondTeam}
-            positionFilter={positionFilterTeam2}
-          />
-        </Box>
+              }
+              handleFilterChange={(statisticKey, matchType, newFilter) =>
+                handleFilterChange(statisticKey, matchType, newFilter)
+              }
+              listCurrentSeason={completeListCurrentSeason2}
+              selectedSeasons={selectedSeasonsSecondTeam}
+              handleSeasonChange={handleSeasonChangeTeam2}
+              idTeam={idTeamSecondTeam}
+              positionFilter={positionFilterTeam2}
+              handlePositionFilterChange={handlePositionFilterChangeTeam2}
+            />
+          </Box>
+        </Paper>
       )}
       {idTeam && (
         <>
@@ -564,8 +580,17 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
       {activeTab === 1 && pathPage === "teams" && (
         <TableAllTeamSeason
           idHomeTeam={idTeam}
-          idAwayTeam={idAwayTeam}
+          idAwayTeam={idTeamSecondTeam}
           seasonId={selectedSeasons}
+          //Probando:
+          homeOnly={homeOnly}
+          awayOnly={awayOnly}
+          awayOnlySecondTeamComparative={awayOnlySecondTeamComparative}
+          homeOnlySecondTeamComparative={homeOnlySecondTeamComparative}
+          setAwayOnly={setAwayOnly}
+          setHomeOnly={setHomeOnly}
+          setAwayOnlySecondTeamComparative={setAwayOnlySecondTeamComparative}
+          setHomeOnlySecondTeamComparative={setHomeOnlySecondTeamComparative}
         />
       )}
       {activeTab === 1 && pathPage === "league" && (
@@ -573,6 +598,7 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
           idHomeTeam={idTeam}
           idAwayTeam={idAwayTeam}
           seasonId={seasonId}
+          //PROBANDO:
         />
       )}
       {idTeam && (

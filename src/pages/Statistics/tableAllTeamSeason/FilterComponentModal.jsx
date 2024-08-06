@@ -41,12 +41,12 @@ export const FilterComponentModal = ({
                 handleCheckboxChange={handleCheckboxChange}
             />
             <Divider style={{ marginBottom: "5px" }} />
-            <CheckboxLocalVisitor 
+            {/* <CheckboxLocalVisitor 
              homeOnly={homeOnly}
              awayOnly={awayOnly}
              handleHomeOnlyChange={handleHomeOnlyChange}
              handleAwayOnlyChange={handleAwayOnlyChange}
-            />
+            /> */}
         </Box>
     );
 
@@ -65,7 +65,7 @@ export const FilterComponentModal = ({
                                     color: "#0069c2",
                                     fontSize:"0.85rem"
                                 }}>
-                                    Filtrar
+                                    Filtrar estadísticas
                                 </Typography>
                                 <ExpandMoreIcon sx={{ marginLeft: 1 }} />
                             </Box>

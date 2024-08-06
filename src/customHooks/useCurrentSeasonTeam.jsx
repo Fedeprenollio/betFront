@@ -2,29 +2,38 @@ import { useEffect, useState } from "react";
 import { useBoundStore } from "../stores";
 
 export const useCurrentSeasonTeam = (idTeam) => {
-  const [completeListCurrentSeason, setCompleteListCurrentSeason] = useState([]);
-  const [currentSeasonTeam, setcurrentSeasonTeam] = useState([])
-  const { getAllCurrentSeasons, allCurrentSeasons, error,seasons,fetchSeasons } = useBoundStore(
-    (state) => state
+  const [completeListCurrentSeason, setCompleteListCurrentSeason] = useState(
+    []
   );
+  const [currentSeasonTeam, setcurrentSeasonTeam] = useState([]);
+  const {
+    getAllCurrentSeasons,
+    allCurrentSeasons,
+    error,
+    seasons,
+    fetchSeasons,
+  } = useBoundStore((state) => state);
 
   useEffect(() => {
     getAllCurrentSeasons();
-    fetchSeasons()
-  }, [getAllCurrentSeasons,fetchSeasons]);
-console.log("filteredCurrentSeasonTeam", "ENTRA?")
+    fetchSeasons();
+  }, [getAllCurrentSeasons, fetchSeasons]);
   useEffect(() => {
-    if(!idTeam){
-      setCompleteListCurrentSeason([])
-      return
+    const fetchData = async () => {
+      const data = await fetchSeasons();
+      const filteredCurrentSeasonTeam = data.filter((season) =>
+        season.teams.some((team) => team === idTeam)
+      );
+      setcurrentSeasonTeam(filteredCurrentSeasonTeam);
+      const list = filteredCurrentSeasonTeam.map((season) => season._id);
+      setCompleteListCurrentSeason(list.toString().split(","));
+    };
+
+    if (!idTeam) {
+      setCompleteListCurrentSeason([]);
+      return;
     }
-    const filteredCurrentSeasonTeam = seasons.filter(season => 
-      season.teams.some(team => team === idTeam)
-    );
-    setcurrentSeasonTeam(filteredCurrentSeasonTeam)
-    const list = filteredCurrentSeasonTeam.map((season) => season._id);
-    console.log("filteredCurrentSeasonTeam",filteredCurrentSeasonTeam)
-    setCompleteListCurrentSeason(list.toString().split(","));
+    fetchData();
   }, [allCurrentSeasons, idTeam]);
 
   return {
