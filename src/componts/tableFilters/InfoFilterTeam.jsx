@@ -20,7 +20,6 @@ export const InfoFilterTeam = ({
     console.log("seasonSelected", seasonSelected);
   }, [fetchSeasons, selectedSeasons]);
 
-  console.log("INFO selectedSeasons", selectedSeasons);
 
   return (
     <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>

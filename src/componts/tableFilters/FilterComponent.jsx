@@ -24,7 +24,8 @@ export const FilterComponent = ({
     filterName,
     idTeam,
     positionFilter,
-    handlePositionFilterChange
+    handlePositionFilterChange,
+    pathPage
 }) => {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [expanded, setExpanded] = useState(false);
@@ -64,7 +65,7 @@ export const FilterComponent = ({
 
 
                 <Divider />
-                {listCurrentSeason && (
+                {pathPage !== "league" && (
                     <Accordion expanded={expanded} onChange={handleAccordionToggle}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                             <Typography variant="span" gutterBottom sx={{

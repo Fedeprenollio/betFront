@@ -130,7 +130,7 @@ export const SelectListCurrentSeasons = ({
     seasons,
     fetchSeasons,
   } = useBoundStore((state) => state);
-  const { completeListCurrentSeason } = useCurrentSeasonTeam(idTeam);
+  const { completeListCurrentSeason ,currentSeasonTeam} = useCurrentSeasonTeam(idTeam);
 
   useEffect(() => {
     getAllCurrentSeasons();
@@ -146,7 +146,7 @@ export const SelectListCurrentSeasons = ({
     return <Typography>Error: {error.message}</Typography>;
   }
 
-  console.log("seasons filter",seasons)
+  console.log("completeListCurrentSeason",completeListCurrentSeason)
   const handleFormSubmit = (values) => {
     const positionRange = `${values.startPosition}-${values.endPosition}`;
     handlePositionFilterChange(positionRange);
@@ -169,7 +169,7 @@ export const SelectListCurrentSeasons = ({
                 key={season._id}
               />
             ))
-          : seasons.map((season) => (
+          : currentSeasonTeam.map((season) => (
               <FormControlLabel
                 control={
                   <Checkbox

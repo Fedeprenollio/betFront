@@ -97,7 +97,6 @@ export const stableSort = (array, comparator) => {
 };
 
 const descendingComparator = (a, b, orderBy) => {
-  console.log("orderBy", orderBy);
   let valueA, valueB;
   switch (orderBy) {
     case "total":
@@ -134,7 +133,6 @@ const descendingComparator = (a, b, orderBy) => {
       }
       break;
   }
-  console.log("valueA", valueA, "valueB", valueB);
   if (valueB < valueA) return -1;
   if (valueB > valueA) return 1;
   return 0;
@@ -146,6 +144,5 @@ const descendingComparator = (a, b, orderBy) => {
 export const handleSortRequest = (order, orderBy, data) => {
   const comparator = getComparator(order, orderBy);
   const sortedData = stableSort(data, comparator);
-  console.log("Sorted Data", sortedData);
   return sortedData;
 };

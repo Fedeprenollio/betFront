@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import {
@@ -63,8 +63,6 @@ export const RangePercentageTable = ({
   setError
 
 }) => {
-  const { seasonId } = useParams();
-  console.log("seasonId en hija",seasonId)
   // const { getLocalTeamStats, getVisitorTeamStats, crearVisitorTeamStats } =
   //   useBoundStore((state) => state);
   const [idTeamSecondTeam, setIdTeamSecondTeam] = useState(idSecondTeam);
@@ -91,8 +89,7 @@ export const RangePercentageTable = ({
   // const [loading, setLoading] = useState(true);
   // const [error, setError] = useState(null);
   const [tabIndex, setTabIndex] = useState(0);
-  console.log("CACA",idTeam)
-  console.log("CACA DATA", selectedSeasons)
+  
 
   // useEffect(() => {
   //   // listCurrentSeason && selectedSeasons.length > 0 && shouldFetch

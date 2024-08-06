@@ -312,7 +312,7 @@ console.log("STATS HOMETeam", homeShots)
   getTeamStatsForSeason: async ({ seasonId, matchType="both"  }) => {
     const response = await axios(`${URL_API_STATS_SEASON}/${seasonId}?matchType=${matchType }`);
     const teamStats = response.data
-
+    console.log("seasonId store",seasonId, "+++", teamStats)
     set({ teamStatsForSeason: teamStats });
   },
   getTeamStatsForTwoTeam: async ({ seasonId,teamFilters  }) => {

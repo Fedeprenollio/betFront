@@ -53,6 +53,7 @@ export const TableAllTeamSeason = ({ idHomeTeam, idAwayTeam,seasonId }) => {
   // const [homeOnly, setHomeOnly] = useState(true);
   // const [awayOnly, setAwayOnly] = useState(true);
   const [matchType, setMatchType] = useState("both");
+  console.log("idHomeTeam",idHomeTeam)
   useEffect(() => {
     if (homeOnly && awayOnly) {
       setMatchType("both");
@@ -101,7 +102,7 @@ export const TableAllTeamSeason = ({ idHomeTeam, idAwayTeam,seasonId }) => {
       });
       setTeamFilters(updatedTeamFilters);
     }, [homeOnly, awayOnly, homeOnlySecondTeamComparative, awayOnlySecondTeamComparative, idAwayTeam, idHomeTeam]);
-    console.log("teamStatsForTwoTeam",seasonId)
+
   useEffect(() => {
     if (idHomeTeam) {
       setListTeams(teamStatsForTwoTeam);
@@ -190,7 +191,6 @@ export const TableAllTeamSeason = ({ idHomeTeam, idAwayTeam,seasonId }) => {
     selectedTeams.length > 0
       ? listTeams.filter((team) => selectedTeams.includes(team.teamName))
       : listTeams;
-console.log("filteredTeams",listTeams)
   const handleHomeOnlyChange = (event) => {
     setHomeOnly(event.target.checked);
   };

@@ -50,10 +50,12 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
     getVisitorTeamStats,
     crearVisitorTeamStats,
     allCurrentSeasons,
-    getAllCurrentSeasons,listAllCurrentSeason
+    getAllCurrentSeasons,
+    listAllCurrentSeason,
   } = useBoundStore((state) => state);
   const [stats, setStats] = useState([]);
   const [idTeamSecondTeam, setIdTeamSecondTeam] = useState(idAwayTeam);
+
   useEffect(() => {
     getAllCurrentSeasons();
   }, [getAllCurrentSeasons]);
@@ -117,7 +119,39 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
   });
   const { completeListCurrentSeason: completeListCurrentSeason2 } =
     useCurrentSeasonTeam(idTeamSecondTeam);
- console.log("selectedSeasons",seasonId,selectedSeasons)
+  const [pathPage, setPathPage] = useState("");
+
+  useEffect(() => {
+    // Extract the last part of the pathname to determine the active tab
+    const currentPath = location.pathname;
+    if (currentPath.includes("league")) {
+      console.log("Viendo una Liga")
+      setPathPage("league");
+      setSelectedSeasons(seasonId);
+    } else if (currentPath.includes("teams")) {
+      console.log("Viendo hasta un par de equipos")
+
+      setPathPage("teams");
+      setSelectedSeasons(completeListCurrentSeason);
+    } else {
+      setPathPage("home");
+      if (someProp === "allTeams" && listAllCurrentSeason.length > 0) {
+        console.log("Viendo todas las ligas")
+        setUpdatedListSeasonTeam1(true);
+        const seasonsArray = listAllCurrentSeason
+          ?.join(",")
+          ?.split(",")
+          .map((season) => season.trim());
+        setSelectedSeasons(seasonsArray);
+      }
+    }
+
+    }, [
+      seasonId,
+      completeListCurrentSeason,
+      listAllCurrentSeason,
+      someProp,
+      ]);
   useEffect(() => {
     if (!idAwayTeam) {
       setSingleTeam(idTeam);
@@ -126,30 +160,29 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
     }
   }, [idTeam, idAwayTeam]);
 
+  // useEffect(() => {
+  //   // Parse listCurrentSeason to an array of seasons if it's not empty
+  //   if (updatedListSeasonTeam1) {
+  //     return;
+  //   }
 
-  useEffect(() => {
-    // Parse listCurrentSeason to an array of seasons if it's not empty
-    if (updatedListSeasonTeam1) {
-      return;
-    }
-    if (someProp === "allTeams" && listAllCurrentSeason.length >0) {
-      setUpdatedListSeasonTeam1(true);
-      console.log("listAllCurrentSeason",listAllCurrentSeason)
-      const seasonsArray = listAllCurrentSeason?.join(",")
-        ?.split(",")
-        .map((season) => season.trim());
-      setSelectedSeasons(seasonsArray);
-    } else if (idTeam) {
-      // const array =completeListCurrentSeason?.split(",")
-      setSelectedSeasons(completeListCurrentSeason);
-    }
-  }, [
-    
-    completeListCurrentSeason,
-    idTeam,
-    updatedListSeasonTeam1,
-    someProp,listAllCurrentSeason
-  ]);
+  //   if (someProp === "allTeams" && listAllCurrentSeason.length >0) {
+  //     setUpdatedListSeasonTeam1(true);
+  //     const seasonsArray = listAllCurrentSeason?.join(",")
+  //       ?.split(",")
+  //       .map((season) => season.trim());
+  //     setSelectedSeasons(seasonsArray);
+  //   } else if (idTeam) {
+  //     // const array =completeListCurrentSeason?.split(",")
+  //     setSelectedSeasons(completeListCurrentSeason);
+  //   }
+  // }, [
+
+  //   completeListCurrentSeason,
+  //   idTeam,
+  //   updatedListSeasonTeam1,
+  //   someProp,listAllCurrentSeason
+  // ]);
 
   useEffect(() => {
     // Parse listCurrentSeason to an array of seasons if it's not empty
@@ -162,8 +195,9 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
   }, [idTeamSecondTeam, completeListCurrentSeason2, updatedListSeasonTeam2]);
 
   useEffect(() => {
+    //Obtencion de estadisticas para una season
+
     if (seasonId && !listCurrentSeason && shouldFetch) {
-      console.log("CACA3");
       const loadStats = async () => {
         try {
           const data = await fetchTeamStats(
@@ -192,11 +226,14 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
     listCurrentSeason,
   ]);
   useEffect(() => {
-    if (someProp === "allTeams") {
-      console.log("CACA PADRE");
+    //Obtencion de estadisticas para todas las temporadas actuales (Home en este momento)
+    console.log("Stats Home", pathPage)
+    if (pathPage === "home") {
       const loadStats = async () => {
         try {
-          const selectedSeasonsString = selectedSeasons.join(",") ? selectedSeasons.join(",") :listAllCurrentSeason.join(",") ;
+          const selectedSeasonsString = selectedSeasons.join(",")
+            ? selectedSeasons.join(",")
+            : listAllCurrentSeason.join(",");
           const data = await fetchTeamStats(
             selectedSeasonsString,
             homeOnly,
@@ -214,6 +251,7 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
       loadStats();
     }
   }, [
+    pathPage,
     listCurrentSeason,
     selectedSeasons,
     homeOnly,
@@ -228,8 +266,9 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
 
   useEffect(() => {
     if (idTeam !== undefined && shouldFetch) {
+      console.log("Stats idTeam", idTeam)
+
       const loadStats = async () => {
-        console.log("CACA2");
         try {
           const a = await getLocalTeamStats({
             season: selectedSeasons.join(","),
@@ -292,7 +331,6 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
   const handleHomeOnlyChange = (event) => {
     setHomeOnly(event.target.checked);
   };
-  console.log("seasonId", seasonId);
   const handleAwayOnlyChange = (event) => {
     setAwayOnly(event.target.checked);
   };
@@ -359,6 +397,7 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
         idTeam={idTeam}
         positionFilter={positionFilterTeam1}
         handlePositionFilterChange={handlePositionFilterChangeTeam1}
+        pathPage={pathPage}
       />
       {someProp !== "allTeams" && (
         <Box
@@ -522,8 +561,19 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
             setError={setError}
           ></RangePercentageTable>
         ))}
-      {activeTab === 1 && (
-        <TableAllTeamSeason idHomeTeam={idTeam} idAwayTeam={idAwayTeam}  seasonId={selectedSeasons}/>
+      {activeTab === 1 && pathPage === "teams" && (
+        <TableAllTeamSeason
+          idHomeTeam={idTeam}
+          idAwayTeam={idAwayTeam}
+          seasonId={selectedSeasons}
+        />
+      )}
+      {activeTab === 1 && pathPage === "league" && (
+        <TableAllTeamSeason
+          idHomeTeam={idTeam}
+          idAwayTeam={idAwayTeam}
+          seasonId={seasonId}
+        />
       )}
       {idTeam && (
         <ShowStatisticsMatches
