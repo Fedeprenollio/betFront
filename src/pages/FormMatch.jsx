@@ -71,6 +71,7 @@ const FormMatch = ({ matchId }) => {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [severity, setSeverity] = useState("");
   const [msgAlert, setMsgAlert] = useState("");
+  const [selectedTeams, setSelectedTeams] = useState([]); // Estado para equipos seleccionados
 
   useEffect(() => {
     fetchLeagues();
@@ -116,6 +117,15 @@ const FormMatch = ({ matchId }) => {
         ...presState,
         response.populatedMatches,
       ]);
+
+        // Añadir equipos seleccionados a la lista de equipos seleccionados
+        setSelectedTeams((prev) => [
+          ...prev,
+          values.homeTeam,
+          values.awayTeam,
+        ]);
+
+
       if (response?.state === "ok") {
         setSeverity("success");
         setMsgAlert("Partido creado exitosamente");
@@ -151,6 +161,9 @@ const FormMatch = ({ matchId }) => {
   const handleLeagueChange = (event) => {
     setSelectedLeague(event.target.value);
   };
+  const availableTeams = seasonById?.season?.teams?.filter(
+    (team) => !selectedTeams.includes(team._id)
+  );
 
   return (
     <>
@@ -282,7 +295,8 @@ const FormMatch = ({ matchId }) => {
               margin="normal"
             >
               {selectedLeague &&
-                seasonById?.season?.teams
+                // seasonById?.season?.teams
+                availableTeams
                   ?.slice()
                   ?.sort((a, b) => a.name.localeCompare(b.name)) // Ordenar alfabéticamente
                   ?.map((team) => {
@@ -305,7 +319,8 @@ const FormMatch = ({ matchId }) => {
               margin="normal"
             >
               {selectedLeague &&
-                seasonById?.season?.teams
+                // seasonById?.season?.teams
+                availableTeams
                   ?.slice()
                   ?.sort((a, b) => a.name.localeCompare(b.name)) // Ordenar alfabéticamente
                   ?.map((team) => {
@@ -328,7 +343,7 @@ const FormMatch = ({ matchId }) => {
             <ErrorMessage name="date" component="div" />
 
             <Button type="submit" variant="contained" color="primary">
-              Submit
+              Crear partido
             </Button>
             <AlertDialogCopy
               open={openAddTeamsDialog}
