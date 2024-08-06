@@ -599,6 +599,14 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
           idAwayTeam={idAwayTeam}
           seasonId={seasonId}
           //PROBANDO:
+          homeOnly={homeOnly}
+          awayOnly={awayOnly}
+          awayOnlySecondTeamComparative={awayOnlySecondTeamComparative}
+          homeOnlySecondTeamComparative={homeOnlySecondTeamComparative}
+          setAwayOnly={setAwayOnly}
+          setHomeOnly={setHomeOnly}
+          setAwayOnlySecondTeamComparative={setAwayOnlySecondTeamComparative}
+          setHomeOnlySecondTeamComparative={setHomeOnlySecondTeamComparative}
         />
       )}
       {idTeam && (

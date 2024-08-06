@@ -160,7 +160,7 @@ export const SelectListCurrentSeasons = ({
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={selectedSeasons.includes(season._id)}
+                    checked={selectedSeasons?.includes(season._id)}
                     onChange={handleChange}
                     name={season._id}
                   />

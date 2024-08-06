@@ -229,9 +229,9 @@ export const TableAllTeamSeason = ({
   //   setHomeOnly(event.target.checked);
   // };
 
-  const handleAwayOnlyChange = (event) => {
-    setAwayOnly(event.target.checked);
-  };
+  // const handleAwayOnlyChange = (event) => {
+  //   setAwayOnly(event.target.checked);
+  // };
 
   const handleHomeOnlyChangeSecondTeam = (event) => {
     setHomeOnlySecondTeamComparative(event.target.checked);
@@ -258,7 +258,7 @@ export const TableAllTeamSeason = ({
         homeOnly={homeOnly}
         awayOnly={awayOnly}
         // handleHomeOnlyChange={handleHomeOnlyChange}
-        handleAwayOnlyChange={handleAwayOnlyChange}
+        // handleAwayOnlyChange={handleAwayOnlyChange}
       />
       {/* {idAwayTeam && (
         <FilterComponentModal
