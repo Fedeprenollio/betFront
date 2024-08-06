@@ -66,7 +66,7 @@ export const TableAllTeamSeason = ({
   // const [homeOnly, setHomeOnly] = useState(true);
   // const [awayOnly, setAwayOnly] = useState(true);
   const [matchType, setMatchType] = useState("both");
-  console.log("idHomeTeam", idHomeTeam);
+  console.log("teamStatsForSeason", teamStatsForSeason);
   useEffect(() => {
     if (homeOnly && awayOnly) {
       setMatchType("both");

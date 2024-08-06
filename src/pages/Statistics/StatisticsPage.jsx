@@ -60,7 +60,7 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
     getAllCurrentSeasons();
   }, [getAllCurrentSeasons]);
 
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState(1);
   const [singleTeam, setSingleTeam] = useState(null);
   const [updatedListSeasonTeam1, setUpdatedListSeasonTeam1] = useState(false);
   const [updatedListSeasonTeam2, setUpdatedListSeasonTeam2] = useState(false);
@@ -608,6 +608,22 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
           idHomeTeam={idTeam}
           idAwayTeam={idAwayTeam}
           seasonId={seasonId}
+          //PROBANDO:
+          homeOnly={homeOnly}
+          awayOnly={awayOnly}
+          awayOnlySecondTeamComparative={awayOnlySecondTeamComparative}
+          homeOnlySecondTeamComparative={homeOnlySecondTeamComparative}
+          setAwayOnly={setAwayOnly}
+          setHomeOnly={setHomeOnly}
+          setAwayOnlySecondTeamComparative={setAwayOnlySecondTeamComparative}
+          setHomeOnlySecondTeamComparative={setHomeOnlySecondTeamComparative}
+        />
+      )}
+       {activeTab === 1 && pathPage === "home" && (
+        <TableAllTeamSeason
+          idHomeTeam={idTeam}
+          idAwayTeam={idAwayTeam}
+          seasonId={selectedSeasons}
           //PROBANDO:
           homeOnly={homeOnly}
           awayOnly={awayOnly}
