@@ -11,6 +11,8 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
+import dayjs from 'dayjs';
+
 import { BACKEND_URL_BASE } from '../../stores/url_base';
 
 export const ListMatchesCreates = ({ listMatchesCreated,setListMatchesCreated }) => {
@@ -21,7 +23,7 @@ export const ListMatchesCreates = ({ listMatchesCreated,setListMatchesCreated })
        console.log("RESPONSED DELETE", response.data)
     }
 
-
+console.log("listMatchesCreated",listMatchesCreated)
   return (
     <Box sx={{ width: '100%', bgcolor: 'background.paper', marginTop: 2 }}>
       <Typography variant="h6" gutterBottom>
@@ -46,7 +48,7 @@ export const ListMatchesCreates = ({ listMatchesCreated,setListMatchesCreated })
                 secondary={
                   <>
                     <Typography component="span" variant="body2" color="text.primary">
-                      Fecha: {match.round} | Liga: {match.league.name} | Temporada: {match.seasonYear.year}
+                      Fecha: {match.round} | Día: {dayjs(match.date).format('DD/MM/YYYY')} | Liga: {match.league.name} | Temporada: {match.seasonYear.year} 
                     </Typography>
                   </>
                 }

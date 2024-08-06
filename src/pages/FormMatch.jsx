@@ -114,8 +114,8 @@ const FormMatch = ({ matchId }) => {
       });
       console.log(response); // handle response from adding matches
       setListMatchesCreated((presState) => [
-        ...presState,
         response.populatedMatches,
+        ...presState,
       ]);
 
         // Añadir equipos seleccionados a la lista de equipos seleccionados
