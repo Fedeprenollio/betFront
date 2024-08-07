@@ -73,7 +73,22 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
     setPositionFilterTeam2(event);
   };
   const [shouldFetch, setShouldFetch] = useState(true);
-  const [selectedSeasons, setSelectedSeasons] = useState([]);
+  const initialStateSelectedSeason = () => {
+    if (someProp === "allTeams" && listAllCurrentSeason.length > 0) {
+      console.log("Viendo todas las ligas");
+      setUpdatedListSeasonTeam1(true);
+      const seasonsArray = listAllCurrentSeason
+        ?.join(",")
+        ?.split(",")
+        .map((season) => season.trim());
+      return seasonsArray || []
+    } else {
+      return seasonId || []
+    }
+  };
+  const [selectedSeasons, setSelectedSeasons] = useState(() =>
+    initialStateSelectedSeason()
+  );
   const [selectedSeasonsSecondTeam, setSelectedSeasonsSecondTeam] = useState(
     []
   );
@@ -136,17 +151,18 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
       setSelectedSeasons(completeListCurrentSeason);
     } else {
       setPathPage("home");
-      if (someProp === "allTeams" && listAllCurrentSeason.length > 0) {
-        console.log("Viendo todas las ligas");
-        setUpdatedListSeasonTeam1(true);
-        const seasonsArray = listAllCurrentSeason
-          ?.join(",")
-          ?.split(",")
-          .map((season) => season.trim());
-        setSelectedSeasons(seasonsArray);
-      }
+      // if (someProp === "allTeams" && listAllCurrentSeason.length > 0) {
+      //   console.log("Viendo todas las ligas");
+      //   setUpdatedListSeasonTeam1(true);
+      //   const seasonsArray = listAllCurrentSeason
+      //     ?.join(",")
+      //     ?.split(",")
+      //     .map((season) => season.trim());
+      //   setSelectedSeasons(seasonsArray);
+      // }
     }
-  }, [seasonId, completeListCurrentSeason, listAllCurrentSeason, someProp]);
+  }, []);
+
   useEffect(() => {
     if (!idAwayTeam) {
       setSingleTeam(idTeam);
@@ -222,7 +238,7 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
   ]);
   useEffect(() => {
     //Obtencion de estadisticas para todas las temporadas actuales (Home en este momento)
-    console.log("Stats Home", pathPage);
+    console.log("Stats Home", selectedSeasons);
     if (pathPage === "home") {
       const loadStats = async () => {
         try {
@@ -412,30 +428,30 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
             />
           </Box>
         </Paper>
-      ):
-      <FilterComponent
-      filterName={["local/visitor", "MatchesCountInput"]}
-      homeOnly={homeOnly}
-      awayOnly={awayOnly}
-      handleHomeOnlyChange={handleHomeOnlyChange}
-      handleAwayOnlyChange={handleAwayOnlyChange}
-      inputMatchesCount={inputMatchesCount}
-      handleInputMatchesCountChange={handleInputMatchesCountChange}
-      handleIncludeAllSeasonMatches={handleIncludeAllSeasonMatches}
-      updateMatchesCount={updateMatchesCount}
-      updateIncludeOtherSeasons={updateIncludeOtherSeasons}
-      inputChekBoxIncludeAllSeason={inputChekBoxIncludeAllSeason}
-      handleFilterChange={handleFilterChange}
-      listCurrentSeason={completeListCurrentSeason}
-      selectedSeasons={selectedSeasons}
-      handleSeasonChange={handleSeasonChange}
-      idTeam={idTeam}
-      positionFilter={positionFilterTeam1}
-      handlePositionFilterChange={handlePositionFilterChangeTeam1}
-      pathPage={pathPage}
-      //Para la tabla de estadisticas no porcentuales
-    />
-      }
+      ) : (
+        <FilterComponent
+          filterName={["local/visitor", "MatchesCountInput"]}
+          homeOnly={homeOnly}
+          awayOnly={awayOnly}
+          handleHomeOnlyChange={handleHomeOnlyChange}
+          handleAwayOnlyChange={handleAwayOnlyChange}
+          inputMatchesCount={inputMatchesCount}
+          handleInputMatchesCountChange={handleInputMatchesCountChange}
+          handleIncludeAllSeasonMatches={handleIncludeAllSeasonMatches}
+          updateMatchesCount={updateMatchesCount}
+          updateIncludeOtherSeasons={updateIncludeOtherSeasons}
+          inputChekBoxIncludeAllSeason={inputChekBoxIncludeAllSeason}
+          handleFilterChange={handleFilterChange}
+          listCurrentSeason={completeListCurrentSeason}
+          selectedSeasons={selectedSeasons}
+          handleSeasonChange={handleSeasonChange}
+          idTeam={idTeam}
+          positionFilter={positionFilterTeam1}
+          handlePositionFilterChange={handlePositionFilterChangeTeam1}
+          pathPage={pathPage}
+          //Para la tabla de estadisticas no porcentuales
+        />
+      )}
 
       {idTeamSecondTeam && (
         <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
@@ -553,11 +569,10 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
             setStats={setStats}
             setLoading={setLoading}
             setError={setError}
-            setOrder={setOrder} 
+            setOrder={setOrder}
             order={order}
-             setOrderBy={setOrderBy}
-             orderBy={orderBy}
-          
+            setOrderBy={setOrderBy}
+            orderBy={orderBy}
           />
         ) : (
           <RangePercentageTable
@@ -581,10 +596,10 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
             setStats={setStats}
             setLoading={setLoading}
             setError={setError}
-            setOrder={setOrder} 
+            setOrder={setOrder}
             order={order}
-             setOrderBy={setOrderBy}
-             orderBy={orderBy}
+            setOrderBy={setOrderBy}
+            orderBy={orderBy}
           ></RangePercentageTable>
         ))}
       {activeTab === 1 && pathPage === "teams" && (
@@ -619,7 +634,7 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
           setHomeOnlySecondTeamComparative={setHomeOnlySecondTeamComparative}
         />
       )}
-       {activeTab === 1 && pathPage === "home" && (
+      {activeTab === 1 && pathPage === "home" && (
         <TableAllTeamSeason
           idHomeTeam={idTeam}
           idAwayTeam={idAwayTeam}

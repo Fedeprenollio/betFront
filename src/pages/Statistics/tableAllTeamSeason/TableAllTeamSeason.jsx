@@ -21,7 +21,6 @@ import { FilterComponentModal } from "./FilterComponentModal";
 import HelpIconWithModal from "../../../componts/helpIconWithModal/HelpIconWithModal";
 import { exportToExcel } from "./exportToExcel";
 import { tableHelpContent } from "./TableHelpContent";
-import { useFilters } from "../../../customHooks/useFilters";
 
 export const TableAllTeamSeason = ({
   idHomeTeam,
@@ -32,8 +31,6 @@ export const TableAllTeamSeason = ({
   awayOnly,
   awayOnlySecondTeamComparative,
   homeOnlySecondTeamComparative,
-  setAwayOnly,
-  setHomeOnly,
   setAwayOnlySecondTeamComparative,
   setHomeOnlySecondTeamComparative,
 }) => {
@@ -84,6 +81,7 @@ export const TableAllTeamSeason = ({
         teamFilters,
       });
     } else {
+      console.log("NO deberia primer")
       getTeamStatsForSeason({ seasonId, matchType });
     }
   }, [
@@ -138,6 +136,7 @@ export const TableAllTeamSeason = ({
   ]);
 
   useEffect(() => {
+    console.log("NO DEBERIA RENDERIZAR",idHomeTeam)
     if (idHomeTeam) {
       setListTeams(teamStatsForTwoTeam);
     } else {

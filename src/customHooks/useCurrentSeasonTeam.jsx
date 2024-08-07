@@ -24,6 +24,7 @@ export const useCurrentSeasonTeam = (idTeam) => {
       const filteredCurrentSeasonTeam = data.filter((season) =>
         season.teams.some((team) => team === idTeam)
       );
+    console.log("dataaa", filteredCurrentSeasonTeam)
       setcurrentSeasonTeam(filteredCurrentSeasonTeam);
       const list = filteredCurrentSeasonTeam.map((season) => season._id);
       setCompleteListCurrentSeason(list.toString().split(","));
