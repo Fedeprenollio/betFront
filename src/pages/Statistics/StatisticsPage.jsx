@@ -30,7 +30,7 @@ export const fetchTeamStats = async (
 
 export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
   const { idHomeTeam: idTeam, idAwayTeam, seasonId } = useParams();
-  const { completeListCurrentSeason } = useCurrentSeasonTeam(idTeam);
+  const { completeListCurrentSeason,currentSeasonTeam } = useCurrentSeasonTeam(idTeam);
   const {
     homeOnly,
     setHomeOnly,
@@ -73,25 +73,25 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
     setPositionFilterTeam2(event);
   };
   const [shouldFetch, setShouldFetch] = useState(true);
-  const initialStateSelectedSeason = () => {
-    if (someProp === "allTeams" && listAllCurrentSeason.length > 0) {
-      console.log("Viendo todas las ligas");
-      setUpdatedListSeasonTeam1(true);
-      const seasonsArray = listAllCurrentSeason
-        ?.join(",")
-        ?.split(",")
-        .map((season) => season.trim());
-      return seasonsArray || []
-    } else {
-      return seasonId || []
-    }
-  };
-  const [selectedSeasons, setSelectedSeasons] = useState(() =>
-    initialStateSelectedSeason()
-  );
+  // const initialStateSelectedSeason = () => {
+  //   if (someProp === "allTeams") {
+  //     setUpdatedListSeasonTeam1(true);
+
+  //     const seasonsArray = listAllCurrentSeason
+  //       ?.join(",")
+  //       ?.split(",")
+  //       .map((season) => season.trim());
+  //     return seasonsArray || []
+  //   } else {
+  //     return seasonId || []
+  //   }
+  // };
+  const [selectedSeasons, setSelectedSeasons] = useState([]  );
   const [selectedSeasonsSecondTeam, setSelectedSeasonsSecondTeam] = useState(
     []
   );
+  console.log("CACA",listAllCurrentSeason)
+
   const [includeAllSeasonMatches, setIncludeAllSeasonMatches] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -137,6 +137,7 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
   const [pathPage, setPathPage] = useState("");
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("team.country");
+  const [isSelectedEditedSeasons, setIsSelectedEditedSeasons] = useState(false)
   useEffect(() => {
     // Extract the last part of the pathname to determine the active tab
     const currentPath = location.pathname;
@@ -151,17 +152,19 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
       setSelectedSeasons(completeListCurrentSeason);
     } else {
       setPathPage("home");
-      // if (someProp === "allTeams" && listAllCurrentSeason.length > 0) {
-      //   console.log("Viendo todas las ligas");
-      //   setUpdatedListSeasonTeam1(true);
-      //   const seasonsArray = listAllCurrentSeason
-      //     ?.join(",")
-      //     ?.split(",")
-      //     .map((season) => season.trim());
-      //   setSelectedSeasons(seasonsArray);
-      // }
+      if(isSelectedEditedSeasons)  return
+      if (someProp === "allTeams" && listAllCurrentSeason.length > 0) {
+        setIsSelectedEditedSeasons(true)
+        console.log("caca 2",listAllCurrentSeason);
+        setUpdatedListSeasonTeam1(true);
+        const seasonsArray = listAllCurrentSeason
+          ?.join(",")
+          ?.split(",")
+          .map((season) => season.trim());
+        setSelectedSeasons(seasonsArray);
+      }
     }
-  }, []);
+  }, [listAllCurrentSeason,isSelectedEditedSeasons]);
 
   useEffect(() => {
     if (!idAwayTeam) {
