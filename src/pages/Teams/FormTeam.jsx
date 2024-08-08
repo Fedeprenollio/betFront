@@ -63,12 +63,13 @@ const FormTeam = () => {
 
   
   const handleSubmit = (values) => {
+    console.log("value form",values)
     if (idTeam) {
       updateTeam(idTeam, values);
     } else {
-      newTeam(values);
+      newTeam({values});
     }
-    navigate('/teams');
+    // navigate('/teams');
   };
 
   const handleCountryChange = (e) => {
