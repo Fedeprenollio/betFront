@@ -30,6 +30,7 @@ const createTeamStore = (set, get) => ({
   // Nuevo selector para obtener los detalles de un equipo específico
   teamDetailsSelector: (teamId) => (state) => state.teamDetails[teamId],
   newTeam: async ({ values }) => {
+    console.log("values", values)
     const { name, city, league, country } = values;
     const token = get().token; 
     const config = {

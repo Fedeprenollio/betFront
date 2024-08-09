@@ -33,116 +33,137 @@ export const TableAllTeamSeason = ({
   homeOnlySecondTeamComparative,
   setAwayOnlySecondTeamComparative,
   setHomeOnlySecondTeamComparative,
+  setSelectedTeams,
+  selectedTeams,
+  listTeams,
 }) => {
   // const{ homeOnly, awayOnly, awayOnlySecondTeamComparative, homeOnlySecondTeamComparative , setAwayOnly, setHomeOnly, setAwayOnlySecondTeamComparative, setHomeOnlySecondTeamComparative} = useFilters()
-  const [teamFilters, setTeamFilters] = useState([
-    {
-      teamId: idHomeTeam,
-      matchType: "both",
-      matchesCount: 10,
-      positions: "1-50",
-    },
-    {
-      teamId: idAwayTeam,
-      matchType: "both",
-      matchesCount: 10,
-      positions: "1-50",
-    },
-  ]);
+  // const [teamFilters, setTeamFilters] = useState([
+  //   {
+  //     teamId: idHomeTeam,
+  //     matchType: "both",
+  //     matchesCount: 10,
+  //     positions: "1-50",
+  //   },
+  //   {
+  //     teamId: idAwayTeam,
+  //     matchType: "both",
+  //     matchesCount: 10,
+  //     positions: "1-50",
+  //   },
+  // ]);
 
   // const { seasonId } = useParams();
-  const {
-    getTeamStatsForSeason,
-    teamStatsForSeason,
-    getTeamStatsForTwoTeam,
-    teamStatsForTwoTeam,
-  } = useBoundStore((state) => state);
+  // const {
+  //   getTeamStatsForSeason,
+  //   teamStatsForSeason,
+  //   getTeamStatsForTwoTeam,
+  //   teamStatsForTwoTeam,
+  // } = useBoundStore((state) => state);
 
-  const [listTeams, setListTeams] = useState([]);
-  const [selectedTeams, setSelectedTeams] = useState([]); // Estado para los equipos seleccionados
+  // const [listTeams, setListTeams] = useState([]);
+  // const [selectedTeams, setSelectedTeams] = useState([]); // Estado para los equipos seleccionados
   // const [homeOnly, setHomeOnly] = useState(true);
   // const [awayOnly, setAwayOnly] = useState(true);
-  const [matchType, setMatchType] = useState("both");
-  console.log("teamStatsForSeason", teamStatsForSeason);
-  useEffect(() => {
-    if (homeOnly && awayOnly) {
-      setMatchType("both");
-    } else if (!homeOnly && awayOnly) {
-      setMatchType("away");
-    } else if (homeOnly && !awayOnly) {
-      setMatchType("home");
-    } else {
-      setMatchType("both");
-    }
-    if (idHomeTeam) {
-      console.log("seasonId,teamFilters",seasonId, teamFilters )
-      getTeamStatsForTwoTeam({
-        seasonId,
-        teamFilters,
-      });
-    } else {
-      console.log("NO deberia primer")
-      getTeamStatsForSeason({ seasonId, matchType });
-    }
-  }, [
-    seasonId,
-    getTeamStatsForSeason,
-    matchType,
-    homeOnly,
-    awayOnly,
-    idHomeTeam,
-    getTeamStatsForTwoTeam,
-    teamFilters,
-  ]);
+  // const [matchType, setMatchType] = useState("both");
+  console.log("listTeams",listTeams);
+  // useEffect(() => {
+  //   // if (homeOnly && awayOnly) {
+  //   //   setMatchType("both");
+  //   // } else if (!homeOnly && awayOnly) {
+  //   //   setMatchType("away");
+  //   // } else if (homeOnly && !awayOnly) {
+  //   //   setMatchType("home");
+  //   // } else {
+  //   //   setMatchType("both");
+  //   // }
+  //   if (idHomeTeam) {
+  //     console.log("seasonId,teamFilters",seasonId, teamFilters )
+  //     getTeamStatsForTwoTeam({
+  //       seasonId,
+  //       teamFilters,
+  //     });
+  //   } else {
+  //     getTeamStatsForSeason({ seasonId, matchType });
+  //   }
+  // }, [
+  //   seasonId,
+  //   getTeamStatsForSeason,
+  //   matchType,
+  //   homeOnly,
+  //   awayOnly,
+  //   idHomeTeam,
+  //   getTeamStatsForTwoTeam,
+  //   teamFilters,
+  // ]);
 
-  // Update teamFilters when conditions change
-  useEffect(() => {
-    const updatedTeamFilters = teamFilters.map((filter) => {
-      if (filter.teamId === idHomeTeam) {
-        return {
-          ...filter,
-          matchType: homeOnly
-            ? awayOnly
-              ? "both"
-              : "home"
-            : awayOnly
-            ? "away"
-            : "both",
-        };
-      }
-      if (filter.teamId === idAwayTeam) {
-        return {
-          ...filter,
-          matchType: homeOnlySecondTeamComparative
-            ? awayOnlySecondTeamComparative
-              ? "both"
-              : "home"
-            : awayOnlySecondTeamComparative
-            ? "away"
-            : "both",
-        };
-      }
-      return filter;
-    });
-    console.log("updatedTeamFilters",updatedTeamFilters,"+++",idAwayTeam)
-    setTeamFilters(updatedTeamFilters);
-  }, [
-    homeOnly,
-    awayOnly,
-    homeOnlySecondTeamComparative,
-    awayOnlySecondTeamComparative,
-    idAwayTeam,
-    idHomeTeam,
-  ]);
+//   // Update teamFilters when conditions change
+//   useEffect(() => {
+//     const updatedTeamFilters = teamFilters.map((filter) => {
+//       console.log("updatedTeamFilters",filter,"===",idHomeTeam)
 
-  useEffect(() => {
-    console.log("NO DEBERIA RENDERIZAR",idHomeTeam)
-    if (idHomeTeam) {
-      setListTeams(teamStatsForTwoTeam);
-    } else {
-      setListTeams(teamStatsForSeason);
-    }
-  }, [teamStatsForSeason, teamStatsForTwoTeam, idHomeTeam]);
+//       if (filter.teamId === idHomeTeam) {
+//         return {
+//           ...filter,
+//           matchType: homeOnly
+//             ? awayOnly
+//               ? "both"
+//               : "home"
+//             : awayOnly
+//             ? "away"
+//             : "both",
+//         };
+//       }
+//       if (filter.teamId === idAwayTeam) {
+//         return {
+//           ...filter,
+//           matchType: homeOnlySecondTeamComparative
+//             ? awayOnlySecondTeamComparative
+//               ? "both"
+//               : "home"
+//             : awayOnlySecondTeamComparative
+//             ? "away"
+//             : "both",
+//         };
+//       }
+//       return filter;
+//     });
+//     console.log("updatedTeamFilters",updatedTeamFilters,"+++",idHomeTeam)
+//     setTeamFilters(updatedTeamFilters);
+//   }, [
+//     homeOnly,
+//     awayOnly,
+//     homeOnlySecondTeamComparative,
+//     awayOnlySecondTeamComparative,
+//     idAwayTeam,
+//     idHomeTeam,
+//   ]);
+//  // Nuevo useEffect para actualizar teamFilters cuando cambien idHomeTeam o idAwayTeam
+//  useEffect(() => {
+//   setTeamFilters([
+//     {
+//       teamId: idHomeTeam,
+//       matchType: "both",
+//       matchesCount: 10,
+//       positions: "1-50",
+//     },
+//     {
+//       teamId: idAwayTeam,
+//       matchType: "both",
+//       matchesCount: 10,
+//       positions: "1-50",
+//     },
+//   ]);
+//   console.log("RECalculando")
+// }, [idHomeTeam, idAwayTeam]);
+//   useEffect(() => {
+//     if (idHomeTeam) {
+//       setListTeams(teamStatsForTwoTeam);
+//       console.log("SI DEBERIA RENDERIZAR",teamStatsForTwoTeam)
+//     } else {
+//       setListTeams(teamStatsForSeason);
+//     }
+//   }, [teamStatsForSeason, teamStatsForTwoTeam, idHomeTeam]);
 
   const [orderBy, setOrderBy] = useState("teamName");
   const [order, setOrder] = useState("asc");
@@ -221,7 +242,7 @@ export const TableAllTeamSeason = ({
     setSelectedTeams(names.flat()); // Actualiza los equipos seleccionados
   };
   const filteredTeams =
-    selectedTeams.length > 0
+    selectedTeams?.length > 0
       ? listTeams.filter((team) => selectedTeams.includes(team.teamName))
       : listTeams;
   // const handleHomeOnlyChange = (event) => {
@@ -579,7 +600,7 @@ export const TableAllTeamSeason = ({
             </TableHead>
 
             <TableBody>
-              {filteredTeams.map((team, rowIndex) => (
+              {filteredTeams?.map((team, rowIndex) => (
                 <TableRow key={team.teamId}>
                   <TableCell
                     style={{

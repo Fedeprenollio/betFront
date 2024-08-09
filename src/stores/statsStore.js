@@ -32,6 +32,8 @@ const createTeamStatsStore = (set) => ({
   visitorMatches: [],
   localTeamPercentageStatistics:[],
   visitorTeamPercentageStatistics:[],
+  localTeamStatistics:[],
+  visitorTeamStatistics:[],
 
   teamStatsForSeason: [],
   teamStatsForTwoTeam: [],
@@ -314,14 +316,25 @@ console.log("STATS HOMETeam", homeShots)
     const teamStats = response.data
     console.log("seasonId store",seasonId, "+++", teamStats)
     set({ teamStatsForSeason: teamStats });
+    return teamStats
   },
-  getTeamStatsForTwoTeam: async ({ seasonId,teamFilters  }) => {
-    const response = await axios.post(`${URL_API_STATS_TWO_TEAM}/${seasonId}`,teamFilters );
-    const teamStats = response.data
-    console.log("teamStats store",teamStats)
-    set({ teamStatsForTwoTeam: teamStats });
-  },
+  // getTeamStatsForTwoTeam: async ({ seasonId,teamFilters  }) => {
+  //   const response = await axios.post(`${URL_API_STATS_TWO_TEAM}/${seasonId}`,teamFilters );
+  //   const teamStats = response.data
+  //   console.log("teamStats store",seasonId)
+  //   set({ teamStatsForTwoTeam: teamStats });
+  // },
+clearStats : ()=>{
+  set({ teamStatsForSeason: [] });
+  set({ localMatches:[] });
+  set({localTeamPercentageStatistics:[]})
+  set({ visitorMatches:[]});
+  set({visitorTeamPercentageStatistics:[]})
+  set({localTeamStatistics:[]})
+  set({visitorTeamStatistics:[]})
 
+
+},
 
   getLocalTeamStats : async ({season, idTeam, homeOnly, awayOnly, matchesCount, includeAllSeasonMatches,position="false"} ) => {
     const response = await axios.get(
@@ -341,7 +354,27 @@ console.log("STATS HOMETeam", homeShots)
     set({visitorTeamPercentageStatistics: response?.data})
     return  response?.data
   },
-  crearVisitorTeamStats:()=>{
+
+
+  getLocalTeamMoreStats : async ({season, idTeam, homeOnly, awayOnly, matchesCount, includeAllSeasonMatches,position="false"} ) => {
+    const response = await axios.get(
+      `${BACKEND_URL_BASE}/team/more-stats/${idTeam}?season=${season}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}&position=${position}`
+    );
+    set({localTeamStatistics: response?.data})
+    console.log("response",response.data)
+    return  response?.data
+
+  },
+  getVisitorTeamMoreStats : async ({season=false, idTeam, homeOnly, awayOnly, matchesCount, includeAllSeasonMatches,position="false"} ) => {
+    const response = await axios.get(
+      `${BACKEND_URL_BASE}/team/more-stats/${idTeam}?season=${season}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}&position=${position}`
+    );
+    set({visitorTeamStatistics: response?.data})
+    return  response?.data
+  },
+
+
+  clearVisitorTeamStats:()=>{
     set({ visitorMatches:[] });
     set({visitorTeamPercentageStatistics: []})
   }

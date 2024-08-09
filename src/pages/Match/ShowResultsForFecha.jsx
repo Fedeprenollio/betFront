@@ -75,7 +75,9 @@ export const ShowResultsForFecha = () => {
 
   const handleOpenInNewTab = (match) => {
     const url = `/stats/${match.homeTeam._id}/${match.awayTeam._id}/${match._id}`;
-    window.open(url, '_blank', 'noopener,noreferrer');
+    // window.open(url, '_blank', 'noopener,noreferrer');
+         window.open(url, );
+
   };
   return (
     <>
