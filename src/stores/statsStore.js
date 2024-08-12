@@ -357,6 +357,7 @@ clearStats : ()=>{
 
 
   getLocalTeamMoreStats : async ({season, idTeam, homeOnly, awayOnly, matchesCount, includeAllSeasonMatches,position="false"} ) => {
+    console.log("matchesCount STORE",matchesCount)
     const response = await axios.get(
       `${BACKEND_URL_BASE}/team/more-stats/${idTeam}?season=${season}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}&position=${position}`
     );

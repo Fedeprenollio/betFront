@@ -23,7 +23,6 @@ import { ShowStatisticsMatches } from "../ShowStatisticsMatches";
 import { useCurrentSeasonTeam } from "../../../customHooks/useCurrentSeasonTeam";
 import { InfoFilterTeam } from "../../../componts/tableFilters/InfoFilterTeam";
 import { useFilters } from "../../../customHooks/useFilters";
-import { fetchTeamStats } from "../StatisticsPage";
 // import GroupByName from "./GroupByName";
 
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({

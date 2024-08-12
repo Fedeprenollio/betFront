@@ -25,7 +25,9 @@ export const FilterComponent = ({
     idTeam,
     positionFilter,
     handlePositionFilterChange,
-    pathPage
+    pathPage,
+    handleMatchesLimitChange,
+    matchesLimit
 }) => {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [expanded, setExpanded] = useState(false);
@@ -82,6 +84,8 @@ export const FilterComponent = ({
                                 listCurrentSeason={listCurrentSeason}
                                 handlePositionFilterChange={handlePositionFilterChange}
                                 positionFilter={positionFilter}
+                                handleMatchesLimitChange={handleMatchesLimitChange}
+                                matchesLimit={matchesLimit}
                             />
                         </AccordionDetails>
                     </Accordion>

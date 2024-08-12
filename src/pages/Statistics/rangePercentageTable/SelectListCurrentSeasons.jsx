@@ -122,6 +122,8 @@ export const SelectListCurrentSeasons = ({
   idTeam,
   handlePositionFilterChange,
   positionFilter,
+  handleMatchesLimitChange,
+  matchesLimit,
 }) => {
   const {
     getAllCurrentSeasons,
@@ -151,6 +153,9 @@ export const SelectListCurrentSeasons = ({
     const positionRange = `${values.startPosition}-${values.endPosition}`;
     handlePositionFilterChange(positionRange);
   };
+
+
+
 
   return (
     <FormControl component="fieldset">
@@ -219,6 +224,16 @@ export const SelectListCurrentSeasons = ({
           )}
         </Formik>
       )}
+       {/* Input para la cantidad de partidos */}
+       <Box mt={2}>
+        <TextField
+          label="Cantidad de partidos"
+          value={matchesLimit}
+          onChange={handleMatchesLimitChange}
+          variant="outlined"
+          fullWidth
+        />
+      </Box>
     </FormControl>
   );
 };

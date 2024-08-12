@@ -17,11 +17,12 @@ export const fetchTeamStats = async (
   seasonId,
   homeOnly,
   awayOnly,
-  matchesCount,
+  matchesLimit,
   includeAllSeasonMatches
 ) => {
+  console.log("matchesLimit", matchesLimit);
   const response = await axios.get(
-    `${BACKEND_URL_BASE}/match/stats?season=${seasonId}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}`
+    `${BACKEND_URL_BASE}/match/stats?season=${seasonId}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession&matchesCount=${matchesLimit}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}`
   );
   return response.data;
 };
@@ -59,7 +60,7 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
     teamStatsForSeason,
     // getTeamStatsForTwoTeam,
     teamStatsForTwoTeam,
-    clearStats
+    clearStats,
   } = useBoundStore((state) => state);
 
   const [stats, setStats] = useState([]);
@@ -84,25 +85,10 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
     setPositionFilterTeam2(event);
   };
   const [shouldFetch, setShouldFetch] = useState(true);
-  // const initialStateSelectedSeason = () => {
-  //   if (someProp === "allTeams") {
-  //     setUpdatedListSeasonTeam1(true);
-
-  //     const seasonsArray = listAllCurrentSeason
-  //       ?.join(",")
-  //       ?.split(",")
-  //       .map((season) => season.trim());
-  //     return seasonsArray || []
-  //   } else {
-  //     return seasonId || []
-  //   }
-  // };
   const [selectedSeasons, setSelectedSeasons] = useState([]);
   const [selectedSeasonsSecondTeam, setSelectedSeasonsSecondTeam] = useState(
     []
   );
-  console.log("CACA", listAllCurrentSeason);
-
   const [includeAllSeasonMatches, setIncludeAllSeasonMatches] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -152,8 +138,12 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
   const [matchType, setMatchType] = useState("both");
 
   const [selectedTeams, setSelectedTeams] = useState([]); // Estado para los equipos seleccionados
+  const [matchesLimit, setMatchesLimit] = useState(""); // Estado para la cantidad de partidos
+  const [matchesLimitSecondTeam, setMatchesLimitSecondTeam] = useState(""); // Estado para la cantidad de partidos
+
+
   useEffect(() => {
-       if (homeOnly && awayOnly) {
+    if (homeOnly && awayOnly) {
       setMatchType("both");
     } else if (!homeOnly && awayOnly) {
       setMatchType("away");
@@ -165,12 +155,9 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
     // Extract the last part of the pathname to determine the active tab
     const currentPath = location.pathname;
     if (currentPath.includes("league")) {
-      console.log("Viendo una Liga");
       setPathPage("league");
       setSelectedSeasons(seasonId);
-    } else if (currentPath.includes("teams")  || currentPath.includes("stats") ) {
-      console.log("Viendo hasta un par de equipos", completeListCurrentSeason);
-
+    } else if (currentPath.includes("teams") || currentPath.includes("stats")) {
       setPathPage("teams");
       setSelectedSeasons(completeListCurrentSeason);
     } else {
@@ -178,7 +165,6 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
       if (isSelectedEditedSeasons) return;
       if (someProp === "allTeams" && listAllCurrentSeason.length > 0) {
         setIsSelectedEditedSeasons(true);
-        console.log("caca 2", listAllCurrentSeason);
         setUpdatedListSeasonTeam1(true);
         const seasonsArray = listAllCurrentSeason
           ?.join(",")
@@ -190,7 +176,9 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
   }, [
     listAllCurrentSeason,
     isSelectedEditedSeasons,
-    completeListCurrentSeason,seasonId, someProp
+    completeListCurrentSeason,
+    seasonId,
+    someProp,
   ]);
 
   useEffect(() => {
@@ -234,23 +222,25 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
       setSelectedSeasonsSecondTeam(completeListCurrentSeason2);
     }
   }, [idTeamSecondTeam, completeListCurrentSeason2, updatedListSeasonTeam2]);
-console.log("teamStatsForSeason",teamStatsForSeason)
   useEffect(() => {
     //Obtencion de estadisticas para una season
 
     if (seasonId && !listCurrentSeason && shouldFetch) {
       const loadStats = async () => {
         try {
-          const moreStats = await  getTeamStatsForSeason({ seasonId, matchType });
+          const moreStats = await getTeamStatsForSeason({
+            seasonId,
+            matchType,
+          });
           const data = await fetchTeamStats(
             seasonId,
             homeOnly,
             awayOnly,
-            matchesCount,
+            matchesLimit,
             includeAllSeasonMatches
           );
           setStats(data);
-          setMoreStats(moreStats)
+          setMoreStats(moreStats);
           setLoading(false);
         } catch (err) {
           setError(err);
@@ -258,9 +248,6 @@ console.log("teamStatsForSeason",teamStatsForSeason)
         }
       };
       loadStats();
-    }
-    return ()=>{
-      clearStats()
     }
   }, [
     seasonId,
@@ -271,31 +258,33 @@ console.log("teamStatsForSeason",teamStatsForSeason)
     shouldFetch,
     listCurrentSeason,
     getTeamStatsForSeason,
-    matchType,clearStats
+    matchType,
+    clearStats,
+    matchesLimit,
   ]);
+  console.log("matchesLimit++", matchesLimit);
   useEffect(() => {
     //Obtencion de estadisticas para todas las temporadas actuales (Home en este momento)
     if (pathPage === "home") {
       const loadStats = async () => {
-        
         try {
-          console.log("Stats Home", seasonId);
-
-         
           const selectedSeasonsString = selectedSeasons.join(",")
             ? selectedSeasons.join(",")
             : listAllCurrentSeason.join(",");
-            const moreStats = await  getTeamStatsForSeason({ seasonId:selectedSeasonsString , matchType });
-            console.log("Stats Home", moreStats);
+          const moreStats = await getTeamStatsForSeason({
+            seasonId: selectedSeasonsString,
+            matchType,
+          });
+          console.log("Stats Home", moreStats);
           const data = await fetchTeamStats(
             selectedSeasonsString,
             homeOnly,
             awayOnly,
-            matchesCount,
+            matchesLimit,
             includeAllSeasonMatches
           );
           setStats(data);
-          setMoreStats(moreStats)
+          setMoreStats(moreStats);
           setLoading(false);
         } catch (err) {
           setError(err);
@@ -304,10 +293,11 @@ console.log("teamStatsForSeason",teamStatsForSeason)
       };
       loadStats();
     }
-    return ()=>{
-      clearStats()
-    }
+    return () => {
+      clearStats();
+    };
   }, [
+    matchesLimit,
     pathPage,
     listCurrentSeason,
     selectedSeasons,
@@ -319,10 +309,9 @@ console.log("teamStatsForSeason",teamStatsForSeason)
     idTeam,
     idAwayTeam,
     someProp,
-    clearStats
+    clearStats,
   ]);
   useEffect(() => {
-    
     if (idTeam !== undefined && shouldFetch) {
       console.log("Stats idTeam", idTeam);
       // if (idTeam) {
@@ -334,13 +323,12 @@ console.log("teamStatsForSeason",teamStatsForSeason)
       // }
       const loadStats = async () => {
         try {
-          console.log("selectedSeasons",selectedSeasons)
           const a = await getLocalTeamStats({
             season: selectedSeasons.join(","),
             idTeam,
             homeOnly,
             awayOnly,
-            matchesCount,
+            matchesCount: matchesLimit,
             includeAllSeasonMatches,
             position: positionFilterTeam1,
           });
@@ -350,7 +338,7 @@ console.log("teamStatsForSeason",teamStatsForSeason)
             idTeam,
             homeOnly,
             awayOnly,
-            matchesCount,
+            matchesCount: matchesLimit,
             includeAllSeasonMatches,
             position: positionFilterTeam1,
           });
@@ -362,7 +350,7 @@ console.log("teamStatsForSeason",teamStatsForSeason)
               idTeam: idTeamSecondTeam,
               homeOnly: homeOnlySecondTeamComparative,
               awayOnly: awayOnlySecondTeamComparative,
-              matchesCount: matchesCountSecondTeamComparative,
+              matchesCount: matchesLimitSecondTeam,
               includeAllSeasonMatches:
                 includeAllSeasonMatchesSecondTeamComparative,
             });
@@ -372,11 +360,11 @@ console.log("teamStatsForSeason",teamStatsForSeason)
               idTeam: idTeamSecondTeam,
               homeOnly: homeOnlySecondTeamComparative,
               awayOnly: awayOnlySecondTeamComparative,
-              matchesCount: matchesCountSecondTeamComparative,
+              matchesCount: matchesLimitSecondTeam,
               includeAllSeasonMatches:
                 includeAllSeasonMatchesSecondTeamComparative,
             });
-            console.log("moreStatsLocal",moreStatsLocal)
+            console.log("moreStatsLocal", moreStatsLocal);
             setStats([...a, b[0]]);
             setMoreStats([...moreStatsLocal, moreStatsVisitor[0]]);
           } else {
@@ -392,9 +380,6 @@ console.log("teamStatsForSeason",teamStatsForSeason)
       };
       loadStats();
     }
-    return ()=>{
-      clearStats()
-    }
   }, [
     clearStats,
     getLocalTeamMoreStats,
@@ -402,7 +387,7 @@ console.log("teamStatsForSeason",teamStatsForSeason)
     idTeam,
     homeOnly,
     awayOnly,
-    matchesCount,
+    matchesLimit,
     includeAllSeasonMatches,
     shouldFetch,
     getLocalTeamStats,
@@ -411,8 +396,7 @@ console.log("teamStatsForSeason",teamStatsForSeason)
     awayOnlySecondTeamComparative,
     includeAllSeasonMatchesSecondTeamComparative,
     getVisitorTeamStats,
-    matchesCountSecondTeamComparative,
-
+    matchesLimitSecondTeam,
     selectedSeasons,
     selectedSeasonsSecondTeam,
     positionFilterTeam1,
@@ -420,13 +404,11 @@ console.log("teamStatsForSeason",teamStatsForSeason)
     seasonId,
   ]);
 
-  console.log("moreStats", moreStats);
 
   useEffect(() => {
     if (idTeam) {
       // setListTeams(teamStatsForTwoTeam);
-      } else {
-      console.log("SI DEBERIA RENDERIZAR", teamStatsForTwoTeam);
+    } else {
       setMoreStats(teamStatsForSeason);
     }
   }, [teamStatsForSeason, teamStatsForTwoTeam, idTeam]);
@@ -482,6 +464,18 @@ console.log("teamStatsForSeason",teamStatsForSeason)
     }));
   };
 
+  const handleMatchesLimitChange = (event) => {
+    const value = event.target.value;
+    console.log("matchesLimit----", matchesLimit);
+    setMatchesLimit(value);
+    // Si quieres hacer algo con el valor (e.g., enviarlo al backend), puedes hacerlo aquí
+  };
+  const handleMatchesLimitChangeSecondTeam = (event) => {
+    const value = event.target.value;
+    console.log("matchesLimit second team----", matchesLimit);
+    setMatchesLimitSecondTeam(value);
+  };
+
   return (
     <>
       {someProp !== "allTeams" ? (
@@ -519,7 +513,8 @@ console.log("teamStatsForSeason",teamStatsForSeason)
               positionFilter={positionFilterTeam1}
               handlePositionFilterChange={handlePositionFilterChangeTeam1}
               pathPage={pathPage}
-              //Para la tabla de estadisticas no porcentuales
+              handleMatchesLimitChange={handleMatchesLimitChange}
+              matchesLimit={matchesLimit}
             />
           </Box>
         </Paper>
@@ -544,6 +539,7 @@ console.log("teamStatsForSeason",teamStatsForSeason)
           positionFilter={positionFilterTeam1}
           handlePositionFilterChange={handlePositionFilterChangeTeam1}
           pathPage={pathPage}
+          handleMatchesLimitChange={handleMatchesLimitChange}
           //Para la tabla de estadisticas no porcentuales
         />
       )}
@@ -556,13 +552,6 @@ console.log("teamStatsForSeason",teamStatsForSeason)
             alignItems="flex-start"
             mb={2}
           >
-            {/* <Avatar
-            alt={stats[1]?.team?.name}
-            src={stats[1]?.team?.logo}
-            sx={{ mr: 2 }}
-          /> */}
-            {/* <Typography variant="h6">{stats[1]?.team?.name}</Typography> */}
-
             <InfoFilterTeam
               team={stats[1]?.team}
               homeOnly={homeOnlySecondTeamComparative}
@@ -611,6 +600,8 @@ console.log("teamStatsForSeason",teamStatsForSeason)
               idTeam={idTeamSecondTeam}
               positionFilter={positionFilterTeam2}
               handlePositionFilterChange={handlePositionFilterChangeTeam2}
+              handleMatchesLimitChange={handleMatchesLimitChangeSecondTeam}
+              matchesLimit={matchesLimitSecondTeam}
             />
           </Box>
         </Paper>
@@ -656,7 +647,6 @@ console.log("teamStatsForSeason",teamStatsForSeason)
             filters={filters}
             selectedSeasons={selectedSeasons}
             shouldFetch={shouldFetch}
-            fetchTeamStats={fetchTeamStats}
             homeOnly={homeOnly}
             awayOnly={awayOnly}
             matchesCount={matchesCount}
@@ -683,7 +673,6 @@ console.log("teamStatsForSeason",teamStatsForSeason)
             filters={filters}
             selectedSeasons={selectedSeasons}
             shouldFetch={shouldFetch}
-            fetchTeamStats={fetchTeamStats}
             homeOnly={homeOnly}
             awayOnly={awayOnly}
             matchesCount={matchesCount}
@@ -732,7 +721,6 @@ console.log("teamStatsForSeason",teamStatsForSeason)
           setAwayOnlySecondTeamComparative={setAwayOnlySecondTeamComparative}
           setHomeOnlySecondTeamComparative={setHomeOnlySecondTeamComparative}
           listTeams={moreStats}
-
         />
       )}
       {activeTab === 1 && pathPage === "home" && (
@@ -750,7 +738,6 @@ console.log("teamStatsForSeason",teamStatsForSeason)
           setAwayOnlySecondTeamComparative={setAwayOnlySecondTeamComparative}
           setHomeOnlySecondTeamComparative={setHomeOnlySecondTeamComparative}
           listTeams={moreStats}
-
         />
       )}
       {idTeam && (
