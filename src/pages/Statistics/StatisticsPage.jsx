@@ -159,18 +159,18 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
       setSelectedSeasons(seasonId);
     } else if (currentPath.includes("teams") || currentPath.includes("stats")) {
       setPathPage("teams");
-      setSelectedSeasons(completeListCurrentSeason);
+      // setSelectedSeasons(completeListCurrentSeason);
     } else {
       setPathPage("home");
       if (isSelectedEditedSeasons) return;
       if (someProp === "allTeams" && listAllCurrentSeason.length > 0) {
         setIsSelectedEditedSeasons(true);
         setUpdatedListSeasonTeam1(true);
-        const seasonsArray = listAllCurrentSeason
-          ?.join(",")
-          ?.split(",")
-          .map((season) => season.trim());
-        setSelectedSeasons(seasonsArray);
+        // const seasonsArray = listAllCurrentSeason
+        //   ?.join(",")
+        //   ?.split(",")
+        //   .map((season) => season.trim());
+        // setSelectedSeasons(seasonsArray);
       }
     }
   }, [
@@ -178,7 +178,7 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
     isSelectedEditedSeasons,
     completeListCurrentSeason,
     seasonId,
-    someProp,
+    someProp,awayOnly, homeOnly
   ]);
 
   useEffect(() => {
@@ -213,15 +213,15 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
   //   someProp,listAllCurrentSeason
   // ]);
 
-  useEffect(() => {
-    // Parse listCurrentSeason to an array of seasons if it's not empty
-    if (updatedListSeasonTeam2) {
-      return;
-    }
-    if (idTeamSecondTeam) {
-      setSelectedSeasonsSecondTeam(completeListCurrentSeason2);
-    }
-  }, [idTeamSecondTeam, completeListCurrentSeason2, updatedListSeasonTeam2]);
+  // useEffect(() => {
+  //   // Parse listCurrentSeason to an array of seasons if it's not empty
+  //   if (updatedListSeasonTeam2) {
+  //     return;
+  //   }
+  //   if (idTeamSecondTeam) {
+  //     setSelectedSeasonsSecondTeam(completeListCurrentSeason2);
+  //   }
+  // }, [idTeamSecondTeam, completeListCurrentSeason2, updatedListSeasonTeam2]);
   useEffect(() => {
     //Obtencion de estadisticas para una season
 

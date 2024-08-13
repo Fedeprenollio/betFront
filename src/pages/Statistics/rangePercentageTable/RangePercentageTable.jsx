@@ -9,20 +9,12 @@ import {
   Tab,
   Box,
   styled,
-  Avatar,
 } from "@mui/material";
-import { BACKEND_URL_BASE } from "../../../stores/url_base";
 import { GroupByName } from "./GroupByName";
-import { FilterComponent } from "../../../componts/tableFilters/FilterComponent";
 import HelpIconWithModal from "../../../componts/helpIconWithModal/HelpIconWithModal";
 import { renderTable } from "./renderTable";
-import { AddMoreTeamComparative } from "./addMoreTeamComparative/AddMoreTeamComparative";
 import { tableHelpContent } from "./TableHelpContent";
-import { useBoundStore } from "../../../stores";
-import { ShowStatisticsMatches } from "../ShowStatisticsMatches";
-import { useCurrentSeasonTeam } from "../../../customHooks/useCurrentSeasonTeam";
-import { InfoFilterTeam } from "../../../componts/tableFilters/InfoFilterTeam";
-import { useFilters } from "../../../customHooks/useFilters";
+
 // import GroupByName from "./GroupByName";
 
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -57,20 +49,9 @@ export const RangePercentageTable = ({
    setOrderBy,
    orderBy,
 
-  selectedSeasons,
-  shouldFetch,
-
-  homeOnly,
-  awayOnly,
-  matchesCount,
-  includeAllSeasonMatches,
-  setStats,
-  setLoading,
-  setError,
 }) => {
   // const { getLocalTeamStats, getVisitorTeamStats, crearVisitorTeamStats } =
   //   useBoundStore((state) => state);
-  const [idTeamSecondTeam, setIdTeamSecondTeam] = useState(idSecondTeam);
 
   // const { completeListCurrentSeason } = useCurrentSeasonTeam(idTeam);
   // const { completeListCurrentSeason: completeListCurrentSeason2 } =  useCurrentSeasonTeam(idTeamSecondTeam);

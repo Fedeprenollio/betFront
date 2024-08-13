@@ -155,12 +155,37 @@ export const SelectListCurrentSeasons = ({
   };
 
 
-
+const ListSeasonTeamRender =()=>{
+  if(    currentSeasonTeam.length === 0  ) {
+    return (
+      <div>
+        Loading....
+      </div>
+    )
+  }else{
+    return (
+      currentSeasonTeam.map((season) => (
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={selectedSeasons.includes(season._id)}
+              onChange={handleChange}
+              name={season._id}
+            />
+          }
+          label={`${season?.league?.name} - ${season.year}`}
+          key={season._id}
+        />
+      )
+    ))
+  }
+  
+  }
 
   return (
     <FormControl component="fieldset">
       <FormGroup>
-        {completeListCurrentSeason.length === 0
+        {!idTeam
           ? allCurrentSeasons.map((season) => (
               <FormControlLabel
                 control={
@@ -174,19 +199,7 @@ export const SelectListCurrentSeasons = ({
                 key={season._id}
               />
             ))
-          : currentSeasonTeam.map((season) => (
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={selectedSeasons.includes(season._id)}
-                    onChange={handleChange}
-                    name={season._id}
-                  />
-                }
-                label={`${season?.league?.name} - ${season.year}`}
-                key={season._id}
-              />
-            ))}
+          : <ListSeasonTeamRender/> }
       </FormGroup>
 
       {selectedSeasons.length === 1 && completeListCurrentSeason.length !== 0 && (
@@ -225,7 +238,7 @@ export const SelectListCurrentSeasons = ({
         </Formik>
       )}
        {/* Input para la cantidad de partidos */}
-       <Box mt={2}>
+       {/* <Box mt={2}>
         <TextField
           label="Cantidad de partidos"
           value={matchesLimit}
@@ -233,7 +246,7 @@ export const SelectListCurrentSeasons = ({
           variant="outlined"
           fullWidth
         />
-      </Box>
+      </Box> */}
     </FormControl>
   );
 };
