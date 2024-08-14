@@ -23,19 +23,15 @@ import { exportToExcel } from "./exportToExcel";
 import { tableHelpContent } from "./TableHelpContent";
 
 export const TableAllTeamSeason = ({
-  idHomeTeam,
-  idAwayTeam,
-  seasonId,
-  //Probando:
-  homeOnly,
+ 
+    homeOnly,
   awayOnly,
-  awayOnlySecondTeamComparative,
-  homeOnlySecondTeamComparative,
   setAwayOnlySecondTeamComparative,
   setHomeOnlySecondTeamComparative,
   setSelectedTeams,
   selectedTeams,
   listTeams,
+  setListTeams
 }) => {
   // const{ homeOnly, awayOnly, awayOnlySecondTeamComparative, homeOnlySecondTeamComparative , setAwayOnly, setHomeOnly, setAwayOnlySecondTeamComparative, setHomeOnlySecondTeamComparative} = useFilters()
   // const [teamFilters, setTeamFilters] = useState([

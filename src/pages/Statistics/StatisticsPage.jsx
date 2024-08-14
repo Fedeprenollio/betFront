@@ -140,6 +140,7 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
   const [selectedTeams, setSelectedTeams] = useState([]); // Estado para los equipos seleccionados
   const [matchesLimit, setMatchesLimit] = useState(""); // Estado para la cantidad de partidos
   const [matchesLimitSecondTeam, setMatchesLimitSecondTeam] = useState(""); // Estado para la cantidad de partidos
+  // const [listTeams, setListTeams] = useState([]);
 
 
   useEffect(() => {
@@ -721,6 +722,8 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
           setAwayOnlySecondTeamComparative={setAwayOnlySecondTeamComparative}
           setHomeOnlySecondTeamComparative={setHomeOnlySecondTeamComparative}
           listTeams={moreStats}
+          setListTeams={setMoreStats}
+
         />
       )}
       {activeTab === 1 && pathPage === "home" && (
@@ -738,6 +741,7 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
           setAwayOnlySecondTeamComparative={setAwayOnlySecondTeamComparative}
           setHomeOnlySecondTeamComparative={setHomeOnlySecondTeamComparative}
           listTeams={moreStats}
+          setListTeams={setMoreStats}
         />
       )}
       {idTeam && (
