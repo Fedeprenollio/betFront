@@ -232,6 +232,7 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
           const moreStats = await getTeamStatsForSeason({
             seasonId,
             matchType,
+            matchLimit:matchesLimit
           });
           const data = await fetchTeamStats(
             seasonId,
@@ -263,7 +264,6 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
     clearStats,
     matchesLimit,
   ]);
-  console.log("matchesLimit++", matchesLimit);
   useEffect(() => {
     //Obtencion de estadisticas para todas las temporadas actuales (Home en este momento)
     if (pathPage === "home") {
@@ -275,8 +275,8 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
           const moreStats = await getTeamStatsForSeason({
             seasonId: selectedSeasonsString,
             matchType,
+            matchLimit:matchesLimit
           });
-          console.log("Stats Home", moreStats);
           const data = await fetchTeamStats(
             selectedSeasonsString,
             homeOnly,
@@ -314,7 +314,6 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
   ]);
   useEffect(() => {
     if (idTeam !== undefined && shouldFetch) {
-      console.log("Stats idTeam", idTeam);
       // if (idTeam) {
       //   console.log("seasonId,teamFilters",seasonId, teamFilters )
       //   getTeamStatsForTwoTeam({
@@ -365,7 +364,6 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
               includeAllSeasonMatches:
                 includeAllSeasonMatchesSecondTeamComparative,
             });
-            console.log("moreStatsLocal", moreStatsLocal);
             setStats([...a, b[0]]);
             setMoreStats([...moreStatsLocal, moreStatsVisitor[0]]);
           } else {
