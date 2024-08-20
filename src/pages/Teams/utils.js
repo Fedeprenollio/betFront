@@ -95,4 +95,8 @@ export const COUNTRIES = [
       value: "Colombia",
       label: "Colombia",
     },
+    {
+      value: "Venezuela",
+      label: "Venezuela",
+    },
   ];
