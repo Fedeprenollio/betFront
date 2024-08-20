@@ -24,9 +24,15 @@ export const Standings = () => {
   const { getTableSeason, tableSeason } = useBoundStore((state) => state);
   const [showHome, setShowHome] = useState(true);
   const [showVisitor, setShowVisitor] = useState(true);
+  const [pathPage, setPathPage] = useState("");
 
   useEffect(() => {
     getTableSeason({ seasonId });
+    const currentPath = location.pathname;
+    if (currentPath.includes("league")) {
+      setPathPage("league");
+     
+    }
   }, [seasonId, getTableSeason]);
 
   const handleShowHomeChange = (event) => {
@@ -67,6 +73,8 @@ export const Standings = () => {
         awayOnly={showVisitor}
         handleHomeOnlyChange={handleShowHomeChange}
         handleAwayOnlyChange={handleShowVisitorChange}
+        pathPage={pathPage}
+        
       />
       {tableSeason?.zoneTables?.map((zone, zoneIndex) => (
         <Box

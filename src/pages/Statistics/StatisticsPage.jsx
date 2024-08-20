@@ -142,7 +142,7 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
   const [matchesLimitSecondTeam, setMatchesLimitSecondTeam] = useState(""); // Estado para la cantidad de partidos
   // const [listTeams, setListTeams] = useState([]);
 
-
+console.log("setPathPage", pathPage)
   useEffect(() => {
     if (homeOnly && awayOnly) {
       setMatchType("both");
@@ -438,6 +438,7 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
   };
 
   const handleSeasonChange = (seasonId, checked) => {
+    console.log("HOLITA")
     setSelectedSeasons((prevSelectedSeasons) =>
       checked
         ? [...prevSelectedSeasons, seasonId]

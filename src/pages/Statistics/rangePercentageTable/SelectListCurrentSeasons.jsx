@@ -202,7 +202,7 @@ const ListSeasonTeamRender =()=>{
           : <ListSeasonTeamRender/> }
       </FormGroup>
 
-      {selectedSeasons.length === 1 && completeListCurrentSeason.length !== 0 && (
+    {selectedSeasons?.length === 1 && completeListCurrentSeason?.length !== 0 && (
         <Formik
           initialValues={{ startPosition: "", endPosition: "" }}
           validationSchema={validationSchema}
