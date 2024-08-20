@@ -11,17 +11,19 @@ import { useBoundStore } from "../stores";
 
 export const FilterDate = () => {
 
-  const [selectedDate, setSelectedDateState] = useState(() => {
-    // Recuperar la fecha seleccionada del almacenamiento local al cargar la página
-    const storedDate = localStorage.getItem("selectedDate");
-    return storedDate ? dayjs(storedDate).startOf("day") : dayjs().startOf("day"); // Si no hay ninguna fecha almacenada, usar la fecha actual
-  });
+  // const [selectedDate, setSelectedDateState] = useState(() => {
+  //   // Recuperar la fecha seleccionada del almacenamiento local al cargar la página
+  //   const storedDate = localStorage.getItem("selectedDate");
+  //   return storedDate ? dayjs(storedDate).startOf("day") : dayjs().startOf("day"); // Si no hay ninguna fecha almacenada, usar la fecha actual
+  // });
+
+  const [selectedDate, setSelectedDateState] = useState(() => dayjs().startOf("day"));
 
   const { setMatches } = useBoundStore((state) => state);
 
   useEffect(() => {
     // Almacenar la fecha seleccionada en el almacenamiento local cada vez que cambie
-    localStorage.setItem("selectedDate", selectedDate.toISOString());
+    // localStorage.setItem("selectedDate", selectedDate.toISOString());
     // Ejecutar setMatches después de que selectedDate haya sido actualizado
     setMatches({ date: selectedDate });
   }, [selectedDate, setMatches]);

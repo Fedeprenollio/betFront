@@ -34,7 +34,8 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export const MatchList3 = ({ match }) => {
-  const { onDeleteMatch} = useBoundStore(state=> state)
+
+  const { onDeleteMatch,isAuthenticated} = useBoundStore(state=> state)
 
   const [isOpen, setIsOpen] = useState(false);
   const fecha = new Date(match.date);
@@ -49,7 +50,6 @@ export const MatchList3 = ({ match }) => {
 
   const handleDelete = (idMatch) => {
     // Ejecutar la función onDelete pasada como prop
-    console.log("DELETE")
     onDeleteMatch(idMatch);
   };
   return (
@@ -121,13 +121,17 @@ export const MatchList3 = ({ match }) => {
           </ListItemButton>
         </Link>
       </Grid>
-      <Grid item xs={2}>
-        <Tooltip title="Delete">
+
+{isAuthenticated && 
+
+<>
+<Grid item xs={2}>
+        {/* <Tooltip title="Delete">
           <IconButton  onClick={()=>handleDelete(match._id)}>
             <DeleteIcon  />
           </IconButton>
-        </Tooltip>
-        <Tooltip title="+ Estadística">
+        </Tooltip> */}
+        <Tooltip title="Agregar resultado">
           <IconButton onClick={toggleForm}>
             {isOpen ? <ExpandLess /> : <ExpandMore />}
           </IconButton>
@@ -142,6 +146,10 @@ export const MatchList3 = ({ match }) => {
           />
         </Collapse>
       </Grid>
+</>
+}
+
+     
     </Grid>
   );
 };
@@ -154,21 +162,23 @@ export const MatchsStack = () => {
   useEffect(() => {
     setMyMatches(matches);
   }, [matches]);
-  console.log("MIS PARTIDAS", myMatches)
   return (
     <Container sx={{ backgroundColor: "#84828244", height: "100vh", padding:"0.3rem" }}>
       {Object.entries(
         myMatches.reduce((acc, match) => {
+          console.log("PARTIDOS", match)
           const leagueName = match?.league?.name;
+          const leagueSeason = match?.seasonYear?.year;
+
           const leagueId = match?.league?._id
           const leagueCountry = match?.league?.country;
           if (!acc[leagueName]) {
-            acc[leagueName] = { country: leagueCountry, matches: [], leagueId };
+            acc[leagueName] = { country: leagueCountry, matches: [], leagueId,leagueSeason };
           }
           acc[leagueName].matches.push(match);
           return acc;
         }, {})
-      ).map(([leagueName, { country, matches, leagueId }]) => (
+      ).map(([leagueName, { country, matches, leagueId ,leagueSeason}]) => (
         <Box key={leagueName} sx={{ width: "100%", backgroundColor: "white" }}>
           <Stack
             spacing={1}
@@ -188,7 +198,7 @@ export const MatchsStack = () => {
                 style={{ textDecoration: "none", color: "inherit" }}
               >
                 <Typography variant="h5" color="white">
-                  {leagueName}- {country}
+                  {leagueName} ({leagueSeason})  - {country}
                 </Typography>
               </Link>
             </Item>

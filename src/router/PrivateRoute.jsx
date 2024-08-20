@@ -42,7 +42,6 @@ function PrivateRoute() {
   if (isVerificationInProgress) {
     return null; // Puedes devolver un spinner o cualquier indicador de carga
   }
-  console.log(isTokenValid,isAuthenticated)
   // Si la verificación del token ha finalizado, mostrar el contenido protegido si el token es válido
   return  isTokenValid ? <Outlet /> : <Navigate to="/user/login" />;
 }
