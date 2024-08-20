@@ -34,15 +34,19 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export const MatchList3 = ({ match }) => {
+  const { onDeleteMatch, isAuthenticated,initializeAuthState } = useBoundStore((state) => state);
+console.log("isAuthenticated",isAuthenticated)
 
-  const { onDeleteMatch,isAuthenticated} = useBoundStore(state=> state)
+useEffect(() => {
+  initializeAuthState();
+}, [initializeAuthState]);
 
   const [isOpen, setIsOpen] = useState(false);
   const fecha = new Date(match.date);
   const hora = dayjs(fecha).format("HH:mm");
 
   // Utilizamos useMediaQuery para detectar si estamos en un dispositivo móvil
-  const isMobile = useMediaQuery((theme) => theme?.breakpoints?.down('sm'));
+  const isMobile = useMediaQuery((theme) => theme?.breakpoints?.down("sm"));
 
   const toggleForm = () => {
     setIsOpen(!isOpen);
@@ -60,7 +64,12 @@ export const MatchList3 = ({ match }) => {
           className="link-no-underline"
         >
           <ListItemButton component="div" sx={{ paddingX: "0.2rem" }}>
-            <Grid container spacing={2} alignItems="center" sx={{ paddingX: "0.2rem" }}>
+            <Grid
+              container
+              spacing={2}
+              alignItems="center"
+              sx={{ paddingX: "0.2rem" }}
+            >
               <Grid item xs={5}>
                 <ListItemText
                   sx={{ paddingX: "0.2rem" }}
@@ -68,7 +77,10 @@ export const MatchList3 = ({ match }) => {
                   primary={
                     <>
                       <Typography
-                        sx={{ display: "inline", fontSize: isMobile ? "0.8rem" : "inherit" }}
+                        sx={{
+                          display: "inline",
+                          fontSize: isMobile ? "0.8rem" : "inherit",
+                        }}
                         component="h6"
                         variant="h6"
                         color="grey"
@@ -86,7 +98,10 @@ export const MatchList3 = ({ match }) => {
                   primary={
                     <>
                       <Typography
-                        sx={{ display: "inline", fontSize: isMobile ? "0.9rem" : "inherit" }}
+                        sx={{
+                          display: "inline",
+                          fontSize: isMobile ? "0.9rem" : "inherit",
+                        }}
                         component="h6"
                         variant="h5"
                         color="green"
@@ -106,7 +121,10 @@ export const MatchList3 = ({ match }) => {
                   primary={
                     <>
                       <Typography
-                        sx={{ display: "inline", fontSize: isMobile ? "0.8rem" : "inherit" }}
+                        sx={{
+                          display: "inline",
+                          fontSize: isMobile ? "0.8rem" : "inherit",
+                        }}
                         component="h6"
                         variant="h6"
                         color="grey"
@@ -122,38 +140,34 @@ export const MatchList3 = ({ match }) => {
         </Link>
       </Grid>
 
-{isAuthenticated && 
-
-<>
-<Grid item xs={2}>
-        {/* <Tooltip title="Delete">
+      {isAuthenticated && (
+        <>
+          <Grid item xs={2}>
+            {/* <Tooltip title="Delete">
           <IconButton  onClick={()=>handleDelete(match._id)}>
             <DeleteIcon  />
           </IconButton>
         </Tooltip> */}
-        <Tooltip title="Agregar resultado">
-          <IconButton onClick={toggleForm}>
-            {isOpen ? <ExpandLess /> : <ExpandMore />}
-          </IconButton>
-        </Tooltip>
-      </Grid>
-      <Grid item xs={12}>
-        <Collapse in={isOpen} timeout="auto" unmountOnExit>
-          <FormAddResult
-            matchId={match._id}
-            localName={match.homeTeam?.name}
-            visitorName={match.awayTeam?.name}
-          />
-        </Collapse>
-      </Grid>
-</>
-}
-
-     
+            <Tooltip title="Agregar resultado">
+              <IconButton onClick={toggleForm}>
+                {isOpen ? <ExpandLess /> : <ExpandMore />}
+              </IconButton>
+            </Tooltip>
+          </Grid>
+          <Grid item xs={12}>
+            <Collapse in={isOpen} timeout="auto" unmountOnExit>
+              <FormAddResult
+                matchId={match._id}
+                localName={match.homeTeam?.name}
+                visitorName={match.awayTeam?.name}
+              />
+            </Collapse>
+          </Grid>
+        </>
+      )}
     </Grid>
   );
 };
-
 
 export const MatchsStack = () => {
   const { matches } = useBoundStore((state) => state);
@@ -163,22 +177,29 @@ export const MatchsStack = () => {
     setMyMatches(matches);
   }, [matches]);
   return (
-    <Container sx={{ backgroundColor: "#84828244", height: "100vh", padding:"0.3rem" }}>
+    <Container
+      sx={{ backgroundColor: "#84828244", height: "100vh", padding: "0.3rem" }}
+    >
       {Object.entries(
         myMatches.reduce((acc, match) => {
-          console.log("PARTIDOS", match)
+          console.log("PARTIDOS", match);
           const leagueName = match?.league?.name;
           const leagueSeason = match?.seasonYear?.year;
 
-          const leagueId = match?.league?._id
+          const leagueId = match?.league?._id;
           const leagueCountry = match?.league?.country;
           if (!acc[leagueName]) {
-            acc[leagueName] = { country: leagueCountry, matches: [], leagueId,leagueSeason };
+            acc[leagueName] = {
+              country: leagueCountry,
+              matches: [],
+              leagueId,
+              leagueSeason,
+            };
           }
           acc[leagueName].matches.push(match);
           return acc;
         }, {})
-      ).map(([leagueName, { country, matches, leagueId ,leagueSeason}]) => (
+      ).map(([leagueName, { country, matches, leagueId, leagueSeason }]) => (
         <Box key={leagueName} sx={{ width: "100%", backgroundColor: "white" }}>
           <Stack
             spacing={1}
@@ -198,7 +219,7 @@ export const MatchsStack = () => {
                 style={{ textDecoration: "none", color: "inherit" }}
               >
                 <Typography variant="h5" color="white">
-                  {leagueName} ({leagueSeason})  - {country}
+                  {leagueName} ({leagueSeason}) - {country}
                 </Typography>
               </Link>
             </Item>
