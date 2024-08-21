@@ -20,7 +20,6 @@ export const fetchTeamStats = async (
   matchesLimit,
   includeAllSeasonMatches
 ) => {
-  console.log("matchesLimit", matchesLimit);
   const response = await axios.get(
     `${BACKEND_URL_BASE}/match/stats?season=${seasonId}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession,foults&matchesCount=${matchesLimit}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}`
   );
