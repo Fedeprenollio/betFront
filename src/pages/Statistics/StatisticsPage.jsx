@@ -302,8 +302,6 @@ console.log("setPathPage", pathPage)
       clearStats();
     };
   }, [
-    matchType,
-    listAllCurrentSeason,
     matchesLimit,
     pathPage,
     listCurrentSeason,
