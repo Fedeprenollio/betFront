@@ -1,10 +1,9 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
-import { Box, Button, Drawer, IconButton, Divider, Typography, useMediaQuery, useTheme, Container } from '@mui/material';
+import  { useState } from 'react';
+import { Box, Drawer, IconButton, Divider, Typography,   Container } from '@mui/material';
 import { SelectStatistics } from './SelectStatistics';
 import { AdvancedOptions } from './AdvancedOptions';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { CheckboxLocalVisitor } from '../rangePercentageTable/CheckboxLocalVisitor';
 
 export const FilterComponentModal = ({
     stats,
@@ -12,15 +11,8 @@ export const FilterComponentModal = ({
     handleStatCheckboxChange,
     showAdvancedStats,
     handleCheckboxChange,
-    homeOnly,
-    awayOnly,
-    handleHomeOnlyChange,
-    handleAwayOnlyChange
 }) => {
     const [drawerOpen, setDrawerOpen] = useState(false);
-    const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-    const [expanded, setExpanded] = useState(false);
 
     const handleDrawerToggle = () => {
         setDrawerOpen(!drawerOpen);

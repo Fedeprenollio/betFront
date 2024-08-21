@@ -345,7 +345,7 @@ clearStats : ()=>{
 
   getLocalTeamStats : async ({season, idTeam, homeOnly, awayOnly, matchesCount, includeAllSeasonMatches,position="false"} ) => {
     const response = await axios.get(
-      `${BACKEND_URL_BASE}/team/stats/${idTeam}?season=${season}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}&position=${position}`
+      `${BACKEND_URL_BASE}/team/stats/${idTeam}?season=${season}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession,foults&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}&position=${position}`
     );
     set({ localMatches: response?.data[0]?.matches });
     set({localTeamPercentageStatistics: response?.data})
@@ -355,7 +355,7 @@ clearStats : ()=>{
   },
   getVisitorTeamStats : async ({season=false, idTeam, homeOnly, awayOnly, matchesCount, includeAllSeasonMatches,position="false"} ) => {
     const response = await axios.get(
-      `${BACKEND_URL_BASE}/team/stats/${idTeam}?season=${season}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}&position=${position}`
+      `${BACKEND_URL_BASE}/team/stats/${idTeam}?season=${season}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession,foults&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}&position=${position}`
     );
     set({ visitorMatches: response?.data[0]?.matches });
     set({visitorTeamPercentageStatistics: response?.data})
@@ -366,7 +366,7 @@ clearStats : ()=>{
   getLocalTeamMoreStats : async ({season, idTeam, homeOnly, awayOnly, matchesCount, includeAllSeasonMatches,position="false"} ) => {
     console.log("matchesCount STORE",matchesCount)
     const response = await axios.get(
-      `${BACKEND_URL_BASE}/team/more-stats/${idTeam}?season=${season}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}&position=${position}`
+      `${BACKEND_URL_BASE}/team/more-stats/${idTeam}?season=${season}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession,foults&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}&position=${position}`
     );
     set({localTeamStatistics: response?.data})
     console.log("response",response.data)
@@ -375,7 +375,7 @@ clearStats : ()=>{
   },
   getVisitorTeamMoreStats : async ({season=false, idTeam, homeOnly, awayOnly, matchesCount, includeAllSeasonMatches,position="false"} ) => {
     const response = await axios.get(
-      `${BACKEND_URL_BASE}/team/more-stats/${idTeam}?season=${season}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}&position=${position}`
+      `${BACKEND_URL_BASE}/team/more-stats/${idTeam}?season=${season}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession,foults&matchesCount=${matchesCount}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}&position=${position}`
     );
     set({visitorTeamStatistics: response?.data})
     return  response?.data

@@ -177,7 +177,7 @@ export const TableAllTeamSeason = ({
     shots: true,
     shotsOnTarget: true,
     possession: false,
-    fouls: false,
+    foults: false,
   });
 
   const handleSortRequest = (property) => {
@@ -218,7 +218,7 @@ export const TableAllTeamSeason = ({
     { key: "shots", label: "Tiros" },
     { key: "shotsOnTarget", label: "Tiros al Arco" },
     { key: "possession", label: "Posesión" },
-    { key: "fouls", label: "Faltas" },
+    { key: "foults", label: "Faltas" },
   ];
 
   const handleCheckboxChange = (key) => {
@@ -241,6 +241,8 @@ export const TableAllTeamSeason = ({
     selectedTeams?.length > 0
       ? listTeams.filter((team) => selectedTeams.includes(team.teamName))
       : listTeams;
+
+      console.log("filteredTeams",filteredTeams)
   // const handleHomeOnlyChange = (event) => {
   //   setHomeOnly(event.target.checked);
   // };

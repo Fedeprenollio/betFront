@@ -22,7 +22,7 @@ export const fetchTeamStats = async (
 ) => {
   console.log("matchesLimit", matchesLimit);
   const response = await axios.get(
-    `${BACKEND_URL_BASE}/match/stats?season=${seasonId}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession&matchesCount=${matchesLimit}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}`
+    `${BACKEND_URL_BASE}/match/stats?season=${seasonId}&statistics=goals,offsides,yellowCards,corners,shots,shotsOnTarget,possession,foults&matchesCount=${matchesLimit}&homeOnly=${homeOnly}&awayOnly=${awayOnly}&includeAllSeasonMatches=${includeAllSeasonMatches}`
   );
   return response.data;
 };
@@ -125,6 +125,10 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
       received: {},
     },
     yellowCards: {
+      scored: {},
+      received: {},
+    },
+    foults: {
       scored: {},
       received: {},
     },
@@ -241,6 +245,7 @@ console.log("setPathPage", pathPage)
             matchesLimit,
             includeAllSeasonMatches
           );
+          console.log("DATA",data)
           setStats(data);
           setMoreStats(moreStats);
           setLoading(false);

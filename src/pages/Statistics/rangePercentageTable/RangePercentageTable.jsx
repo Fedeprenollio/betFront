@@ -348,6 +348,8 @@ export const RangePercentageTable = ({
     "shots",
     "shotsOnTarget",
     "possession",
+    "foults"
+    
   ];
   // const handleInputMatchesCountChange = (event) => {
   //   setInputMatchesCount(event.target?.value);
