@@ -708,6 +708,8 @@ console.log("setPathPage", pathPage)
           selectedTeams={selectedTeams}
           listTeams={moreStats}
           stats={moreStats}
+          setListTeams={setMoreStats}
+
         />
       )}
       {activeTab === 1 && pathPage === "league" && (
@@ -726,6 +728,10 @@ console.log("setPathPage", pathPage)
           setHomeOnlySecondTeamComparative={setHomeOnlySecondTeamComparative}
           listTeams={moreStats}
           setListTeams={setMoreStats}
+          setSelectedTeams={setSelectedTeams}
+          selectedTeams={selectedTeams}
+
+
 
         />
       )}
@@ -745,6 +751,10 @@ console.log("setPathPage", pathPage)
           setHomeOnlySecondTeamComparative={setHomeOnlySecondTeamComparative}
           listTeams={moreStats}
           setListTeams={setMoreStats}
+          setSelectedTeams={setSelectedTeams}
+          selectedTeams={selectedTeams}
+
+
         />
       )}
       {idTeam && (

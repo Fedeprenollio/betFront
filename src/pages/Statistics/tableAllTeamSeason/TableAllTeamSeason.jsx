@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState } from "react";
-import { useBoundStore } from "../../../stores";
-import { useParams } from "react-router-dom";
+import React, {  useState } from "react";
+
 import {
   TableContainer,
   Table,
@@ -12,10 +11,8 @@ import {
   TableSortLabel,
   Paper,
   Box,
-  Typography,
 } from "@mui/material";
 import { GroupByName } from "../rangePercentageTable/GroupByName";
-import * as XLSX from "xlsx"; // Importa xlsx
 import ExportExcelButton from "../../../componts/exportToExcel/ExportExcelButton";
 import { FilterComponentModal } from "./FilterComponentModal";
 import HelpIconWithModal from "../../../componts/helpIconWithModal/HelpIconWithModal";
@@ -33,133 +30,7 @@ export const TableAllTeamSeason = ({
   listTeams,
   setListTeams
 }) => {
-  // const{ homeOnly, awayOnly, awayOnlySecondTeamComparative, homeOnlySecondTeamComparative , setAwayOnly, setHomeOnly, setAwayOnlySecondTeamComparative, setHomeOnlySecondTeamComparative} = useFilters()
-  // const [teamFilters, setTeamFilters] = useState([
-  //   {
-  //     teamId: idHomeTeam,
-  //     matchType: "both",
-  //     matchesCount: 10,
-  //     positions: "1-50",
-  //   },
-  //   {
-  //     teamId: idAwayTeam,
-  //     matchType: "both",
-  //     matchesCount: 10,
-  //     positions: "1-50",
-  //   },
-  // ]);
 
-  // const { seasonId } = useParams();
-  // const {
-  //   getTeamStatsForSeason,
-  //   teamStatsForSeason,
-  //   getTeamStatsForTwoTeam,
-  //   teamStatsForTwoTeam,
-  // } = useBoundStore((state) => state);
-
-  // const [listTeams, setListTeams] = useState([]);
-  // const [selectedTeams, setSelectedTeams] = useState([]); // Estado para los equipos seleccionados
-  // const [homeOnly, setHomeOnly] = useState(true);
-  // const [awayOnly, setAwayOnly] = useState(true);
-  // const [matchType, setMatchType] = useState("both");
-  console.log("listTeams",listTeams);
-  // useEffect(() => {
-  //   // if (homeOnly && awayOnly) {
-  //   //   setMatchType("both");
-  //   // } else if (!homeOnly && awayOnly) {
-  //   //   setMatchType("away");
-  //   // } else if (homeOnly && !awayOnly) {
-  //   //   setMatchType("home");
-  //   // } else {
-  //   //   setMatchType("both");
-  //   // }
-  //   if (idHomeTeam) {
-  //     console.log("seasonId,teamFilters",seasonId, teamFilters )
-  //     getTeamStatsForTwoTeam({
-  //       seasonId,
-  //       teamFilters,
-  //     });
-  //   } else {
-  //     getTeamStatsForSeason({ seasonId, matchType });
-  //   }
-  // }, [
-  //   seasonId,
-  //   getTeamStatsForSeason,
-  //   matchType,
-  //   homeOnly,
-  //   awayOnly,
-  //   idHomeTeam,
-  //   getTeamStatsForTwoTeam,
-  //   teamFilters,
-  // ]);
-
-//   // Update teamFilters when conditions change
-//   useEffect(() => {
-//     const updatedTeamFilters = teamFilters.map((filter) => {
-//       console.log("updatedTeamFilters",filter,"===",idHomeTeam)
-
-//       if (filter.teamId === idHomeTeam) {
-//         return {
-//           ...filter,
-//           matchType: homeOnly
-//             ? awayOnly
-//               ? "both"
-//               : "home"
-//             : awayOnly
-//             ? "away"
-//             : "both",
-//         };
-//       }
-//       if (filter.teamId === idAwayTeam) {
-//         return {
-//           ...filter,
-//           matchType: homeOnlySecondTeamComparative
-//             ? awayOnlySecondTeamComparative
-//               ? "both"
-//               : "home"
-//             : awayOnlySecondTeamComparative
-//             ? "away"
-//             : "both",
-//         };
-//       }
-//       return filter;
-//     });
-//     console.log("updatedTeamFilters",updatedTeamFilters,"+++",idHomeTeam)
-//     setTeamFilters(updatedTeamFilters);
-//   }, [
-//     homeOnly,
-//     awayOnly,
-//     homeOnlySecondTeamComparative,
-//     awayOnlySecondTeamComparative,
-//     idAwayTeam,
-//     idHomeTeam,
-//   ]);
-//  // Nuevo useEffect para actualizar teamFilters cuando cambien idHomeTeam o idAwayTeam
-//  useEffect(() => {
-//   setTeamFilters([
-//     {
-//       teamId: idHomeTeam,
-//       matchType: "both",
-//       matchesCount: 10,
-//       positions: "1-50",
-//     },
-//     {
-//       teamId: idAwayTeam,
-//       matchType: "both",
-//       matchesCount: 10,
-//       positions: "1-50",
-//     },
-//   ]);
-//   console.log("RECalculando")
-// }, [idHomeTeam, idAwayTeam]);
-//   useEffect(() => {
-//     if (idHomeTeam) {
-//       setListTeams(teamStatsForTwoTeam);
-//       console.log("SI DEBERIA RENDERIZAR",teamStatsForTwoTeam)
-//     } else {
-//       setListTeams(teamStatsForSeason);
-//     }
-//   }, [teamStatsForSeason, teamStatsForTwoTeam, idHomeTeam]);
 
   const [orderBy, setOrderBy] = useState("teamName");
   const [order, setOrder] = useState("asc");
@@ -235,14 +106,18 @@ export const TableAllTeamSeason = ({
     }));
   };
   const handleNamesChange = (names) => {
+    const updatedTeams = names.flat();
+    
     setSelectedTeams(names.flat()); // Actualiza los equipos seleccionados
+   
+    console.log("NOMBRES", updatedTeams)
   };
   const filteredTeams =
     selectedTeams?.length > 0
       ? listTeams.filter((team) => selectedTeams.includes(team.teamName))
       : listTeams;
 
-      console.log("filteredTeams",filteredTeams)
+      console.log("filteredTeams",selectedTeams,filteredTeams)
   // const handleHomeOnlyChange = (event) => {
   //   setHomeOnly(event.target.checked);
   // };
@@ -278,19 +153,7 @@ export const TableAllTeamSeason = ({
         // handleHomeOnlyChange={handleHomeOnlyChange}
         // handleAwayOnlyChange={handleAwayOnlyChange}
       />
-      {/* {idAwayTeam && (
-        <FilterComponentModal
-          stats={stats}
-          visibleStats={visibleStats}
-          handleStatCheckboxChange={handleStatCheckboxChange}
-          showAdvancedStats={showAdvancedStats}
-          handleCheckboxChange={handleCheckboxChange}
-          homeOnly={homeOnlySecondTeamComparative}
-          awayOnly={awayOnlySecondTeamComparative}
-          handleHomeOnlyChange={handleHomeOnlyChangeSecondTeam}
-          handleAwayOnlyChange={handleAwayOnlyChangeSecondTeam}
-        />
-      )} */}
+  
       <GroupByName onNamesChange={handleNamesChange} />{" "}
       {/* Componente GroupByName */}
       <HelpIconWithModal
