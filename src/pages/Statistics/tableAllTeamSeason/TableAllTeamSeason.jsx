@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, {  useState } from "react";
+import React, { useState } from "react";
 
 import {
   TableContainer,
@@ -20,18 +20,15 @@ import { exportToExcel } from "./exportToExcel";
 import { tableHelpContent } from "./TableHelpContent";
 
 export const TableAllTeamSeason = ({
- 
-    homeOnly,
+  homeOnly,
   awayOnly,
   setAwayOnlySecondTeamComparative,
   setHomeOnlySecondTeamComparative,
   setSelectedTeams,
   selectedTeams,
   listTeams,
-  setListTeams
+  setListTeams,
 }) => {
-
-
   const [orderBy, setOrderBy] = useState("teamName");
   const [order, setOrder] = useState("asc");
   const [showAdvancedStats, setShowAdvancedStats] = useState({
@@ -106,18 +103,14 @@ export const TableAllTeamSeason = ({
     }));
   };
   const handleNamesChange = (names) => {
-    const updatedTeams = names.flat();
-    
     setSelectedTeams(names.flat()); // Actualiza los equipos seleccionados
-   
-    console.log("NOMBRES", updatedTeams)
   };
   const filteredTeams =
     selectedTeams?.length > 0
       ? listTeams.filter((team) => selectedTeams.includes(team.teamName))
       : listTeams;
 
-      console.log("filteredTeams",selectedTeams,filteredTeams)
+  console.log("filteredTeams", selectedTeams, filteredTeams);
   // const handleHomeOnlyChange = (event) => {
   //   setHomeOnly(event.target.checked);
   // };
@@ -153,7 +146,6 @@ export const TableAllTeamSeason = ({
         // handleHomeOnlyChange={handleHomeOnlyChange}
         // handleAwayOnlyChange={handleAwayOnlyChange}
       />
-  
       <GroupByName onNamesChange={handleNamesChange} />{" "}
       {/* Componente GroupByName */}
       <HelpIconWithModal
@@ -179,6 +171,24 @@ export const TableAllTeamSeason = ({
                     zIndex: 2,
                   }}
                 >
+                  {/* <TableSortLabel
+                    active={orderBy === "teamName"}
+                    direction={orderBy === "teamName" ? order : "asc"}
+                    onClick={() => handleSortRequest("teamCountry")}
+                  > */}
+                  País
+                  {/* </TableSortLabel> */}
+                </TableCell>
+                <TableCell
+                  style={{
+                    width: "100px",
+                    position: "sticky",
+                    top: 0,
+                    left: 0,
+                    backgroundColor: "#fff",
+                    zIndex: 2,
+                  }}
+                >
                   <TableSortLabel
                     active={orderBy === "teamName"}
                     direction={orderBy === "teamName" ? order : "asc"}
@@ -187,6 +197,7 @@ export const TableAllTeamSeason = ({
                     Equipo
                   </TableSortLabel>
                 </TableCell>
+
                 {stats.map(
                   (stat) =>
                     visibleStats[stat.key] && (
@@ -213,6 +224,15 @@ export const TableAllTeamSeason = ({
                 )}
               </TableRow>
               <TableRow>
+                <TableCell
+                  style={{
+                    position: "sticky",
+                    top: 40,
+                    left: 0,
+                    backgroundColor: "#fff",
+                    zIndex: 2,
+                  }}
+                ></TableCell>
                 <TableCell
                   style={{
                     position: "sticky",
@@ -463,6 +483,17 @@ export const TableAllTeamSeason = ({
             <TableBody>
               {filteredTeams?.map((team, rowIndex) => (
                 <TableRow key={team.teamId}>
+                  <TableCell
+                    style={{
+                      backgroundColor:
+                        rowIndex % 2 === 0 ? "#f0f0f0" : "#ffffff",
+                      position: "sticky",
+                      left: 0,
+                      zIndex: 1,
+                    }}
+                  >
+                    {team.country}
+                  </TableCell>
                   <TableCell
                     style={{
                       backgroundColor:
