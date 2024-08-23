@@ -82,7 +82,6 @@ export const Teams = () => {
     setSelectedTeamId(id);
     setSelectedTeamName(name);
     setOpenDialog(true);
-    console.log("HOLA")
   };
 
   const handleCloseDialog = () => {

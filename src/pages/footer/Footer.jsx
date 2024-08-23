@@ -12,8 +12,9 @@ const Footer = () => {
     <Paper 
       sx={{ 
         width: '100%', 
-        mt: 'auto', 
-        py: 2 
+        mb: 'auto', 
+        py: 2,
+        position: 'relative',
       }} 
       component="footer" 
       square 

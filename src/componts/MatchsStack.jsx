@@ -26,7 +26,7 @@ import FormAddResult from "../pages/Match/FormAddResult";
 import { useBoundStore } from "../stores";
 import LoadingErrorWrapper from "./loadingErrorWrapper/LoadingErrorWrapper";
 import LoadingSpinner from "./loading/LoadingSpinner";
-
+import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
@@ -36,12 +36,14 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export const MatchList3 = ({ match }) => {
-  const { onDeleteMatch, isAuthenticated,initializeAuthState } = useBoundStore((state) => state);
-console.log("isAuthenticated",isAuthenticated)
+  const { onDeleteMatch, isAuthenticated, initializeAuthState } = useBoundStore(
+    (state) => state
+  );
+  console.log("isAuthenticated", isAuthenticated);
 
-useEffect(() => {
-  initializeAuthState();
-}, [initializeAuthState]);
+  useEffect(() => {
+    initializeAuthState();
+  }, [initializeAuthState]);
 
   const [isOpen, setIsOpen] = useState(false);
   const fecha = new Date(match.date);
@@ -172,7 +174,9 @@ useEffect(() => {
 };
 
 export const MatchsStack = () => {
-  const { matches, loading, error,clearMatches } = useBoundStore((state) => state);
+  const { matches, loading, error, clearMatches } = useBoundStore(
+    (state) => state
+  );
 
   useEffect(() => {
     return () => {
@@ -180,75 +184,97 @@ export const MatchsStack = () => {
     };
   }, [clearMatches]);
 
-console.log("loagind", loading)
+  console.log("loagind", loading);
 
   // if (error) {
   //   return <Alert severity="error">{error}</Alert>;
   // }
 
-
-
   return (
     <Container
-      sx={{ backgroundColor: "#84828244", height: "100vh", padding: "0.3rem" }}
+      sx={{ backgroundColor: "#84828244",minHeight: "100vh", padding: "0.3rem" }}
     >
-      {loading && <LoadingSpinner/>}
-      {(!loading & matches.length === 0)   ? <h1>SIN PARTIDOS</h1> : null}
-     
-        {
-          Object.entries(
-            matches.reduce((acc, match) => {
-              const leagueName = match?.league?.name;
-              const leagueSeason = match?.seasonYear?.year;
-              const leagueSeasonId = match?.seasonYear?._id;
+      {loading && <LoadingSpinner />}
+      {!loading & (matches.length === 0) ? (
+        <Box
+          sx={{
+            height: "50%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            flexDirection: "column",
+          }}
+        >
+          <SportsSoccerIcon sx={{ fontSize: 80, color: "#94BE1F" }} />
+          <Typography variant="h4" color="textSecondary" sx={{ mt: 2 }}>
+            No hay partidos disponibles
+          </Typography>
+          <Typography variant="subtitle1" color="textSecondary">
+            Por favor, intenta nuevamente más tarde.
+          </Typography>
+        </Box>
+      ) : null}
 
-              const leagueId = match?.league?._id;
-              const leagueCountry = match?.league?.country;
-              if (!acc[leagueName]) {
-                acc[leagueName] = {
-                  country: leagueCountry,
-                  matches: [],
-                  leagueId,
-                  leagueSeason,
-                  leagueSeasonId
-                };
-              }
-              acc[leagueName].matches.push(match);
-              return acc;
-            }, {})
-          ).map(([leagueName, { country, matches, leagueId, leagueSeason,leagueSeasonId }]) => (
-            <Box key={leagueName} sx={{ width: "100%", backgroundColor: "white" }}>
-              <Stack
-                spacing={1}
-                sx={{ margin: "2rem 0" }}
-                divider={<Divider orientation="horizontal" />}
+      {Object.entries(
+        matches.reduce((acc, match) => {
+          const leagueName = match?.league?.name;
+          const leagueSeason = match?.seasonYear?.year;
+          const leagueSeasonId = match?.seasonYear?._id;
+
+          const leagueId = match?.league?._id;
+          const leagueCountry = match?.league?.country;
+          if (!acc[leagueName]) {
+            acc[leagueName] = {
+              country: leagueCountry,
+              matches: [],
+              leagueId,
+              leagueSeason,
+              leagueSeasonId,
+            };
+          }
+          acc[leagueName].matches.push(match);
+          return acc;
+        }, {})
+      ).map(
+        ([
+          leagueName,
+          { country, matches, leagueId, leagueSeason, leagueSeasonId },
+        ]) => (
+          <Box
+            key={leagueName}
+            sx={{ width: "100%", backgroundColor: "white" }}
+          >
+            <Stack
+              spacing={1}
+              sx={{ margin: "2rem 0" }}
+              divider={<Divider orientation="horizontal" />}
+            >
+              <Item
+                elevation={3}
+                sx={{
+                  margin: "1rem 0",
+                  padding: "10px 0",
+                  backgroundColor: "#94BE1F",
+                }}
               >
-                <Item
-                  elevation={3}
-                  sx={{
-                    margin: "1rem 0",
-                    padding: "10px 0",
-                    backgroundColor: "#94BE1F",
-                  }}
+                <Link
+                  to={`/league/${leagueSeasonId}/showResults`}
+                  style={{ textDecoration: "none", color: "inherit" }}
                 >
-                  <Link
-                    to={`/league/${leagueSeasonId}/showResults`}
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    <Typography variant="h5" color="white">
-                      {leagueName} ({leagueSeason}) - {country}
-                    </Typography>
-                  </Link>
-                </Item>
-              </Stack>
+                  <Typography variant="h5" color="white">
+                    {leagueName} ({leagueSeason}) - {country}
+                  </Typography>
+                </Link>
+              </Item>
+            </Stack>
 
-              {matches.map((match) => (
-                <MatchList3 key={match._id} match={match} />
-              ))}
-            </Box>
-          ))
-        }
+            {matches.map((match) => (
+              <MatchList3 key={match._id} match={match} />
+            ))}
+          </Box>
+        )
+      )}
     </Container>
   );
 };
-

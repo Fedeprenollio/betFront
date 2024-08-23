@@ -27,7 +27,7 @@ const Navbar = () => {
   const [anchorElAyudanos, setAnchorElAyudanos] = useState(null);
   const [anchorElAyudanosMobile, setAnchorElAyudanosMobile] = useState(null);
   const { user, isAuthenticated, logout } = useBoundStore((state) => state);
-
+console.log("token+", user)
   const handleMenuPartidos = (event) => {
     setAnchorElPartidos(event.currentTarget);
   };
@@ -81,7 +81,7 @@ const Navbar = () => {
       <AppBar position="static">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            {isAuthenticated && <h4>Hola {user?.user}</h4>}
+            {isAuthenticated && <Typography>Hola {user}</Typography>}
             <IconButton
               component={Link}
               to="/"

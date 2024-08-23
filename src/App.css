@@ -163,3 +163,9 @@ body {
 .main-content {
   flex: 1;
 }
+
+.main-container{
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
