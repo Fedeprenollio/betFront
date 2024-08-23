@@ -8,8 +8,16 @@ const URL_API = `${BACKEND_URL_BASE}/match`
 const createMatchesStore = ((set, get) => ({
   matches: [],
   matchDetail :{},
+  loading: false,
+  error: null,
+
+  clearMatches: ()=>{
+      set({matches: []})
+  } ,
 
   setMatches: async ({ league, round, isFinished = "all", country, seasonId, date }) => {
+    set({ loading: true, error: null });
+
     try {
       // Construir la URL base
       let url = `${URL_API}?`;
@@ -36,38 +44,53 @@ const createMatchesStore = ((set, get) => ({
   
       // Eliminar el último carácter '&' si está presente
       url = url.replace(/&$/, '');
-      console.log("QUERYS STORE", url)
       const res = await fetch(url);
       const matches = await res.json();
-      console.log("Datos recibidos:", matches);
       set({ matches });
     } catch (error) {
       console.log(error);
+      set({ error: error.message });
+
+    }finally{
+      set({ loading: false });
+
     }
   },
   
   getAllMatches: async () => {
+
+    // try {
+    //   const res = await fetch(URL_API);
+    //   const matches = await res.json();
+    //   set({ matches });
+    // } catch (error) {
+    //   console.log(error)
+    // }
     try {
-      const res = await fetch(URL_API);
-      const matches = await res.json();
-      console.log("Datos recibidos:", matches);
+      set({ loading: true, error: null });
+      const { data: matches } = await axios.get(URL_API);
       set({ matches });
     } catch (error) {
-      console.log(error)
+      set({ error: error.message });
+      console.error(error);
+    } finally {
+      set({ loading: false });
     }
   },
   getMatchDetail: async ({idMatch}) => {
+    // set({ loading: true, error: null });
+
     try {
       const res = await fetch(`${URL_API}/`+ idMatch);
       const matchDetail = await res.json();
-      console.log("PARTIDO DETALLE:", matchDetail);
       set({ matchDetail });
     } catch (error) {
       console.log(error)
     }
   },
   newMatch: async ({ homeTeamName, awayTeamName, date, league, seasonYear, round }) => {
-    console.log(homeTeamName, awayTeamName, date, league, seasonYear, round)
+    set({ loading: true, error: null });
+
     try {
        await fetch(URL_API, {
         method: "POST",
@@ -89,9 +112,8 @@ const createMatchesStore = ((set, get) => ({
     }
   },
   addMatchResult: async (matchId, resultData) => {
-    console.log("ID PARTIDO,", matchId);
-    console.log("BODY,", resultData);
-    
+    // set({ loading: true, error: null });
+
     const token = get().token;
     const config = {
       headers: {
@@ -113,7 +135,8 @@ const createMatchesStore = ((set, get) => ({
   },
 
   onDeleteMatch: async (idMatch)=>{
-    console.log("ID DELETE", idMatch)
+    set({ loading: true, error: null });
+
     try {
      await fetch(`${URL_API}/${idMatch}`, {
         method: "DELETE",
@@ -138,6 +161,8 @@ const createMatchesStore = ((set, get) => ({
     }
   },
   updateMatchById: async ({matchId, updateFields}) => {
+    // set({ loading: true, error: null });
+
     try {
       // Realiza una solicitud a tu API para actualizar el partido
       const response = await fetch(`${URL_API}/${matchId}`, {

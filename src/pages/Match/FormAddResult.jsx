@@ -11,7 +11,7 @@ import AlertDialogCopy from "../../componts/feedback/AlertDialogCopy";
 import { AlertMessageCopy } from "../../componts/feedback/AlertMessageCopy";
 
 const FormAddResult = ({ matchId, visitorName, localName }) => {
-  const { addMatchResult, getMatchDetail, matchDetail } = useBoundStore(
+  const { addMatchResult, getMatchDetail, matchDetail, loading, error } = useBoundStore(
     (state) => state
   );
 

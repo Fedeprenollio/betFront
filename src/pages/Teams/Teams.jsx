@@ -208,9 +208,7 @@ export const Teams = () => {
                     <TableCell>
                       <Button onClick={() => handleStatisticsClick(team._id)}>Estadística</Button>
                     </TableCell>
-                    <TableCell>
-                      <Button onClick={() => handleStatisticsPercentageClick(team._id)}>Probando Estadística %</Button>
-                    </TableCell>
+                   
                     <TableCell>
                     <Button onClick={() => handleEditClick(team._id)}>Editar</Button>
                     </TableCell>
