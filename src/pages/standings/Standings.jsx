@@ -14,10 +14,11 @@ import {
 import { Link, useParams } from "react-router-dom";
 import { StyledTableRow } from "../Statistics/rangePercentageTable/RangePercentageTable";
 import { FilterComponent } from "../../componts/tableFilters/FilterComponent";
+import LoadingSpinner from "../../componts/loading/LoadingSpinner";
 
 export const Standings = () => {
   const { seasonId } = useParams();
-  const { getTableSeason, tableSeason } = useBoundStore((state) => state);
+  const { getTableSeason, tableSeason, loading,clearTableSeason } = useBoundStore((state) => state);
   const [showHome, setShowHome] = useState(true);
   const [showVisitor, setShowVisitor] = useState(true);
   const [pathPage, setPathPage] = useState("");
@@ -29,8 +30,11 @@ export const Standings = () => {
       setPathPage("league");
      
     }
-  }, [seasonId, getTableSeason]);
-
+    return ()=>{
+      clearTableSeason()
+    }
+  }, [seasonId, getTableSeason,clearTableSeason]);
+console.log("tableSeason",tableSeason?.table, loading)
   const handleShowHomeChange = (event) => {
     setShowHome(event.target.checked);
   };
@@ -72,6 +76,7 @@ export const Standings = () => {
         pathPage={pathPage}
         
       />
+      { tableSeason?.table === undefined && loading ? <LoadingSpinner/> : null}
       {tableSeason?.zoneTables?.map((zone, zoneIndex) => (
         <Box
           key={zoneIndex}

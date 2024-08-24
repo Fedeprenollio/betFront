@@ -174,7 +174,7 @@ export const CaroulselCurrentSeason = () => {
     return (
         <Box
             position="relative"
-            sx={{ display: 'flex', alignItems: 'center' }}
+            sx={{ display: 'flex', alignItems: 'center',padding: '0 30px' }}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}

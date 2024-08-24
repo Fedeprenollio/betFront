@@ -190,7 +190,7 @@ const CarouselLogos = ({ seasonId }) => {
             {teams.length > 0 && (
                 <Box
                     position="relative"
-                    sx={{ display: 'flex', alignItems: 'center' }}
+                    sx={{ display: 'flex', alignItems: 'center',padding: '0 60px' }}
                     onMouseDown={handleMouseDown}
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}
