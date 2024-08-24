@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useBoundStore } from "../../stores";
 import {
   Table,
@@ -8,16 +8,12 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
   Typography,
   Box,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import { StyledTableRow } from "../Statistics/rangePercentageTable/RangePercentageTable";
 import { FilterComponent } from "../../componts/tableFilters/FilterComponent";
-import HelpIconWithModal from "../../componts/helpIconWithModal/HelpIconWithModal";
 
 export const Standings = () => {
   const { seasonId } = useParams();

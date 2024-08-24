@@ -14,10 +14,8 @@
 //   const [season, setSeasom] = useState("")
 //   useEffect(() => {
 //     getSeasonById(seasonId.toString())
-    
-    
+
 //     }, [seasonId,getSeasonById])
-    
 
 //   // Map paths to tab indexes
 //   const pathToTabIndex = {
@@ -74,14 +72,14 @@
 //       )}
 //       </Tabs>
 //       {   <Outlet />}
-    
+
 //     </Box>
 //   );
 // };
 
 // export default StatisticsPageTab;
 import React, { useState, useEffect } from "react";
-import { Tabs, Tab, Box } from "@mui/material";
+import { Tabs, Tab, Box, Typography } from "@mui/material";
 import { useNavigate, useLocation, Outlet, useParams } from "react-router-dom";
 import { useBoundStore } from "../../stores";
 
@@ -98,9 +96,9 @@ const StatisticsPageTab = () => {
 
   // Map paths to tab indexes
   const pathToTabIndex = {
-    "showResults": 0,
-    "positions": 1,
-    "statistics": 2
+    showResults: 0,
+    positions: 1,
+    statistics: 2,
   };
 
   useEffect(() => {
@@ -111,11 +109,29 @@ const StatisticsPageTab = () => {
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
-    navigate(newValue === 0 ? "showResults" : newValue === 1 ? "positions" : "statistics");
+    navigate(
+      newValue === 0
+        ? "showResults"
+        : newValue === 1
+        ? "positions"
+        : "statistics"
+    );
   };
 
   return (
     <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      <Typography
+        variant="h4"
+        sx={{
+          fontWeight: "bold",
+          color: "#3f51b5",
+          textAlign: "center",
+          marginBottom: 2,
+        }}
+      >
+        {seasonById?.season?.league.name}
+      </Typography>
+
       <Tabs
         value={activeTab}
         onChange={handleTabChange}
