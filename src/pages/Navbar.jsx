@@ -81,7 +81,7 @@ console.log("token+", user)
       <AppBar position="static">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            {isAuthenticated && <Typography>Hola {user}</Typography>}
+            {isAuthenticated && <Typography>Hola { user && user}</Typography>}
             <IconButton
               component={Link}
               to="/"

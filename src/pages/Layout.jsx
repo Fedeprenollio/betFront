@@ -13,7 +13,7 @@ const Layout = () => {
   useEffect(() => {
     initializeAuthState();
   }, [initializeAuthState]);
-
+console.log("Token mayor")
   return (
     <Box  display="flex" flexDirection="column" minHeight="100vh">
         <Navbar />

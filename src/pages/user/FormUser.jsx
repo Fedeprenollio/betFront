@@ -51,7 +51,7 @@ const FormUser = ({ action }) => {
         console.log("loginResponse", loginResponse);
         if (loginResponse?.status === "ok") {
           // Redireccionar a la página de administrador si el inicio de sesión es exitoso
-          navigate("/teams/adm");
+          navigate("/match");
         } else {
           // Si el inicio de sesión falla, mostrar un mensaje de error al usuario
           setLoginError(error);

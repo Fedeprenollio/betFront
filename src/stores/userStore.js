@@ -5,7 +5,7 @@ import { BACKEND_URL_BASE } from "./url_base";
 const URL_API = `${BACKEND_URL_BASE}/user`;
 
 const createUserStore = (set, get) => ({
-  user: {},
+  user: "",
   isAuthenticated: false,
   setIsAuthenticated: (boolean) => set({ isAuthenticated: boolean }),
   error: null,
@@ -48,7 +48,7 @@ const createUserStore = (set, get) => ({
       if (infoUser?.status === "ok") {
         // Configura el estado isAuthenticated en true si el inicio de sesión es exitoso
         set({ isAuthenticated: true });
-        set({ user: infoUser });
+        set({ user: infoUser.user });
         return infoUser;
       } else {
         set({ isAuthenticated: false });
@@ -100,12 +100,25 @@ const createUserStore = (set, get) => ({
     }
   },
   initializeAuthState: () => {
-    const token = JSON.parse(window.localStorage.getItem("loggedUser"))?.token;
-    if (token) {
-      // Aquí podrías agregar una verificación del token si es necesario
-      set({ isAuthenticated: true });
+    const loggedUser = window.localStorage.getItem("loggedUser");
+  
+    // Verificamos si loggedUser no es null
+    if (loggedUser) {
+      const { token, user } = JSON.parse(loggedUser);
+  
+      if (token) {
+        console.log("TOKEN", token, user);
+        // Aquí podrías agregar una verificación del token si es necesario
+        set({ isAuthenticated: true });
+        set({ user: user });
+      }
+    } else {
+      console.warn("No hay usuario logueado");
+      set({ isAuthenticated: false });
+      set({ user: null });
     }
   },
+  
 
 });
 
