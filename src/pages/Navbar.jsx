@@ -71,10 +71,6 @@ console.log("token+", user)
     navigate("/user/login");
   };
 
-  const deleteCookie = (name) => {
-    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-    navigate("/user/login");
-  };
 
   return (
     <>
@@ -107,7 +103,7 @@ console.log("token+", user)
             >
               LOGO
             </Typography>
-            <TemporaryDrawer />
+            {/* <TemporaryDrawer /> */}
             <Box sx={{ flexGrow: 1 }}>
               <Button
                 id="partidos-button"
@@ -235,6 +231,8 @@ console.log("token+", user)
                 <MenuItem onClick={handleClose} component={Link} to="/cafecito">
                   Cafecito
                 </MenuItem>
+
+
               </Menu>
             </Box>
 
@@ -267,10 +265,23 @@ console.log("token+", user)
                 <MenuItem onClick={handleClose} component={Link} to="/cafecito">
                   Cafecito
                 </MenuItem>
+                {!isAuthenticated && (
+                  <MenuItem
+                    onClick={handleClose}
+                    component={Link}
+                    to="/user/login"
+                  >
+                    Login
+                  </MenuItem>
+                )}
+
+                {isAuthenticated && (
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                )}
               </Menu>
             </Box>
 
-            <Box sx={{ flexGrow: 0 }}>
+            <Box sx={{ flexGrow: 0,display: { xs: 'none', md: 'flex' }  }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />

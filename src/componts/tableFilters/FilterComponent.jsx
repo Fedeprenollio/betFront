@@ -63,7 +63,7 @@ export const FilterComponent = ({
         )}
 
         <Divider />
-        {filterName.includes("MatchesCountInput") && (
+        {/* {filterName.includes("MatchesCountInput") && (
           <MatchesCountInput
             inputMatchesCount={inputMatchesCount}
             handleInputMatchesCountChange={handleInputMatchesCountChange}
@@ -73,7 +73,7 @@ export const FilterComponent = ({
             inputChekBoxIncludeAllSeason={inputChekBoxIncludeAllSeason}
             onFilterChange={handleFilterChange}
           />
-        )}
+        )} */}
 
         <Divider />
         {pathPage !== "league" && (

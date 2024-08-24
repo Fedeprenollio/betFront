@@ -35,7 +35,7 @@ export default function TemporaryDrawer() {
   }, [leagues]);
 
   const toggleDrawer = (newOpen) => () => {
-    setOpen(newOpen);
+    setOpen(!newOpen);
   };
 
   const handleAccordionChange = (panel) => (event, isExpanded) => {
@@ -45,7 +45,7 @@ export default function TemporaryDrawer() {
   return (
     <div>
       {/* <Button sx={{ color: "inherit" }} onClick={toggleDrawer(true)}>Destacado</Button> */}
-      <IconButton sx={{ color: "inherit" }} onClick={toggleDrawer(true)}>
+      <IconButton sx={{ color: "inherit" }} onClick={toggleDrawer(open)}>
         <StarIcon /> {/* Cambia StarIcon por el icono que desees */}
       </IconButton>
       <Drawer open={open} onClose={toggleDrawer(false)}>

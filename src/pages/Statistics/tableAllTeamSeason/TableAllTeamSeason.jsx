@@ -18,6 +18,7 @@ import { FilterComponentModal } from "./FilterComponentModal";
 import HelpIconWithModal from "../../../componts/helpIconWithModal/HelpIconWithModal";
 import { exportToExcel } from "./exportToExcel";
 import { tableHelpContent } from "./TableHelpContent";
+import LoadingSpinner from "../../../componts/loading/LoadingSpinner";
 
 export const TableAllTeamSeason = ({
   homeOnly,
@@ -28,6 +29,7 @@ export const TableAllTeamSeason = ({
   selectedTeams,
   listTeams,
   setListTeams,
+  loadingStats
 }) => {
   const [orderBy, setOrderBy] = useState("teamName");
   const [order, setOrder] = useState("asc");
@@ -126,7 +128,7 @@ export const TableAllTeamSeason = ({
   const handleAwayOnlyChangeSecondTeam = (event) => {
     setAwayOnlySecondTeamComparative(event.target.checked);
   };
-
+console.log("loadingStats",loadingStats)
   return (
     <Box>
       {/* <Divider style={{ marginTop: "10px" }} />
@@ -481,6 +483,7 @@ export const TableAllTeamSeason = ({
             </TableHead>
 
             <TableBody>
+              {loadingStats ?  <LoadingSpinner/>: null}
               {filteredTeams?.map((team, rowIndex) => (
                 <TableRow key={team.teamId}>
                   <TableCell

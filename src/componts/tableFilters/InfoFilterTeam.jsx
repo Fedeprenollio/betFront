@@ -2,13 +2,14 @@
 import { Box, Typography, Paper, Divider, Chip, Avatar } from "@mui/material";
 import { useBoundStore } from "../../stores";
 import { useEffect, useState } from "react";
+import LoadingSpinner from "../loading/LoadingSpinner";
 
 export const InfoFilterTeam = ({
   team,
   homeOnly,
   awayOnly,
   selectedSeasons,
-  positionFilter
+  positionFilter, loading
 }) => {
   const { getAllCurrentSeasons, allCurrentSeasons, error, seasons, fetchSeasons } = useBoundStore((state) => state);
   const [infoSeasonSelected, setInfoSeasonSelected] = useState([]);
@@ -24,6 +25,7 @@ export const InfoFilterTeam = ({
   return (
   
       <Box sx={{ mt: 2 }}>
+        {loading && <LoadingSpinner/>}
         <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>Filtros del equipo:</Typography>
         <Typography variant="h5" sx={{ mb: 1, color: 'primary.main' }}>{team?.name}</Typography>
         <Divider sx={{ mb: 2 }} />

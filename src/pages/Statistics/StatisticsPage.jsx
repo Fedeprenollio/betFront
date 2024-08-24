@@ -53,6 +53,8 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
 
     getLocalTeamMoreStats,
     getVisitorTeamMoreStats,
+    clearTeamStatsForSeason,
+    loadingStats
   } = useBoundStore((state) => state);
   const {
     getTeamStatsForSeason,
@@ -145,7 +147,6 @@ export const StatisticsPage = ({ someProp, listCurrentSeason }) => {
   const [matchesLimitSecondTeam, setMatchesLimitSecondTeam] = useState(""); // Estado para la cantidad de partidos
   // const [listTeams, setListTeams] = useState([]);
 
-console.log("setPathPage", pathPage)
   useEffect(() => {
     if (homeOnly && awayOnly) {
       setMatchType("both");
@@ -228,10 +229,12 @@ console.log("setPathPage", pathPage)
   // }, [idTeamSecondTeam, completeListCurrentSeason2, updatedListSeasonTeam2]);
   useEffect(() => {
     //Obtencion de estadisticas para una season
-
     if (seasonId && !listCurrentSeason && shouldFetch) {
+      console.log("PRUEBA TEMPORADA")
       const loadStats = async () => {
         try {
+          setLoading(true);
+
           const moreStats = await getTeamStatsForSeason({
             seasonId,
             matchType,
@@ -247,13 +250,17 @@ console.log("setPathPage", pathPage)
           console.log("DATA",data)
           setStats(data);
           setMoreStats(moreStats);
-          setLoading(false);
         } catch (err) {
           setError(err);
           setLoading(false);
+        }finally{
+          setLoading(false)
         }
       };
       loadStats();
+    }
+    return ()=>{
+      clearTeamStatsForSeason()
     }
   }, [
     seasonId,
@@ -271,8 +278,11 @@ console.log("setPathPage", pathPage)
   useEffect(() => {
     //Obtencion de estadisticas para todas las temporadas actuales (Home en este momento)
     if (pathPage === "home") {
+      console.log("PRUEBA TODAS LAS TEMPORADAS")
       const loadStats = async () => {
         try {
+          setLoading(true);
+
           const selectedSeasonsString = selectedSeasons.join(",")
             ? selectedSeasons.join(",")
             : listAllCurrentSeason.join(",");
@@ -290,10 +300,11 @@ console.log("setPathPage", pathPage)
           );
           setStats(data);
           setMoreStats(moreStats);
-          setLoading(false);
         } catch (err) {
           setError(err);
           setLoading(false);
+        }finally{
+          setLoading(false)
         }
       };
       loadStats();
@@ -318,15 +329,11 @@ console.log("setPathPage", pathPage)
   ]);
   useEffect(() => {
     if (idTeam !== undefined && shouldFetch) {
-      // if (idTeam) {
-      //   console.log("seasonId,teamFilters",seasonId, teamFilters )
-      //   getTeamStatsForTwoTeam({
-      //     seasonId,
-      //     teamFilters,
-      //   });
-      // }
+      console.log("PRUEBA SOLO EQUIPOS")
+     
       const loadStats = async () => {
         try {
+          setLoading(true);
           const a = await getLocalTeamStats({
             season: selectedSeasons.join(","),
             idTeam,
@@ -375,10 +382,12 @@ console.log("setPathPage", pathPage)
             setMoreStats([...moreStatsLocal]);
           }
 
-          setLoading(false);
+          
         } catch (err) {
           setError(err);
           setLoading(false);
+        }finally{
+          setLoading(false)
         }
       };
       loadStats();
@@ -496,6 +505,7 @@ console.log("setPathPage", pathPage)
               awayOnly={awayOnly}
               selectedSeasons={selectedSeasons}
               positionFilter={positionFilterTeam1}
+              loading={loading}
             />
             <FilterComponent
               filterName={["local/visitor", "MatchesCountInput"]}
@@ -562,6 +572,7 @@ console.log("setPathPage", pathPage)
               awayOnly={awayOnlySecondTeamComparative}
               selectedSeasons={selectedSeasonsSecondTeam}
               positionFilter={positionFilterTeam2}
+              loading={loading}
             />
             <FilterComponent
               filterName={["local/visitor", "MatchesCountInput"]}
@@ -709,6 +720,7 @@ console.log("setPathPage", pathPage)
           listTeams={moreStats}
           stats={moreStats}
           setListTeams={setMoreStats}
+          loadingStats={loadingStats}
 
         />
       )}
@@ -730,6 +742,8 @@ console.log("setPathPage", pathPage)
           setListTeams={setMoreStats}
           setSelectedTeams={setSelectedTeams}
           selectedTeams={selectedTeams}
+          loadingStats={loadingStats}
+
 
 
 
@@ -753,6 +767,8 @@ console.log("setPathPage", pathPage)
           setListTeams={setMoreStats}
           setSelectedTeams={setSelectedTeams}
           selectedTeams={selectedTeams}
+          loadingStats={loadingStats}
+
 
 
         />

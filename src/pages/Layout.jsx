@@ -6,6 +6,7 @@ import Footer from "./footer/Footer";
 import { Box, Container } from "@mui/material";
 import { useBoundStore } from "../stores";
 import { useEffect } from "react";
+import FloatingDrawerButton from "../componts/floatingDrawerButton/FloatingDrawerButton";
 
 const Layout = () => {
   const { initializeAuthState } = useBoundStore((state) => state);
@@ -13,14 +14,14 @@ const Layout = () => {
   useEffect(() => {
     initializeAuthState();
   }, [initializeAuthState]);
-console.log("Token mayor")
+  console.log("Token mayor");
   return (
-    <Box  display="flex" flexDirection="column" minHeight="100vh">
-        <Navbar />
+    <Box display="flex" flexDirection="column" minHeight="100vh">
+      <Navbar />
       <Box component="main" sx={{ flex: 1 }} flexGrow={1}>
-
         <RoutesComponent />
       </Box>
+        <FloatingDrawerButton/>
       <Footer />
     </Box>
   );
