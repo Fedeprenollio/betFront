@@ -36,7 +36,7 @@ const RoutesComponent = () => {
 
 
         <Route path="adm" element={<PrivateRoute />}>
-          {/* <Route path="" element={<FormTeam />} /> */}
+          <Route path="" element={<FormTeam />} />
           <Route path=":idTeam" element={<FormTeam />} />
         </Route>
       </Route>
