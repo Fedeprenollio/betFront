@@ -39,8 +39,7 @@ export const MatchList3 = ({ match }) => {
   const { onDeleteMatch, isAuthenticated, initializeAuthState } = useBoundStore(
     (state) => state
   );
-  console.log("isAuthenticated", isAuthenticated);
-
+console.log("match",match)
   useEffect(() => {
     initializeAuthState();
   }, [initializeAuthState]);
@@ -61,6 +60,15 @@ export const MatchList3 = ({ match }) => {
     onDeleteMatch(idMatch);
   };
   return (
+    <Box
+    sx={{
+      marginY: 2, // Margen vertical entre partidos
+      padding: 2, // Espaciado interno para que los contenidos no queden pegados al borde
+      boxShadow: 3, // Relieve
+      borderRadius: 2, // Bordes redondeados para suavizar el contenedor
+      backgroundColor: "background.paper", // Fondo blanco
+    }}
+  >
     <Grid container spacing={2} alignItems="center">
       <Grid item xs={10} sx={{ paddingX: "0rem" }}>
         <Link
@@ -139,6 +147,19 @@ export const MatchList3 = ({ match }) => {
                   }
                 />
               </Grid>
+              <Grid item xs={6} sx={{ padding: "0.0rem", marginTop: isMobile ? "0.1rem" : "1rem" }}>
+                <Typography
+                  sx={{
+                    fontSize: isMobile ? "0.75rem" : "0.85rem",
+                    textAlign: "center",
+                    color: "gray",
+                    // fontStyle: "italic",
+                     paddingX: "0.0rem"
+                  }}
+                >
+                  Árbitro: {match?.referee?.name ? match.referee.name : "Sin registro"}
+                </Typography>
+              </Grid>
             </Grid>
           </ListItemButton>
         </Link>
@@ -170,6 +191,7 @@ export const MatchList3 = ({ match }) => {
         </>
       )}
     </Grid>
+    </Box>
   );
 };
 

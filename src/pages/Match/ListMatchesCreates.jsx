@@ -20,7 +20,6 @@ export const ListMatchesCreates = ({ listMatchesCreated,setListMatchesCreated })
        const response = await axios.delete(`${BACKEND_URL_BASE}/match/${id}`)
 
        setListMatchesCreated(prevState=> prevState.flat().filter(match => match._id !== id))
-       console.log("RESPONSED DELETE", response.data)
     }
 
 console.log("listMatchesCreated",listMatchesCreated)
@@ -49,6 +48,9 @@ console.log("listMatchesCreated",listMatchesCreated)
                   <>
                     <Typography component="span" variant="body2" color="text.primary">
                       Fecha: {match.round} | Día: {dayjs(match.date).format('DD/MM/YYYY')} | Liga: {match.league.name} | Temporada: {match.seasonYear.year} 
+                    </Typography>
+                    <Typography component="p" variant="body2" color="text.primary">
+                      Árbitro: {match.referee.name}  
                     </Typography>
                   </>
                 }

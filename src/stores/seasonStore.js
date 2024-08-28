@@ -120,7 +120,8 @@ const createSeasonStore = (set) => ({
   },
 
   // Función para agregar partidos a una temporada
-  addMatchesToSeason: async ({ seasonId, matches }) => {
+  addMatchesToSeason: async ({ seasonId, matches,refereeId }) => {
+    console.log("info",matches,refereeId,seasonId)
     try {
       const response = await fetch(`${URL_API}/${seasonId}/matches`, {
         method: "POST",

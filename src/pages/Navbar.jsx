@@ -212,6 +212,51 @@ console.log("token+", user)
               </Menu>
             </Box>
 
+            <Box sx={{ flexGrow: 1 }}>
+              <Button
+                id="ligas-button"
+                aria-controls="ligas-menu"
+                aria-haspopup="true"
+                onClick={handleMenuLeagues}
+                sx={{ color: "inherit" }}
+              >
+                Arbitros
+              </Button>
+              <Menu
+                id="ligas-menu"
+                anchorEl={anchorElLeagues}
+                open={Boolean(anchorElLeagues)}
+                onClose={handleClose}
+              >
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
+                  to="/referee"
+                >
+                  Ver arbitros
+                </MenuItem>
+                {isAuthenticated && (
+                  <MenuItem
+                    onClick={handleClose}
+                    component={Link}
+                    to="/referee/admin"
+                  >
+                    Administrar arbitros
+                  </MenuItem>
+                )}
+                 {isAuthenticated && (
+                  <MenuItem
+                    onClick={handleClose}
+                    component={Link}
+                    to="/referee/admin"
+                  >
+                    Administrar temporadas
+                  </MenuItem>
+                )}
+              </Menu>
+            </Box>
+
+
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               <Button
                 id="ayudanos-button"

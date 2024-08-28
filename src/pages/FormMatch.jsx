@@ -11,6 +11,7 @@ import { AutoFillOrder } from "./AutoFillOrder";
 import { AlertMessageCopy } from "../componts/feedback/AlertMessageCopy";
 import AlertDialogCopy from "../componts/feedback/AlertDialogCopy";
 import { ListMatchesCreates } from "./Match/ListMatchesCreates";
+import { AddRefereeToMatch } from "./referee/AddRefereeToMatch";
 
 const validationSchema = Yup.object().shape({
   homeTeam: Yup.string().required("Required"),
@@ -58,6 +59,8 @@ const FormMatch = ({ matchId }) => {
     addMatchesToSeason,
     getSeasonById,
     seasonById,
+    getReferees, // Nuevo hook para obtener árbitros
+    referees, // Lista de árbitros
   } = useBoundStore((state) => state);
 
   const [countries, setCountries] = useState([]);
@@ -72,6 +75,11 @@ const FormMatch = ({ matchId }) => {
   const [severity, setSeverity] = useState("");
   const [msgAlert, setMsgAlert] = useState("");
   const [selectedTeams, setSelectedTeams] = useState([]); // Estado para equipos seleccionados
+  const [refereeSelected, setRefereeSelected] = useState("")
+  useEffect(() => {
+    getReferees(); // Obtener la lista de árbitros
+  }, [getReferees]);
+  console.log("referees", referees);
 
   useEffect(() => {
     fetchLeagues();
@@ -110,21 +118,17 @@ const FormMatch = ({ matchId }) => {
     try {
       const response = await addMatchesToSeason({
         seasonId: selectedSeason,
+        refereeId: "66cc17438d341b845cc88f8d",
         matches: [values],
       });
-      console.log(response); // handle response from adding matches
+      console.log("values", values); // handle response from adding matches
       setListMatchesCreated((presState) => [
         response.populatedMatches,
         ...presState,
       ]);
 
-        // Añadir equipos seleccionados a la lista de equipos seleccionados
-        setSelectedTeams((prev) => [
-          ...prev,
-          values.homeTeam,
-          values.awayTeam,
-        ]);
-
+      // Añadir equipos seleccionados a la lista de equipos seleccionados
+      setSelectedTeams((prev) => [...prev, values.homeTeam, values.awayTeam]);
 
       if (response?.state === "ok") {
         setSeverity("success");
@@ -148,11 +152,14 @@ const FormMatch = ({ matchId }) => {
     }
   };
   const handleCountryChange = (event) => {
-    console.log(event.target.value);
     setSelectedCountry(event.target.value);
     setSelectedLeague("");
   };
+const handleRefereeChange =(e)=>{
+  console.log(e.target.value);
+  setRefereeSelected(e.target.value)
 
+}
   const handleSeasonChange = (event) => {
     const selectedSeasonForm = event.target.value;
     setSelectedSeason(selectedSeasonForm);
@@ -177,6 +184,7 @@ const FormMatch = ({ matchId }) => {
           seasonYear: "",
           round: "",
           order: "",
+          referee: "",
         }}
         onSubmit={handleSubmit}
         validationSchema={validationSchema}
@@ -341,7 +349,16 @@ const FormMatch = ({ matchId }) => {
               )}
             </Field>
             <ErrorMessage name="date" component="div" />
+            <Grid item xs={12}>
+            
 
+              <AddRefereeToMatch
+                  referees={referees}
+                  handleChange={handleChange}
+                  handleRefereeChange={handleRefereeChange}
+                />
+             
+            </Grid>
             <Button type="submit" variant="contained" color="primary">
               Crear partido
             </Button>
@@ -369,9 +386,12 @@ const FormMatch = ({ matchId }) => {
           </Form>
         )}
       </Formik>
-      {listMatchesCreated.length > 0 && 
-        <ListMatchesCreates listMatchesCreated={listMatchesCreated} setListMatchesCreated={setListMatchesCreated}/>
-      }
+      {listMatchesCreated.length > 0 && (
+        <ListMatchesCreates
+          listMatchesCreated={listMatchesCreated}
+          setListMatchesCreated={setListMatchesCreated}
+        />
+      )}
     </>
   );
 };

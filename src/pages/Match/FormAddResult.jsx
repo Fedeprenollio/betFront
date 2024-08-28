@@ -9,12 +9,10 @@ import Button from "@mui/material/Button";
 import { useBoundStore } from "../../stores";
 import AlertDialogCopy from "../../componts/feedback/AlertDialogCopy";
 import { AlertMessageCopy } from "../../componts/feedback/AlertMessageCopy";
+import { AddRefereeToMatch } from "../referee/AddRefereeToMatch";
 
 const FormAddResult = ({ matchId, visitorName, localName }) => {
-  const { addMatchResult, getMatchDetail, matchDetail, loading, error } = useBoundStore(
-    (state) => state
-  );
-
+  const { addMatchResult, getMatchDetail, matchDetail, loading, error, getReferees, referees } = useBoundStore((state) => state );
   const [initialValues, setInitialValues] = useState({
     goalsHome: "",
     goalsAway: 0,
@@ -44,17 +42,15 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
   const [alertText, setAlertText] = useState("");
   const [penaltiesEnabled, setPenaltiesEnabled] = useState(false); // Estado para habilitar/deshabilitar penales
 
-  console.log(
-    "matchDetail?.teamStatistics?.local?.foults",
-    matchDetail?.teamStatistics
-  );
 
+console.log("matchDetail",matchDetail)
   useEffect(() => {
     const fetchMatchDetail = async () => {
       await getMatchDetail({ idMatch: matchId });
     };
     fetchMatchDetail();
-  }, [getMatchDetail, matchId]);
+    getReferees()
+  }, [getMatchDetail, matchId,getReferees]);
 
   useEffect(() => {
     if (matchDetail && matchDetail._id === matchId) {
@@ -120,6 +116,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
   const handleConfirm = useCallback(
     async (values) => {
       setIsDialogOpen(false);
+      console.log("values para resultado:", values)
       try {
         await addMatchResult(matchId, {
           goalsHome: parseInt(values.goalsHome),
@@ -153,8 +150,9 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
             homePenalties: parseInt(values.penaltiesHome),
             awayPenalties: parseInt(values.penaltiesAway),
           },
+          refereeId: values.referee
         });
-
+        getMatchDetail()
         setAlertSeverity("success");
         setAlertText("Resultado actualizado con éxito");
       } catch (error) {
@@ -181,7 +179,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ values, setFieldValue }) => (
+        {({ values, setFieldValue,handleChange }) => (
           <Form>
             <Grid container spacing={2} alignItems="center">
               <Grid item xs={6} sx={{ maxWidth: "200px" }}>
@@ -431,7 +429,11 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
                   </Grid>
                 </>
               )}
-
+                <AddRefereeToMatch
+                  referees={referees}
+                  handleChange={handleChange}
+                  // handleRefereeChange={handleRefereeChange}
+                />
               <Grid item xs={12}>
                 <Button type="submit" variant="contained" color="primary">
                   Actualizar Resultado

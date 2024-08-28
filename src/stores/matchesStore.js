@@ -89,8 +89,8 @@ const createMatchesStore = ((set, get) => ({
     }
   },
   newMatch: async ({ homeTeamName, awayTeamName, date, league, seasonYear, round }) => {
+    console.log("INFO", homeTeamName, awayTeamName, date, league, seasonYear, round)
     set({ loading: true, error: null });
-
     try {
        await fetch(URL_API, {
         method: "POST",
@@ -113,7 +113,7 @@ const createMatchesStore = ((set, get) => ({
   },
   addMatchResult: async (matchId, resultData) => {
     // set({ loading: true, error: null });
-
+    console.log("resultData",resultData)
     const token = get().token;
     const config = {
       headers: {

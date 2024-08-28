@@ -21,6 +21,9 @@ import { RangePercentageTable } from "../pages/Statistics/rangePercentageTable/R
 import { HomePage } from "../pages/home/HomePage";
 import Cafecito from "../pages/cafecito/Cafecito";
 import { SeasonPage } from "../pages/season/SeasonPage";
+import { RefereePage } from "../pages/referee/RefereePage";
+import { RefereeStatisticsPage } from "../pages/referee/RefereeStatisticsPage";
+import { AdminReferee } from "../pages/referee/AdminReferee";
 
 const RoutesComponent = () => {
   const additionalProps = { someProp: "allTeams" };
@@ -40,7 +43,20 @@ const RoutesComponent = () => {
           <Route path=":idTeam" element={<FormTeam />} />
         </Route>
       </Route>
+      <Route path="/referee">
+        <Route index element={<RefereePage />} />
+        <Route path=":idReferee/statistics" element={<RefereeStatisticsPage />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="admin" element={<AdminReferee />} />
+          <Route path="edit/:matchId" element={<AdminMatch />} />
+          
+        </Route>
 
+        <Route path="adm" element={<PrivateRoute />}>
+          <Route path="" element={<FormTeam />} />
+          <Route path=":idTeam" element={<FormTeam />} />
+        </Route>
+      </Route>
       <Route path="/match">
         <Route index element={<MatchesPage />} />
 

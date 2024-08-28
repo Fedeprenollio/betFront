@@ -183,7 +183,7 @@ export const CaroulselCurrentSeason = () => {
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
         >
-            {allCurrentSeasons.length > 0 &&
+            { (allCurrentSeasons && allCurrentSeasons.length > 0) ?
                 <>
                     <IconButton
                         onClick={() => handleScroll('left')}
@@ -255,7 +255,7 @@ export const CaroulselCurrentSeason = () => {
                         <ArrowForwardIosIcon />
                     </IconButton>
                 </>
-            }
+             : <h2>Cargando...</h2> }
         </Box>
     );
 };

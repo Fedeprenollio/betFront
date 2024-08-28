@@ -6,6 +6,7 @@ import createSeasonStore from "./seasonStore";
 import crateLeagueStore from "./leagueStore";
 import createUserStore from './userStore';
 import createTableStore from './tableStore';
+import createRefereeStore from './referees';
 
 // Combina ambos slices en un solo store
 export const useBoundStore = create((...a) => ({
@@ -15,6 +16,7 @@ export const useBoundStore = create((...a) => ({
     ... createSeasonStore(...a),
     ... crateLeagueStore(...a),
     ... createUserStore(...a),
-    ... createTableStore(...a)
+    ... createTableStore(...a),
+    ... createRefereeStore(...a)
 
   }));
