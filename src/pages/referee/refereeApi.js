@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { BACKEND_URL_BASE } from '../../stores/url_base';
 
-const API_URL = 'http://localhost:1234/referees';
+const API_URL = `${BACKEND_URL_BASE}/referees`
 
 export const fetchReferees = async () => {
   const response = await axios.get(API_URL);
