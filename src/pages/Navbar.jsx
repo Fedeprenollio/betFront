@@ -24,6 +24,8 @@ const Navbar = () => {
   const [anchorElPartidos, setAnchorElPartidos] = useState(null);
   const [anchorElEquipos, setAnchorElEquipos] = useState(null);
   const [anchorElLeagues, setAnchorElLeagues] = useState(null);
+  const [anchorElReferee, setAnchorElReferee] = useState(null);
+
   const [anchorElAyudanos, setAnchorElAyudanos] = useState(null);
   const [anchorElAyudanosMobile, setAnchorElAyudanosMobile] = useState(null);
   const { user, isAuthenticated, logout } = useBoundStore((state) => state);
@@ -39,6 +41,9 @@ console.log("token+", user)
   const handleMenuLeagues = (event) => {
     setAnchorElLeagues(event.currentTarget);
   };
+  const handleMenuReferee = (event) => {
+    setAnchorElReferee(event.currentTarget);
+  };
 
   const handleMenuAyudanos = (event) => {
     setAnchorElAyudanos(event.currentTarget);
@@ -52,6 +57,8 @@ console.log("token+", user)
     setAnchorElPartidos(null);
     setAnchorElEquipos(null);
     setAnchorElLeagues(null);
+    setAnchorElReferee(null);
+
     setAnchorElAyudanos(null);
     setAnchorElAyudanosMobile(null);
   };
@@ -217,15 +224,15 @@ console.log("token+", user)
                 id="ligas-button"
                 aria-controls="ligas-menu"
                 aria-haspopup="true"
-                onClick={handleMenuLeagues}
+                onClick={handleMenuReferee}
                 sx={{ color: "inherit" }}
               >
-                Arbitros
+                Árbitros
               </Button>
               <Menu
                 id="ligas-menu"
-                anchorEl={anchorElLeagues}
-                open={Boolean(anchorElLeagues)}
+                anchorEl={anchorElReferee}
+                open={Boolean(anchorElReferee)}
                 onClose={handleClose}
               >
                 <MenuItem
@@ -233,7 +240,7 @@ console.log("token+", user)
                   component={Link}
                   to="/referee"
                 >
-                  Ver arbitros
+                  Ver árbitros
                 </MenuItem>
                 {isAuthenticated && (
                   <MenuItem
