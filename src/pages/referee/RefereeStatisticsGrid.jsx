@@ -66,7 +66,7 @@ const RefereeStatisticsTable = () => {
     return stabilizedReferees.map((el) => el[0]);
   };
   const sortedReferees = sortReferees(referees, getComparator(order, orderBy));
-
+console.log("sortedReferees",sortedReferees)
   return (
     <TableContainer component={Paper}>
       <Table>
