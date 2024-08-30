@@ -50,7 +50,7 @@ console.log("listMatchesCreated",listMatchesCreated)
                       Fecha: {match.round} | Día: {dayjs(match.date).format('DD/MM/YYYY')} | Liga: {match.league.name} | Temporada: {match.seasonYear.year} 
                     </Typography>
                     <Typography component="p" variant="body2" color="text.primary">
-                      Árbitro: {match.referee.name}  
+                      Árbitro: {match?.referee?.name ?match?.referee?.name : "Sin definir" }  
                     </Typography>
                   </>
                 }
