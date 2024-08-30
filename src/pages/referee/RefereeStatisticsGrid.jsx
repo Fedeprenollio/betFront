@@ -241,7 +241,7 @@ console.log("sortedReferees",sortedReferees)
         </TableHead>
         <TableBody>
           {sortedReferees.map((referee) => (
-            <TableRow key={referee.name}>
+            <TableRow key={referee.refereeId}>
               <TableCell>{referee.name}</TableCell>
               <TableCell align="right">{referee.totalMatches}</TableCell>
 
