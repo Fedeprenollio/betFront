@@ -12,6 +12,8 @@ import { AlertMessageCopy } from "../componts/feedback/AlertMessageCopy";
 import AlertDialogCopy from "../componts/feedback/AlertDialogCopy";
 import { ListMatchesCreates } from "./Match/ListMatchesCreates";
 import { AddRefereeToMatch } from "./referee/AddRefereeToMatch";
+import dayjs from "dayjs";
+import { updateMach } from "./Match/matchApi";
 
 const validationSchema = Yup.object().shape({
   homeTeam: Yup.string().required("Required"),
@@ -32,7 +34,7 @@ const MyDateTimePicker = ({ field, form }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DateTimePicker
-        value={field.value}
+        value={field?.value}
         onChange={handleDateTimeChange}
         textField={(props) => (
           <TextField
@@ -52,7 +54,7 @@ const MyDateTimePicker = ({ field, form }) => {
 };
 
 // PARA LUEGO EDITAR PARTIDOS voy a usar luego los matchId
-const FormMatch = ({ matchId }) => {
+const FormMatch = ({ initialValues, onClose, matchId }) => {
   const {
     fetchLeagues,
     leagues,
@@ -61,6 +63,7 @@ const FormMatch = ({ matchId }) => {
     seasonById,
     getReferees, // Nuevo hook para obtener árbitros
     referees, // Lista de árbitros
+    setMatches
   } = useBoundStore((state) => state);
 
   const [countries, setCountries] = useState([]);
@@ -68,6 +71,9 @@ const FormMatch = ({ matchId }) => {
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedLeague, setSelectedLeague] = useState("");
   const [selectedSeason, setSelectedSeason] = useState("");
+  const [initialTeams, setInitialTeams] = useState({
+    homeTeam:"",awayTeam:""
+  })
   const [listMatchesCreated, setListMatchesCreated] = useState([]);
   // Estado para las alertas
   const [openAddTeamsDialog, setOpenAddTeamsDialog] = useState(false);
@@ -75,7 +81,7 @@ const FormMatch = ({ matchId }) => {
   const [severity, setSeverity] = useState("");
   const [msgAlert, setMsgAlert] = useState("");
   const [selectedTeams, setSelectedTeams] = useState([]); // Estado para equipos seleccionados
-  const [refereeSelected, setRefereeSelected] = useState("")
+  const [refereeSelected, setRefereeSelected] = useState("");
   useEffect(() => {
     getReferees(); // Obtener la lista de árbitros
   }, [getReferees]);
@@ -92,47 +98,83 @@ const FormMatch = ({ matchId }) => {
   useEffect(() => {
     // Obtener países únicos de los equipos
     const uniqueCountries = Array.from(
-      new Set(leagues.map((league) => league.country))
+      new Set(leagues?.map((league) => league.country))
     );
     setCountries(uniqueCountries);
 
     // Obtener ligas únicas por país
     const leaguesData = {};
-    uniqueCountries.forEach((country) => {
+
+    uniqueCountries?.forEach((  country) => {
       const uniqueLeagues = new Set(
-        leagues
-          .filter((league) => league.country === country)
-          .map((league) => {
+        leagues?.filter((league) => league.country === country)
+          ?.map((league) => {
             return { _id: league._id, name: league.name };
           })
       );
-      leaguesData[country] = Array.from(uniqueLeagues).map(({ name, _id }) => ({
-        _id: _id,
-        label: name,
-      }));
+      leaguesData[country] = Array.from(uniqueLeagues)?.map(
+        ({ name, _id }) => ({
+          _id: _id,
+          label: name,
+        })
+      );
     });
+
+
+
+
     setLeaguesByCountry(leaguesData);
   }, [leagues]);
 
+
+  useEffect(() => {
+    if(matchId){
+      setSelectedLeague(initialValues.league._id)
+      setSelectedCountry(initialValues.country)
+      setSelectedSeason(initialValues.seasonYear._id)
+      setInitialTeams({
+        homeTeam: initialValues.homeTeam._id,
+        awayTeam: initialValues.awayTeam._id
+}      )
+    }
+  }, [initialValues ,matchId ])
+  
+  
   const handleSubmit = async (values) => {
     try {
-      const response = await addMatchesToSeason({
-        seasonId: selectedSeason,
-        refereeId: "66cc17438d341b845cc88f8d",
-        matches: [values],
-      });
-      console.log("values", values); // handle response from adding matches
-      setListMatchesCreated((presState) => [
-        response.populatedMatches,
-        ...presState,
-      ]);
+      let response;
 
-      // Añadir equipos seleccionados a la lista de equipos seleccionados
-      setSelectedTeams((prev) => [...prev, values.homeTeam, values.awayTeam]);
+      // Verificar si es un partido existente (actualizar) o nuevo (crear)
+      if (matchId) {
+        // Actualizar partido existente
+        response = await updateMach({
+          matchId: matchId,
+          updatedData: values,
+          token: JSON.parse(localStorage.getItem("loggedUser"))
+        });
+        // setMatches()
+      } else {
+        // Crear nuevo partido
+        response = await addMatchesToSeason({
+          seasonId: selectedSeason,
+          matches: [values],
+        });
+      }
+
+      if (!matchId) {
+        // Solo añadir a la lista si es una creación, no en actualización
+        setListMatchesCreated((prevState) => [
+          response?.populatedMatches,
+          ...prevState,
+        ]);
+
+        // Añadir equipos seleccionados solo si es creación
+        setSelectedTeams((prev) => [...prev, values.homeTeam, values.awayTeam]);
+      }
 
       if (response?.state === "ok") {
         setSeverity("success");
-        setMsgAlert("Partido creado exitosamente");
+        setMsgAlert(matchId ? "Partido editado exitosamente":"Partido creado exitosamente");
         setIsAlertOpen(true);
       } else {
         setSeverity("error");
@@ -155,11 +197,10 @@ const FormMatch = ({ matchId }) => {
     setSelectedCountry(event.target.value);
     setSelectedLeague("");
   };
-const handleRefereeChange =(e)=>{
-  console.log(e.target.value);
-  setRefereeSelected(e.target.value)
-
-}
+  const handleRefereeChange = (e) => {
+    console.log(e.target.value);
+    setRefereeSelected(e.target.value);
+  };
   const handleSeasonChange = (event) => {
     const selectedSeasonForm = event.target.value;
     setSelectedSeason(selectedSeasonForm);
@@ -168,29 +209,42 @@ const handleRefereeChange =(e)=>{
   const handleLeagueChange = (event) => {
     setSelectedLeague(event.target.value);
   };
-  const availableTeams = seasonById?.season?.teams?.filter(
-    (team) => !selectedTeams.includes(team._id)
-  );
+  const handleTeamsChange = (event) => {
+    const { name, value } = event.target;
+    setInitialTeams(prevValue => ({
+      ...prevValue,
+      [name]: value
+    }));
+  };
+  const availableTeams = !matchId ? seasonById?.season?.teams?.filter(
+    (team) => !selectedTeams?.includes(team._id)
+  ):  seasonById?.season?.teams
+ 
+
 
   return (
     <>
       <Formik
         initialValues={{
-          homeTeam: "",
-          awayTeam: "",
-          date: null, // Inicializar la fecha como null
-          league: "",
-          country: "",
-          seasonYear: "",
-          round: "",
-          order: "",
-          referee: "",
+          homeTeam: initialValues?.homeTeam._id || "",
+          awayTeam: initialValues?.awayTeam._id || "",
+          date: dayjs(initialValues?.date) || null, // Inicializar la fecha como null
+          league: initialValues?.league._id || "",
+          country: initialValues?.country || "",
+          seasonYear: initialValues?.seasonYear._id || "",
+          round: initialValues?.round || "",
+          order: initialValues?.order || "",
+          referee: initialValues?.referee?._id || "",
         }}
+       
+
         onSubmit={handleSubmit}
         validationSchema={validationSchema}
       >
         {({ values, handleChange, setFieldValue }) => (
+          
           <Form>
+            {console.log("valuess", values)}
             <AutoFillOrder values={values} setFieldValue={setFieldValue} />
             <Field
               as={TextField}
@@ -199,6 +253,7 @@ const handleRefereeChange =(e)=>{
               label="País"
               variant="outlined"
               fullWidth
+              // value={initialValues?.country || ""}
               margin="normal"
               onChange={(event) => {
                 handleChange(event);
@@ -206,7 +261,7 @@ const handleRefereeChange =(e)=>{
               }}
             >
               <MenuItem value="">Seleccione un país</MenuItem>
-              {countries.map((country) => (
+              {countries?.map((country) => (
                 <MenuItem key={country} value={country}>
                   {country}
                 </MenuItem>
@@ -257,7 +312,7 @@ const handleRefereeChange =(e)=>{
               <MenuItem value="">Selecciona una temporada</MenuItem>
               {leagues
                 .find((league) => league._id === selectedLeague)
-                ?.season.map((season) => (
+                ?.season?.map((season) => (
                   <MenuItem key={season._id} value={season._id}>
                     {season.year}
                   </MenuItem>
@@ -301,16 +356,21 @@ const handleRefereeChange =(e)=>{
               variant="outlined"
               fullWidth
               margin="normal"
+              value={initialTeams?.homeTeam}
+              onChange={(event) => {
+                handleChange(event);
+                handleTeamsChange(event);
+              }}
             >
               {selectedLeague &&
                 // seasonById?.season?.teams
                 availableTeams
                   ?.slice()
-                  ?.sort((a, b) => a.name.localeCompare(b.name)) // Ordenar alfabéticamente
+                  ?.sort((a, b) => a?.name?.localeCompare(b?.name)) // Ordenar alfabéticamente
                   ?.map((team) => {
                     return (
-                      <MenuItem key={team._id} value={team._id}>
-                        {team.name}
+                      <MenuItem key={team?._id} value={team?._id}>
+                        {team?.name}
                       </MenuItem>
                     );
                   })}
@@ -325,6 +385,11 @@ const handleRefereeChange =(e)=>{
               variant="outlined"
               fullWidth
               margin="normal"
+              value={initialTeams.awayTeam}
+              onChange={(event) => {
+                handleChange(event);
+                handleTeamsChange(event);
+              }}
             >
               {selectedLeague &&
                 // seasonById?.season?.teams
@@ -350,17 +415,14 @@ const handleRefereeChange =(e)=>{
             </Field>
             <ErrorMessage name="date" component="div" />
             <Grid item xs={12}>
-            
-
               <AddRefereeToMatch
-                  referees={referees}
-                  handleChange={handleChange}
-                  handleRefereeChange={handleRefereeChange}
-                />
-             
+                referees={referees}
+                handleChange={handleChange}
+                handleRefereeChange={handleRefereeChange}
+              />
             </Grid>
             <Button type="submit" variant="contained" color="primary">
-              Crear partido
+             {matchId ? "Editar partido" :"Crear partido" } 
             </Button>
             <AlertDialogCopy
               open={openAddTeamsDialog}
@@ -386,7 +448,7 @@ const handleRefereeChange =(e)=>{
           </Form>
         )}
       </Formik>
-      {listMatchesCreated.length > 0 && (
+      {listMatchesCreated.length > 0 && !matchId && (
         <ListMatchesCreates
           listMatchesCreated={listMatchesCreated}
           setListMatchesCreated={setListMatchesCreated}

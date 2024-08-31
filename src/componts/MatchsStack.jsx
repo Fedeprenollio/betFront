@@ -21,12 +21,15 @@ import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import Collapse from "@mui/material/Collapse";
-import { Alert, CircularProgress, useMediaQuery } from "@mui/material";
+import { Alert, CircularProgress, Dialog, DialogContent, DialogTitle, useMediaQuery } from "@mui/material";
 import FormAddResult from "../pages/Match/FormAddResult";
 import { useBoundStore } from "../stores";
 import LoadingErrorWrapper from "./loadingErrorWrapper/LoadingErrorWrapper";
 import LoadingSpinner from "./loading/LoadingSpinner";
 import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
+import EditIcon from "@mui/icons-material/Edit";
+import FormMatch from "../pages/FormMatch";
+
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
@@ -39,7 +42,18 @@ export const MatchList3 = ({ match }) => {
   const { onDeleteMatch, isAuthenticated, initializeAuthState } = useBoundStore(
     (state) => state
   );
-console.log("match",match)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  // Abrir modal de edición
+  const handleOpenEditModal = () => {
+    setIsEditModalOpen(true);
+  };
+
+  // Cerrar modal de edición
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
+  };
+  console.log("match", match);
   useEffect(() => {
     initializeAuthState();
   }, [initializeAuthState]);
@@ -61,136 +75,161 @@ console.log("match",match)
   };
   return (
     <Box
-    sx={{
-      marginY: 2, // Margen vertical entre partidos
-      padding: 2, // Espaciado interno para que los contenidos no queden pegados al borde
-      boxShadow: 3, // Relieve
-      borderRadius: 2, // Bordes redondeados para suavizar el contenedor
-      backgroundColor: "background.paper", // Fondo blanco
-    }}
-  >
-    <Grid container spacing={2} alignItems="center">
-      <Grid item xs={10} sx={{ paddingX: "0rem" }}>
-        <Link
-          to={`/stats/${match?.homeTeam?._id}/${match?.awayTeam?._id}/${match._id}`}
-          className="link-no-underline"
-        >
-          <ListItemButton component="div" sx={{ paddingX: "0.2rem" }}>
-            <Grid
-              container
-              spacing={2}
-              alignItems="center"
-              sx={{ paddingX: "0.2rem" }}
-            >
-              <Grid item xs={5}>
-                <ListItemText
-                  sx={{ paddingX: "0.2rem" }}
-                  align="end"
-                  primary={
-                    <>
-                      <Typography
-                        sx={{
-                          display: "inline",
-                          fontSize: isMobile ? "0.8rem" : "inherit",
-                        }}
-                        component="h6"
-                        variant="h6"
-                        color="grey"
-                      >
-                        {match?.homeTeam?.name}
-                      </Typography>
-                    </>
-                  }
-                />
-              </Grid>
-              <Grid item xs={2} sx={{ paddingX: "0.2rem" }}>
-                <ListItemText
-                  sx={{ paddingX: "0.3rem" }}
-                  align="center"
-                  primary={
-                    <>
-                      <Typography
-                        sx={{
-                          display: "inline",
-                          fontSize: isMobile ? "0.9rem" : "inherit",
-                        }}
-                        component="h6"
-                        variant="h5"
-                        color="green"
-                      >
-                        {match.isFinished
-                          ? `${match.teamStatistics.local.goals}-${match.teamStatistics.visitor.goals} `
-                          : hora}
-                      </Typography>
-                    </>
-                  }
-                />
-              </Grid>
-              <Grid item xs={5} sx={{ paddingX: "0.2rem" }}>
-                <ListItemText
-                  sx={{ paddingX: "0.2rem" }}
-                  align="start"
-                  primary={
-                    <>
-                      <Typography
-                        sx={{
-                          display: "inline",
-                          fontSize: isMobile ? "0.8rem" : "inherit",
-                        }}
-                        component="h6"
-                        variant="h6"
-                        color="grey"
-                      >
-                        {match?.awayTeam?.name}
-                      </Typography>
-                    </>
-                  }
-                />
-              </Grid>
-              <Grid item xs={6} sx={{ padding: "0.0rem", marginTop: isMobile ? "0.1rem" : "1rem" }}>
-                <Typography
+      sx={{
+        marginY: 2, // Margen vertical entre partidos
+        padding: 2, // Espaciado interno para que los contenidos no queden pegados al borde
+        boxShadow: 3, // Relieve
+        borderRadius: 2, // Bordes redondeados para suavizar el contenedor
+        backgroundColor: "background.paper", // Fondo blanco
+      }}
+    >
+      <Grid container spacing={2} alignItems="center">
+        <Grid item xs={10} sx={{ paddingX: "0rem" }}>
+          <Link
+            to={`/stats/${match?.homeTeam?._id}/${match?.awayTeam?._id}/${match._id}`}
+            className="link-no-underline"
+          >
+            <ListItemButton component="div" sx={{ paddingX: "0.2rem" }}>
+              <Grid
+                container
+                spacing={2}
+                alignItems="center"
+                sx={{ paddingX: "0.2rem" }}
+              >
+                <Grid item xs={5}>
+                  <ListItemText
+                    sx={{ paddingX: "0.2rem" }}
+                    align="end"
+                    primary={
+                      <>
+                        <Typography
+                          sx={{
+                            display: "inline",
+                            fontSize: isMobile ? "0.8rem" : "inherit",
+                          }}
+                          component="h6"
+                          variant="h6"
+                          color="grey"
+                        >
+                          {match?.homeTeam?.name}
+                        </Typography>
+                      </>
+                    }
+                  />
+                </Grid>
+                <Grid item xs={2} sx={{ paddingX: "0.2rem" }}>
+                  <ListItemText
+                    sx={{ paddingX: "0.3rem" }}
+                    align="center"
+                    primary={
+                      <>
+                        <Typography
+                          sx={{
+                            display: "inline",
+                            fontSize: isMobile ? "0.9rem" : "inherit",
+                          }}
+                          component="h6"
+                          variant="h5"
+                          color="green"
+                        >
+                          {match.isFinished
+                            ? `${match.teamStatistics.local.goals}-${match.teamStatistics.visitor.goals} `
+                            : hora}
+                        </Typography>
+                      </>
+                    }
+                  />
+                </Grid>
+                <Grid item xs={5} sx={{ paddingX: "0.2rem" }}>
+                  <ListItemText
+                    sx={{ paddingX: "0.2rem" }}
+                    align="start"
+                    primary={
+                      <>
+                        <Typography
+                          sx={{
+                            display: "inline",
+                            fontSize: isMobile ? "0.8rem" : "inherit",
+                          }}
+                          component="h6"
+                          variant="h6"
+                          color="grey"
+                        >
+                          {match?.awayTeam?.name}
+                        </Typography>
+                      </>
+                    }
+                  />
+                </Grid>
+                <Grid
+                  item
+                  xs={6}
                   sx={{
-                    fontSize: isMobile ? "0.75rem" : "0.85rem",
-                    textAlign: "center",
-                    color: "gray",
-                    // fontStyle: "italic",
-                     paddingX: "0.0rem"
+                    padding: "0.0rem",
+                    marginTop: isMobile ? "0.1rem" : "1rem",
                   }}
                 >
-                  Árbitro: {match?.referee?.name ? match.referee.name : "Sin registro"}
-                </Typography>
+                  <Typography
+                    sx={{
+                      fontSize: isMobile ? "0.75rem" : "0.85rem",
+                      textAlign: "center",
+                      color: "gray",
+                      // fontStyle: "italic",
+                      paddingX: "0.0rem",
+                    }}
+                  >
+                    Árbitro:{" "}
+                    {match?.referee?.name ? match.referee.name : "Sin registro"}
+                  </Typography>
+                </Grid>
+             
               </Grid>
-            </Grid>
-          </ListItemButton>
-        </Link>
-      </Grid>
+            </ListItemButton>
+          </Link>
+        </Grid>
 
-      {isAuthenticated && (
-        <>
-          <Grid item xs={2}>
-            {/* <Tooltip title="Delete">
+        {isAuthenticated && (
+          <>
+            <Grid item xs={2}>
+              {/* <Tooltip title="Delete">
           <IconButton  onClick={()=>handleDelete(match._id)}>
             <DeleteIcon  />
           </IconButton>
         </Tooltip> */}
-            <Tooltip title="Agregar resultado">
-              <IconButton onClick={toggleForm}>
-                {isOpen ? <ExpandLess /> : <ExpandMore />}
-              </IconButton>
-            </Tooltip>
-          </Grid>
-          <Grid item xs={12}>
-            <Collapse in={isOpen} timeout="auto" unmountOnExit>
-              <FormAddResult
-                matchId={match._id}
-                localName={match.homeTeam?.name}
-                visitorName={match.awayTeam?.name}
-              />
-            </Collapse>
-          </Grid>
-        </>
-      )}
-    </Grid>
+           {/* Botón para Editar */}
+           <Grid item xs={2}>
+                  <Tooltip title="Editar Partido">
+                    <IconButton onClick={handleOpenEditModal}>
+                      <EditIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+              <Tooltip title="Agregar resultado">
+                <IconButton onClick={toggleForm}>
+                  {isOpen ? <ExpandLess /> : <ExpandMore />}
+                </IconButton>
+              </Tooltip>
+            </Grid>
+            <Grid item xs={12}>
+              <Collapse in={isOpen} timeout="auto" unmountOnExit>
+                <FormAddResult
+                  matchId={match._id}
+                  localName={match.homeTeam?.name}
+                  visitorName={match.awayTeam?.name}
+                />
+              </Collapse>
+            </Grid>
+          </>
+        )}
+      </Grid>
+        {/* Modal para Editar Partido */}
+        <Dialog open={isEditModalOpen} onClose={handleCloseEditModal} maxWidth="md" fullWidth>
+        <DialogTitle>Editar Partido</DialogTitle>
+        <DialogContent>
+          {/* Pasa los datos del partido al formulario */}
+          <FormMatch initialValues={match} onClose={handleCloseEditModal} matchId={match._id} />
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };
@@ -206,15 +245,17 @@ export const MatchsStack = () => {
     };
   }, [clearMatches]);
 
-  console.log("loagind", loading);
-
   // if (error) {
   //   return <Alert severity="error">{error}</Alert>;
   // }
 
   return (
     <Container
-      sx={{ backgroundColor: "#84828244",minHeight: "100vh", padding: "0.3rem" }}
+      sx={{
+        backgroundColor: "#84828244",
+        minHeight: "100vh",
+        padding: "0.3rem",
+      }}
     >
       {loading && <LoadingSpinner />}
       {!loading & (matches.length === 0) ? (
