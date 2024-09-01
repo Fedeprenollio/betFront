@@ -440,12 +440,14 @@ console.log("matchDetail",matchDetail)
                   </Grid>
                 </>
               )}
+              <Grid item xs={6} >
                 <AddRefereeToMatch
                   refereeSelected={refereeSelected}
                   referees={referees}
                   handleChange={handleChange}
                   handleRefereeChange={handleRefereeChange}
                 />
+                </Grid>
               <Grid item xs={12}>
                 <Button type="submit" variant="contained" color="primary">
                   Actualizar Resultado
