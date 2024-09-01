@@ -12,7 +12,7 @@ import { AlertMessageCopy } from "../../componts/feedback/AlertMessageCopy";
 import { AddRefereeToMatch } from "../referee/AddRefereeToMatch";
 
 const FormAddResult = ({ matchId, visitorName, localName }) => {
-  const { addMatchResult, getMatchDetail, matchDetail, loading, error, getReferees, referees } = useBoundStore((state) => state );
+  const { addMatchResult, getMatchDetail, matchDetail, loading, error, getReferees, referees,setMatches } = useBoundStore((state) => state );
   const [initialValues, setInitialValues] = useState({
     goalsHome: "",
     goalsAway: 0,
@@ -41,7 +41,7 @@ const FormAddResult = ({ matchId, visitorName, localName }) => {
   const [alertSeverity, setAlertSeverity] = useState("success");
   const [alertText, setAlertText] = useState("");
   const [penaltiesEnabled, setPenaltiesEnabled] = useState(false); // Estado para habilitar/deshabilitar penales
-
+  const [refereeSelected, setRefereeSelected] = useState("")
 
 console.log("matchDetail",matchDetail)
   useEffect(() => {
@@ -49,9 +49,14 @@ console.log("matchDetail",matchDetail)
       await getMatchDetail({ idMatch: matchId });
     };
     fetchMatchDetail();
+    
     getReferees()
   }, [getMatchDetail, matchId,getReferees]);
 
+  useEffect(() => {
+    setRefereeSelected(matchDetail.referee)
+  }, [matchDetail.referee])
+  
   useEffect(() => {
     if (matchDetail && matchDetail._id === matchId) {
       setInitialValues({
@@ -152,7 +157,9 @@ console.log("matchDetail",matchDetail)
           },
           refereeId: values.referee
         });
-        getMatchDetail()
+        // getMatchDetail({idMatch:matchId})
+        setMatches({date: matchDetail.date})
+        
         setAlertSeverity("success");
         setAlertText("Resultado actualizado con éxito");
       } catch (error) {
@@ -170,6 +177,10 @@ console.log("matchDetail",matchDetail)
   };
   const togglePenalties = () => {
     setPenaltiesEnabled((prev) => !prev);
+  };
+  const handleRefereeChange = (e) => {
+    console.log(e.target.value);
+    setRefereeSelected(e.target.value);
   };
   return (
     <>
@@ -430,9 +441,10 @@ console.log("matchDetail",matchDetail)
                 </>
               )}
                 <AddRefereeToMatch
+                  refereeSelected={refereeSelected}
                   referees={referees}
                   handleChange={handleChange}
-                  // handleRefereeChange={handleRefereeChange}
+                  handleRefereeChange={handleRefereeChange}
                 />
               <Grid item xs={12}>
                 <Button type="submit" variant="contained" color="primary">

@@ -136,6 +136,7 @@ const FormMatch = ({ initialValues, onClose, matchId }) => {
         homeTeam: initialValues.homeTeam._id,
         awayTeam: initialValues.awayTeam._id
 }      )
+      setRefereeSelected(initialValues.referee._id)
     }
   }, [initialValues ,matchId ])
   
@@ -416,6 +417,7 @@ const FormMatch = ({ initialValues, onClose, matchId }) => {
             <ErrorMessage name="date" component="div" />
             <Grid item xs={12}>
               <AddRefereeToMatch
+              refereeSelected={refereeSelected}
                 referees={referees}
                 handleChange={handleChange}
                 handleRefereeChange={handleRefereeChange}

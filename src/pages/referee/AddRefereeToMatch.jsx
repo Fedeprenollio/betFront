@@ -5,7 +5,7 @@ import { Field, ErrorMessage } from "formik";
 
 
 
-export const AddRefereeToMatch = ({ referees, handleChange, handleRefereeChange }) => {
+export const AddRefereeToMatch = ({ referees, handleChange, handleRefereeChange,refereeSelected }) => {
   return (
     <>
       <Field
@@ -15,6 +15,7 @@ export const AddRefereeToMatch = ({ referees, handleChange, handleRefereeChange 
         label="Árbitro"
         variant="outlined"
         fullWidth
+        value={refereeSelected}
         margin="normal"
         onChange={(event) => {
           handleChange(event);
