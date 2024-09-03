@@ -158,7 +158,8 @@ console.log("matchDetail",matchDetail)
           refereeId: values.referee
         });
         // getMatchDetail({idMatch:matchId})
-        setMatches({date: matchDetail.date})
+        // console.log("matchDetail.date",matchDetail.date)
+        // setMatches({date: matchDetail.date})
         
         setAlertSeverity("success");
         setAlertText("Resultado actualizado con éxito");
@@ -440,7 +441,7 @@ console.log("matchDetail",matchDetail)
                   </Grid>
                 </>
               )}
-              <Grid item xs={6} >
+              <Grid item xs={9} md={6} >
                 <AddRefereeToMatch
                   refereeSelected={refereeSelected}
                   referees={referees}

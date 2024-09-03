@@ -6,39 +6,41 @@ import {
   Typography,
   List,
   ListItem,
-  Container,
   Card,
   CardContent,
   Grid,
-  useMediaQuery,
-  useTheme,
   Accordion,
   AccordionSummary,
   AccordionDetails,
   IconButton,
   Tooltip,
   Box,
-  Avatar
+  Avatar,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ShowResultMatch from "./ShowResultMatch";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { AddRefereeToMatch } from "../referee/AddRefereeToMatch";
+import { Form, Formik } from "formik";
+import { updateMach } from "./matchApi";
 
 export const ShowResultsForFecha = () => {
   const { seasonId } = useParams();
-  const { seasonById, getSeasonById } = useBoundStore((state) => state);
+  const { seasonById, getSeasonById, referees, getReferees } = useBoundStore(
+    (state) => state
+  );
   const [selectedFecha, setSelectedFecha] = useState(null);
   const [selectedSeason, setSelectedSeason] = useState("");
   const [expandedMatchId, setExpandedMatchId] = useState(null);
-
-  const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  // const [refereeSelected, setRefereeSelected] = useState(null);
+  // const [refereeSelected, setRefereeSelected] = useState({}); // Cambiado a objeto
+  const [refereesSelectedByMatch, setRefereesSelectedByMatch] = useState({});
 
   useEffect(() => {
     getSeasonById(seasonId);
-  }, [seasonId, getSeasonById]);
+    getReferees();
+  }, [seasonId, getSeasonById, getReferees]);
 
   useEffect(() => {
     if (seasonById?.season?.fechas) {
@@ -60,6 +62,20 @@ export const ShowResultsForFecha = () => {
     }
   }, [seasonById, seasonId]);
 
+  useEffect(() => {
+    if (seasonById?.season?.matches) {
+      const refereesMap = {};
+  
+      seasonById.season.matches.forEach((match) => {
+        if (match.referee) {
+          // Asumiendo que match.referee contiene el ID del árbitro
+          refereesMap[match._id] = match.referee;
+        }
+      });
+  
+      setRefereesSelectedByMatch(refereesMap);
+    }
+  }, [seasonById]);
   const handleFechaClick = (fecha) => {
     setSelectedFecha(fecha);
   };
@@ -76,8 +92,52 @@ export const ShowResultsForFecha = () => {
   const handleOpenInNewTab = (match) => {
     const url = `/stats/${match.homeTeam._id}/${match.awayTeam._id}/${match._id}`;
     // window.open(url, '_blank', 'noopener,noreferrer');
-         window.open(url, );
+    window.open(url);
+  };
 
+  // Lógica para manejar cambios adicionales al seleccionar un árbitro
+   // Lógica para manejar cambios adicionales al seleccionar un árbitro
+   const handleRefereeChange = (matchId, selectedRefereeId) => {
+    setRefereesSelectedByMatch((prev) => ({
+      ...prev,
+      [matchId]: selectedRefereeId,
+    }));
+  };
+  console.log("refereesSelectedByMatch",refereesSelectedByMatch)
+
+  const handleSubmit = async (values, matchId) => {
+    try {
+      let response;
+
+      // Actualizar partido existente
+      response = await updateMach({
+        matchId: matchId,
+        updatedData: values,
+        token: JSON.parse(localStorage.getItem("loggedUser")),
+      });
+      console.log("RESPONSE", response);
+      // setMatches()
+
+      // if (response?.state === "ok") {
+      //   setSeverity("success");
+      //   setMsgAlert(matchId ? "Partido editado exitosamente":"Partido creado exitosamente");
+      //   setIsAlertOpen(true);
+      // } else {
+      //   setSeverity("error");
+      //   setMsgAlert("Error al crear partido");
+      //   setIsAlertOpen(true);
+      // }
+    } catch (error) {
+      // if (error.name === "ValidationError") {
+      //   const errorMessage = error.errors.join(", ");
+      //   setSeverity("error");
+      //   setMsgAlert(errorMessage);
+      //   setIsAlertOpen(true);
+      // } else {
+      //   console.error("Error al validar el formulario:", error);
+      // }
+      console.error(error); // handle error
+    }
   };
   return (
     <>
@@ -153,7 +213,7 @@ export const ShowResultsForFecha = () => {
             boxShadow: 1,
             backgroundColor: "#fff",
             transition: "box-shadow 0.3s",
-            '&:hover': {
+            "&:hover": {
               boxShadow: 4,
             },
           }}
@@ -176,10 +236,10 @@ export const ShowResultsForFecha = () => {
                           justifyContent="center"
                           alignItems="center"
                           sx={{
-                            flexDirection: { xs: 'column', sm: 'row' },
-                            overflow: 'hidden',
-                            whiteSpace: 'nowrap',
-                            textOverflow: 'ellipsis',
+                            flexDirection: { xs: "column", sm: "row" },
+                            overflow: "hidden",
+                            whiteSpace: "nowrap",
+                            textOverflow: "ellipsis",
                           }}
                         >
                           <Avatar
@@ -193,24 +253,33 @@ export const ShowResultsForFecha = () => {
                           <Typography
                             variant="body1"
                             sx={{
-                              fontWeight: 'bold',
-                              textOverflow: 'ellipsis',
-                              overflow: 'hidden',
-                              whiteSpace: 'nowrap',
-                              textAlign: { xs: 'center', sm: 'left' },
+                              fontWeight: "bold",
+                              textOverflow: "ellipsis",
+                              overflow: "hidden",
+                              whiteSpace: "nowrap",
+                              textAlign: { xs: "center", sm: "left" },
                             }}
                           >
                             {match.homeTeam.name}
                           </Typography>
                         </Grid>
-                        <Grid item xs={2} container alignItems={"center"} justifyContent="center" display={"flex"}  flexDirection={"column"}>
-                          <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+                        <Grid
+                          item
+                          xs={2}
+                          container
+                          alignItems={"center"}
+                          justifyContent="center"
+                          display={"flex"}
+                          flexDirection={"column"}
+                        >
+                          <Typography variant="h4" sx={{ fontWeight: "bold" }}>
                             {match.isFinished
                               ? `${match.teamStatistics.local.goals}    ${match.teamStatistics.visitor.goals}`
                               : "-"}
                           </Typography>
-                          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                            {(match?.penaltyResult?.homePenalties!== match.penaltyResult.awayPenalties)
+                          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                            {match?.penaltyResult?.homePenalties !==
+                            match.penaltyResult.awayPenalties
                               ? `(${match?.penaltyResult?.homePenalties})   ( ${match.penaltyResult.awayPenalties})`
                               : null}
                           </Typography>
@@ -222,20 +291,20 @@ export const ShowResultsForFecha = () => {
                           justifyContent="center"
                           alignItems="center"
                           sx={{
-                            flexDirection: { xs: 'column-reverse', sm: 'row' },
-                            overflow: 'hidden',
-                            whiteSpace: 'nowrap',
-                            textOverflow: 'ellipsis',
+                            flexDirection: { xs: "column-reverse", sm: "row" },
+                            overflow: "hidden",
+                            whiteSpace: "nowrap",
+                            textOverflow: "ellipsis",
                           }}
                         >
                           <Typography
                             variant="body1"
                             sx={{
-                              fontWeight: 'bold',
-                              textOverflow: 'ellipsis',
-                              overflow: 'hidden',
-                              whiteSpace: 'nowrap',
-                              textAlign: { xs: 'center', sm: 'left' },
+                              fontWeight: "bold",
+                              textOverflow: "ellipsis",
+                              overflow: "hidden",
+                              whiteSpace: "nowrap",
+                              textAlign: { xs: "center", sm: "left" },
                             }}
                           >
                             {match.awayTeam.name}
@@ -253,7 +322,7 @@ export const ShowResultsForFecha = () => {
                           <Tooltip title="Ver Estadísticas">
                             <IconButton
                               // component={Link}
-                              onClick={()=>handleOpenInNewTab(match)}
+                              onClick={() => handleOpenInNewTab(match)}
                               to={`/stats/${match.homeTeam._id}/${match.awayTeam._id}/${match._id}`}
                               color="primary"
                             >
@@ -261,23 +330,67 @@ export const ShowResultsForFecha = () => {
                             </IconButton>
                           </Tooltip>
                           {match.isFinished && (
-                            <Tooltip title={expandedMatchId === match._id ? "Ocultar Resultado" : "Ver Resultado"}>
+                            <Tooltip
+                              title={
+                                expandedMatchId === match._id
+                                  ? "Ocultar Resultado"
+                                  : "Ver Resultado"
+                              }
+                            >
                               <IconButton
                                 color="secondary"
                                 onClick={() => handleAccordionToggle(match._id)}
                               >
-                                {expandedMatchId === match._id ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                                {expandedMatchId === match._id ? (
+                                  <VisibilityOffIcon />
+                                ) : (
+                                  <VisibilityIcon />
+                                )}
                               </IconButton>
                             </Tooltip>
                           )}
                         </Grid>
                       </Grid>
-                      <Typography variant="body2" color="textSecondary" sx={{ marginTop: 1 }}>
-                        {match.date ?
-                          new Date(match.date).toLocaleDateString("es-ES", { day: "numeric", month: "short" }) :
-                          "Fecha sin definir"
-                        }
+                      <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        sx={{ marginTop: 1 }}
+                      >
+                        {match.date
+                          ? new Date(match.date).toLocaleDateString("es-ES", {
+                              day: "numeric",
+                              month: "short",
+                            })
+                          : "Fecha sin definir"}
                       </Typography>
+                      {console.log("EL PARTIDO", match)}{" "}
+                      {
+                        <Formik
+                          initialValues={{ referee: match.referee || "" }}
+                          onSubmit={(values) => handleSubmit(values, match._id)}
+                        >
+                          {({ values, handleChange, setFieldValue }) => (
+                            <Form>
+                              {console.log("Values prbando", values)}
+                              <AddRefereeToMatch
+                                refereeSelected={
+                                  refereesSelectedByMatch[match._id] || ""
+                                }
+                                referees={referees}
+                                handleChange={handleChange}
+                                handleRefereeChange={handleRefereeChange}
+                              />
+                              <Button
+                                type="submit"
+                                variant="contained"
+                                color="primary"
+                              >
+                                Agregar arbitro
+                              </Button>
+                            </Form>
+                          )}
+                        </Formik>
+                      }
                       {expandedMatchId === match._id && (
                         <Accordion expanded>
                           <AccordionSummary>
