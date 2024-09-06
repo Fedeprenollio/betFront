@@ -21,7 +21,14 @@ import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import Collapse from "@mui/material/Collapse";
-import { Alert, CircularProgress, Dialog, DialogContent, DialogTitle, useMediaQuery } from "@mui/material";
+import {
+  Alert,
+  CircularProgress,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  useMediaQuery,
+} from "@mui/material";
 import FormAddResult from "../pages/Match/FormAddResult";
 import { useBoundStore } from "../stores";
 import LoadingErrorWrapper from "./loadingErrorWrapper/LoadingErrorWrapper";
@@ -43,6 +50,7 @@ export const MatchList3 = ({ match }) => {
     (state) => state
   );
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [updatedMatch, setUpdatedMatch] = useState(match); // Estado para el partido actualizado
 
   // Abrir modal de edición
   const handleOpenEditModal = () => {
@@ -53,13 +61,15 @@ export const MatchList3 = ({ match }) => {
   const handleCloseEditModal = () => {
     setIsEditModalOpen(false);
   };
-  console.log("match", match);
+  console.log("match", updatedMatch);
   useEffect(() => {
     initializeAuthState();
   }, [initializeAuthState]);
 
   const [isOpen, setIsOpen] = useState(false);
-  const fecha = new Date(match.date);
+  // const fecha = new Date(match.date);
+  const fecha = new Date(updatedMatch.date);
+
   const hora = dayjs(fecha).format("HH:mm");
 
   // Utilizamos useMediaQuery para detectar si estamos en un dispositivo móvil
@@ -86,7 +96,7 @@ export const MatchList3 = ({ match }) => {
       <Grid container spacing={2} alignItems="center">
         <Grid item xs={10} sx={{ paddingX: "0rem" }}>
           <Link
-            to={`/stats/${match?.homeTeam?._id}/${match?.awayTeam?._id}/${match._id}`}
+            to={`/stats/${updatedMatch?.homeTeam?._id}/${updatedMatch?.awayTeam?._id}/${updatedMatch._id}`}
             className="link-no-underline"
           >
             <ListItemButton component="div" sx={{ paddingX: "0.2rem" }}>
@@ -111,7 +121,7 @@ export const MatchList3 = ({ match }) => {
                           variant="h6"
                           color="grey"
                         >
-                          {match?.homeTeam?.name}
+                          {updatedMatch?.homeTeam?.name}
                         </Typography>
                       </>
                     }
@@ -132,8 +142,8 @@ export const MatchList3 = ({ match }) => {
                           variant="h5"
                           color="green"
                         >
-                          {match.isFinished
-                            ? `${match.teamStatistics.local.goals}-${match.teamStatistics.visitor.goals} `
+                          {updatedMatch.isFinished
+                            ? `${updatedMatch.teamStatistics.local.goals}-${updatedMatch.teamStatistics.visitor.goals} `
                             : hora}
                         </Typography>
                       </>
@@ -155,7 +165,7 @@ export const MatchList3 = ({ match }) => {
                           variant="h6"
                           color="grey"
                         >
-                          {match?.awayTeam?.name}
+                          {updatedMatch?.awayTeam?.name}
                         </Typography>
                       </>
                     }
@@ -179,10 +189,11 @@ export const MatchList3 = ({ match }) => {
                     }}
                   >
                     Árbitro:{" "}
-                    {match?.referee?.name ? match.referee.name : "Sin registro"}
+                    {updatedMatch?.referee?.name
+                      ? updatedMatch.referee.name
+                      : "Sin registro"}
                   </Typography>
                 </Grid>
-             
               </Grid>
             </ListItemButton>
           </Link>
@@ -196,14 +207,14 @@ export const MatchList3 = ({ match }) => {
             <DeleteIcon  />
           </IconButton>
         </Tooltip> */}
-           {/* Botón para Editar */}
-           <Grid item xs={2}>
-                  <Tooltip title="Editar Partido">
-                    <IconButton onClick={handleOpenEditModal}>
-                      <EditIcon />
-                    </IconButton>
-                  </Tooltip>
-                </Grid>
+              {/* Botón para Editar */}
+              <Grid item xs={2}>
+                <Tooltip title="Editar Partido">
+                  <IconButton onClick={handleOpenEditModal}>
+                    <EditIcon />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
               <Tooltip title="Agregar resultado">
                 <IconButton onClick={toggleForm}>
                   {isOpen ? <ExpandLess /> : <ExpandMore />}
@@ -213,21 +224,32 @@ export const MatchList3 = ({ match }) => {
             <Grid item xs={12}>
               <Collapse in={isOpen} timeout="auto" unmountOnExit>
                 <FormAddResult
-                  matchId={match._id}
-                  localName={match.homeTeam?.name}
-                  visitorName={match.awayTeam?.name}
+                  matchId={updatedMatch._id}
+                  localName={updatedMatch.homeTeam?.name}
+                  visitorName={updatedMatch.awayTeam?.name}
+                  onSuccess={(newMatch) => setUpdatedMatch(newMatch)} // Actualiza el partido cuando se edite
+
                 />
               </Collapse>
             </Grid>
           </>
         )}
       </Grid>
-        {/* Modal para Editar Partido */}
-        <Dialog open={isEditModalOpen} onClose={handleCloseEditModal} maxWidth="md" fullWidth>
+      {/* Modal para Editar Partido */}
+      <Dialog
+        open={isEditModalOpen}
+        onClose={handleCloseEditModal}
+        maxWidth="md"
+        fullWidth
+      >
         <DialogTitle>Editar Partido</DialogTitle>
         <DialogContent>
           {/* Pasa los datos del partido al formulario */}
-          <FormMatch initialValues={match} onClose={handleCloseEditModal} matchId={match._id} />
+          <FormMatch
+            initialValues={updatedMatch}
+            onClose={handleCloseEditModal}
+            matchId={updatedMatch._id}
+          />
         </DialogContent>
       </Dialog>
     </Box>

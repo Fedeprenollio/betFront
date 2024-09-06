@@ -11,7 +11,7 @@ import AlertDialogCopy from "../../componts/feedback/AlertDialogCopy";
 import { AlertMessageCopy } from "../../componts/feedback/AlertMessageCopy";
 import { AddRefereeToMatch } from "../referee/AddRefereeToMatch";
 
-const FormAddResult = ({ matchId, visitorName, localName }) => {
+const FormAddResult = ({ matchId, visitorName, localName,onSuccess }) => {
   const { addMatchResult, getMatchDetail, matchDetail, loading, error, getReferees, referees,setMatches } = useBoundStore((state) => state );
   const [initialValues, setInitialValues] = useState({
     goalsHome: "",
@@ -123,7 +123,7 @@ console.log("matchDetail",matchDetail)
       setIsDialogOpen(false);
       console.log("values para resultado:", values)
       try {
-        await addMatchResult(matchId, {
+      const updatedMatch =   await addMatchResult(matchId, {
           goalsHome: parseInt(values.goalsHome),
           goalsAway: parseInt(values.goalsAway),
           teamStatistics: {
@@ -157,6 +157,8 @@ console.log("matchDetail",matchDetail)
           },
           refereeId: values.referee
         });
+        console.log("updatedMatch",updatedMatch)
+        onSuccess(updatedMatch)
         // getMatchDetail({idMatch:matchId})
         // console.log("matchDetail.date",matchDetail.date)
         // setMatches({date: matchDetail.date})

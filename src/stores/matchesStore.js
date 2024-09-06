@@ -113,7 +113,6 @@ const createMatchesStore = ((set, get) => ({
   },
   addMatchResult: async (matchId, resultData) => {
     // set({ loading: true, error: null });
-    console.log("resultData",resultData)
     const token = get().token;
     const config = {
       headers: {
@@ -129,6 +128,8 @@ const createMatchesStore = ((set, get) => ({
           m.id === matchId ? { ...m, ...match } : m
         ),
       }));
+
+      return match
     } catch (error) {
       console.error('Error adding match result:', error);
     }

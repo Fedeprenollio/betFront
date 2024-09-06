@@ -54,7 +54,7 @@ const MyDateTimePicker = ({ field, form }) => {
 };
 
 // PARA LUEGO EDITAR PARTIDOS voy a usar luego los matchId
-const FormMatch = ({ initialValues, onClose, matchId }) => {
+const FormMatch = ({ initialValues, onClose, matchId  }) => {
   const {
     fetchLeagues,
     leagues,
@@ -153,6 +153,7 @@ const FormMatch = ({ initialValues, onClose, matchId }) => {
           updatedData: values,
           token: JSON.parse(localStorage.getItem("loggedUser"))
         });
+        console.log("response",response)
         // setMatches()
       } else {
         // Crear nuevo partido
