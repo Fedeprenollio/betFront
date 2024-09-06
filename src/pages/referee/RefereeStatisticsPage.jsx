@@ -283,11 +283,12 @@ console.log("statistics",statistics)
               <TableBody>
                 {statistics.consideredMatches.map((match, index) => (
                   <TableRow key={index}>
+                    {console.log("matchmatch",match)}
                     <TableCell>{match.homeTeam}</TableCell>
                     <TableCell>{match.awayTeam}</TableCell>
                     <TableCell>{new Date(match.date).toLocaleDateString()}</TableCell>
-                    <TableCell>{match.teamStatistics.local.fouls || 0}</TableCell>
-                    <TableCell>{match.teamStatistics.visitor.fouls || 0}</TableCell>
+                    <TableCell>{match.teamStatistics.local.foults || 0}</TableCell>
+                    <TableCell>{match.teamStatistics.visitor.foults || 0}</TableCell>
                     <TableCell>{match.teamStatistics.local.yellowCards || 0}</TableCell>
                     <TableCell>{match.teamStatistics.visitor.yellowCards || 0}</TableCell>
                   </TableRow>
