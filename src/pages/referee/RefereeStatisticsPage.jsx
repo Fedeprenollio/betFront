@@ -19,6 +19,8 @@ import {
   Grid,
 } from '@mui/material';
 import { green, red, blue } from '@mui/material/colors';
+import { ConsideredMatches } from './ConsideredMatches';
+import { RefereeStatistics } from './RefereeStatistics';
 export const RefereeStatisticsPage = () => {
   const { idReferee } = useParams(); // Obtener el idReferee de los parámetros de la URL
   const [statistics, setStatistics] = useState(null);
@@ -49,192 +51,7 @@ console.log("statistics",statistics)
       {statistics ? (
         <div>
           
-          <Card variant="outlined" sx={{ marginBottom: 2}}>
-          <CardContent>
-            <Typography variant="h5" gutterBottom>
-              Árbitro: {statistics.name}
-            </Typography>
-            <Typography variant="h6" gutterBottom>
-              Partidos dirigidos: {statistics.totalMatches}
-            </Typography>
-            <Typography variant="span"  gutterBottom>
-              Torneos: POR PROGRAMAR (Por ahora todos)
-            </Typography>
-            {/* <Typography variant="subtitle1" color={green[700]}>
-              Nombre del Equipo: {statistics.teamName}
-            </Typography> */}
-
-            <Divider sx={{ marginY: 2 }} />
-
-            <Grid container spacing={2}>
-              {/* Título de las columnas */}
-              <Grid item xs={4} sx={{ textAlign: 'center', fontWeight: 'bold', color: green[700] }}>
-                <Typography variant="subtitle2">
-                  Equipo Local
-                </Typography>
-              </Grid>
-              <Grid item xs={4} sx={{ textAlign: 'center', fontWeight: 'bold', color: green[700] }}>
-                <Typography variant="subtitle2">
-                  Estadística
-                </Typography>
-              </Grid>
-              <Grid item xs={4} sx={{ textAlign: 'center', fontWeight: 'bold', color: green[700] }}>
-                <Typography variant="subtitle2">
-                  Equipo Visitante
-                </Typography>
-              </Grid>
-
-              {/* Datos de las estadísticas */}
-              {/* Faltas */}
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: green[50], padding: 1 }}>
-                <Typography variant="body1">
-                  {statistics.totalFoulsHome}
-                </Typography>
-              </Grid>
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: green[50], padding: 1 }}>
-                <Typography variant="body1" color={blue[600]}>
-                  Faltas
-                </Typography>
-              </Grid>
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: green[50], padding: 1 }}>
-                <Typography variant="body1">
-                  {statistics.totalFoulsAway}
-                </Typography>
-              </Grid>
-
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: green[50], padding: 1 }}>
-                <Typography variant="body1">
-                  {statistics.foulsHomeStats?.mean?.toFixed(2)}
-                </Typography>
-              </Grid>
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: green[50], padding: 1 }}>
-                <Typography variant="body1" color={blue[600]}>
-                  Faltas Media
-                </Typography>
-              </Grid>
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: green[50], padding: 1 }}>
-                <Typography variant="body1">
-                  {statistics.foulsAwayStats?.mean?.toFixed(2)}
-                </Typography>
-              </Grid>
-
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: green[50], padding: 1 }}>
-                <Typography variant="body1">
-                  {statistics.foulsHomeStats?.median?.toFixed(2)}
-                </Typography>
-              </Grid>
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: green[50], padding: 1 }}>
-                <Typography variant="body1" color={blue[600]}>
-                  Faltas Mediana
-                </Typography>
-              </Grid>
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: green[50], padding: 1 }}>
-                <Typography variant="body1">
-                  {statistics.foulsAwayStats?.median?.toFixed(2)}
-                </Typography>
-              </Grid>
-
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: green[50], padding: 1 }}>
-                <Typography variant="body1">
-                  {statistics.foulsHomeStats?.stdDev?.toFixed(2)}
-                </Typography>
-              </Grid>
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: green[50], padding: 1 }}>
-                <Typography variant="body1" color={blue[600]}>
-                  Faltas DE
-                </Typography>
-              </Grid>
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: green[50], padding: 1 }}>
-                <Typography variant="body1">
-                  {statistics.foulsAwayStats?.stdDev?.toFixed(2)}
-                </Typography>
-              </Grid>
-
-              {/* Amarillas */}
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: red[50], padding: 1 }}>
-                <Typography variant="body1">
-                  {statistics.totalYellowCardsHome}
-                </Typography>
-              </Grid>
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: red[50], padding: 1 }}>
-                <Typography variant="body1" color={blue[600]}>
-                  Amarillas
-                </Typography>
-              </Grid>
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: red[50], padding: 1 }}>
-                <Typography variant="body1">
-                  {statistics.totalYellowCardsAway}
-                </Typography>
-              </Grid>
-
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: red[50], padding: 1 }}>
-                <Typography variant="body1">
-                  {statistics.yellowCardsHomeStats?.mean?.toFixed(2)}
-                </Typography>
-              </Grid>
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: red[50], padding: 1 }}>
-                <Typography variant="body1" color={blue[600]}>
-                  Amarillas Media
-                </Typography>
-              </Grid>
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: red[50], padding: 1 }}>
-                <Typography variant="body1">
-                  {statistics.yellowCardsAwayStats?.mean?.toFixed(2)}
-                </Typography>
-              </Grid>
-
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: red[50], padding: 1 }}>
-                <Typography variant="body1">
-                  {statistics.yellowCardsHomeStats?.median?.toFixed(2)}
-                </Typography>
-              </Grid>
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: red[50], padding: 1 }}>
-                <Typography variant="body1" color={blue[600]}>
-                  Amarillas Mediana
-                </Typography>
-              </Grid>
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: red[50], padding: 1 }}>
-                <Typography variant="body1">
-                  {statistics.yellowCardsAwayStats?.median?.toFixed(2)}
-                </Typography>
-              </Grid>
-
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: red[50], padding: 1 }}>
-                <Typography variant="body1">
-                  {statistics.yellowCardsHomeStats?.stdDev?.toFixed(2)}
-                </Typography>
-              </Grid>
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: red[50], padding: 1 }}>
-                <Typography variant="body1" color={blue[600]}>
-                  Amarillas DE
-                </Typography>
-              </Grid>
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: red[50], padding: 1 }}>
-                <Typography variant="body1">
-                  {statistics.yellowCardsAwayStats?.stdDev?.toFixed(2)}
-                </Typography>
-              </Grid>
-
-
-
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: blue[50], padding: 1 }}>
-                <Typography variant="body1">
-                  Por Programar
-                </Typography>
-              </Grid>
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: blue[50], padding: 1 }}>
-                <Typography variant="body1" color={blue[600]}>
-                  % Triunfo
-                </Typography>
-              </Grid>
-              <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: blue[50], padding: 1 }}>
-                <Typography variant="body1">
-                  Por Programar
-                </Typography>
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
+        <RefereeStatistics statistics={statistics}/>
 
           <Typography variant="h5" gutterBottom color={green[800]}>
             Estadísticas de Equipos
@@ -264,38 +81,7 @@ console.log("statistics",statistics)
             </Table>
           </TableContainer>
 
-          <Typography variant="h5" gutterBottom color={green[800]}>
-            Partidos Considerados
-          </Typography>
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Equipo Local</TableCell>
-                  <TableCell>Equipo Visitante</TableCell>
-                  <TableCell>Fecha</TableCell>
-                  <TableCell>Faltas Local</TableCell>
-                  <TableCell>Faltas Visitante</TableCell>
-                  <TableCell>Tarjetas Amarillas Locales</TableCell>
-                  <TableCell>Tarjetas Amarillas Visitantes</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {statistics.consideredMatches.map((match, index) => (
-                  <TableRow key={index}>
-                    {console.log("matchmatch",match)}
-                    <TableCell>{match.homeTeam}</TableCell>
-                    <TableCell>{match.awayTeam}</TableCell>
-                    <TableCell>{new Date(match.date).toLocaleDateString()}</TableCell>
-                    <TableCell>{match.teamStatistics.local.foults || 0}</TableCell>
-                    <TableCell>{match.teamStatistics.visitor.foults || 0}</TableCell>
-                    <TableCell>{match.teamStatistics.local.yellowCards || 0}</TableCell>
-                    <TableCell>{match.teamStatistics.visitor.yellowCards || 0}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+         <ConsideredMatches statistics={statistics}/>
         </div>
       ) : (
         <Typography>Cargando...</Typography>
