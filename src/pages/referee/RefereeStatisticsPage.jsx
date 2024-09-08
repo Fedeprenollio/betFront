@@ -1,87 +1,57 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import { BACKEND_URL_BASE } from '../../stores/url_base';
-import {
-  Container,
-  Typography,
-  Card,
-  CardContent,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Divider,
-  Box,
-  Grid,
-} from '@mui/material';
-import { green, red, blue } from '@mui/material/colors';
-import { ConsideredMatches } from './ConsideredMatches';
-import { RefereeStatistics } from './RefereeStatistics';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { BACKEND_URL_BASE } from "../../stores/url_base";
+import { Container, Typography } from "@mui/material";
+import { green, red, blue } from "@mui/material/colors";
+import { ConsideredMatches } from "./ConsideredMatches";
+import { RefereeStatistics } from "./RefereeStatistics";
+import { StatisticsOfRefereeTeams } from "./StatisticsOfRefereeTeams";
+import { FilterComponent } from "../../componts/tableFilters/FilterComponent";
 export const RefereeStatisticsPage = () => {
   const { idReferee } = useParams(); // Obtener el idReferee de los parámetros de la URL
   const [statistics, setStatistics] = useState(null);
+  const [matchesLimit, setMatchesLimit] = useState(""); // Estado para la cantidad de partidos
 
   useEffect(() => {
     // Llamada a la API para obtener las estadísticas del árbitro
     const fetchStatistics = async () => {
       try {
-        const response = await axios.get(`${BACKEND_URL_BASE}/referees/statistics`, {
-          params: {
-            refereeId: idReferee,
+        const response = await axios.get(
+          `${BACKEND_URL_BASE}/referees/statistics?limit=${matchesLimit}`,
+          {
+            params: {
+              refereeId: idReferee,
+            },
           }
-        });
+        );
         setStatistics(response.data);
       } catch (error) {
-        console.error('Error al obtener las estadísticas del árbitro:', error);
+        console.error("Error al obtener las estadísticas del árbitro:", error);
       }
     };
 
     fetchStatistics();
-  }, [idReferee]);
-console.log("statistics",statistics)
+  }, [idReferee,matchesLimit]);
+  const handleMatchesLimitChange = (event) => {
+    const value = event.target.value;
+    setMatchesLimit(value);
+    // Si quieres hacer algo con el valor (e.g., enviarlo al backend), puedes hacerlo aquí
+  };
   return (
     <Container>
+      <FilterComponent
+        matchesLimit={matchesLimit}
+        handleMatchesLimitChange={handleMatchesLimitChange}
+        />
       <Typography variant="h4" gutterBottom>
         Estadísticas del Árbitro
       </Typography>
       {statistics ? (
         <div>
-          
-        <RefereeStatistics statistics={statistics}/>
-
-          <Typography variant="h5" gutterBottom color={green[800]}>
-            Estadísticas de Equipos
-          </Typography>
-          <TableContainer component={Paper} sx={{ marginBottom: 2 }}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Nombre del Equipo</TableCell>
-                  <TableCell>Faltas Locales</TableCell>
-                  <TableCell>Faltas Visitantes</TableCell>
-                  <TableCell>Tarjetas Amarillas Locales</TableCell>
-                  <TableCell>Tarjetas Amarillas Visitantes</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {statistics.teamStatistics.map((teamStat, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{teamStat.teamName}</TableCell>
-                    <TableCell>{teamStat.totalFoulsHome}</TableCell>
-                    <TableCell>{teamStat.totalFoulsAway}</TableCell>
-                    <TableCell>{teamStat.totalYellowCardsHome}</TableCell>
-                    <TableCell>{teamStat.totalYellowCardsAway}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-
-         <ConsideredMatches statistics={statistics}/>
+          <RefereeStatistics statistics={statistics} />
+          <StatisticsOfRefereeTeams statistics={statistics} />
+          <ConsideredMatches statistics={statistics} />
         </div>
       ) : (
         <Typography>Cargando...</Typography>

@@ -22,14 +22,7 @@ export const FilterComponent = ({
   awayOnly,
   handleHomeOnlyChange,
   handleAwayOnlyChange,
-  inputMatchesCount,
-  handleInputMatchesCountChange,
-  handleIncludeAllSeasonMatches,
-  updateMatchesCount,
-  updateIncludeOtherSeasons,
-  inputChekBoxIncludeAllSeason,
-  handleFilterChange,
-  listCurrentSeason,
+   listCurrentSeason,
   selectedSeasons,
   handleSeasonChange,
   filterName,
@@ -53,7 +46,7 @@ export const FilterComponent = ({
   const filterContent = (
     <div>
       <Box sx={{ width: "100%" }}>
-        {filterName.includes("local/visitor") && (
+        {filterName?.includes("local/visitor") && (
           <CheckboxLocalVisitor
             homeOnly={homeOnly}
             awayOnly={awayOnly}

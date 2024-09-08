@@ -4,6 +4,7 @@ import { Box, Paper, Typography, Grid } from '@mui/material';
 import { green, grey } from '@mui/material/colors';
 
 export const ConsideredMatches = ({ statistics }) => {
+  console.log("Consideracion ", statistics)
   return (
     <Box sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom color={green[800]} sx={{ fontWeight: 'bold', textAlign: 'center' }}>
@@ -48,9 +49,22 @@ export const ConsideredMatches = ({ statistics }) => {
 
             {/* Información central: VS y detalles del partido */}
             <Grid item xs={6} textAlign="center">
-              <Typography variant="h5" fontWeight="bold">
-                VS
-              </Typography>
+            <Box display="flex" alignItems="center" justifyContent="center">
+                {/* Goles equipo local */}
+                <Typography variant="h5" fontWeight="bold" sx={{ mx: 2 }}>
+                  {match.homeGoals}
+                </Typography>
+                
+                {/* VS */}
+                <Typography variant="h5" fontWeight="bold">
+                  VS
+                </Typography>
+
+                {/* Goles equipo visitante */}
+                <Typography variant="h5" fontWeight="bold" sx={{ mx: 2 }}>
+                  {match.awayGoals}
+                </Typography>
+              </Box>
               <Typography variant="body2">{match.leagueName}</Typography>
               <Typography variant="body2">Fecha: {new Date(match.date).toLocaleDateString()}</Typography>
               <Typography variant="body2">Ronda: {match.round}</Typography>

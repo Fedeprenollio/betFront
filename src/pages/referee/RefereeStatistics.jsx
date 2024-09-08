@@ -4,6 +4,16 @@ import { blue, green, red } from '@mui/material/colors'
 import React from 'react'
 
 export const RefereeStatistics = ({statistics}) => {
+  console.log("statisticsstatistics",statistics)
+    // Obtener una lista de ligas con temporadas únicas
+    const uniqueTournaments = Array.from(
+      new Set(
+        statistics.consideredMatches?.map(
+          (match) => `${match.leagueName} (${match.season})`
+        )
+      )
+    );
+  
   return (
     <Card variant="outlined" sx={{ marginBottom: 2}}>
     <CardContent>
@@ -11,11 +21,11 @@ export const RefereeStatistics = ({statistics}) => {
         Árbitro: {statistics.name}
       </Typography>
       <Typography variant="h6" gutterBottom>
-        Partidos dirigidos: {statistics.totalMatches}
+        Partidos dirigidos contabilizados: {statistics.consideredMatches?.length}
       </Typography>
-      <Typography variant="span"  gutterBottom>
-        Torneos: POR PROGRAMAR (Por ahora todos)
-      </Typography>
+      <Typography variant="span" gutterBottom>
+          Torneos: {uniqueTournaments.join(', ') || 'Por programar (Por ahora todos)'}
+        </Typography>
       {/* <Typography variant="subtitle1" color={green[700]}>
         Nombre del Equipo: {statistics.teamName}
       </Typography> */}
@@ -175,17 +185,17 @@ export const RefereeStatistics = ({statistics}) => {
 
         <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: blue[50], padding: 1 }}>
           <Typography variant="body1">
-            Por Programar
+           {statistics.homeWinPercentage} % triunfo locales
           </Typography>
         </Grid>
         <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: blue[50], padding: 1 }}>
           <Typography variant="body1" color={blue[600]}>
-            % Triunfo
+            {statistics.drawPercentage} % empates
           </Typography>
         </Grid>
         <Grid item xs={4} sx={{ textAlign: 'center', backgroundColor: blue[50], padding: 1 }}>
           <Typography variant="body1">
-            Por Programar
+           {statistics.awayWinPercentage  } % triunfo visitantes
           </Typography>
         </Grid>
       </Grid>
