@@ -121,9 +121,7 @@ export const SelectListCurrentSeasons = ({
   onSeasonChange,
   idTeam,
   handlePositionFilterChange,
-  positionFilter,
-  handleMatchesLimitChange,
-  matchesLimit,
+ 
 }) => {
   const {
     getAllCurrentSeasons,

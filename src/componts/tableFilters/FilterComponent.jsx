@@ -11,6 +11,10 @@ import {
   Typography,
   Container,
   TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { CheckboxLocalVisitor } from "../../pages/Statistics/rangePercentageTable/CheckboxLocalVisitor";
@@ -22,7 +26,7 @@ export const FilterComponent = ({
   awayOnly,
   handleHomeOnlyChange,
   handleAwayOnlyChange,
-   listCurrentSeason,
+  listCurrentSeason,
   selectedSeasons,
   handleSeasonChange,
   filterName,
@@ -32,6 +36,7 @@ export const FilterComponent = ({
   pathPage,
   handleMatchesLimitChange,
   matchesLimit,
+  availableSeasons,
 }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);
@@ -56,20 +61,8 @@ export const FilterComponent = ({
         )}
 
         <Divider />
-        {/* {filterName.includes("MatchesCountInput") && (
-          <MatchesCountInput
-            inputMatchesCount={inputMatchesCount}
-            handleInputMatchesCountChange={handleInputMatchesCountChange}
-            handleIncludeAllSeasonMatches={handleIncludeAllSeasonMatches}
-            updateMatchesCount={updateMatchesCount}
-            updateIncludeOtherSeasons={updateIncludeOtherSeasons}
-            inputChekBoxIncludeAllSeason={inputChekBoxIncludeAllSeason}
-            onFilterChange={handleFilterChange}
-          />
-        )} */}
-
         <Divider />
-        {pathPage !== "league" && (
+        {pathPage !== "league" && filterName !== "filter-referee" && (
           <Accordion expanded={expanded} onChange={handleAccordionToggle}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography
@@ -95,6 +88,37 @@ export const FilterComponent = ({
               />
             </AccordionDetails>
           </Accordion>
+        )}
+
+        {filterName === "filter-referee" && (
+          <FormControl fullWidth margin="normal">
+            <InputLabel id="season-select-label">
+              Seleccionar Temporadas
+            </InputLabel>
+            <Select
+              labelId="season-select-label"
+              multiple
+              label="Seleccionar Temporadas"
+              value={selectedSeasons}
+              onChange={handleSeasonChange}
+              renderValue={(selected) =>
+                selected
+                  .map((seasonId) => {
+                    const season = availableSeasons.find((s) => s.seasonId === seasonId);
+                    return season
+                      ? `${season.year} (${season.leagueName})`
+                      : seasonId;
+                  })
+                  .join(", ")
+              }
+            >
+              {availableSeasons.map((season) => (
+                <MenuItem key={season.seasonId} value={season.seasonId}>
+                  {`${season.year} (${season.leagueName})`}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         )}
 
         <Accordion>

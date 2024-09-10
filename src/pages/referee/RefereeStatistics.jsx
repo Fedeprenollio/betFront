@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Card, CardContent, Divider, Grid, Typography } from '@mui/material'
 import { blue, green, red } from '@mui/material/colors'
-import React from 'react'
 
 export const RefereeStatistics = ({statistics}) => {
   console.log("statisticsstatistics",statistics)
@@ -9,7 +8,7 @@ export const RefereeStatistics = ({statistics}) => {
     const uniqueTournaments = Array.from(
       new Set(
         statistics.consideredMatches?.map(
-          (match) => `${match.leagueName} (${match.season})`
+          (match) => `${match.leagueName} (${match.season.year})`
         )
       )
     );

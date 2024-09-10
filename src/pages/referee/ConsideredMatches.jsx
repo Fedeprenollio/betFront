@@ -68,7 +68,7 @@ export const ConsideredMatches = ({ statistics }) => {
               <Typography variant="body2">{match.leagueName}</Typography>
               <Typography variant="body2">Fecha: {new Date(match.date).toLocaleDateString()}</Typography>
               <Typography variant="body2">Ronda: {match.round}</Typography>
-              <Typography variant="body2">Temporada: {match.season}</Typography>
+              <Typography variant="body2">Temporada: {match.season.year}</Typography>
             </Grid>
 
             {/* Equipo Visitante: Logo + Estadísticas */}
