@@ -18,7 +18,6 @@ import TemporaryDrawer from "./drawer/TemporaryDrawer";
 import { CaroulselCurrentSeason } from "../componts/caroulselCurrentSeason/CaroulselCurrentSeason";
 import CarouselLogos from "../componts/caroulselLogos/CaroulselLogos";
 
-
 const Navbar = () => {
   const navigate = useNavigate();
   const [anchorElPartidos, setAnchorElPartidos] = useState(null);
@@ -29,7 +28,6 @@ const Navbar = () => {
   const [anchorElAyudanos, setAnchorElAyudanos] = useState(null);
   const [anchorElAyudanosMobile, setAnchorElAyudanosMobile] = useState(null);
   const { user, isAuthenticated, logout } = useBoundStore((state) => state);
-console.log("token+", user)
   const handleMenuPartidos = (event) => {
     setAnchorElPartidos(event.currentTarget);
   };
@@ -78,13 +76,12 @@ console.log("token+", user)
     navigate("/user/login");
   };
 
-
   return (
     <>
       <AppBar position="static">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            {isAuthenticated && <Typography>Hola { user && user}</Typography>}
+            {isAuthenticated && <Typography>Hola {user && user}</Typography>}
             <IconButton
               component={Link}
               to="/"
@@ -207,7 +204,7 @@ console.log("token+", user)
                     Administrar ligas
                   </MenuItem>
                 )}
-                 {isAuthenticated && (
+                {isAuthenticated && (
                   <MenuItem
                     onClick={handleClose}
                     component={Link}
@@ -219,6 +216,9 @@ console.log("token+", user)
               </Menu>
             </Box>
 
+            
+
+            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <Box sx={{ flexGrow: 1 }}>
               <Button
                 id="ligas-button"
@@ -235,11 +235,7 @@ console.log("token+", user)
                 open={Boolean(anchorElReferee)}
                 onClose={handleClose}
               >
-                <MenuItem
-                  onClick={handleClose}
-                  component={Link}
-                  to="/referee"
-                >
+                <MenuItem onClick={handleClose} component={Link} to="/referee">
                   Ver árbitros
                 </MenuItem>
                 {isAuthenticated && (
@@ -248,10 +244,10 @@ console.log("token+", user)
                     component={Link}
                     to="/referee/admin"
                   >
-                    Administrar arbitros
+                    Administrar árbitros
                   </MenuItem>
                 )}
-                 {isAuthenticated && (
+                {isAuthenticated && (
                   <MenuItem
                     onClick={handleClose}
                     component={Link}
@@ -262,9 +258,6 @@ console.log("token+", user)
                 )}
               </Menu>
             </Box>
-
-
-            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               <Button
                 id="ayudanos-button"
                 aria-controls="ayudanos-menu"
@@ -283,12 +276,16 @@ console.log("token+", user)
                 <MenuItem onClick={handleClose} component={Link} to="/cafecito">
                   Cafecito
                 </MenuItem>
-
-
               </Menu>
             </Box>
 
-            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' }, justifyContent: 'flex-end' }}>
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: { xs: "flex", md: "none" },
+                justifyContent: "flex-end",
+              }}
+            >
               <IconButton
                 size="large"
                 aria-label="menu"
@@ -314,6 +311,45 @@ console.log("token+", user)
                 open={Boolean(anchorElAyudanosMobile)}
                 onClose={handleClose}
               >
+               <Box sx={{ flexGrow: 1 }}>
+              <Button
+                id="ligas-button"
+                aria-controls="ligas-menu"
+                aria-haspopup="true"
+                onClick={handleMenuReferee}
+                sx={{ color: "inherit" }}
+              >
+                Árbitros
+              </Button>
+              <Menu
+                id="ligas-menu"
+                anchorEl={anchorElReferee}
+                open={Boolean(anchorElReferee)}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose} component={Link} to="/referee">
+                  Ver árbitros
+                </MenuItem>
+                {isAuthenticated && (
+                  <MenuItem
+                    onClick={handleClose}
+                    component={Link}
+                    to="/referee/admin"
+                  >
+                    Administrar árbitros
+                  </MenuItem>
+                )}
+                {isAuthenticated && (
+                  <MenuItem
+                    onClick={handleClose}
+                    component={Link}
+                    to="/referee/admin"
+                  >
+                    Administrar temporadas
+                  </MenuItem>
+                )}
+              </Menu>
+            </Box>
                 <MenuItem onClick={handleClose} component={Link} to="/cafecito">
                   Cafecito
                 </MenuItem>
@@ -333,7 +369,7 @@ console.log("token+", user)
               </Menu>
             </Box>
 
-            <Box sx={{ flexGrow: 0,display: { xs: 'none', md: 'flex' }  }}>
+            <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
