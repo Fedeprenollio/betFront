@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useBoundStore } from "../../stores";
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate
+import { useNavigate } from "react-router-dom"; // Importa useNavigate
 import {
   Table,
   TableBody,
@@ -17,13 +17,13 @@ import {
   FormControl,
   InputLabel,
   TableSortLabel,
-  Avatar
+  Avatar,
 } from "@mui/material";
 import AlertDialogCopy from "../../componts/feedback/AlertDialogCopy";
 import { AlertMessageCopy } from "../../componts/feedback/AlertMessageCopy";
 
 export const Teams = () => {
-  const { teams, setTeams, deleteTeam } = useBoundStore((state) => state);
+  const { teams, setTeams, deleteTeam,isAuthenticated } = useBoundStore((state) => state);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("");
   const [filteredTeams, setFilteredTeams] = useState([]);
@@ -59,9 +59,14 @@ export const Teams = () => {
 
     filtered = filtered.sort((a, b) => {
       if (orderBy === "country") {
-        return (a.country.localeCompare(b.country) || a.name.localeCompare(b.name)) * (order === "asc" ? 1 : -1);
+        return (
+          (a.country.localeCompare(b.country) || a.name.localeCompare(b.name)) *
+          (order === "asc" ? 1 : -1)
+        );
       } else {
-        return a[orderBy].localeCompare(b[orderBy]) * (order === "asc" ? 1 : -1);
+        return (
+          a[orderBy].localeCompare(b[orderBy]) * (order === "asc" ? 1 : -1)
+        );
       }
     });
 
@@ -119,18 +124,14 @@ export const Teams = () => {
     navigate(`/teams/${teamId}/stats`);
   };
 
-
-  
-
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
 
-
   const handleEditClick = (teamId) => {
-    console.log("EDITAR; ", teamId)
+    console.log("EDITAR; ", teamId);
     navigate(`/teams/adm/${teamId}`); // Redirigir a la página de edición
   };
   return (
@@ -167,7 +168,7 @@ export const Teams = () => {
         <Table>
           <TableHead>
             <TableRow>
-            <TableCell></TableCell>
+              <TableCell></TableCell>
               <TableCell sortDirection={orderBy === "name" ? order : false}>
                 <TableSortLabel
                   active={orderBy === "name"}
@@ -177,7 +178,7 @@ export const Teams = () => {
                   Nombre del Equipo
                 </TableSortLabel>
               </TableCell>
-              
+
               <TableCell sortDirection={orderBy === "country" ? order : false}>
                 <TableSortLabel
                   active={orderBy === "country"}
@@ -198,19 +199,29 @@ export const Teams = () => {
                 <React.Fragment key={team._id}>
                   <TableRow>
                     <TableCell>
-                  <Avatar src={team.logo} alt={team.name} variant="square" sx={{ width: 56, height: 56 }} />
-
+                      <Avatar
+                        src={team.logo}
+                        alt={team.name}
+                        variant="square"
+                        sx={{ width: 56, height: 56 }}
+                      />
                     </TableCell>
-                  <TableCell>{team.name}</TableCell>
+                    <TableCell>{team.name}</TableCell>
 
                     <TableCell>{team.country}</TableCell>
                     <TableCell>
-                      <Button onClick={() => handleStatisticsClick(team._id)}>Estadística</Button>
+                      <Button onClick={() => handleStatisticsClick(team._id)}>
+                        Estadística
+                      </Button>
                     </TableCell>
-                   
+
+                  {isAuthenticated && 
+                  
                     <TableCell>
-                    <Button onClick={() => handleEditClick(team._id)}>Editar</Button>
-                    </TableCell>
+                      <Button onClick={() => handleEditClick(team._id)}>
+                        Editar
+                      </Button>
+
                     <TableCell>
                       <Button
                         onClick={() => handleOpenDialog(team._id, team.name)}
@@ -218,6 +229,8 @@ export const Teams = () => {
                         Eliminar
                       </Button>
                     </TableCell>
+                    </TableCell>
+                  }
                   </TableRow>
                 </React.Fragment>
               ))}
@@ -225,14 +238,12 @@ export const Teams = () => {
         </Table>
       </TableContainer>
       {isAlertOpen && (
-       
-          <AlertMessageCopy
-            isAlertOpen={isAlertOpen}
-            severity={alertSeverity}
-            textAlert={alertMessage}
-            setIsAlertOpen={setIsAlertOpen}
-          />
-    
+        <AlertMessageCopy
+          isAlertOpen={isAlertOpen}
+          severity={alertSeverity}
+          textAlert={alertMessage}
+          setIsAlertOpen={setIsAlertOpen}
+        />
       )}
       <AlertDialogCopy
         open={openDialog}
