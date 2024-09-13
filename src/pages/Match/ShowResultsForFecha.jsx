@@ -27,7 +27,7 @@ import { updateMach } from "./matchApi";
 
 export const ShowResultsForFecha = () => {
   const { seasonId } = useParams();
-  const { seasonById, getSeasonById, referees, getReferees } = useBoundStore(
+  const { seasonById, getSeasonById, referees, getReferees, isAuthenticated} = useBoundStore(
     (state) => state
   );
   const [selectedFecha, setSelectedFecha] = useState(null);
@@ -103,7 +103,6 @@ export const ShowResultsForFecha = () => {
       [matchId]: selectedRefereeId,
     }));
   };
-  console.log("refereesSelectedByMatch",refereesSelectedByMatch)
 
   const handleSubmit = async (values, matchId) => {
     try {
@@ -363,8 +362,7 @@ export const ShowResultsForFecha = () => {
                             })
                           : "Fecha sin definir"}
                       </Typography>
-                      {console.log("EL PARTIDO", match)}{" "}
-                      {
+                      {isAuthenticated &&
                         <Formik
                           initialValues={{ referee: match.referee || "" }}
                           onSubmit={(values) => handleSubmit(values, match._id)}
