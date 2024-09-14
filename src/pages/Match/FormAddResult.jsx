@@ -10,6 +10,7 @@ import { useBoundStore } from "../../stores";
 import AlertDialogCopy from "../../componts/feedback/AlertDialogCopy";
 import { AlertMessageCopy } from "../../componts/feedback/AlertMessageCopy";
 import { AddRefereeToMatch } from "../referee/AddRefereeToMatch";
+import { ScrapeURLForm } from "./ScrapeURLForm";
 
 const FormAddResult = ({ matchId, visitorName, localName,onSuccess }) => {
   const { addMatchResult, getMatchDetail, matchDetail, loading, error, getReferees, referees,setMatches } = useBoundStore((state) => state );
@@ -443,6 +444,8 @@ console.log("matchDetail",matchDetail)
                   </Grid>
                 </>
               )}
+
+              
               <Grid item xs={9} md={6} >
                 <AddRefereeToMatch
                   refereeSelected={refereeSelected}
@@ -458,6 +461,7 @@ console.log("matchDetail",matchDetail)
               </Grid>
             </Grid>
             <AutoFillPossession values={values} setFieldValue={setFieldValue} />
+            <ScrapeURLForm setFieldValue={setFieldValue} />
 
             <AlertDialogCopy
               open={isDialogOpen}
