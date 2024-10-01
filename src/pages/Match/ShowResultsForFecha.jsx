@@ -24,18 +24,20 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { AddRefereeToMatch } from "../referee/AddRefereeToMatch";
 import { Form, Formik } from "formik";
 import { updateMach } from "./matchApi";
+import { ScrapeMatchResult } from "./ScrapeMatchResult";
+import SecuencialClickButton from "./SecuencialClickButton";
 
 export const ShowResultsForFecha = () => {
   const { seasonId } = useParams();
-  const { seasonById, getSeasonById, referees, getReferees, isAuthenticated} = useBoundStore(
-    (state) => state
-  );
+  const { seasonById, getSeasonById, referees, getReferees, isAuthenticated } =
+    useBoundStore((state) => state);
   const [selectedFecha, setSelectedFecha] = useState(null);
   const [selectedSeason, setSelectedSeason] = useState("");
   const [expandedMatchId, setExpandedMatchId] = useState(null);
   // const [refereeSelected, setRefereeSelected] = useState(null);
   // const [refereeSelected, setRefereeSelected] = useState({}); // Cambiado a objeto
   const [refereesSelectedByMatch, setRefereesSelectedByMatch] = useState({});
+  const [updatedMatches, setUpdatedMatches] = useState({}); // Nuevo estado para los partidos actualizados
 
   useEffect(() => {
     getSeasonById(seasonId);
@@ -65,14 +67,14 @@ export const ShowResultsForFecha = () => {
   useEffect(() => {
     if (seasonById?.season?.matches) {
       const refereesMap = {};
-  
+
       seasonById.season.matches.forEach((match) => {
         if (match.referee) {
           // Asumiendo que match.referee contiene el ID del árbitro
           refereesMap[match._id] = match.referee;
         }
       });
-  
+
       setRefereesSelectedByMatch(refereesMap);
     }
   }, [seasonById]);
@@ -96,8 +98,8 @@ export const ShowResultsForFecha = () => {
   };
 
   // Lógica para manejar cambios adicionales al seleccionar un árbitro
-   // Lógica para manejar cambios adicionales al seleccionar un árbitro
-   const handleRefereeChange = (matchId, selectedRefereeId) => {
+  // Lógica para manejar cambios adicionales al seleccionar un árbitro
+  const handleRefereeChange = (matchId, selectedRefereeId) => {
     setRefereesSelectedByMatch((prev) => ({
       ...prev,
       [matchId]: selectedRefereeId,
@@ -138,6 +140,16 @@ export const ShowResultsForFecha = () => {
       console.error(error); // handle error
     }
   };
+
+  // Actualiza los partidos después del scraping
+  const handleScrapeSuccess = (matchId, newMatchData) => {
+    console.log("QUE HAY HANDLE",matchId, newMatchData)
+    setUpdatedMatches((prevMatches) => ({
+      ...prevMatches,
+      [matchId]: newMatchData,
+    }));
+  };
+console.log("updated", updatedMatches)
   return (
     <>
       <Box
@@ -220,10 +232,16 @@ export const ShowResultsForFecha = () => {
           <Typography variant="h5" gutterBottom>
             Partidos para la Fecha {selectedFecha.number}
           </Typography>
+          <SecuencialClickButton />
+
           <List>
             {seasonById?.season?.fechas
               ?.find((fecha) => fecha._id === selectedFecha._id)
-              ?.matches?.map((match) => (
+              ?.matches?.map((match) => {
+                const updatedMatch = updatedMatches[match._id] || match; // Usa los datos actualizados si existen
+
+                
+                 return (
                 <ListItem key={match._id} disableGutters>
                   <Card sx={{ width: "100%", marginBottom: 2 }}>
                     <CardContent sx={{ padding: 0 }}>
@@ -273,7 +291,7 @@ export const ShowResultsForFecha = () => {
                         >
                           <Typography variant="h4" sx={{ fontWeight: "bold" }}>
                             {match.isFinished
-                              ? `${match.teamStatistics.local.goals}    ${match.teamStatistics.visitor.goals}`
+                              ? `${updatedMatch.teamStatistics.local.goals}    ${updatedMatch.teamStatistics.visitor.goals}`
                               : "-"}
                           </Typography>
                           <Typography variant="h6" sx={{ fontWeight: "bold" }}>
@@ -362,7 +380,7 @@ export const ShowResultsForFecha = () => {
                             })
                           : "Fecha sin definir"}
                       </Typography>
-                      {isAuthenticated &&
+                      {isAuthenticated && (
                         <Formik
                           initialValues={{ referee: match.referee || "" }}
                           onSubmit={(values) => handleSubmit(values, match._id)}
@@ -388,7 +406,21 @@ export const ShowResultsForFecha = () => {
                             </Form>
                           )}
                         </Formik>
-                      }
+                      )}
+
+                      {isAuthenticated && (
+                        <ScrapeMatchResult
+                          // matchId={match._id}
+                          // urlScrape={match?.urlScrape}
+                          matchId={updatedMatch._id}
+
+                          urlScrape={updatedMatch?.urlScrape}
+
+                          onSuccess={(newMatchData) =>
+                            handleScrapeSuccess(updatedMatch._id, newMatchData)
+                          }
+                        />
+                      )}
                       {expandedMatchId === match._id && (
                         <Accordion expanded>
                           <AccordionSummary>
@@ -408,7 +440,7 @@ export const ShowResultsForFecha = () => {
                     </CardContent>
                   </Card>
                 </ListItem>
-              ))}
+              )})}
           </List>
         </Box>
       )}

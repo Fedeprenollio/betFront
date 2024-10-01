@@ -27,6 +27,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  Switch,
   useMediaQuery,
 } from "@mui/material";
 import FormAddResult from "../pages/Match/FormAddResult";
@@ -36,6 +37,9 @@ import LoadingSpinner from "./loading/LoadingSpinner";
 import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
 import EditIcon from "@mui/icons-material/Edit";
 import FormMatch from "../pages/FormMatch";
+import ScrapeButton from "../pages/Match/ScrapeButton";
+import { ScrapeMatchResult } from "../pages/Match/ScrapeMatchResult";
+import SecuencialClickButton from "../pages/Match/SecuencialClickButton.jsx";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -45,7 +49,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export const MatchList3 = ({ match }) => {
+export const MatchList3 = ({ match, scrapingMode }) => {
   const { onDeleteMatch, isAuthenticated, initializeAuthState } = useBoundStore(
     (state) => state
   );
@@ -67,6 +71,12 @@ export const MatchList3 = ({ match }) => {
   }, [initializeAuthState]);
 
   const [isOpen, setIsOpen] = useState(false);
+  useEffect(() => {
+    if (scrapingMode) {
+      setIsOpen(true);
+    }
+  }, [scrapingMode]);
+
   // const fecha = new Date(match.date);
   const fecha = new Date(updatedMatch.date);
 
@@ -224,11 +234,17 @@ export const MatchList3 = ({ match }) => {
             <Grid item xs={12}>
               <Collapse in={isOpen} timeout="auto" unmountOnExit>
                 <FormAddResult
+                  scrapingMode={scrapingMode}
                   matchId={updatedMatch._id}
                   localName={updatedMatch.homeTeam?.name}
                   visitorName={updatedMatch.awayTeam?.name}
                   onSuccess={(newMatch) => setUpdatedMatch(newMatch)} // Actualiza el partido cuando se edite
-
+                />
+                {/* Add the ScrapeMatchResult component */}
+                <ScrapeMatchResult
+                  matchId={updatedMatch._id}
+                  urlScrape={updatedMatch?.urlScrape || ""}
+                  onSuccess={(newMatch) => setUpdatedMatch(newMatch)}
                 />
               </Collapse>
             </Grid>
@@ -256,10 +272,11 @@ export const MatchList3 = ({ match }) => {
   );
 };
 
-export const MatchsStack = () => {
+export const MatchsStack = ({ date }) => {
   const { matches, loading, error, clearMatches } = useBoundStore(
     (state) => state
   );
+  const [scrapingMode, setScrapingMode] = useState(false); // State for "Modo Scraping"
 
   useEffect(() => {
     return () => {
@@ -270,7 +287,9 @@ export const MatchsStack = () => {
   // if (error) {
   //   return <Alert severity="error">{error}</Alert>;
   // }
-
+  const handleScrapingToggle = (event) => {
+    setScrapingMode(event.target.checked); // Update state when toggled
+  };
   return (
     <Container
       sx={{
@@ -279,6 +298,15 @@ export const MatchsStack = () => {
         padding: "0.3rem",
       }}
     >
+      {/* "Modo Scraping" Switch */}
+      <Box sx={{ display: "flex", alignItems: "center", marginBottom: 2 }}>
+        <Typography variant="body1" sx={{ marginRight: 1 }}>
+          Modo Scraping
+        </Typography>
+        <Switch checked={scrapingMode} onChange={handleScrapingToggle} />
+        <ScrapeButton selectedDate={date} />
+        <SecuencialClickButton/>
+      </Box>
       {loading && <LoadingSpinner />}
       {!loading & (matches.length === 0) ? (
         <Box
@@ -355,7 +383,11 @@ export const MatchsStack = () => {
             </Stack>
 
             {matches.map((match) => (
-              <MatchList3 key={match._id} match={match} />
+              <MatchList3
+                key={match._id}
+                match={match}
+                scrapingMode={scrapingMode}
+              />
             ))}
           </Box>
         )

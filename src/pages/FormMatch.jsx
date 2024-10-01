@@ -24,6 +24,7 @@ const validationSchema = Yup.object().shape({
   seasonYear: Yup.string().required("Required"),
   round: Yup.string().required("Required"),
   order: Yup.number().required("Required"),
+  urlScrape: Yup.string().url(),
 });
 
 const MyDateTimePicker = ({ field, form }) => {
@@ -54,7 +55,7 @@ const MyDateTimePicker = ({ field, form }) => {
 };
 
 // PARA LUEGO EDITAR PARTIDOS voy a usar luego los matchId
-const FormMatch = ({ initialValues, onClose, matchId  }) => {
+const FormMatch = ({ initialValues, onClose, matchId }) => {
   const {
     fetchLeagues,
     leagues,
@@ -63,7 +64,7 @@ const FormMatch = ({ initialValues, onClose, matchId  }) => {
     seasonById,
     getReferees, // Nuevo hook para obtener árbitros
     referees, // Lista de árbitros
-    setMatches
+    setMatches,
   } = useBoundStore((state) => state);
 
   const [countries, setCountries] = useState([]);
@@ -72,8 +73,9 @@ const FormMatch = ({ initialValues, onClose, matchId  }) => {
   const [selectedLeague, setSelectedLeague] = useState("");
   const [selectedSeason, setSelectedSeason] = useState("");
   const [initialTeams, setInitialTeams] = useState({
-    homeTeam:"",awayTeam:""
-  })
+    homeTeam: "",
+    awayTeam: "",
+  });
   const [listMatchesCreated, setListMatchesCreated] = useState([]);
   // Estado para las alertas
   const [openAddTeamsDialog, setOpenAddTeamsDialog] = useState(false);
@@ -85,7 +87,6 @@ const FormMatch = ({ initialValues, onClose, matchId  }) => {
   useEffect(() => {
     getReferees(); // Obtener la lista de árbitros
   }, [getReferees]);
-  console.log("referees", referees);
 
   useEffect(() => {
     fetchLeagues();
@@ -105,9 +106,10 @@ const FormMatch = ({ initialValues, onClose, matchId  }) => {
     // Obtener ligas únicas por país
     const leaguesData = {};
 
-    uniqueCountries?.forEach((  country) => {
+    uniqueCountries?.forEach((country) => {
       const uniqueLeagues = new Set(
-        leagues?.filter((league) => league.country === country)
+        leagues
+          ?.filter((league) => league.country === country)
           ?.map((league) => {
             return { _id: league._id, name: league.name };
           })
@@ -120,27 +122,22 @@ const FormMatch = ({ initialValues, onClose, matchId  }) => {
       );
     });
 
-
-
-
     setLeaguesByCountry(leaguesData);
   }, [leagues]);
 
-
   useEffect(() => {
-    if(matchId){
-      setSelectedLeague(initialValues.league._id)
-      setSelectedCountry(initialValues.country)
-      setSelectedSeason(initialValues.seasonYear._id)
+    if (matchId) {
+      setSelectedLeague(initialValues.league._id);
+      setSelectedCountry(initialValues.country);
+      setSelectedSeason(initialValues.seasonYear._id);
       setInitialTeams({
         homeTeam: initialValues.homeTeam._id,
-        awayTeam: initialValues.awayTeam._id
-}      )
-      setRefereeSelected(initialValues.referee._id)
+        awayTeam: initialValues.awayTeam._id,
+      });
+      setRefereeSelected(initialValues.referee._id);
     }
-  }, [initialValues ,matchId ])
-  
-  
+  }, [initialValues, matchId]);
+
   const handleSubmit = async (values) => {
     try {
       let response;
@@ -151,9 +148,9 @@ const FormMatch = ({ initialValues, onClose, matchId  }) => {
         response = await updateMach({
           matchId: matchId,
           updatedData: values,
-          token: JSON.parse(localStorage.getItem("loggedUser"))
+          token: JSON.parse(localStorage.getItem("loggedUser")),
         });
-        console.log("response",response)
+        console.log("response", response);
         // setMatches()
       } else {
         // Crear nuevo partido
@@ -176,7 +173,11 @@ const FormMatch = ({ initialValues, onClose, matchId  }) => {
 
       if (response?.state === "ok") {
         setSeverity("success");
-        setMsgAlert(matchId ? "Partido editado exitosamente":"Partido creado exitosamente");
+        setMsgAlert(
+          matchId
+            ? "Partido editado exitosamente"
+            : "Partido creado exitosamente"
+        );
         setIsAlertOpen(true);
       } else {
         setSeverity("error");
@@ -213,16 +214,16 @@ const FormMatch = ({ initialValues, onClose, matchId  }) => {
   };
   const handleTeamsChange = (event) => {
     const { name, value } = event.target;
-    setInitialTeams(prevValue => ({
+    setInitialTeams((prevValue) => ({
       ...prevValue,
-      [name]: value
+      [name]: value,
     }));
   };
-  const availableTeams = !matchId ? seasonById?.season?.teams?.filter(
-    (team) => !selectedTeams?.includes(team._id)
-  ):  seasonById?.season?.teams
- 
-
+  const availableTeams = !matchId
+    ? seasonById?.season?.teams?.filter(
+        (team) => !selectedTeams?.includes(team._id)
+      )
+    : seasonById?.season?.teams;
 
   return (
     <>
@@ -237,14 +238,12 @@ const FormMatch = ({ initialValues, onClose, matchId  }) => {
           round: initialValues?.round || "",
           order: initialValues?.order || "",
           referee: initialValues?.referee?._id || "",
+          urlScrape: initialValues?.urlScrape || "",
         }}
-       
-
         onSubmit={handleSubmit}
         validationSchema={validationSchema}
       >
         {({ values, handleChange, setFieldValue }) => (
-          
           <Form>
             {console.log("valuess", values)}
             <AutoFillOrder values={values} setFieldValue={setFieldValue} />
@@ -418,14 +417,27 @@ const FormMatch = ({ initialValues, onClose, matchId  }) => {
             <ErrorMessage name="date" component="div" />
             <Grid item xs={12}>
               <AddRefereeToMatch
-              refereeSelected={refereeSelected}
+                refereeSelected={refereeSelected}
                 referees={referees}
                 handleChange={handleChange}
                 handleRefereeChange={handleRefereeChange}
               />
             </Grid>
+            <Grid item xs={12}>
+              <Field
+                as={TextField}
+                name="urlScrape"
+                label="URL"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                value={values.urlScrape}
+                onChange={handleChange}
+              />
+              <ErrorMessage name="urlScrape" component="div" />
+            </Grid>
             <Button type="submit" variant="contained" color="primary">
-             {matchId ? "Editar partido" :"Crear partido" } 
+              {matchId ? "Editar partido" : "Crear partido"}
             </Button>
             <AlertDialogCopy
               open={openAddTeamsDialog}

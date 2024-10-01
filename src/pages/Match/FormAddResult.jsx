@@ -12,8 +12,23 @@ import { AlertMessageCopy } from "../../componts/feedback/AlertMessageCopy";
 import { AddRefereeToMatch } from "../referee/AddRefereeToMatch";
 import { ScrapeURLForm } from "./ScrapeURLForm";
 
-const FormAddResult = ({ matchId, visitorName, localName,onSuccess }) => {
-  const { addMatchResult, getMatchDetail, matchDetail, loading, error, getReferees, referees,setMatches } = useBoundStore((state) => state );
+const FormAddResult = ({
+  matchId,
+  visitorName,
+  localName,
+  onSuccess,
+  scrapingMode,
+}) => {
+  const {
+    addMatchResult,
+    getMatchDetail,
+    matchDetail,
+    loading,
+    error,
+    getReferees,
+    referees,
+    setMatches,
+  } = useBoundStore((state) => state);
   const [initialValues, setInitialValues] = useState({
     goalsHome: "",
     goalsAway: 0,
@@ -42,22 +57,22 @@ const FormAddResult = ({ matchId, visitorName, localName,onSuccess }) => {
   const [alertSeverity, setAlertSeverity] = useState("success");
   const [alertText, setAlertText] = useState("");
   const [penaltiesEnabled, setPenaltiesEnabled] = useState(false); // Estado para habilitar/deshabilitar penales
-  const [refereeSelected, setRefereeSelected] = useState("")
+  const [refereeSelected, setRefereeSelected] = useState("");
 
-console.log("matchDetail",matchDetail)
+  console.log("matchDetail", matchDetail);
   useEffect(() => {
     const fetchMatchDetail = async () => {
       await getMatchDetail({ idMatch: matchId });
     };
     fetchMatchDetail();
-    
-    getReferees()
-  }, [getMatchDetail, matchId,getReferees]);
+
+    getReferees();
+  }, [getMatchDetail, matchId, getReferees]);
 
   useEffect(() => {
-    setRefereeSelected(matchDetail.referee)
-  }, [matchDetail.referee])
-  
+    setRefereeSelected(matchDetail.referee);
+  }, [matchDetail.referee]);
+
   useEffect(() => {
     if (matchDetail && matchDetail._id === matchId) {
       setInitialValues({
@@ -122,9 +137,9 @@ console.log("matchDetail",matchDetail)
   const handleConfirm = useCallback(
     async (values) => {
       setIsDialogOpen(false);
-      console.log("values para resultado:", values)
+      console.log("values para resultado:", values);
       try {
-      const updatedMatch =   await addMatchResult(matchId, {
+        const updatedMatch = await addMatchResult(matchId, {
           goalsHome: parseInt(values.goalsHome),
           goalsAway: parseInt(values.goalsAway),
           teamStatistics: {
@@ -156,14 +171,14 @@ console.log("matchDetail",matchDetail)
             homePenalties: parseInt(values.penaltiesHome),
             awayPenalties: parseInt(values.penaltiesAway),
           },
-          refereeId: values.referee
+          refereeId: values.referee,
         });
-        console.log("updatedMatch",updatedMatch)
-        onSuccess(updatedMatch)
+        console.log("updatedMatch", updatedMatch);
+        onSuccess(updatedMatch);
         // getMatchDetail({idMatch:matchId})
         // console.log("matchDetail.date",matchDetail.date)
         // setMatches({date: matchDetail.date})
-        
+
         setAlertSeverity("success");
         setAlertText("Resultado actualizado con éxito");
       } catch (error) {
@@ -194,266 +209,277 @@ console.log("matchDetail",matchDetail)
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ values, setFieldValue,handleChange }) => (
+        {({ values, setFieldValue, handleChange }) => (
           <Form>
-            <Grid container spacing={2} alignItems="center">
-              <Grid item xs={6} sx={{ maxWidth: "200px" }}>
-                <Typography variant="h6" gutterBottom align="center">
-                  {localName}
-                </Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography variant="h6" gutterBottom align="center">
-                  {visitorName}
-                </Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <FastField
-                  as={TextField}
-                  name="goalsHome"
-                  label="Goles Equipo Local"
-                  type="number"
-                  variant="outlined"
-                  fullWidth
-                  onWheel={(e) => e.target.blur()} // Manejar evento de rueda para prevenir scroll
-                />
-                <ErrorMessage name="goalsHome" component="div" />
-              </Grid>
-              <Grid item xs={6}>
-                <FastField
-                  as={TextField}
-                  name="goalsAway"
-                  label="Goles Equipo Visitante"
-                  type="number"
-                  variant="outlined"
-                  fullWidth
-                  onWheel={(e) => e.target.blur()}
-                />
-                <ErrorMessage name="goalsAway" component="div" />
-              </Grid>
-              <Grid item xs={6}>
-                <FastField
-                  as={TextField}
-                  name="totalShotsHome"
-                  label="Tiros Total Equipo Local"
-                  type="number"
-                  variant="outlined"
-                  fullWidth
-                  onWheel={(e) => e.target.blur()}
-                />
-                <ErrorMessage name="totalShotsHome" component="div" />
-              </Grid>
-              <Grid item xs={6}>
-                <FastField
-                  as={TextField}
-                  name="totalShotsAway"
-                  label="Tiros Total Equipo Visitante"
-                  type="number"
-                  variant="outlined"
-                  fullWidth
-                  onWheel={(e) => e.target.blur()}
-                />
-                <ErrorMessage name="totalShotsAway" component="div" />
-              </Grid>
-              <Grid item xs={6}>
-                <FastField
-                  as={TextField}
-                  name="shotsOnTargetHome"
-                  label="Tiros al arco Equipo Local"
-                  type="number"
-                  variant="outlined"
-                  fullWidth
-                  onWheel={(e) => e.target.blur()}
-                />
-                <ErrorMessage name="shotsOnTargetHome" component="div" />
-              </Grid>
-              <Grid item xs={6}>
-                <FastField
-                  as={TextField}
-                  name="shotsOnTargetAway"
-                  label="Tiros al arco Equipo Visitante"
-                  type="number"
-                  variant="outlined"
-                  fullWidth
-                  onWheel={(e) => e.target.blur()}
-                />
-                <ErrorMessage name="shotsOnTargetAway" component="div" />
-              </Grid>
-              <Grid item xs={6}>
-                <FastField
-                  as={TextField}
-                  name="possessionHome"
-                  label="Posesión (%) Equipo Local"
-                  type="number"
-                  variant="outlined"
-                  fullWidth
-                  onWheel={(e) => e.target.blur()}
-                />
-                <ErrorMessage name="possessionHome" component="div" />
-              </Grid>
-              <Grid item xs={6}>
-                <FastField
-                  as={TextField}
-                  name="possessionAway"
-                  label="Posesión (%) Equipo Visitante"
-                  type="number"
-                  variant="outlined"
-                  fullWidth
-                  onWheel={(e) => e.target.blur()}
-                />
-                <ErrorMessage name="possessionAway" component="div" />
-              </Grid>
-              <Grid item xs={6}>
-                <FastField
-                  as={TextField}
-                  name="foultsHome"
-                  label="Faltas Equipo Local"
-                  type="number"
-                  variant="outlined"
-                  fullWidth
-                  onWheel={(e) => e.target.blur()}
-                />
-                <ErrorMessage name="foultsHome" component="div" />
-              </Grid>
-              <Grid item xs={6}>
-                <FastField
-                  as={TextField}
-                  name="foultsAway"
-                  label="Faltas Equipo Visitante"
-                  type="number"
-                  variant="outlined"
-                  fullWidth
-                  onWheel={(e) => e.target.blur()}
-                />
-                <ErrorMessage name="foultsAway" component="div" />
-              </Grid>
-              <Grid item xs={6}>
-                <FastField
-                  as={TextField}
-                  name="yellowCardsHome"
-                  label="Tarjetas Amarillas Equipo Local"
-                  type="number"
-                  variant="outlined"
-                  fullWidth
-                  onWheel={(e) => e.target.blur()}
-                />
-                <ErrorMessage name="yellowCardsHome" component="div" />
-              </Grid>
-              <Grid item xs={6}>
-                <FastField
-                  as={TextField}
-                  name="yellowCardsAway"
-                  label="Tarjetas Amarillas Equipo Visitante"
-                  type="number"
-                  variant="outlined"
-                  fullWidth
-                  onWheel={(e) => e.target.blur()}
-                />
-                <ErrorMessage name="yellowCardsAway" component="div" />
-              </Grid>
-
-              <Grid item xs={6}>
-                <FastField
-                  as={TextField}
-                  name="offsidesHome"
-                  label="Offsides Equipo Local"
-                  type="number"
-                  variant="outlined"
-                  fullWidth
-                  onWheel={(e) => e.target.blur()}
-                />
-                <ErrorMessage name="offsidesHome" component="div" />
-              </Grid>
-              <Grid item xs={6}>
-                <FastField
-                  as={TextField}
-                  name="offsidesAway"
-                  label="Offsides Equipo Visitante"
-                  type="number"
-                  variant="outlined"
-                  fullWidth
-                  onWheel={(e) => e.target.blur()}
-                />
-                <ErrorMessage name="offsidesAway" component="div" />
-              </Grid>
-              <Grid item xs={6}>
-                <FastField
-                  as={TextField}
-                  name="cornersHome"
-                  label="Córners Equipo Local"
-                  type="number"
-                  variant="outlined"
-                  fullWidth
-                  onWheel={(e) => e.target.blur()}
-                />
-                <ErrorMessage name="cornersHome" component="div" />
-              </Grid>
-              <Grid item xs={6}>
-                <FastField
-                  as={TextField}
-                  name="cornersAway"
-                  label="Córners Equipo Visitante"
-                  type="number"
-                  variant="outlined"
-                  fullWidth
-                  onWheel={(e) => e.target.blur()}
-                />
-                <ErrorMessage name="cornersAway" component="div" />
-              </Grid>
-
-              {
-                // Penales
-              }
-
-              <Grid item xs={12}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={togglePenalties}
-                >
-                  {penaltiesEnabled
-                    ? "Deshabilitar Penales"
-                    : "Habilitar Penales"}
-                </Button>
-              </Grid>
-              {penaltiesEnabled && (
+            <Grid
+              container
+              spacing={2}
+              alignItems="center"
+              // sx={{
+              //   display: scrapingMode ? "none" : "flex", // Ocultar el Grid cuando el modo scraping está activado
+              // }}
+            >
+              {!scrapingMode && (
                 <>
+                  <Grid item xs={6} sx={{ maxWidth: "200px" }}>
+                    <Typography variant="h6" gutterBottom align="center">
+                      {localName}
+                    </Typography>
+                  </Grid>
                   <Grid item xs={6}>
-                    <FastField
-                      as={TextField}
-                      name="penaltiesHome"
-                      label="Penales Equipo Local"
-                      type="number"
-                      variant="outlined"
-                      fullWidth
-                      onWheel={(e) => e.target.blur()}
-                    />
-                    <ErrorMessage name="penaltiesHome" component="div" />
+                    <Typography variant="h6" gutterBottom align="center">
+                      {visitorName}
+                    </Typography>
                   </Grid>
                   <Grid item xs={6}>
                     <FastField
                       as={TextField}
-                      name="penaltiesAway"
-                      label="Penales Equipo Visitante"
+                      name="goalsHome"
+                      label="Goles Equipo Local"
+                      type="number"
+                      variant="outlined"
+                      fullWidth
+                      onWheel={(e) => e.target.blur()} // Manejar evento de rueda para prevenir scroll
+                    />
+                    <ErrorMessage name="goalsHome" component="div" />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FastField
+                      as={TextField}
+                      name="goalsAway"
+                      label="Goles Equipo Visitante"
                       type="number"
                       variant="outlined"
                       fullWidth
                       onWheel={(e) => e.target.blur()}
                     />
-                    <ErrorMessage name="penaltiesAway" component="div" />
+                    <ErrorMessage name="goalsAway" component="div" />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FastField
+                      as={TextField}
+                      name="totalShotsHome"
+                      label="Tiros Total Equipo Local"
+                      type="number"
+                      variant="outlined"
+                      fullWidth
+                      onWheel={(e) => e.target.blur()}
+                    />
+                    <ErrorMessage name="totalShotsHome" component="div" />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FastField
+                      as={TextField}
+                      name="totalShotsAway"
+                      label="Tiros Total Equipo Visitante"
+                      type="number"
+                      variant="outlined"
+                      fullWidth
+                      onWheel={(e) => e.target.blur()}
+                    />
+                    <ErrorMessage name="totalShotsAway" component="div" />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FastField
+                      as={TextField}
+                      name="shotsOnTargetHome"
+                      label="Tiros al arco Equipo Local"
+                      type="number"
+                      variant="outlined"
+                      fullWidth
+                      onWheel={(e) => e.target.blur()}
+                    />
+                    <ErrorMessage name="shotsOnTargetHome" component="div" />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FastField
+                      as={TextField}
+                      name="shotsOnTargetAway"
+                      label="Tiros al arco Equipo Visitante"
+                      type="number"
+                      variant="outlined"
+                      fullWidth
+                      onWheel={(e) => e.target.blur()}
+                    />
+                    <ErrorMessage name="shotsOnTargetAway" component="div" />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FastField
+                      as={TextField}
+                      name="possessionHome"
+                      label="Posesión (%) Equipo Local"
+                      type="number"
+                      variant="outlined"
+                      fullWidth
+                      onWheel={(e) => e.target.blur()}
+                    />
+                    <ErrorMessage name="possessionHome" component="div" />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FastField
+                      as={TextField}
+                      name="possessionAway"
+                      label="Posesión (%) Equipo Visitante"
+                      type="number"
+                      variant="outlined"
+                      fullWidth
+                      onWheel={(e) => e.target.blur()}
+                    />
+                    <ErrorMessage name="possessionAway" component="div" />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FastField
+                      as={TextField}
+                      name="foultsHome"
+                      label="Faltas Equipo Local"
+                      type="number"
+                      variant="outlined"
+                      fullWidth
+                      onWheel={(e) => e.target.blur()}
+                    />
+                    <ErrorMessage name="foultsHome" component="div" />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FastField
+                      as={TextField}
+                      name="foultsAway"
+                      label="Faltas Equipo Visitante"
+                      type="number"
+                      variant="outlined"
+                      fullWidth
+                      onWheel={(e) => e.target.blur()}
+                    />
+                    <ErrorMessage name="foultsAway" component="div" />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FastField
+                      as={TextField}
+                      name="yellowCardsHome"
+                      label="Tarjetas Amarillas Equipo Local"
+                      type="number"
+                      variant="outlined"
+                      fullWidth
+                      onWheel={(e) => e.target.blur()}
+                    />
+                    <ErrorMessage name="yellowCardsHome" component="div" />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FastField
+                      as={TextField}
+                      name="yellowCardsAway"
+                      label="Tarjetas Amarillas Equipo Visitante"
+                      type="number"
+                      variant="outlined"
+                      fullWidth
+                      onWheel={(e) => e.target.blur()}
+                    />
+                    <ErrorMessage name="yellowCardsAway" component="div" />
+                  </Grid>
+
+                  <Grid item xs={6}>
+                    <FastField
+                      as={TextField}
+                      name="offsidesHome"
+                      label="Offsides Equipo Local"
+                      type="number"
+                      variant="outlined"
+                      fullWidth
+                      onWheel={(e) => e.target.blur()}
+                    />
+                    <ErrorMessage name="offsidesHome" component="div" />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FastField
+                      as={TextField}
+                      name="offsidesAway"
+                      label="Offsides Equipo Visitante"
+                      type="number"
+                      variant="outlined"
+                      fullWidth
+                      onWheel={(e) => e.target.blur()}
+                    />
+                    <ErrorMessage name="offsidesAway" component="div" />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FastField
+                      as={TextField}
+                      name="cornersHome"
+                      label="Córners Equipo Local"
+                      type="number"
+                      variant="outlined"
+                      fullWidth
+                      onWheel={(e) => e.target.blur()}
+                    />
+                    <ErrorMessage name="cornersHome" component="div" />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FastField
+                      as={TextField}
+                      name="cornersAway"
+                      label="Córners Equipo Visitante"
+                      type="number"
+                      variant="outlined"
+                      fullWidth
+                      onWheel={(e) => e.target.blur()}
+                    />
+                    <ErrorMessage name="cornersAway" component="div" />
+                  </Grid>
+
+                  {
+                    // Penales
+                  }
+
+                  <Grid item xs={12}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={togglePenalties}
+                    >
+                      {penaltiesEnabled
+                        ? "Deshabilitar Penales"
+                        : "Habilitar Penales"}
+                    </Button>
+                  </Grid>
+                  {penaltiesEnabled && (
+                    <>
+                      <Grid item xs={6}>
+                        <FastField
+                          as={TextField}
+                          name="penaltiesHome"
+                          label="Penales Equipo Local"
+                          type="number"
+                          variant="outlined"
+                          fullWidth
+                          onWheel={(e) => e.target.blur()}
+                        />
+                        <ErrorMessage name="penaltiesHome" component="div" />
+                      </Grid>
+                      <Grid item xs={6}>
+                        <FastField
+                          as={TextField}
+                          name="penaltiesAway"
+                          label="Penales Equipo Visitante"
+                          type="number"
+                          variant="outlined"
+                          fullWidth
+                          onWheel={(e) => e.target.blur()}
+                        />
+                        <ErrorMessage name="penaltiesAway" component="div" />
+                      </Grid>
+                    </>
+                  )}
+
+                  <Grid item xs={9} md={6}>
+                    <AddRefereeToMatch
+                      refereeSelected={refereeSelected}
+                      referees={referees}
+                      handleChange={handleChange}
+                      handleRefereeChange={handleRefereeChange}
+                    />
                   </Grid>
                 </>
               )}
 
-              
-              <Grid item xs={9} md={6} >
-                <AddRefereeToMatch
-                  refereeSelected={refereeSelected}
-                  referees={referees}
-                  handleChange={handleChange}
-                  handleRefereeChange={handleRefereeChange}
-                />
-                </Grid>
               <Grid item xs={12}>
                 <Button type="submit" variant="contained" color="primary">
                   Actualizar Resultado
@@ -461,7 +487,11 @@ console.log("matchDetail",matchDetail)
               </Grid>
             </Grid>
             <AutoFillPossession values={values} setFieldValue={setFieldValue} />
-            <ScrapeURLForm setFieldValue={setFieldValue} />
+
+            <ScrapeURLForm
+              setFieldValue={setFieldValue}
+              matchDetail={matchDetail}
+            />
 
             <AlertDialogCopy
               open={isDialogOpen}

@@ -2,9 +2,9 @@
 import { Container } from "@mui/material";
 import { MatchsStack } from "./MatchsStack";
 
-const MatchList = () => {
+const MatchList = ({date}) => {
   // const { matches } = useMatchesStore();
-  return <MatchsStack />;
+  return <MatchsStack date={date}/>;
 };
 
 export default MatchList;

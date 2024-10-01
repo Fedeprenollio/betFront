@@ -37,6 +37,7 @@ const FormTeam = () => {
     name: Yup.string().required("Required"),
     logo: Yup.string(),
     country: Yup.string().required("Required"),
+    alternateCode: Yup.string(),
   });
 
   const {
@@ -52,6 +53,7 @@ const FormTeam = () => {
     name: "",
     country: "",
     logo: "",
+    alternateCode: "",
   });
 
   // const [logoUrl, setLogoUrl] = useState("");
@@ -79,7 +81,10 @@ const FormTeam = () => {
 
   useEffect(() => {
     if (idTeam && teamDetails[idTeam]) {
-      setInitialValues(teamDetails[idTeam]);
+      setInitialValues({
+        ...teamDetails[idTeam],
+        alternateCode: teamDetails[idTeam].alternateCode || "", // Asignamos el código alternativo si existe
+      });
       setLogoUrl(teamDetails[idTeam].logo || "");
     }
   }, [idTeam, teamDetails, setLogoUrl]);
@@ -164,7 +169,16 @@ const FormTeam = () => {
               margin="normal"
             />
             <ErrorMessage name="name" component="div" />
-
+            {/* Campo para el código alternativo */}
+            <Field
+              as={TextField}
+              name="alternateCode"
+              label="Código Alternativo"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+            />
+            <ErrorMessage name="alternateCode" component="div" />
             <LogoUploader
               logoUrl={logoUrl}
               uploadingLogoUrl={uploadingLogoUrl}

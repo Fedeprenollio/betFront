@@ -9,7 +9,7 @@ import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
 import { useBoundStore } from "../stores";
 
-export const FilterDate = () => {
+export const FilterDate = ({setSelectedDateState,selectedDate}) => {
 
   // const [selectedDate, setSelectedDateState] = useState(() => {
   //   // Recuperar la fecha seleccionada del almacenamiento local al cargar la página
@@ -17,7 +17,7 @@ export const FilterDate = () => {
   //   return storedDate ? dayjs(storedDate).startOf("day") : dayjs().startOf("day"); // Si no hay ninguna fecha almacenada, usar la fecha actual
   // });
 
-  const [selectedDate, setSelectedDateState] = useState(() => dayjs().startOf("day"));
+  // const [selectedDate, setSelectedDateState] = useState(() => dayjs().startOf("day"));
 
   const { setMatches } = useBoundStore((state) => state);
 
@@ -33,6 +33,7 @@ export const FilterDate = () => {
   const startOfDay = dayjs(date).startOf("day");
     setSelectedDateState(startOfDay);
     // setSelectedDate(dayjs(date).startOf("day")); // Establecer la hora en 00:00
+    
   };
 
   const handlePreviousDay = () => {
@@ -43,6 +44,7 @@ export const FilterDate = () => {
     setSelectedDateState((prevDate) => prevDate.add(1, "day").startOf("day"));
   };
 
+ 
   return (
     <Box display="flex" alignItems="center">
       <IconButton onClick={handlePreviousDay}>
