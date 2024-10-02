@@ -40,6 +40,8 @@ export const ScrapeURLForm = ({ setFieldValue,matchDetail }) => {
       //  setFieldValue('possessionAway', data.awayPossession || 0);
       //  setFieldValue('penaltiesHome', data.homePenalties || 0);
       //  setFieldValue('penaltiesAway', data.awayPenalties || 0);setFieldValue('goalsHome', data.homeScore !== undefined ? data.homeScore : 0);
+      setFieldValue('goalsHome', data.homeScore !== undefined ? data.homeScore : 0);
+
       setFieldValue('goalsAway', data.awayScore !== undefined ? data.awayScore : 0);
       setFieldValue('shotsOnTargetHome', data.homeShotsToGoal !== undefined ? data.homeShotsToGoal : 0);
       setFieldValue('shotsOnTargetAway', data.awayShotsToGoal !== undefined ? data.awayShotsToGoal : 0);

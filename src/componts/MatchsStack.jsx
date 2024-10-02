@@ -153,7 +153,7 @@ export const MatchList3 = ({ match, scrapingMode }) => {
                           color="green"
                         >
                           {updatedMatch.isFinished
-                            ? `${updatedMatch.teamStatistics.local.goals}-${updatedMatch.teamStatistics.visitor.goals} `
+                          ? `${updatedMatch?.teamStatistics?.local?.goals}-${updatedMatch?.teamStatistics?.visitor?.goals} `
                             : hora}
                         </Typography>
                       </>

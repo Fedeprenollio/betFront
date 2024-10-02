@@ -239,10 +239,15 @@ console.log("updated", updatedMatches)
               ?.find((fecha) => fecha._id === selectedFecha._id)
               ?.matches?.map((match) => {
                 const updatedMatch = updatedMatches[match._id] || match; // Usa los datos actualizados si existen
+                console.log("updatedMatch completo",updatedMatch)
+
+                console.log("updatedMatch",updatedMatch?.teamStatistics?.local?.goals)
+                console.log("match",match)
 
                 
+                
                  return (
-                <ListItem key={match._id} disableGutters>
+                <ListItem key={updatedMatch._id} disableGutters>
                   <Card sx={{ width: "100%", marginBottom: 2 }}>
                     <CardContent sx={{ padding: 0 }}>
                       <Grid container alignItems="center" spacing={1}>
@@ -290,8 +295,8 @@ console.log("updated", updatedMatches)
                           flexDirection={"column"}
                         >
                           <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-                            {match.isFinished
-                              ? `${updatedMatch.teamStatistics.local.goals}    ${updatedMatch.teamStatistics.visitor.goals}`
+                            {updatedMatch?.isFinished
+                              ? `${updatedMatch?.teamStatistics?.local?.goals}    ${updatedMatch?.teamStatistics?.visitor?.goals}`
                               : "-"}
                           </Typography>
                           <Typography variant="h6" sx={{ fontWeight: "bold" }}>

@@ -137,7 +137,7 @@ const FormAddResult = ({
   const handleConfirm = useCallback(
     async (values) => {
       setIsDialogOpen(false);
-      console.log("values para resultado:", values);
+      console.log("values para resultado:", parseInt(values.goalsAway));
       try {
         const updatedMatch = await addMatchResult(matchId, {
           goalsHome: parseInt(values.goalsHome),
