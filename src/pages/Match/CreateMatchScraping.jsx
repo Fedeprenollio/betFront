@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { TextField, Button, MenuItem, Grid } from "@mui/material";
+import { TextField, Button, MenuItem, Grid, CircularProgress, Alert } from "@mui/material";
 import * as Yup from "yup";
 import { useBoundStore } from "../../stores";
 import axios from "axios";
 import { BACKEND_URL_BASE } from "../../stores/url_base";
+import { ListMatchesCreates } from "./ListMatchesCreates";
+import { ListMatchesCreatedByScrap } from "./ListMatchesCreatedByScrap";
 
 const validationSchema = Yup.object().shape({
   country: Yup.string().required("Required"),
@@ -24,6 +26,10 @@ const CreateMatchScraping = () => {
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedLeague, setSelectedLeague] = useState("");
   const [selectedSeason, setSelectedSeason] = useState("");
+  const [loading, setLoading] = useState(false); // Loading state
+  const [error, setError] = useState(null); // Error state
+  const [success, setSuccess] = useState(false); // Estado de éxito
+  const [listMatchesCreated, setListMatchesCreated] = useState([]);
 
   useEffect(() => {
     fetchLeagues(); // Obtener la lista de ligas
@@ -50,6 +56,10 @@ const CreateMatchScraping = () => {
     setSelectedSeason(selectedSeasonForm);
   };
   const handleSubmit = async (values) => {
+    setLoading(true); // Set loading to true when form is submitted
+    setError(null); // Reset error before making the request
+    setSuccess(false); // Reiniciar éxito
+
     const token = JSON.parse(window.localStorage.getItem("loggedUser")).token;
     const config = {
       headers: {
@@ -65,18 +75,24 @@ const CreateMatchScraping = () => {
       );
       const data = response.data;
       console.log("DATA SCRAP", data);
+      setListMatchesCreated(data.populatedMatches)
+      setSuccess(true);  // Indicar éxito si la solicitud fue exitosa
+
       //   if (response.ok) {
       //     console.log("Match created successfully!");
       //   } else {
       //     console.log("Failed to create match.");
       //   }
     } catch (error) {
-      console.error("Error:", error);
+      setError(error.response?.data?.message || "Un error ha ocurrido");     
+    } finally {
+      setLoading(false); // Always set loading to false at the end
     }
-  };
+  }
 
   return (
-    <Formik
+    <>
+      <Formik
       initialValues={{
         country: "",
         league: "",
@@ -92,6 +108,21 @@ const CreateMatchScraping = () => {
     >
       {({ handleChange, values }) => (
         <Form>
+            {/* Show loading spinner if the form is being submitted */}
+            {loading && (
+            <div style={{ textAlign: "center", marginBottom: "10px" }}>
+              <CircularProgress />
+            </div>
+          )}
+
+          {/* Show error message if there is an error */}
+          {error && (
+            <Alert severity="error" style={{ marginBottom: "10px" }}>
+              {error}
+            </Alert>
+          )}
+                    {success && <Alert severity="success">Partido creado exitosamente.</Alert>} {/* Mostrar mensaje de éxito */}
+
           <Field
             as={TextField}
             select
@@ -226,6 +257,13 @@ const CreateMatchScraping = () => {
         </Form>
       )}
     </Formik>
+     {listMatchesCreated.length > 0 && (
+      <ListMatchesCreatedByScrap
+        listMatchesCreated={listMatchesCreated}
+        setListMatchesCreated={setListMatchesCreated}
+      />
+    )}
+    </>
   );
 };
 
