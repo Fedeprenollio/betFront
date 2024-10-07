@@ -31,7 +31,7 @@ const createTeamStore = (set, get) => ({
   teamDetailsSelector: (teamId) => (state) => state.teamDetails[teamId],
   newTeam: async ({ values }) => {
     console.log("values", values)
-    const { name, city, league, country } = values;
+    const { name, city, league, country, alternateCode, logo } = values;
     const token = get().token; 
     const config = {
       headers:{
@@ -40,7 +40,7 @@ const createTeamStore = (set, get) => ({
     }
     console.log(values);
     try {
-      const response = await axios.post(URL_API,{ name, city, league, country }, config
+      const response = await axios.post(URL_API,{ name, city, league, country, alternateCode, logo }, config
      );
       // if (response.ok) {
       //   console.log("Equipo creado exitosamente");
