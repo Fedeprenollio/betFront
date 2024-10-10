@@ -129,13 +129,23 @@ const Navbar = () => {
                 </MenuItem>
 
                 {isAuthenticated && (
-                  <MenuItem
-                    onClick={handleClose}
-                    component={Link}
-                    to="/match/new"
-                  >
-                    Administrar Partidos
-                  </MenuItem>
+                  <>
+                    <MenuItem
+                      onClick={handleClose}
+                      component={Link}
+                      to="/match/new"
+                    >
+                      Administrar Partidos
+                    </MenuItem>
+
+                    <MenuItem
+                      onClick={handleClose}
+                      component={Link}
+                      to="/match/with-observation"
+                    >
+                      Ver partidos con observación
+                    </MenuItem>
+                  </>
                 )}
               </Menu>
             </Box>
@@ -216,48 +226,50 @@ const Navbar = () => {
               </Menu>
             </Box>
 
-            
-
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            <Box sx={{ flexGrow: 1 }}>
-              <Button
-                id="ligas-button"
-                aria-controls="ligas-menu"
-                aria-haspopup="true"
-                onClick={handleMenuReferee}
-                sx={{ color: "inherit" }}
-              >
-                Árbitros
-              </Button>
-              <Menu
-                id="ligas-menu"
-                anchorEl={anchorElReferee}
-                open={Boolean(anchorElReferee)}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose} component={Link} to="/referee">
-                  Ver árbitros
-                </MenuItem>
-                {isAuthenticated && (
+              <Box sx={{ flexGrow: 1 }}>
+                <Button
+                  id="ligas-button"
+                  aria-controls="ligas-menu"
+                  aria-haspopup="true"
+                  onClick={handleMenuReferee}
+                  sx={{ color: "inherit" }}
+                >
+                  Árbitros
+                </Button>
+                <Menu
+                  id="ligas-menu"
+                  anchorEl={anchorElReferee}
+                  open={Boolean(anchorElReferee)}
+                  onClose={handleClose}
+                >
                   <MenuItem
                     onClick={handleClose}
                     component={Link}
-                    to="/referee/admin"
+                    to="/referee"
                   >
-                    Administrar árbitros
+                    Ver árbitros
                   </MenuItem>
-                )}
-                {isAuthenticated && (
-                  <MenuItem
-                    onClick={handleClose}
-                    component={Link}
-                    to="/referee/admin"
-                  >
-                    Administrar temporadas
-                  </MenuItem>
-                )}
-              </Menu>
-            </Box>
+                  {isAuthenticated && (
+                    <MenuItem
+                      onClick={handleClose}
+                      component={Link}
+                      to="/referee/admin"
+                    >
+                      Administrar árbitros
+                    </MenuItem>
+                  )}
+                  {isAuthenticated && (
+                    <MenuItem
+                      onClick={handleClose}
+                      component={Link}
+                      to="/referee/admin"
+                    >
+                      Administrar temporadas
+                    </MenuItem>
+                  )}
+                </Menu>
+              </Box>
               <Button
                 id="ayudanos-button"
                 aria-controls="ayudanos-menu"
@@ -311,45 +323,49 @@ const Navbar = () => {
                 open={Boolean(anchorElAyudanosMobile)}
                 onClose={handleClose}
               >
-               <Box sx={{ flexGrow: 1 }}>
-              <Button
-                id="ligas-button"
-                aria-controls="ligas-menu"
-                aria-haspopup="true"
-                onClick={handleMenuReferee}
-                sx={{ color: "inherit" }}
-              >
-                Árbitros
-              </Button>
-              <Menu
-                id="ligas-menu"
-                anchorEl={anchorElReferee}
-                open={Boolean(anchorElReferee)}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose} component={Link} to="/referee">
-                  Ver árbitros
-                </MenuItem>
-                {isAuthenticated && (
-                  <MenuItem
-                    onClick={handleClose}
-                    component={Link}
-                    to="/referee/admin"
+                <Box sx={{ flexGrow: 1 }}>
+                  <Button
+                    id="ligas-button"
+                    aria-controls="ligas-menu"
+                    aria-haspopup="true"
+                    onClick={handleMenuReferee}
+                    sx={{ color: "inherit" }}
                   >
-                    Administrar árbitros
-                  </MenuItem>
-                )}
-                {isAuthenticated && (
-                  <MenuItem
-                    onClick={handleClose}
-                    component={Link}
-                    to="/referee/admin"
+                    Árbitros
+                  </Button>
+                  <Menu
+                    id="ligas-menu"
+                    anchorEl={anchorElReferee}
+                    open={Boolean(anchorElReferee)}
+                    onClose={handleClose}
                   >
-                    Administrar temporadas
-                  </MenuItem>
-                )}
-              </Menu>
-            </Box>
+                    <MenuItem
+                      onClick={handleClose}
+                      component={Link}
+                      to="/referee"
+                    >
+                      Ver árbitros
+                    </MenuItem>
+                    {isAuthenticated && (
+                      <MenuItem
+                        onClick={handleClose}
+                        component={Link}
+                        to="/referee/admin"
+                      >
+                        Administrar árbitros
+                      </MenuItem>
+                    )}
+                    {isAuthenticated && (
+                      <MenuItem
+                        onClick={handleClose}
+                        component={Link}
+                        to="/referee/admin"
+                      >
+                        Administrar temporadas
+                      </MenuItem>
+                    )}
+                  </Menu>
+                </Box>
                 <MenuItem onClick={handleClose} component={Link} to="/cafecito">
                   Cafecito
                 </MenuItem>

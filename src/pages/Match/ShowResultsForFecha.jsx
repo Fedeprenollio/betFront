@@ -26,6 +26,9 @@ import { Form, Formik } from "formik";
 import { updateMach } from "./matchApi";
 import { ScrapeMatchResult } from "./ScrapeMatchResult";
 import SecuencialClickButton from "./SecuencialClickButton";
+import DeleteMatchButton from "../../componts/buttons/DeleteMatchButton";
+import axios from "axios";
+import { BACKEND_URL_BASE } from "../../stores/url_base";
 
 export const ShowResultsForFecha = () => {
   const { seasonId } = useParams();
@@ -143,13 +146,27 @@ export const ShowResultsForFecha = () => {
 
   // Actualiza los partidos después del scraping
   const handleScrapeSuccess = (matchId, newMatchData) => {
-    console.log("QUE HAY HANDLE",matchId, newMatchData)
     setUpdatedMatches((prevMatches) => ({
       ...prevMatches,
       [matchId]: newMatchData,
     }));
   };
-console.log("updated", updatedMatches)
+
+
+  const handleDelete = async (matchId) => {
+    try {
+      // Realiza la solicitud DELETE a tu API
+      const response = await axios.delete(`${BACKEND_URL_BASE}/match/${matchId}`);      
+      // Llama a la función de callback para actualizar la lista de partidos
+      // onMatchDeleted(matchId);
+      // setUpdatedMatches()
+      console.log("LISTA DE PARTIDOS,", updatedMatches)
+
+      console.log(`Partido con id ${matchId} eliminado exitosamente.`);
+    } catch (error) {
+      console.error('Error al eliminar el partido:', error);
+    }
+  };
   return (
     <>
       <Box
@@ -238,214 +255,229 @@ console.log("updated", updatedMatches)
             {seasonById?.season?.fechas
               ?.find((fecha) => fecha._id === selectedFecha._id)
               ?.matches?.map((match) => {
-                const updatedMatch = updatedMatches[match._id] || match; // Usa los datos actualizados si existen
-                console.log("updatedMatch completo",updatedMatch)
-
-                console.log("updatedMatch",updatedMatch?.teamStatistics?.local?.goals)
-                console.log("match",match)
-
-                
-                
-                 return (
-                <ListItem key={updatedMatch._id} disableGutters>
-                  <Card sx={{ width: "100%", marginBottom: 2 }}>
-                    <CardContent sx={{ padding: 0 }}>
-                      <Grid container alignItems="center" spacing={1}>
-                        <Grid
-                          item
-                          xs={4}
-                          container
-                          justifyContent="center"
-                          alignItems="center"
-                          sx={{
-                            flexDirection: { xs: "column", sm: "row" },
-                            overflow: "hidden",
-                            whiteSpace: "nowrap",
-                            textOverflow: "ellipsis",
-                          }}
-                        >
-                          <Avatar
-                            src={match.homeTeam?.logo}
-                            alt={match.homeTeam?.name}
+                let updatedMatch = updatedMatches[match._id] || match; // Usa los datos actualizados si existen
+                console.log("LOS PARTIDOS...", updatedMatch)
+                return (
+                  <ListItem key={updatedMatch._id} disableGutters>
+                    <Card sx={{ width: "100%", marginBottom: 2 }}>
+                      <CardContent sx={{ padding: 0 }}>
+                        <Grid container alignItems="center" spacing={1}>
+                          <Grid
+                            item
+                            xs={4}
+                            container
+                            justifyContent="center"
+                            alignItems="center"
                             sx={{
-                              marginRight: { xs: 0, sm: 1 },
-                              marginBottom: { xs: 1, sm: 0 },
-                            }}
-                          />
-                          <Typography
-                            variant="body1"
-                            sx={{
-                              fontWeight: "bold",
-                              textOverflow: "ellipsis",
+                              flexDirection: { xs: "column", sm: "row" },
                               overflow: "hidden",
                               whiteSpace: "nowrap",
-                              textAlign: { xs: "center", sm: "left" },
+                              textOverflow: "ellipsis",
                             }}
                           >
-                            {match.homeTeam.name}
-                          </Typography>
-                        </Grid>
-                        <Grid
-                          item
-                          xs={2}
-                          container
-                          alignItems={"center"}
-                          justifyContent="center"
-                          display={"flex"}
-                          flexDirection={"column"}
-                        >
-                          <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-                            {updatedMatch?.isFinished
-                              ? `${updatedMatch?.teamStatistics?.local?.goals}    ${updatedMatch?.teamStatistics?.visitor?.goals}`
-                              : "-"}
-                          </Typography>
-                          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                            {match?.penaltyResult?.homePenalties !==
-                            match.penaltyResult.awayPenalties
-                              ? `(${match?.penaltyResult?.homePenalties})   ( ${match.penaltyResult.awayPenalties})`
-                              : null}
-                          </Typography>
-                        </Grid>
-                        <Grid
-                          item
-                          xs={4}
-                          container
-                          justifyContent="center"
-                          alignItems="center"
-                          sx={{
-                            flexDirection: { xs: "column-reverse", sm: "row" },
-                            overflow: "hidden",
-                            whiteSpace: "nowrap",
-                            textOverflow: "ellipsis",
-                          }}
-                        >
-                          <Typography
-                            variant="body1"
+                            <Avatar
+                              src={match.homeTeam?.logo}
+                              alt={match.homeTeam?.name}
+                              sx={{
+                                marginRight: { xs: 0, sm: 1 },
+                                marginBottom: { xs: 1, sm: 0 },
+                              }}
+                            />
+                            <Typography
+                              variant="body1"
+                              sx={{
+                                fontWeight: "bold",
+                                textOverflow: "ellipsis",
+                                overflow: "hidden",
+                                whiteSpace: "nowrap",
+                                textAlign: { xs: "center", sm: "left" },
+                              }}
+                            >
+                              {match.homeTeam.name}
+                            </Typography>
+                          </Grid>
+                          <Grid
+                            item
+                            xs={2}
+                            container
+                            alignItems={"center"}
+                            justifyContent="center"
+                            display={"flex"}
+                            flexDirection={"column"}
+                          >
+                            <Typography
+                              variant="h4"
+                              sx={{ fontWeight: "bold" }}
+                            >
+                              {updatedMatch?.isFinished
+                                ? `${updatedMatch?.teamStatistics?.local?.goals}    ${updatedMatch?.teamStatistics?.visitor?.goals}`
+                                : "-"}
+                            </Typography>
+                            <Typography
+                              variant="h6"
+                              sx={{ fontWeight: "bold" }}
+                            >
+                              {match?.penaltyResult?.homePenalties !==
+                              match.penaltyResult.awayPenalties
+                                ? `(${match?.penaltyResult?.homePenalties})   ( ${match.penaltyResult.awayPenalties})`
+                                : null}
+                            </Typography>
+                          </Grid>
+                          <Grid
+                            item
+                            xs={4}
+                            container
+                            justifyContent="center"
+                            alignItems="center"
                             sx={{
-                              fontWeight: "bold",
-                              textOverflow: "ellipsis",
+                              flexDirection: {
+                                xs: "column-reverse",
+                                sm: "row",
+                              },
                               overflow: "hidden",
                               whiteSpace: "nowrap",
-                              textAlign: { xs: "center", sm: "left" },
+                              textOverflow: "ellipsis",
                             }}
                           >
-                            {match.awayTeam.name}
-                          </Typography>
-                          <Avatar
-                            src={match.awayTeam?.logo}
-                            alt={match.awayTeam?.name}
-                            sx={{
-                              marginLeft: { xs: 0, sm: 1 },
-                              marginBottom: { xs: 1, sm: 0 },
-                            }}
-                          />
-                        </Grid>
-                        <Grid item xs={2} container justifyContent="flex-end">
-                          <Tooltip title="Ver Estadísticas">
-                            <IconButton
-                              // component={Link}
-                              onClick={() => handleOpenInNewTab(match)}
-                              to={`/stats/${match.homeTeam._id}/${match.awayTeam._id}/${match._id}`}
-                              color="primary"
+                            <Typography
+                              variant="body1"
+                              sx={{
+                                fontWeight: "bold",
+                                textOverflow: "ellipsis",
+                                overflow: "hidden",
+                                whiteSpace: "nowrap",
+                                textAlign: { xs: "center", sm: "left" },
+                              }}
                             >
-                              <BarChartIcon />
-                            </IconButton>
-                          </Tooltip>
-                          {match.isFinished && (
-                            <Tooltip
-                              title={
-                                expandedMatchId === match._id
-                                  ? "Ocultar Resultado"
-                                  : "Ver Resultado"
-                              }
-                            >
+                              {match.awayTeam.name}
+                            </Typography>
+                            <Avatar
+                              src={match.awayTeam?.logo}
+                              alt={match.awayTeam?.name}
+                              sx={{
+                                marginLeft: { xs: 0, sm: 1 },
+                                marginBottom: { xs: 1, sm: 0 },
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={2} container justifyContent="flex-end">
+                            <Tooltip title="Ver Estadísticas">
                               <IconButton
-                                color="secondary"
-                                onClick={() => handleAccordionToggle(match._id)}
-                              >
-                                {expandedMatchId === match._id ? (
-                                  <VisibilityOffIcon />
-                                ) : (
-                                  <VisibilityIcon />
-                                )}
-                              </IconButton>
-                            </Tooltip>
-                          )}
-                        </Grid>
-                      </Grid>
-                      <Typography
-                        variant="body2"
-                        color="textSecondary"
-                        sx={{ marginTop: 1 }}
-                      >
-                        {match.date
-                          ? new Date(match.date).toLocaleDateString("es-ES", {
-                              day: "numeric",
-                              month: "short",
-                            })
-                          : "Fecha sin definir"}
-                      </Typography>
-                      {isAuthenticated && (
-                        <Formik
-                          initialValues={{ referee: match.referee || "" }}
-                          onSubmit={(values) => handleSubmit(values, match._id)}
-                        >
-                          {({ values, handleChange, setFieldValue }) => (
-                            <Form>
-                              {console.log("Values prbando", values)}
-                              <AddRefereeToMatch
-                                refereeSelected={
-                                  refereesSelectedByMatch[match._id] || ""
-                                }
-                                referees={referees}
-                                handleChange={handleChange}
-                                handleRefereeChange={handleRefereeChange}
-                              />
-                              <Button
-                                type="submit"
-                                variant="contained"
+                                // component={Link}
+                                onClick={() => handleOpenInNewTab(match)}
+                                to={`/stats/${match.homeTeam._id}/${match.awayTeam._id}/${match._id}`}
                                 color="primary"
                               >
-                                Agregar arbitro
-                              </Button>
-                            </Form>
-                          )}
-                        </Formik>
-                      )}
-
-                      {isAuthenticated && (
-                        <ScrapeMatchResult
-                          // matchId={match._id}
-                          // urlScrape={match?.urlScrape}
-                          matchId={updatedMatch._id}
-
-                          urlScrape={updatedMatch?.urlScrape}
-
-                          onSuccess={(newMatchData) =>
-                            handleScrapeSuccess(updatedMatch._id, newMatchData)
-                          }
-                        />
-                      )}
-                      {expandedMatchId === match._id && (
-                        <Accordion expanded>
-                          <AccordionSummary>
-                            <Typography>Detalles del Partido</Typography>
-                          </AccordionSummary>
-                          <AccordionDetails>
-                            <ShowResultMatch
-                              matchId={match._id}
-                              visitorName={match.awayTeam.name}
-                              logoVisitor={match.awayTeam.logo}
-                              localName={match.homeTeam.name}
-                              logoLocal={match.homeTeam.logo}
+                                <BarChartIcon />
+                              </IconButton>
+                            </Tooltip>
+                            {match.isFinished && (
+                              <Tooltip
+                                title={
+                                  expandedMatchId === match._id
+                                    ? "Ocultar Resultado"
+                                    : "Ver Resultado"
+                                }
+                              >
+                                <IconButton
+                                  color="secondary"
+                                  onClick={() =>
+                                    handleAccordionToggle(match._id)
+                                  }
+                                >
+                                  {expandedMatchId === match._id ? (
+                                    <VisibilityOffIcon />
+                                  ) : (
+                                    <VisibilityIcon />
+                                  )}
+                                </IconButton>
+                              </Tooltip>
+                            )}
+                            <DeleteMatchButton
+                              onClick={() => handleDelete(match._id)}
+                              tooltipText={`Eliminar el partido ${match.team1} vs ${match.team2}`}
+                              updatedList = {()=>updatedMatch = null}
                             />
-                          </AccordionDetails>
-                        </Accordion>
-                      )}
-                    </CardContent>
-                  </Card>
-                </ListItem>
-              )})}
+                          </Grid>
+                        </Grid>
+                        <Typography
+                          variant="body2"
+                          color="textSecondary"
+                          sx={{ marginTop: 1 }}
+                        >
+                          {match.date
+                            ? new Date(match.date).toLocaleDateString("es-ES", {
+                                day: "numeric",
+                                month: "short",
+                              })
+                            : "Fecha sin definir"} 
+                             {  match?.status ? ` - ${match?.status}` : null}
+                        </Typography>
+                        {isAuthenticated && (
+                          <Formik
+                            initialValues={{ referee: match.referee || "" }}
+                            onSubmit={(values) =>
+                              handleSubmit(values, match._id)
+                            }
+                          >
+                            {({ values, handleChange, setFieldValue }) => (
+                              <Form>
+                                {console.log("Values prbando", values)}
+                                <AddRefereeToMatch
+                                  refereeSelected={
+                                    refereesSelectedByMatch[match._id] || ""
+                                  }
+                                  referees={referees}
+                                  handleChange={handleChange}
+                                  handleRefereeChange={handleRefereeChange}
+                                />
+                                <Button
+                                  type="submit"
+                                  variant="contained"
+                                  color="primary"
+                                >
+                                  Agregar arbitro
+                                </Button>
+                              </Form>
+                            )}
+                          </Formik>
+                        )}
+
+                        {isAuthenticated && (
+                          <ScrapeMatchResult
+                            // matchId={match._id}
+                            // urlScrape={match?.urlScrape}
+                            matchId={updatedMatch._id}
+                            urlScrape={updatedMatch?.urlScrape}
+                            onSuccess={(newMatchData) =>
+                              handleScrapeSuccess(
+                                updatedMatch._id,
+                                newMatchData
+                              )
+                            }
+                          />
+                        )}
+                        {expandedMatchId === match._id && (
+                          <Accordion expanded>
+                            <AccordionSummary>
+                              <Typography>Detalles del Partido</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                              <ShowResultMatch
+                                matchId={match._id}
+                                visitorName={match.awayTeam.name}
+                                logoVisitor={match.awayTeam.logo}
+                                localName={match.homeTeam.name}
+                                logoLocal={match.homeTeam.logo}
+                              />
+                            </AccordionDetails>
+                          </Accordion>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </ListItem>
+                );
+              })}
           </List>
         </Box>
       )}

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { TextField, Button, MenuItem, Grid } from "@mui/material";
+import { TextField, Button, MenuItem, Grid, FormControl, InputLabel, Select, FormHelperText } from "@mui/material";
 import * as Yup from "yup";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -55,7 +55,7 @@ const MyDateTimePicker = ({ field, form }) => {
 };
 
 // PARA LUEGO EDITAR PARTIDOS voy a usar luego los matchId
-const FormMatch = ({ initialValues, onClose, matchId }) => {
+const FormMatch = ({ initialValues, onClose, matchId,onUpdate }) => {
   const {
     fetchLeagues,
     leagues,
@@ -66,7 +66,7 @@ const FormMatch = ({ initialValues, onClose, matchId }) => {
     referees, // Lista de árbitros
     setMatches,
   } = useBoundStore((state) => state);
-
+console.log("initialValues",initialValues)
   const [countries, setCountries] = useState([]);
   const [leaguesByCountry, setLeaguesByCountry] = useState({});
   const [selectedCountry, setSelectedCountry] = useState("");
@@ -139,6 +139,7 @@ const FormMatch = ({ initialValues, onClose, matchId }) => {
   }, [initialValues, matchId]);
 
   const handleSubmit = async (values) => {
+   
     try {
       let response;
 
@@ -150,8 +151,10 @@ const FormMatch = ({ initialValues, onClose, matchId }) => {
           updatedData: values,
           token: JSON.parse(localStorage.getItem("loggedUser")),
         });
-        console.log("response", response);
+        console.log("values", values);
         // setMatches()
+        onUpdate({...values, _id: matchId}); // Llama a la función para actualizar el estado en el componente padre
+
       } else {
         // Crear nuevo partido
         response = await addMatchesToSeason({
@@ -224,7 +227,13 @@ const FormMatch = ({ initialValues, onClose, matchId }) => {
         (team) => !selectedTeams?.includes(team._id)
       )
     : seasonById?.season?.teams;
-
+    const matchStatuses = [
+      { value: 'Suspendido', label: 'Suspendido' },
+      { value: 'Pospuesto', label: 'Pospuesto' },
+      { value: 'Finalizado', label: 'Finalizado' },
+      { value: 'Por jugar', label: 'Por jugar' }
+    ];
+    
   return (
     <>
       <Formik
@@ -239,11 +248,12 @@ const FormMatch = ({ initialValues, onClose, matchId }) => {
           order: initialValues?.order || "",
           referee: initialValues?.referee?._id || "",
           urlScrape: initialValues?.urlScrape || "",
+          status:   initialValues?.status || "",
         }}
         onSubmit={handleSubmit}
         validationSchema={validationSchema}
       >
-        {({ values, handleChange, setFieldValue }) => (
+        {({ values, handleChange, setFieldValue,touched ,errors }) => (
           <Form>
             {console.log("valuess", values)}
             <AutoFillOrder values={values} setFieldValue={setFieldValue} />
@@ -436,6 +446,33 @@ const FormMatch = ({ initialValues, onClose, matchId }) => {
               />
               <ErrorMessage name="urlScrape" component="div" />
             </Grid>
+
+            <Grid>
+
+            <Field
+              as={TextField}
+              select
+              name="status"
+              label="Estatus del Partido"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              onChange={handleChange}
+              value={values.status}
+            >
+              {matchStatuses.map((status) => (
+                <MenuItem key={status.value} value={status.value}>
+                  {status.label}
+                </MenuItem>
+              ))}
+            </Field>
+            <ErrorMessage name="status" component="div" />
+
+            </Grid>
+
+
+      
+
             <Button type="submit" variant="contained" color="primary">
               {matchId ? "Editar partido" : "Crear partido"}
             </Button>

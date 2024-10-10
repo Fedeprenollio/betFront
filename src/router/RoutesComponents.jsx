@@ -24,6 +24,7 @@ import { SeasonPage } from "../pages/season/SeasonPage";
 import { RefereePage } from "../pages/referee/RefereePage";
 import { RefereeStatisticsPage } from "../pages/referee/RefereeStatisticsPage";
 import { AdminReferee } from "../pages/referee/AdminReferee";
+import { MatchWithObservation } from "../pages/Match/MatchWithObservation";
 
 const RoutesComponent = () => {
   const additionalProps = { someProp: "allTeams" };
@@ -65,6 +66,7 @@ const RoutesComponent = () => {
           <Route path="edit/:matchId" element={<AdminMatch />} />
           <Route path="results/:idSeason" element={<ResultsSeason />} />
           <Route path="newResults" element={<AddResults />} />
+          <Route path="with-observation" element={<MatchWithObservation />} />
         </Route>
       </Route>
       <Route path="/league">
